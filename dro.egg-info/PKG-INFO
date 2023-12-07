@@ -1,0 +1,40 @@
+Metadata-Version: 2.1
+Name: dro
+Version: 0.0.1
+Summary: A package of distributionally robust optimization (DRO) methods. Implemented via cvxpy and PyTorch
+Home-page: https://github.com/namkoong-lab/dro
+Author: Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong
+Author-email: liujiashuo77@gmail.com, tw2837@columbia.edu, cuip@tsinghua.edu.cn, namkoong@gsb.columbia.edu
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: POSIX :: Linux
+Requires-Python: >=3
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+### DRO Package
+
+> <a href="https://ljsthu.github.io">Jiashuo Liu*</a>, <a href="https://wangtianyu61.github.io">Tianyu Wang*</a>, <a href="https://pengcui.thumedialab.com">Peng Cui</a>, <a href="https://hsnamkoong.github.io">Hongseok Namkoong</a>
+
+> Tsinghua University, Columbia University
+
+
+`DRO` is a python package that implements 12 typical DRO methods on linear models (SVM, logistic regression, and linear regression). It is built based on `cvxpy`. Implemented DRO methods include:
+* $f$-DRO
+    * CVaR-DRO
+    * KL-DRO
+    * TV-DRO
+    * Marginal DRO (CVaR)
+* Wasserstein DRO
+    * Wasserstein DRO
+    * Augmented Wasserstein DRO
+    * Regularized Wasserstein DRO
+* MMD-DRO
+* Sinkhorn-DRO
+* Holistic DRO
+* Unified-DRO
+    * $L_2$ cost
+    * $L_{inf}$ cost
+
+Current version only contains linear models. And further version will incorporate neural network implementations via some approximations.
