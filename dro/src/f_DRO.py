@@ -208,7 +208,7 @@ class KL_DRO(base_DRO):
         t = cp.Variable()
         per_loss = cp.Variable(sample_size)
         epi_g = cp.Variable(sample_size)
-        cons = [cp.sum(epi_g) <= sample_size]
+        cons = [cp.sum(epi_g) <= sample_size*eta]
         for i in range(sample_size):
             cons.append(cp.constraints.exponential.ExpCone(per_loss[i] - t, eta, epi_g[i]))
         cons.append(per_loss >= self.cvx_loss(X, y, theta))
@@ -224,10 +224,12 @@ class KL_DRO(base_DRO):
         return model_params
 
     def worst_distribution(self, X, y):
-        sample_size, __ = X.shape
+        self.fit(X, y)
+        print(self.dual_variable)
         per_loss = self.loss(X, y)
         weight = np.exp(per_loss / self.dual_variable)
         weight = weight / np.sum(weight)
         return {'sample_pts': [X, y], 'weight': weight}
+
 
     
