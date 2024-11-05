@@ -61,7 +61,6 @@ class Chi2DRO(BaseLinearDRO):
         theta = cp.Variable(self.input_dim)
         eta = cp.Variable()
 
-        # Define the loss function with chi-squared robustness
         loss = (np.sqrt(1 + self.eps) / np.sqrt(sample_size) * 
                 cp.norm(cp.pos(self._cvx_loss(X, y, theta) - eta), 2) + eta)
         
@@ -101,7 +100,6 @@ class Chi2DRO(BaseLinearDRO):
         per_loss = self._loss(X, y)
         prob = cp.Variable(sample_size, nonneg=True)
         
-        # Constraints for worst-case distribution
         constraints = [
             cp.sum(prob) == 1,
             cp.sum_squares(sample_size * prob - 1) <= sample_size * self.eps
