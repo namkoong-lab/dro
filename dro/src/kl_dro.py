@@ -85,14 +85,14 @@ class KLDRO(BaseLinearDRO):
 
         try:
             problem.solve(solver=cp.MOSEK)
+            self.theta = theta.value
+            self.dual_variable = eta.value
         except cp.SolverError as e:
             raise KLDROError("Optimization failed to solve using MOSEK.") from e
 
         if self.theta is None or self.dual_variable is None:
             raise KLDROError("Optimization did not converge to a solution.")
 
-        self.theta = theta.value
-        self.dual_variable = eta.value
         return {"theta": self.theta.tolist(), "dual": self.dual_variable}
 
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:

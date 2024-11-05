@@ -60,7 +60,7 @@ class BaseLinearDRO:
             raise DataValidationError(f"Expected input with {self.input_dim} features, got {X.shape[1]}.")
 
         scores = X @ self.theta
-        if self.model_type == 2:
+        if self.model_type == 'linear':
             return scores
 
         preds = np.where(scores >= (0 if self.model_type == 'svm' else 0.5), 1, 0)
