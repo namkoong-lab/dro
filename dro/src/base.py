@@ -82,7 +82,7 @@ class BaseLinearDRO:
             f1 = f1_score(y, predictions, average='macro')
             return accuracy, f1
 
-    def loss(self, X: np.ndarray, y: np.ndarray) -> np.ndarray:
+    def _loss(self, X: np.ndarray, y: np.ndarray) -> np.ndarray:
         """Compute the loss for the current model parameters."""
         if self.model_type == 'svm':
             new_y = 2 * y - 1
@@ -92,7 +92,7 @@ class BaseLinearDRO:
         else:
             raise NotImplementedError("Loss function not implemented for the specified model_type value.")
 
-    def cvx_loss(self, X: cp.Expression, y: cp.Expression, theta: cp.Expression) -> cp.Expression:
+    def _cvx_loss(self, X: cp.Expression, y: cp.Expression, theta: cp.Expression) -> cp.Expression:
         """Define the CVXPY loss expression for the model."""
         if self.model_type == 'svm':
             new_y = 2 * y - 1
