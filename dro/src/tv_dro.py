@@ -114,10 +114,7 @@ class TVDRO(BaseLinearDRO):
         Raises:
             TVDROError: If the worst-case distribution calculation fails.
         """
-        _, feature_size = X.shape
-        if feature_size != self.input_dim:
-            raise TVDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
-        
+        self.fit(X,y)
         # Calculate the per-sample loss with current theta
         per_loss = self._loss(X, y)
 

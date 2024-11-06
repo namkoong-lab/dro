@@ -93,9 +93,7 @@ class Chi2DRO(BaseLinearDRO):
         """
         self.fit(X, y)
 
-        sample_size, feature_size = X.shape
-        if feature_size != self.input_dim:
-            raise Chi2DROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
+        sample_size, _ = X.shape
         
         per_loss = self._loss(X, y)
         prob = cp.Variable(sample_size, nonneg=True)
