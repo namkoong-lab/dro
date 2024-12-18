@@ -4,6 +4,10 @@ from sklearn.metrics import f1_score
 from typing import Dict, Any
 from .base import BaseLinearDRO, DataValidationError
 
+class HRDROError(Exception):
+    """Base exception class for errors in HR DRO model."""
+    pass
+
 class HR_DRO_LR(BaseLinearDRO):
     """Holistic Robust DRO Linear Regression (HR_DRO_LR) model.
     
@@ -25,6 +29,7 @@ class HR_DRO_LR(BaseLinearDRO):
         self.epsilon_prime = epsilon_prime
 
     def update(self, config: Dict[str, Any] = {}):
+        # TODO: Add hyper-parameter checking
         """Update model configuration based on the provided dictionary."""
         self.r = config.get("r", self.r)
         self.alpha = config.get("alpha", self.alpha)
@@ -72,8 +77,14 @@ class HR_DRO_LR(BaseLinearDRO):
             raise NotImplementedError("Model type not supported for HR_DRO_LR.")
 
         # Solve the optimization problem
-        prob = cp.Problem(objective, constraints)
-        prob.solve(solver=cp.MOSEK, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8}, verbose=True)
+        problem = cp.Problem(objective, constraints)
+        try:
+            problem.solve(solver=cp.MOSEK, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8}, verbose=True)
+        except cp.error.SolverError as e:
+            raise HRDROError("Optimization failed to solve using MOSEK.") from e
+
+        if theta.value is None:
+            raise HRDROError("Optimization did not converge to a solution.")
 
         # Store fitted parameters
         self.theta = theta.value
@@ -84,22 +95,3 @@ class HR_DRO_LR(BaseLinearDRO):
 
         # Return model parameters in dictionary format
         return {"theta": self.theta.tolist()}
-
-    def predict(self, X: np.ndarray) -> np.ndarray:
-        """Predict output based on input data and model parameters."""
-        scores = X @ self.theta
-        if self.model_type == 'linear':
-            return scores
-        else:
-            return np.where(scores >= 0, 1, 0) if self.model_type == 'svm' else np.where(scores >= 0.5, 1, 0)
-
-    def score(self, X: np.ndarray, y: np.ndarray) -> Dict[str, float]:
-        """Compute the performance metrics (accuracy, F1 score for classification; MSE for regression)."""
-        predictions = self.predict(X)
-        if self.model_type == 'linear':
-            mse = np.mean((predictions - y) ** 2)
-            return {"mse": mse}
-        else:
-            accuracy = np.mean(predictions == y)
-            f1 = f1_score(y, predictions, average='macro')
-            return {"accuracy": accuracy, "f1": f1}
