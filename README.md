@@ -1,8 +1,8 @@
 ## DRO: A Package for Distributionally Robust Optimization in Machine Learning
 
-> <a href="https://ljsthu.github.io">Jiashuo Liu*</a>, <a href="https://wangtianyu61.github.io">Tianyu Wang*</a>, <a href="https://pengcui.thumedialab.com">Peng Cui</a>, <a href="https://hsnamkoong.github.io">Hongseok Namkoong</a>
+> <a href="https://ljsthu.github.io">Jiashuo Liu*</a>, <a href="https://wangtianyu61.github.io">Tianyu Wang*</a>, <a href="https://pengcui.thumedialab.com">Peng Cui</a>, <a href="https://hsnamkoong.github.io">Hongseok Namkoong</a>, <a href="https://web.stanford.edu/~jblanche/">Jose Blanchet</a>
 
-> Tsinghua University, Columbia University
+> Tsinghua University, Columbia University, Stanford University
 
 
 `DRO` is a python package that implements 12 typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver `cvxpy`. Without specified, our DRO model is to solve the following optimization problem:
