@@ -29,8 +29,8 @@ class BaseLinearDRO:
     def __init__(self, input_dim: int, model_type: str = 'svm'):
         if input_dim <= 0:
             raise ParameterError("Input dimension must be a positive integer.")
-        if model_type not in {'svm', 'logistic', 'linear'}:
-            raise ParameterError("is_regression should be svm, logistic regression, or linear regression.")
+        if model_type not in {'svm', 'logistic', 'linear', 'lad'}:
+            raise ParameterError("is_regression should be svm, logistic regression, or l1/l2 linear regression.")
         
         self.input_dim = input_dim
         self.model_type = model_type
@@ -87,8 +87,10 @@ class BaseLinearDRO:
         if self.model_type == 'svm':
             new_y = 2 * y - 1
             return np.maximum(1 - new_y * (X @ self.theta), 0)
-        elif self.is_regression in {'logistic', 'linear'}:
+        elif self.model_type in {'logistic', 'linear'}:
             return (y - X @ self.theta) ** 2
+        elif self.model_type == 'lad':
+            return np.abs(y - X @ self.theta)
         else:
             raise NotImplementedError("Loss function not implemented for the specified model_type value.")
 
@@ -99,6 +101,8 @@ class BaseLinearDRO:
             return cp.pos(1 - cp.multiply(new_y, X @ theta))
         elif self.model_type in {'logistic', 'linear'}:
             return cp.power(y - X @ theta, 2)
+        elif self.model_type == 'lad':
+            return cp.power(y - X @ theta, 1)
         else:
             raise NotImplementedError("CVXPY loss not implemented for the specified model_type value.")
 
