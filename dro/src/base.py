@@ -102,7 +102,7 @@ class BaseLinearDRO:
         elif self.model_type in {'logistic', 'linear'}:
             return cp.power(y - X @ theta, 2)
         elif self.model_type == 'lad':
-            return cp.power(y - X @ theta, 1)
+            return cp.abs(y - X @ theta)
         else:
             raise NotImplementedError("CVXPY loss not implemented for the specified model_type value.")
 

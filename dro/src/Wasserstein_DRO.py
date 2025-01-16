@@ -1,27 +1,29 @@
-from .base import *
+from .base import BaseLinearDRO
 import numpy as np
 import math
 import cvxpy as cp
 from scipy.linalg import sqrtm
+from typing import Dict, Any
 
-class Wasserstein_DRO(base_DRO):
+
+class Wasserstein_DRO(BaseLinearDRO):
     # https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9004785
-    #fix the uncertainty in Y
-    def __init__(self, input_dim, is_regression):
-        base_DRO.__init__(self, input_dim, is_regression)
+    # set the uncertainty in Y as well.
+    def __init__(self, input_dim: int, model_type: str):
+        BaseLinearDRO.__init__(self, input_dim, model_type)
         self.cost_matrix = np.eye(input_dim)
         self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
         self.eps = 0
         self.p = 1
         self.kappa = 1
 
-    def update(self, config = {}):
+    def update(self, config: Dict[str, Any]) -> None:
         if 'cost_matrix' in config.keys():
             self.cost_matrix = config['cost_matrix']
             self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
         if 'eps' in config.keys():
             self.eps = config['eps']
-        # the following two are only used in SVM-wasserstein
+        # the following two are only used in SVM-wasserstein or l1 loss, in linear regression and logistic regression, we do not allow changes in Y in the current version.
         if 'p' in config.keys():
             self.p = config['p']
         if 'kappa' in config.keys():
@@ -32,8 +34,9 @@ class Wasserstein_DRO(base_DRO):
         theta = cp.Variable(self.input_dim)
         t1 = cp.Variable(nonneg = True)
         t2 = cp.Variable(nonneg = True)
-        y2 = cp.Variable()
-        if self.is_regression == 1 or self.is_regression == 2:
+        if self.model_type == 'linear':
+        #self.is_regression == 1 or self.is_regression == 2:
+            # TODO: check it whether it can incorporate change of Y.
             cons = [t1 >= cp.norm(X @ theta - y) / math.sqrt(sample_size)]
             if self.eps > 0:
                 theta_transform = cp.Variable(self.input_dim)
@@ -41,24 +44,33 @@ class Wasserstein_DRO(base_DRO):
             final_loss = t1 + t2
 
         else:
+            # TODO: modify it to incorporate change of Y.
             newy = 2*y - 1
-            if not (self.is_regression is 0):
+            if self.model_type == 'logistic':
                 # logistic
                 cons = [t1 >= cp.sum(cp.logistic(-cp.multiply(newy, X @ theta))) / sample_size]
                 if self.eps > 0:
                     theta_transform = cp.Variable(self.input_dim)
                     cons += [t2 >= self.eps * cp.norm(theta_transform), theta_transform == self.cost_inv_transform @ theta]
                 final_loss = t1 + t2
-            else:
+            elif self.model_type == 'svm':
                 # svm https://jmlr.org/papers/volume20/17-633/17-633.pdf 
-                # we do not fix to be the l2 loss (coro 15)
+                # we do not fix to be the l2 loss (coro 15), but it cannot be adapted to the general cost matrix there.
                 s = cp.Variable(sample_size)
                 cons = [s >= 1 - cp.multiply(newy, X@theta), s >= 0, s >= 1 + cp.multiply(newy, X@theta) - t1 * self.kappa]
                 if self.p == 1:
                     dual_norm = 'inf'
                 else:
                     dual_norm = 1 / (1 - 1 / self.p)
-                final_loss = cp.sum(s) / sample_size + self.eps * cp.norm(theta, dual_norm)
+                final_loss = cp.sum(s) / sample_size + self.eps * cp.norm(self.cost_inv_transform @ theta, dual_norm)
+            else:
+                # model type == 'lad':
+                if self.p == 1:
+                    dual_norm = 'inf'
+                else:
+                    dual_norm = 1 / (1 - 1 / self.p)
+                final_loss = cp.sum(self._cvx_loss(X, y)) / sample_size + self.eps * cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
+                cons = []
 
         problem = cp.Problem(cp.Minimize(final_loss), cons)
         problem.solve(solver = cp.MOSEK)
@@ -69,6 +81,7 @@ class Wasserstein_DRO(base_DRO):
         return model_params
 
     def worst_distribution(self, X, y):
+        # TODO: try to fix bugs and unify them.
         # REQUIRED TO BE CALLED after solving the DRO problem
         # return a dict {"sample_pts": [np.array([pts_num, input_dim]), np.array(pts_num)], 'weight': np.array(pts_num)}
 
@@ -115,9 +128,9 @@ class Wasserstein_DRO(base_DRO):
                 return {'sample_pts': [X, y], 'weight': weight}
 
 
-class Wasserstein_DRO_satisficing(base_DRO):
-    def __init__(self, input_dim, is_regression):
-        base_DRO.__init__(self, input_dim, is_regression)
+class Wasserstein_DRO_satisficing(BaseLinearDRO):
+    def __init__(self, input_dim: int, model_type: str):
+        BaseLinearDRO.__init__(self, input_dim, model_type)
         self.cost_matrix = np.eye(input_dim)
         self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
         # target that the robust error need to achieve
@@ -140,6 +153,35 @@ class Wasserstein_DRO_satisficing(base_DRO):
             self.kappa = config['kappa']
     
     def fit(self, X, y):
+    
+
+        if self.p == 1:
+            dual_norm = 'inf'
+        else:
+            dual_norm = 1 / (1 - 1 / self.p)
+
+        sample_size, __ = X.shape
+        empirical_rmse = self.fit_oracle(X, y)
+        TGT = self.target_ratio * empirical_rmse
+        theta = cp.Variable(self.input_dim)
+        cons = [TGT >= cp.sum(self._cvx_loss(X, y)) * sample_size]
+        if self.model_type == 'lad':
+            obj = cp.norm(cp.hstack([theta, -1]), dual_norm)
+        # TODO: check it is approximation or exact
+        elif self.model_type in ['linear', 'svm', 'logistic']:
+            obj = cp.norm(theta, dual_norm)
+
+
+        problem = cp.Problem(cp.Minimize(obj), cons)
+        problem.solve(solver = cp.MOSEK)
+        self.theta = theta.value
+
+        model_params = {}
+        model_params["theta"] = self.theta.reshape(-1).tolist()
+        return model_params
+
+
+    def fit_depreciate(self, X, y):
         iter_num = 10
         # determine the empirical obj
         self.eps = 0
@@ -162,6 +204,10 @@ class Wasserstein_DRO_satisficing(base_DRO):
         model_params = {}
         model_params["theta"] = self.theta.reshape(-1).tolist()
         return model_params
+    
+    
+
+
             
 
     def fit_oracle(self, X, y):
