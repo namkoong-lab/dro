@@ -51,6 +51,10 @@ class BaseLinearDRO:
         """Fit model to data by solving an optimization problem."""
         pass  # Method to be implemented in subclasses
 
+    def evaluate(self, X: np.darray, y: np.darray, theta: np.darray, fast: True):
+        """Evaluate the true model performance for the obtained theta efficiently"""
+        pass
+
     def load(self, config: dict):
         """Load model parameters from a configuration dictionary."""
         try:
@@ -88,6 +92,8 @@ class BaseLinearDRO:
             accuracy = np.average(predictions == y, weights=weights)
             f1 = f1_score(y, predictions, average='macro')
             return accuracy, f1
+    
+
 
     def _loss(self, X: np.ndarray, y: np.ndarray) -> np.ndarray:
         """Compute the loss for the current model parameters."""
