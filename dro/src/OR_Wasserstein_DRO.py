@@ -18,7 +18,7 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'linear' for Linear Regression).
+        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
         eps (float): Robustness parameter for OR-WDRO. 
         eta (float): Fraction of outlier for OR-WDRO.
         dual norm (int): used in the optimization

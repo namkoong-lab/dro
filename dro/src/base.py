@@ -3,7 +3,8 @@ import cvxpy as cp
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from sklearn.metrics import f1_score
+import warnings
+#from sklearn.metrics import f1_score
 
 from torch.autograd import grad
 from torch.utils.data import Dataset, DataLoader, TensorDataset, random_split
@@ -13,6 +14,7 @@ from typing import Optional, Tuple, Union
 class DROError(Exception):
     """Base exception class for all errors in DRO models."""
     pass
+
 
 class ParameterError(DROError):
     """Exception raised for invalid parameter configurations."""
@@ -30,15 +32,14 @@ class BaseLinearDRO:
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'linear' for Linear Regression).
+        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
         theta (np.ndarray): Model parameters.
     """
     def __init__(self, input_dim: int, model_type: str = 'svm'):
         if input_dim <= 0:
             raise ParameterError("Input dimension must be a positive integer.")
-        if model_type not in {'svm', 'logistic', 'linear', 'lad'}:
-            raise ParameterError(f"Unsupported model_type: {model_type}. Supported types are svm, logistic regression, or l1/l2 linear regression.")
-        
+        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
+            warnings.warn(f"Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.", UserWarning)
         self.input_dim = input_dim
         self.model_type = model_type
         self.theta = np.zeros(self.input_dim)
@@ -51,7 +52,7 @@ class BaseLinearDRO:
         """Fit model to data by solving an optimization problem."""
         pass  # Method to be implemented in subclasses
 
-    def evaluate(self, X: np.darray, y: np.darray, theta: np.darray, fast: True):
+    def evaluate(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray, fast: True):
         """Evaluate the true model performance for the obtained theta efficiently"""
         pass
 
@@ -71,7 +72,7 @@ class BaseLinearDRO:
             raise DataValidationError(f"Expected input with {self.input_dim} features, got {X.shape[1]}.")
 
         scores = X @ self.theta
-        if self.model_type == 'linear':
+        if self.model_type == 'ols':
             return scores
 
         preds = np.where(scores >= (0 if self.model_type == 'svm' else 0.5), 1, 0)
@@ -85,7 +86,7 @@ class BaseLinearDRO:
                 raise DataValidationError("Weights must have the same number of elements as y.")
             weights = weights / weights.sum()
         
-        if self.model_type == 'linear':
+        if self.model_type == 'ols':
             mse = np.average((predictions - y) ** 2, weights=weights)
             return mse
         else:
@@ -101,7 +102,10 @@ class BaseLinearDRO:
         if self.model_type == 'svm':
             new_y = 2 * y - 1
             return np.maximum(1 - new_y * (X @ self.theta), 0)
-        elif self.model_type in {'logistic', 'linear'}:
+        elif self.model_type in 'logistic':
+            new_y = 2 * y - 1
+            return np.log(1 + np.exp(-np.multiply(new_y, X @ model.theta)))
+        elif self.model_type == 'ols':
             return (y - X @ self.theta) ** 2
         elif self.model_type == 'lad':
             return np.abs(y - X @ self.theta)
@@ -115,7 +119,10 @@ class BaseLinearDRO:
         if self.model_type == 'svm':
             new_y = 2 * y - 1
             return cp.pos(1 - cp.multiply(new_y, X @ theta))
-        elif self.model_type in {'logistic', 'linear'}:
+        elif self.model_type == 'logistic':
+            new_y = 2 * y - 1
+            return cp.logistic(-cp.multiply(new_y, X @ theta))
+        elif self.model_type == 'ols':
             return cp.power(y - X @ theta, 2)
         elif self.model_type == 'lad':
             return cp.abs(y - X @ theta)
@@ -158,7 +165,7 @@ class BaseNNDRO:
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'linear' for Linear Regression).
+        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
         theta (np.ndarray): Model parameters.
     """
     def __init__(self, input_dim, num_classes):

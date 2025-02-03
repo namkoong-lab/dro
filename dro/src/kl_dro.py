@@ -14,7 +14,7 @@ class KLDRO(BaseLinearDRO):
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'linear' for Linear Regression).
+        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
         eps (float): Robustness parameter for KL-DRO.
         dual_variable (Optional[float]): Dual variable value from the optimization problem.
     """
@@ -25,7 +25,7 @@ class KLDRO(BaseLinearDRO):
 
         Args:
             input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'linear').
+            model_type (str): Type of model ('svm', 'logistic', 'ols').
             eps (float): Ambiguity size for the KL constraint (default is 0.0).
         """
         super().__init__(input_dim, model_type)

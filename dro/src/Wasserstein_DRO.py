@@ -34,7 +34,7 @@ class Wasserstein_DRO(BaseLinearDRO):
         theta = cp.Variable(self.input_dim)
         t1 = cp.Variable(nonneg = True)
         t2 = cp.Variable(nonneg = True)
-        if self.model_type == 'linear':
+        if self.model_type == 'ols':
         #self.is_regression == 1 or self.is_regression == 2:
             # TODO: check it whether it can incorporate change of Y.
             cons = [t1 >= cp.norm(X @ theta - y) / math.sqrt(sample_size)]
@@ -45,6 +45,7 @@ class Wasserstein_DRO(BaseLinearDRO):
 
         else:
             # TODO: modify it to incorporate change of Y.
+            # TODO: here only works for p = 2
             newy = 2*y - 1
             if self.model_type == 'logistic':
                 # logistic
@@ -64,7 +65,7 @@ class Wasserstein_DRO(BaseLinearDRO):
                     dual_norm = 1 / (1 - 1 / self.p)
                 final_loss = cp.sum(s) / sample_size + self.eps * cp.norm(self.cost_inv_transform @ theta, dual_norm)
             else:
-                # model type == 'lad':
+                # model type == 'lad' for general p.
                 if self.p == 1:
                     dual_norm = 'inf'
                 else:
@@ -168,7 +169,7 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
         if self.model_type == 'lad':
             obj = cp.norm(cp.hstack([theta, -1]), dual_norm)
         # TODO: check it is approximation or exact
-        elif self.model_type in ['linear', 'svm', 'logistic']:
+        elif self.model_type in ['ols', 'svm', 'logistic']:
             obj = cp.norm(theta, dual_norm)
 
 
@@ -299,7 +300,7 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
 
         
 
-class Wasserstein_DRO_aug(base_DRO):
+class Wasserstein_DRO_aug(BaseLinearDRO):
     # https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9004785
     #fix the uncertainty in Y
     def __init__(self, input_dim, is_regression):

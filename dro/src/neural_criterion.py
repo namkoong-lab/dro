@@ -27,6 +27,18 @@ def chi_square_value(p, v, reg):
 
 
 def cvar_value(p, v, reg):
+
+    """Returns <p, v> - reg * KL(p, uniform) for Torch tensors"""
+    m = p.shape[0]
+
+    with torch.no_grad():
+        idx = torch.nonzero(p)  # where is annoyingly backwards incompatible
+        kl = np.log(m) + (p[idx] * torch.log(p[idx])).sum()
+
+    return torch.dot(p, v) - reg * kl
+
+
+def kl_value(p, v, reg):
     """Returns <p, v> - reg * KL(p, uniform) for Torch tensors"""
     m = p.shape[0]
 
@@ -173,7 +185,7 @@ class RobustLoss(nn.Module):
                     p[idx[cutoff]] = surplus
                 return p
 
-        if self.geometry == 'chi-square':
+        elif self.geometry == 'chi-square':
             if (v.max() - v.min()) / v.max() <= MIN_REL_DIFFERENCE:
                 return (torch.ones_like(v) / m).to(self.device)
 

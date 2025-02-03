@@ -76,11 +76,11 @@ class Chi2DRO(BaseLinearDRO):
         self.theta = theta.value
         return {"theta": self.theta.reshape(-1).tolist()}
 
-    def evaluate(self, X: np.darray, y: np.darray, theta: np.darray, fast: True):
-        """Evaluate the true model performance for the obtained theta efficiently"""
+    def evaluate(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray, fast: True):
+        """Fast Evaluate the true model performance for the obtained theta efficiently"""
         sample_num, __ = X.shape
         errors = (predictions - y) ** 2
-        if self.model_type == 'linear':
+        if self.model_type == 'ols':
             predictions = self.predict(X)
             cov_inv = np.linalg.pinv(np.cov(X.T))
             grad_square = np.dot(X.T, errors * X)
