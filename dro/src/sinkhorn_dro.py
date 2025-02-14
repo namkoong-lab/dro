@@ -7,6 +7,7 @@ from torch.autograd import Variable
 import math
 from sklearn.metrics import f1_score
 from typing import Dict, Union, Tuple
+from base import BaseLinearDRO
 
 
 class LinearModel(nn.Module):
@@ -33,7 +34,7 @@ def to_tensor(x: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
         raise TypeError("Input should be either numpy array or torch tensor.")
 
 
-class SinkhornLinearDRO:
+class SinkhornLinearDRO(BaseLinearDRO):
     """
     Sinkhorn Distributionally Robust Optimization (DRO) with Linear Models.
     """
@@ -45,14 +46,15 @@ class SinkhornLinearDRO:
                  max_iter: int = 50, 
                  learning_rate: float = 1e-2, 
                  k_sample_max: int = 5, 
-                 is_regression: bool = True):
+                 model_type: str = "svm"):
+        super().__init__(input_dim, model_type)
         self.model = LinearModel(input_dim, output_dim)
         self.lambda_ = lambda_
         self.reg_ = reg_
         self.max_iter = max_iter
         self.learning_rate = learning_rate
         self.k_sample_max = k_sample_max
-        self.is_regression = is_regression
+        self.model_type = model_type
 
     def update(self, config: Dict[str, Union[float, int]]) -> None:
         """
