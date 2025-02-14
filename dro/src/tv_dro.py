@@ -14,7 +14,7 @@ class TVDRO(BaseLinearDRO):
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'linear' for Linear Regression).
+        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
         eps (float): Robustness parameter for TV-DRO.
         threshold_val (float): Threshold value from the optimization.
     """
@@ -25,7 +25,7 @@ class TVDRO(BaseLinearDRO):
 
         Args:
             input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'linear').
+            model_type (str): Type of model ('svm', 'logistic', 'ols').
             eps (float): Ambiguity size for the TV constraint (default is 0.0).
         """
         super().__init__(input_dim, model_type)
@@ -72,7 +72,7 @@ class TVDRO(BaseLinearDRO):
         u = cp.Variable()
 
         # Set up loss function and constraints based on model type
-        if self.model_type in {'linear', 'logistic'}:
+        if self.model_type in {'ols', 'logistic'}:
             # Loss for regression models
             loss = (cp.sum(cp.pos(self._cvx_loss(X,y) - eta)) / 
                     (sample_size * (1 - self.eps)) + eta)

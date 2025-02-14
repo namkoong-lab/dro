@@ -15,7 +15,7 @@ class CVaRDRO(BaseLinearDRO):
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'linear' for Linear Regression).
+        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
         alpha (float): Risk level for the CVaR constraint.
         threshold_val (float): Threshold value from the optimization.
     """
@@ -26,7 +26,7 @@ class CVaRDRO(BaseLinearDRO):
 
         Args:
             input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'linear').
+            model_type (str): Type of model ('svm', 'logistic', 'ols').
             alpha (float): Risk level for CVaR (default is 1.0).
         """
         super().__init__(input_dim, model_type)

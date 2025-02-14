@@ -76,6 +76,19 @@ class Chi2DRO(BaseLinearDRO):
         self.theta = theta.value
         return {"theta": self.theta.reshape(-1).tolist()}
 
+    def evaluate(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray, fast: True):
+        """Fast Evaluate the true model performance for the obtained theta efficiently"""
+        sample_num, __ = X.shape
+        errors = (predictions - y) ** 2
+        if self.model_type == 'ols':
+            predictions = self.predict(X)
+            cov_inv = np.linalg.pinv(np.cov(X.T))
+            grad_square = np.dot(X.T, errors * X)
+            bias = 2 * np.trace(cov_inv @ grad_square)/ len(sample_num ** 2)
+        return np.mean(errors) + bias
+
+
+
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Compute the worst-case distribution.
 

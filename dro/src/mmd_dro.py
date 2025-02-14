@@ -5,6 +5,8 @@ from typing import Dict, Any, Tuple
 from sklearn.metrics.pairwise import rbf_kernel
 from sklearn.metrics import euclidean_distances
 
+
+
 class MMD_DRO(BaseLinearDRO):
     """
     MMD-DRO (Maximum Mean Discrepancy - Distributionally Robust Optimization)
@@ -17,9 +19,6 @@ class MMD_DRO(BaseLinearDRO):
         self.sampling_method = 'bound'  # Sampling method: 'bound' or 'hull'
         self.n_certify_ratio = 1        # Ratio of additional certification samples
 
-        # Validate model_type
-        if model_type not in ["linear", "logistic", "svm"]:
-            raise ValueError(f"Unsupported model_type: {model_type}. Supported types are ['linear', 'logistic', 'svm'].")
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update configuration parameters."""
@@ -57,17 +56,6 @@ class MMD_DRO(BaseLinearDRO):
         kernel_width = np.sqrt(0.5 * np.median(distsqr))
         kernel_gamma = 1.0 / (2 * kernel_width ** 2)
         return kernel_width, kernel_gamma
-
-    def cvx_loss(self, theta: cp.Variable, zeta: np.ndarray) -> cp.Expression:
-        """Define convex loss based on model type."""
-        assert zeta.shape[-1] == self.input_dim + 1, "Mismatch between zeta and input dimension."
-
-        if self.model_type in ["linear", "logistic"]:
-            return (zeta[-1] - theta @ zeta[:-1]) ** 2
-        elif self.model_type == "svm":
-            return cp.pos(1 - cp.multiply(zeta[-1], theta @ zeta[:-1]))
-        else:
-            raise NotImplementedError(f"Model type {self.model_type} is not supported.")
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """Fit the MMD-DRO model to the data."""
@@ -123,7 +111,7 @@ class MMD_DRO(BaseLinearDRO):
         # Step 3: Define objective and constraints
         # --------------------------------------------------------------------------------
         f = a @ K
-        constraints = [self.cvx_loss(theta, zeta[i]) <= f0 + f[i] for i in range(len(zeta))]
+        constraints = [self._cvx_loss(theta, zeta[i]) <= f0 + f[i] for i in range(len(zeta))]
         objective = f0 + cp.sum(f[:sample_size]) / sample_size + self.eta * cp.norm(a.T @ self.matrix_decomp(K))
 
         # Solve optimization problem

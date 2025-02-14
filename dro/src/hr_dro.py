@@ -20,7 +20,7 @@ class HR_DRO_LR(BaseLinearDRO):
         epsilon_prime (float): Tolerance for secondary DRO constraints.
     """
     
-    def __init__(self, input_dim: int, model_type: str = 'linear', r: float = 1.0, alpha: float = 1.0, 
+    def __init__(self, input_dim: int, model_type: str = 'ols', r: float = 1.0, alpha: float = 1.0, 
                  epsilon: float = 0.5, epsilon_prime: float = 1.0):
         super().__init__(input_dim, model_type)
         self.r = r
@@ -54,7 +54,7 @@ class HR_DRO_LR(BaseLinearDRO):
 
         # Constraints setup based on the model type
         constraints = []
-        if self.model_type in {'linear', 'logistic'}:
+        if self.model_type in {'lad'}:
             for t in range(T):
                 constraints.extend([
                     temp >= cp.abs(theta.T @ X[t] - Y[t]),
@@ -74,6 +74,7 @@ class HR_DRO_LR(BaseLinearDRO):
                     eta >= 1 - Y[t] * (theta.T @ X[t]) + self.epsilon * cp.norm(theta, 2)
                 ])
         else:
+            # TODO: check whether ols works for HR-DRO.
             raise NotImplementedError("Model type not supported for HR_DRO_LR.")
 
         # Solve the optimization problem

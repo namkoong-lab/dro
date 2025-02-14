@@ -14,7 +14,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
     
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Type of model (e.g., 'svm', 'logistic', 'linear').
+        model_type (str): Type of model (e.g., 'svm', 'logistic', 'ols').
         alpha (float): Risk level for CVaR.
         control_name (Optional[list[int]]): Indices of the control features for marginal DRO.
         p (int): Power parameter for the distance measure.
