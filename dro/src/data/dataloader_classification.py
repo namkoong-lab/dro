@@ -1,5 +1,4 @@
 import numpy as np 
-import numpy as np
 from src.data.draw_utils import draw_classification
 
 def classification_basic(d=2, k=2, num_samples=500, radius=5, seed=42, visualize=False, save_dir="./visualization.png"):
@@ -94,5 +93,6 @@ def classification_LWLC(num_data=10000, d=5, bias=0.5, scramble=1, sigma_s=3.0, 
     if visualize:
         draw_classification(X, y, save_dir)
 
-
     return X, y
+
+
