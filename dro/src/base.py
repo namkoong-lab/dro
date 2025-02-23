@@ -100,11 +100,9 @@ class BaseLinearDRO:
         """Compute the loss for the current model parameters."""
 
         if self.model_type == 'svm':
-            new_y = 2 * y - 1
-            return np.maximum(1 - new_y * (X @ self.theta), 0)
+            return np.maximum(1 - y * (X @ self.theta), 0)
         elif self.model_type in 'logistic':
-            new_y = 2 * y - 1
-            return np.log(1 + np.exp(-np.multiply(new_y, X @ model.theta)))
+            return np.log(1 + np.exp(-np.multiply(y, X @ model.theta)))
         elif self.model_type == 'ols':
             return (y - X @ self.theta) ** 2
         elif self.model_type == 'lad':
@@ -117,11 +115,9 @@ class BaseLinearDRO:
         assert X.shape[-1] == self.input_dim, "Mismatch between feature and input dimension."
 
         if self.model_type == 'svm':
-            new_y = 2 * y - 1
-            return cp.pos(1 - cp.multiply(new_y, X @ theta))
+            return cp.pos(1 - cp.multiply(y, X @ theta))
         elif self.model_type == 'logistic':
-            new_y = 2 * y - 1
-            return cp.logistic(-cp.multiply(new_y, X @ theta))
+            return cp.logistic(-cp.multiply(y, X @ theta))
         elif self.model_type == 'ols':
             return cp.power(y - X @ theta, 2)
         elif self.model_type == 'lad':

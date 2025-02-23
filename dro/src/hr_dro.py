@@ -63,7 +63,6 @@ class HR_DRO_LR(BaseLinearDRO):
                     eta >= cp.abs(theta.T @ X[t] - Y[t]) + self.epsilon_prime * cp.norm(theta, 2)
                 ])
         elif self.model_type == 'svm':
-            Y = 2 * Y - 1  # Convert labels to {-1, 1}
             constraints.append(eta >= 1e-6)  # Stability constraint for eta
             for t in range(T):
                 constraints.extend([

@@ -79,10 +79,9 @@ class TVDRO(BaseLinearDRO):
             constraints = [u >= cp.sum_squares(X[i] @ theta - y[i]) for i in range(sample_size)]
         else:
             # Loss for SVM
-            new_y = 2 * y - 1
             loss = (cp.sum(cp.pos(self._cvx_loss(X,y) - eta)) /
                     (sample_size * (1 - self.eps)) + eta)
-            constraints = [u >= 1 - cp.multiply(new_y[i], X[i] @ theta) for i in range(sample_size)]
+            constraints = [u >= 1 - cp.multiply(y[i], X[i] @ theta) for i in range(sample_size)]
             constraints += [u >= 0]
 
         # Define the objective with the total variation constraint

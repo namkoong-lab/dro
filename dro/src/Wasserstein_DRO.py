@@ -237,8 +237,6 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
         iter_num = 10
         # determine the empirical obj
         self.eps = 0
-        if self.is_regression == 0:
-            y = 2 * y - 1
         empirical_rmse = self.fit_oracle(X, y)
         TGT = self.target_ratio * empirical_rmse
         # print('tgt', TGT)

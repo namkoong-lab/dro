@@ -63,9 +63,6 @@ class MMD_DRO(BaseLinearDRO):
         if len(X.shape) != 2 or len(y.shape) != 1:
             raise ValueError("X must be a 2D array and y must be a 1D array.")
 
-        if self.model_type == "svm":
-            y = 2 * y - 1  # Transform labels to {-1, 1}
-
         sample_size, _ = X.shape
         n_certify = int(self.n_certify_ratio * sample_size)
 
