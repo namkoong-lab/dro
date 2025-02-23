@@ -113,7 +113,7 @@ class MMD_DRO(BaseLinearDRO):
 
         # Solve optimization problem
         problem = cp.Problem(cp.Minimize(objective), constraints)
-        problem.solve(solver=cp.MOSEK)
+        problem.solve(solver=self.solver)
 
         # Check optimization status
         if problem.status not in [cp.OPTIMAL, cp.OPTIMAL_INACCURATE]:

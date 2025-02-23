@@ -66,7 +66,7 @@ class Chi2DRO(BaseLinearDRO):
         
         problem = cp.Problem(cp.Minimize(loss))
         try:
-            problem.solve(solver=cp.MOSEK)
+            problem.solve(solver=self.solver)
         except cp.error.SolverError as e:
             raise Chi2DROError("Optimization failed to solve using MOSEK.") from e
 
@@ -118,7 +118,7 @@ class Chi2DRO(BaseLinearDRO):
         
         problem = cp.Problem(cp.Maximize(prob @ per_loss), constraints)
         try:
-            problem.solve(solver=cp.MOSEK)
+            problem.solve(solver=self.solver)
         except cp.error.SolverError as e:
             raise Chi2DROError("Optimization failed to solve for worst-case distribution.") from e
 

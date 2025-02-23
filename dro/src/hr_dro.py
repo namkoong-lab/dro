@@ -79,7 +79,7 @@ class HR_DRO_LR(BaseLinearDRO):
         # Solve the optimization problem
         problem = cp.Problem(objective, constraints)
         try:
-            problem.solve(solver=cp.MOSEK, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8}, verbose=True)
+            problem.solve(solver=self.solver, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8}, verbose=True)
         except cp.error.SolverError as e:
             raise HRDROError("Optimization failed to solve using MOSEK.") from e
 

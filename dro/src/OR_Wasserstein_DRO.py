@@ -287,7 +287,7 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
 
         problem = cp.Problem(objective, constraints)
         try:
-            problem.solve(solver = cp.MOSEK, verbose = True)
+            problem.solve(solver = self.solver, verbose = True)
 
         except cp.error.SolverError as e:
             raise ORWDROError("Optimization failed to solve for worst-case distribution.") from e

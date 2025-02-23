@@ -110,7 +110,7 @@ class MMD_DRO(base_DRO):
         opt = cp.Problem(cp.Minimize(obj), constr)
     
 
-        opt.solve(solver = cp.MOSEK)
+        opt.solve(solver = self.solver)
         self.theta = theta.value #, obj.value, a.value, f0.value, kernel_gamma, zeta
 
         

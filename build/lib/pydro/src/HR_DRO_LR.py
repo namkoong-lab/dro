@@ -60,7 +60,7 @@ class HR_DRO_LR:
         prob = cp.Problem(objective, constraints)
 
         # Solve
-        prob.solve(solver=cp.MOSEK,
+        prob.solve(solver=self.solver,
             mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8},
             verbose=True)
 

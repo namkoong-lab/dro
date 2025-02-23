@@ -117,7 +117,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
                 'MSK_DPAR_INTPNT_TOL_PFEAS': 1e-5,
                 'MSK_DPAR_INTPNT_TOL_REL_GAP': 1e-5
             }
-            problem.solve(solver=cp.MOSEK, **solver_options)
+            problem.solve(solver=self.solver, **solver_options)
 
             # Extract optimization results
             self.theta = theta.value

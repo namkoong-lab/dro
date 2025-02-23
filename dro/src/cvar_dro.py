@@ -76,7 +76,7 @@ class CVaRDRO(BaseLinearDRO):
         problem = cp.Problem(cp.Minimize(loss))
 
         try:
-            problem.solve(solver=cp.MOSEK)
+            problem.solve(solver=self.solver)
             self.theta = theta.value
             self.threshold_val = eta.value
         except cp.SolverError as e:

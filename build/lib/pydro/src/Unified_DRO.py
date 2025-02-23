@@ -100,7 +100,7 @@ class MOT_Robust_CLF_L2:
         self.theta2_par.value = self.theta2
         print("begin solving...")
         self.problem.solve(
-            solver=cp.MOSEK,
+            solver=self.solver,
             mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8},
             verbose=True,
         )
@@ -228,7 +228,7 @@ class MOT_Robust_CLF_Linf:
         self.theta1_par.value = self.theta1
         self.theta2_par.value = self.theta2
         self.problem.solve(
-            solver=cp.MOSEK,
+            solver=self.solver,
             mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8},
             verbose=self.verbose,
         )

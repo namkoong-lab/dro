@@ -23,7 +23,7 @@ class chi2_DRO(base_DRO):
         loss = math.sqrt(1 + self.eps) / math.sqrt(sample_size) * cp.norm(cp.pos(self.cvx_loss(X, y, theta) - eta), 2) + eta
         
         problem = cp.Problem(cp.Minimize(loss))
-        problem.solve(solver = cp.MOSEK)
+        problem.solve(solver = self.solver)
         self.theta = theta.value
 
         model_params = {}
@@ -40,7 +40,7 @@ class chi2_DRO(base_DRO):
         prob = cp.Variable(sample_size, nonneg = True)
         cons = [cp.sum(prob) == 1, cp.sum_squares(sample_size * prob - 1) <= sample_size * self.eps]
         problem = cp.Problem(cp.Maximize(prob @ per_loss), cons)
-        problem.solve(solver = cp.MOSEK)
+        problem.solve(solver = self.solver)
         return {'sample_pts': [X, y], 'weight': prob.value}
 
 
@@ -60,7 +60,7 @@ class CVaR_DRO(base_DRO):
         eta = cp.Variable()
         loss = cp.sum(cp.pos(self.cvx_loss(X, y, theta)- eta)) / (sample_size * self.alpha) + eta
         problem = cp.Problem(cp.Minimize(loss))
-        problem.solve(solver = cp.MOSEK)
+        problem.solve(solver = self.solver)
         self.theta = theta.value
         self.threshold_val  = eta.value
         model_params = {}
@@ -126,7 +126,7 @@ class Marginal_CVaR_DRO(base_DRO):
             'MSK_DPAR_INTPNT_TOL_PFEAS': 1e-5,  
             'MSK_DPAR_INTPNT_TOL_REL_GAP': 1e-5
         }
-        prob.solve(solver = cp.MOSEK)
+        prob.solve(solver = self.solver)
         print("end fitting")
         self.theta = theta.value
         self.b_val = b_var.value
@@ -175,7 +175,7 @@ class TV_DRO(base_DRO):
             cons = [u >= 1 - cp.multiply(newy[i], X[i] @ theta) for i in range(sample_size)]
             cons += [u >= 0]
         problem = cp.Problem(cp.Minimize(loss * (1 - self.eps) + self.eps * u), cons)
-        problem.solve(solver = cp.MOSEK)
+        problem.solve(solver = self.solver)
         self.theta = theta.value
         self.threshold_val = eta.value
         model_params = {}
@@ -215,7 +215,7 @@ class KL_DRO(base_DRO):
 
         loss = t + eta * self.eps
         problem = cp.Problem(cp.Minimize(loss), cons)
-        problem.solve(solver = cp.MOSEK)
+        problem.solve(solver = self.solver)
         self.theta = theta.value
         self.dual_variable = eta.value
         model_params = {}

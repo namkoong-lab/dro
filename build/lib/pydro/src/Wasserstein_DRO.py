@@ -61,7 +61,7 @@ class Wasserstein_DRO(base_DRO):
                 final_loss = cp.sum(s) / sample_size + self.eps * cp.norm(theta, dual_norm)
 
         problem = cp.Problem(cp.Minimize(final_loss), cons)
-        problem.solve(solver = cp.MOSEK)
+        problem.solve(solver = self.solver)
         self.theta = theta.value
 
         model_params = {}
@@ -89,7 +89,7 @@ class Wasserstein_DRO(base_DRO):
                     var_x = cp.Variable(self.input_dim)
                     obj = 1 - newy[i] * var_x @ self.theta - norm_theta * cp.sum_squares(var_x - X[i])
                     problem = cp.Problem(cp.Maximize(obj))
-                    problem.solve(solver = cp.MOSEK)
+                    problem.solve(solver = self.solver)
                     
                     if 1 - newy[i] * var_x.value @ self.theta < 0:
                         new_X[i] = X[i]
@@ -108,7 +108,7 @@ class Wasserstein_DRO(base_DRO):
                 dual_loss = L * eta * norm_theta + cp.sum(cp.multiply(1 - alpha, self.loss(X, y))) / sample_size + cp.sum(cp.multiply(alpha, self.loss(X, y_flip))) / sample_size
                 cons = [alpha <= 1, eta + self.kappa * cp.sum(alpha) / sample_size == self.eps]
                 problem = cp.Problem(cp.Maximize(dual_loss), cons)
-                problem.solve(solver = cp.MOSEK)
+                problem.solve(solver = self.solver)
                 weight = np.concatenate(((1 - alpha.value) / sample_size, alpha.value / sample_size))
                 X = np.concatenate((X, X))
                 y = np.concatenate((y, y_flip))
@@ -196,7 +196,7 @@ class Wasserstein_DRO_satisficing(base_DRO):
                 final_loss = cp.sum(s) / sample_size + self.eps * cp.norm(theta, dual_norm)
                 
         problem = cp.Problem(cp.Minimize(final_loss), cons)
-        problem.solve(solver = cp.MOSEK)
+        problem.solve(solver = self.solver)
         self.theta = theta.value
 
         return problem.value
@@ -223,7 +223,7 @@ class Wasserstein_DRO_satisficing(base_DRO):
                     var_x = cp.Variable(self.input_dim)
                     obj = 1 - y[i] * var_x @ self.theta - norm_theta * cp.sum_squares(var_x - X[i])
                     problem = cp.Problem(cp.Maximize(obj))
-                    problem.solve(solver = cp.MOSEK)
+                    problem.solve(solver = self.solver)
                     
                     if 1 - y[i] * var_x.value @ self.theta < 0:
                         new_X[i] = X[i]
@@ -243,7 +243,7 @@ class Wasserstein_DRO_satisficing(base_DRO):
                 dual_loss = L * eta * norm_theta + cp.sum(cp.multiply(1 - alpha, self.loss(X, y))) / sample_size + cp.sum(cp.multiply(alpha, self.loss(X, y_flip))) / sample_size
                 cons = [alpha <= 1, eta + self.kappa * cp.sum(alpha) / sample_size == self.eps]
                 problem = cp.Problem(cp.Maximize(dual_loss), cons)
-                problem.solve(solver = cp.MOSEK)
+                problem.solve(solver = self.solver)
                 weight = np.concatenate(((1 - alpha.value) / sample_size, alpha.value / sample_size))
                 X = np.concatenate((X, X))
                 y = np.concatenate((y, y_flip))
@@ -287,7 +287,7 @@ class Wasserstein_DRO_aug(base_DRO):
                 cons += [t2 >= self.eps * cp.norm(theta_transform), theta_transform == self.cost_inv_transform @ cp.hstack([theta, -1])]
         final_loss = t1 + t2
         problem = cp.Problem(cp.Minimize(final_loss), cons)
-        problem.solve(solver = cp.MOSEK)
+        problem.solve(solver = self.solver)
         self.theta = theta.value
 
         model_params = {}

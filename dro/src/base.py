@@ -20,6 +20,10 @@ class ParameterError(DROError):
     """Exception raised for invalid parameter configurations."""
     pass
 
+class InstallError(DROError):
+    """Exception raised for packages / solvers not installed."""
+    pass
+
 class DataValidationError(DROError):
     """Exception raised for invalid data format or dimensions."""
     pass
@@ -34,8 +38,9 @@ class BaseLinearDRO:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
         theta (np.ndarray): Model parameters.
+        solver (str): Optimization solver to solve the problem
     """
-    def __init__(self, input_dim: int, model_type: str = 'svm'):
+    def __init__(self, input_dim: int, model_type: str = 'svm', solver: str = 'MOSEK'):
         if input_dim <= 0:
             raise ParameterError("Input dimension must be a positive integer.")
         if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
@@ -43,6 +48,10 @@ class BaseLinearDRO:
         self.input_dim = input_dim
         self.model_type = model_type
         self.theta = np.zeros(self.input_dim)
+        if solver not in cp.installed_solvers():
+            raise InstallError(f"Unsupported solver {solver}. It does not exist in your package. Please change the solver or install {solver}.")
+        self.solver = solver
+        
 
     def update(self, config: dict):
         """Update model parameters based on configuration."""

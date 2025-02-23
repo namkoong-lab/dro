@@ -34,8 +34,6 @@ class Bayesian_KL_DRO(base_DRO):
 
     def fit(self, X, y):
         sample_size, __ = X.shape
-        if self.is_regression == 0:
-            y = 2*y - 1
         if self.model_class == 'Gaussian':
             stacked_data = np.hstack((X, y.reshape(-1, 1)))
             cov = np.cov(stacked_data.T)
@@ -80,7 +78,7 @@ class Bayesian_KL_DRO(base_DRO):
                     cons.append(per_loss[i][j] >= cp.pos(1 - cp.multiply(y[i][j], X[i][j] @ theta)))
         loss = cp.sum(t) / self.posterior_param_num + eta * self.eps
         problem = cp.Problem(cp.Minimize(loss), cons)
-        problem.solve(solver = cp.MOSEK, verbose=True)
+        problem.solve(solver = self.solver, verbose=True)
         self.theta = theta.value
 
         model_params = {}

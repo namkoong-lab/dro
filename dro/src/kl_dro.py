@@ -84,7 +84,7 @@ class KLDRO(BaseLinearDRO):
         problem = cp.Problem(cp.Minimize(loss), constraints)
 
         try:
-            problem.solve(solver=cp.MOSEK)
+            problem.solve(solver=self.solver)
             self.theta = theta.value
             self.dual_variable = eta.value
         except cp.SolverError as e:
