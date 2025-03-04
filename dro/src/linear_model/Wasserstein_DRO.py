@@ -29,7 +29,7 @@ class WassersteinDRO(BaseLinearDRO):
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
         eps (float): Robustness parameter for DRO.
         cost matrix (np.ndarray): the feature importance perturbation matrix with the dimension being (input_dim, input_dim).
-        p (float): Norm parameter for controlling the perturbation moment of X.
+        p (float or 'inf'): Norm parameter for controlling the perturbation moment of X.
         kappa (float): Robustness parameter for the perturbation of Y.
 
     Reference:
@@ -100,8 +100,11 @@ class WassersteinDRO(BaseLinearDRO):
         """
         if self.p == 1:
             dual_norm = 'inf'
-        else:
+        elif self.p != 'inf':
             dual_norm = 1 / (1 - 1 / self.p)
+        else:
+            dual_norm = 1
+
         if self.model_type == 'ols':
             return cp.norm(self.cost_inv_transform @ theta, dual_norm)
         elif self.model_type in ['svm', 'logistic']:
@@ -237,8 +240,10 @@ class WassersteinDRO(BaseLinearDRO):
         self.fit(X, y)
         if self.p == 1:
             dual_norm = 'inf'
-        else:
+        elif self.p != 'inf':
             dual_norm = 1 / (1 - 1 / self.p)
+        else:
+            dual_norm = 1
 
         if compute_type == 2:
             if self.model_type == 'ols':
@@ -392,8 +397,10 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         if self.p == 1:
             dual_norm = 'inf'
-        else:
+        elif self.p != 'inf':
             dual_norm = 1 / (1 - 1 / self.p)
+        else:
+            dual_norm = 1
 
         sample_size, __ = X.shape
         empirical_rmse = self.fit_oracle(X, y)
