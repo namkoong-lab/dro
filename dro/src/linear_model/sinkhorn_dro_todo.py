@@ -37,6 +37,8 @@ def to_tensor(x: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
 class SinkhornLinearDRO(BaseLinearDRO):
     """
     Sinkhorn Distributionally Robust Optimization (DRO) with Linear Models.
+
+    Reference:<https://arxiv.org/abs/2109.11926>
     """
     def __init__(self, 
                  input_dim: int, 

@@ -9,7 +9,9 @@ class MarginalCVaRDROError(Exception):
     pass
 
 class MarginalCVaRDRO(BaseLinearDRO):
-    """Marginal CVaR DRO model following Equation (27) in:
+    """Marginal CVaR DRO model 
+    
+    The specific model follows Equation (27) in:
     https://arxiv.org/pdf/2007.13982.pdf with parameters L and p.
     
     Attributes:
@@ -20,6 +22,8 @@ class MarginalCVaRDRO(BaseLinearDRO):
         p (int): Power parameter for the distance measure.
         L (float): Scaling parameter for the marginal robustness.
         threshold_val (float): Threshold value from the optimization.
+
+    Reference:<https://pubsonline.informs.org/doi/10.1287/opre.2022.2363>
     """
     
     def __init__(self, input_dim: int, model_type: str, alpha: float = 1.0, L: float = 10.0, p: int = 2):

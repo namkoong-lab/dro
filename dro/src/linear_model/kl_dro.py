@@ -8,15 +8,17 @@ class KLDROError(Exception):
     pass
 
 class KLDRO(BaseLinearDRO):
-    """Kullback-Leibler (KL) divergence-based Distributionally Robust Optimization (DRO) model.
+    """Kullback-Leibler divergence-based Distributionally Robust Optimization (KL-DRO) model.
 
     This model minimizes a KL-robust loss function for both regression and classification.
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
+        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
         eps (float): Robustness parameter for KL-DRO.
         dual_variable (Optional[float]): Dual variable value from the optimization problem.
+
+    Reference: <https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf>
     """
 
     def __init__(self, input_dim: int, model_type: str, eps: float = 0.0):
@@ -25,7 +27,7 @@ class KLDRO(BaseLinearDRO):
 
         Args:
             input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols').
+            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
             eps (float): Ambiguity size for the KL constraint (default is 0.0).
         """
         super().__init__(input_dim, model_type)

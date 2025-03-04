@@ -10,17 +10,27 @@ class Chi2DROError(Exception):
     pass
 
 class Chi2DRO(BaseLinearDRO):
-    """Chi-squared Distributionally Robust Optimization (DRO) model.
+    """Chi-squared Distributionally Robust Optimization (chi2-DRO) model.
 
     This model minimizes a chi-squared robust loss function for both regression and classification.
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., svm for SVM, logistic for Logistic Regression, linear for Linear Regression).
+        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
         eps (float): Robustness parameter for DRO.
+
+    Reference: <https://www.jmlr.org/papers/volume20/17-750/17-750.pdf>
     """
 
     def __init__(self, input_dim: int, model_type: str):
+        """
+        Initialize the Chi2-DRO model with specified input dimension and model type.
+
+        Args:
+            input_dim (int): Dimension of the input features.
+            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
+        """
+
         super().__init__(input_dim, model_type)
         self.eps = 0.0
 
@@ -40,7 +50,7 @@ class Chi2DRO(BaseLinearDRO):
             self.eps = float(eps)
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """Fit the model using CVXPY to solve the robust optimization problem.
+        """Fit the model using CVXPY to solve the Chi2 distributionally robust optimization problem.
 
         Args:
             X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
@@ -68,7 +78,7 @@ class Chi2DRO(BaseLinearDRO):
         try:
             problem.solve(solver=self.solver)
         except cp.error.SolverError as e:
-            raise Chi2DROError("Optimization failed to solve using MOSEK.") from e
+            raise Chi2DROError(f"Optimization failed to solve using {self.solver}.") from e
 
         if theta.value is None:
             raise Chi2DROError("Optimization did not converge to a solution.")
@@ -77,7 +87,7 @@ class Chi2DRO(BaseLinearDRO):
         return {"theta": self.theta.reshape(-1).tolist()}
 
     def evaluate(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray, fast: True):
-        """Fast Evaluate the true model performance for the obtained theta efficiently"""
+        """Fast evaluate the true model performance for the obtained theta efficiently from data unbiased"""
         sample_num, __ = X.shape
         errors = (predictions - y) ** 2
         if self.model_type == 'ols':
@@ -92,8 +102,6 @@ class Chi2DRO(BaseLinearDRO):
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Compute the worst-case distribution.
 
-        Reference: Eq (8) in p6 of https://jmlr.org/papers/volume20/17-750/17-750.pdf. And only change |n p - 1|^2 \leq 2 \rho to |np - 1|^2 \leq n * eps^2
-
         Args:
             X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
             y (np.ndarray): Target vector with shape (n_samples,).
@@ -103,6 +111,8 @@ class Chi2DRO(BaseLinearDRO):
 
         Raises:
             Chi2DROError: If the worst-case distribution optimization fails.
+
+        Reference: <https://jmlr.org/papers/volume20/17-750/17-750.pdf> (Equation (8))
         """
         self.fit(X, y)
 

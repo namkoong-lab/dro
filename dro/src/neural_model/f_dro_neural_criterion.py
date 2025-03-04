@@ -313,3 +313,7 @@ def cvar_doro_criterion(outputs, targets, eps, alpha):
     rk = torch.argsort(loss, descending=True)
     loss = loss[rk[n2:n1]].sum() / alpha / (batch_size - n2)
     return loss
+
+
+
+

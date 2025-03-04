@@ -11,13 +11,11 @@ where $U$ is the so-called ambiguity set and typically of the form $U = \{P: d(P
 
 ## Implemented Algorithms
 We support DRO methods including:
-* WDRO: (Basic) Wasserstein DRO, Augmented Wasserstein DRO, Satisificing Wasserstein DRO
-* $f$-DRO: KL-DRO, $\chi^2$-DRO, TV-DRO, CVaR-DRO, Marginal DRO (CVaR)
+* WDRO: (Basic) Wasserstein DRO, Satisificing Wasserstein DRO
+* $f$-DRO: KL-DRO, $\chi^2$-DRO, TV-DRO, CVaR-DRO, Marginal DRO (CVaR), Conditional DRO (CVaR)
 * MMD-DRO
 * Bayesian-based DRO: Bayesian-PDRO, PDRO
-* Sinkhorn-DRO
-* Holistic DRO
-* Unified-DRO ($L_2$ / $L_{\infty}$ cost)
+* Mixed-DRO: Sinkhorn-DRO, Holistic DRO, Unified-DRO ($L_2$ / $L_{\infty}$ cost), Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO)
 
 Then we give some high-level construction of each method and corresponding references as follows. 
 

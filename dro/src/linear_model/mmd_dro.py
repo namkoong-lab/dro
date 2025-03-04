@@ -11,10 +11,12 @@ class MMD_DRO(BaseLinearDRO):
     """
     MMD-DRO (Maximum Mean Discrepancy - Distributionally Robust Optimization)
     Implementation with flexible sampling methods and model types.
+
+    Reference: <https://arxiv.org/abs/2006.06981>
     """
 
     def __init__(self, input_dim: int, model_type: str):
-        super().__init__(input_dim, model_type)
+        BaseLinearDRO.__init__(input_dim, model_type)
         self.eta = 0.1
         self.sampling_method = 'bound'  # Sampling method: 'bound' or 'hull'
         self.n_certify_ratio = 1        # Ratio of additional certification samples

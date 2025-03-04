@@ -22,9 +22,9 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
         eps (float): Robustness parameter for OR-WDRO. 
         eta (float): Fraction of outlier for OR-WDRO.
         dual norm (int): used in the optimization
+
+    Reference:<https://arxiv.org/pdf/2311.05573>
     """
-    #https://arxiv.org/pdf/2311.05573
-    # standard Wasserstein while with TV corruption
 
     def __init__(self, input_dim: int, model_type: str, eps: float = 0.0, eta: float = 0.0, dual_norm: int = 1):
         """

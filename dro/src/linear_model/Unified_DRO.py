@@ -35,12 +35,10 @@ class MOT_Robust_CLF_L2:
 
 
     def fit(self, X, y):
-        newy = 2*y - 1
-
         if self.model_prepared:
             self.param_fit()
         else:
-            self.prepare_model(X, newy)
+            self.prepare_model(X, y)
             self.param_fit()
         
         model_params = {}
@@ -158,12 +156,10 @@ class MOT_Robust_CLF_Linf:
 
 
     def fit(self, X, y):
-        newy = 2*y - 1
-
         if self.model_prepared:
             self.param_fit()
         else:
-            self.prepare_model(X, newy)
+            self.prepare_model(X, y)
             self.param_fit()
         
         model_params = {}

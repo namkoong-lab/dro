@@ -12,9 +12,10 @@ class ConditionalCVaRDROError(Exception):
 class ConditionalCVaRDRO(BaseLinearDRO):
     """
     Conditional CVaR DRO model following Theorem 2 in:
-    https://arxiv.org/pdf/2209.01754.pdf
     with alpha(x) to be beta^T x for simplicity
     alpha corresponds to Gamma in the paper;
+
+    Reference: <https://arxiv.org/pdf/2209.01754.pdf>
     """
     def __init__(self, input_dim: int, is_regression: int):
         BaseLinearDRO.__init__(self, input_dim, is_regression)

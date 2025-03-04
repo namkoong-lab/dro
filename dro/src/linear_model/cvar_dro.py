@@ -14,10 +14,12 @@ class CVaRDRO(BaseLinearDRO):
     under a CVaR constraint.
 
     Attributes:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
-        alpha (float): Risk level for the CVaR constraint.
-        threshold_val (float): Threshold value from the optimization.
+    input_dim (int): Dimensionality of the input features.
+    model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
+    alpha (float): Risk level for the CVaR constraint.
+    threshold_val (float): Threshold value from the optimization.
+
+    Reference: <https://www.risk.net/journal-risk/2161159/optimization-conditional-value-risk>
     """
 
     def __init__(self, input_dim: int, model_type: str, alpha: float = 1.0):
