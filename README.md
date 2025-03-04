@@ -67,7 +67,7 @@ Bayesian-PDRO:
 
 ### Holistic-DRO
 * Reference: Bennouna, Amine, and Bart Van Parys. "Holistic robust data-driven decisions." arXiv preprint arXiv:2207.09560 (2022).
-### Unified-DRO
+### MOT-DRO
 * Reference: Blanchet, Jose, et al. "Unifying Distributionally Robust Optimization via Optimal Transport Theory." arXiv preprint arXiv:2308.05414 (2023).
 
 ## Base Models
