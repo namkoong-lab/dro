@@ -36,11 +36,13 @@ class BaseLinearDRO:
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
+        model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
+        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
         theta (np.ndarray): Model parameters.
-        solver (str): Optimization solver to solve the problem
+
     """
-    def __init__(self, input_dim: int, model_type: str = 'svm', solver: str = 'MOSEK'):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK'):
         if input_dim <= 0:
             raise ParameterError("Input dimension must be a positive integer.")
         if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
@@ -48,6 +50,9 @@ class BaseLinearDRO:
         self.input_dim = input_dim
         self.model_type = model_type
         self.theta = np.zeros(self.input_dim)
+        self.fit_intercept = fit_intercept
+        self.b = 0
+
         if solver not in cp.installed_solvers():
             raise InstallError(f"Unsupported solver {solver}. It does not exist in your package. Please change the solver or install {solver}.")
         self.solver = solver
@@ -80,7 +85,7 @@ class BaseLinearDRO:
         if X.shape[1] != self.input_dim:
             raise DataValidationError(f"Expected input with {self.input_dim} features, got {X.shape[1]}.")
 
-        scores = X @ self.theta
+        scores = X @ self.theta + self.b
         if self.model_type == 'ols':
             return scores
 
@@ -112,28 +117,28 @@ class BaseLinearDRO:
         """Compute the loss for the current model parameters."""
 
         if self.model_type == 'svm':
-            return np.maximum(1 - y * (X @ self.theta), 0)
+            return np.maximum(1 - y * (X @ self.theta + self.b), 0)
         elif self.model_type in 'logistic':
-            return np.log(1 + np.exp(-np.multiply(y, X @ model.theta)))
+            return np.log(1 + np.exp(-np.multiply(y, X @ self.theta + self.b)))
         elif self.model_type == 'ols':
-            return (y - X @ self.theta) ** 2
+            return (y - X @ self.theta - self.b) ** 2
         elif self.model_type == 'lad':
-            return np.abs(y - X @ self.theta)
+            return np.abs(y - X @ self.theta - self.b)
         else:
             raise NotImplementedError("Loss function not implemented for the specified model_type value.")
 
-    def _cvx_loss(self, X: cp.Expression, y: cp.Expression, theta: cp.Expression) -> cp.Expression:
+    def _cvx_loss(self, X: cp.Expression, y: cp.Expression, theta: cp.Expression, b: cp.Expression) -> cp.Expression:
         """Define the CVXPY loss expression for the model."""
         assert X.shape[-1] == self.input_dim, "Mismatch between feature and input dimension."
 
         if self.model_type == 'svm':
-            return cp.pos(1 - cp.multiply(y, X @ theta))
+            return cp.pos(1 - cp.multiply(y, X @ theta + b))
         elif self.model_type == 'logistic':
-            return cp.logistic(-cp.multiply(y, X @ theta))
+            return cp.logistic(-cp.multiply(y, X @ theta + b))
         elif self.model_type == 'ols':
-            return cp.power(y - X @ theta, 2)
+            return cp.power(y - X @ theta - b, 2)
         elif self.model_type == 'lad':
-            return cp.abs(y - X @ theta)
+            return cp.abs(y - X @ theta - b)
         else:
             raise NotImplementedError("CVXPY loss not implemented for the specified model_type value.")
 

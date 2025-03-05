@@ -126,7 +126,7 @@ class MOTDRO(BaseLinearDRO):
                     epig_[i] - t, self.theta2 * self.lambda_, eta[i]
                 )
             )
-          
+        # TODO: double check
         cons.append(self.lambda_ * self.theta1 >= cp.norm(self.theta, q))
         cons.append(N_train * self.lambda_ * self.theta2 >= cp.sum(eta))
         obj = self.eps * self.lambda_ + t

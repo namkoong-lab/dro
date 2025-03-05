@@ -1,7 +1,7 @@
 import numpy as np 
-from src.data.draw_utils import draw_classification
+from dro.src.data.draw_utils import draw_classification
 
-def classification_basic(d=2, k=2, num_samples=500, radius=5.0, seed=42, visualize=False, save_dir="./visualization.png"):
+def classification_basic(d=2, k=2, num_samples=500, radius=5.0, seed=42, visualize=False, save_dir= None):
     """
     Basic classification setting.
 
@@ -12,7 +12,7 @@ def classification_basic(d=2, k=2, num_samples=500, radius=5.0, seed=42, visuali
     - radius (float): The radius of the ball to sample the class center
     - seed (int): Random seed.
     - visualize (bool): Whether to visualize the data
-    - save_dir (str): The save path of the visualization figure
+    - save_dir (str): The save path of the visualization figure, if set None, we just visualize instead of storing it.
 
     Returns:
     - X (numpy.ndarray): A numpy array containing the generated covariate data
@@ -29,7 +29,7 @@ def classification_basic(d=2, k=2, num_samples=500, radius=5.0, seed=42, visuali
     for i, center in enumerate(centers):
         class_points = np.random.randn(samples_per_class, d) + center 
         X.append(class_points)
-        y.append(np.full(samples_per_class, i)) 
+        y.append(np.full(samples_per_class, 2 * i - 1)) 
     
     X = np.vstack(X)
     y = np.hstack(y)

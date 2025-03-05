@@ -21,7 +21,7 @@ class KLDRO(BaseLinearDRO):
     Reference: <https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf>
     """
 
-    def __init__(self, input_dim: int, model_type: str, eps: float = 0.0):
+    def __init__(self, input_dim: int, model_type: str = 'svm', eps: float = 0.0):
         """
         Initialize the KL-DRO model with specified input dimension and model type.
 
@@ -70,6 +70,10 @@ class KLDRO(BaseLinearDRO):
 
         # Define variables for optimization
         theta = cp.Variable(self.input_dim)
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
         eta = cp.Variable(nonneg=True)
         t = cp.Variable()
         per_loss = cp.Variable(sample_size)
@@ -79,7 +83,7 @@ class KLDRO(BaseLinearDRO):
         constraints = [cp.sum(epi_g) <= sample_size * eta]
         for i in range(sample_size):
             constraints.append(cp.constraints.exponential.ExpCone(per_loss[i] - t, eta, epi_g[i]))
-        constraints.append(per_loss >= self._cvx_loss(X, y, theta))
+        constraints.append(per_loss >= self._cvx_loss(X, y, theta, b))
 
         # Define loss objective for minimization
         loss = t + eta * self.eps
@@ -95,7 +99,10 @@ class KLDRO(BaseLinearDRO):
         if self.theta is None or self.dual_variable is None:
             raise KLDROError("Optimization did not converge to a solution.")
 
-        return {"theta": self.theta.tolist(), "dual": self.dual_variable}
+        if self.fit_intercept == True:
+            self.b = b.value
+
+        return {"theta": self.theta.tolist(), "dual": self.dual_variable, "b": self.b}
 
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Compute the worst-case distribution based on KL divergence.

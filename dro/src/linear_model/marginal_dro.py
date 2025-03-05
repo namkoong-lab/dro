@@ -26,7 +26,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
     Reference:<https://pubsonline.informs.org/doi/10.1287/opre.2022.2363>
     """
     
-    def __init__(self, input_dim: int, model_type: str, alpha: float = 1.0, L: float = 10.0, p: int = 2):
+    def __init__(self, input_dim: int, model_type: str = 'svm', alpha: float = 1.0, L: float = 10.0, p: int = 2):
         super().__init__(input_dim, model_type)
         self.alpha = alpha
         self.control_name = None
@@ -76,7 +76,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
             y (np.ndarray): Target vector with shape (n_samples,).
 
         Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta', 'b', and 'threshold' keys.
+            Dict[str, Any]: Model parameters dictionary with 'theta', 'b_val', and 'threshold' keys.
 
         Raises:
             MarginalCVaRDROError: If the optimization fails to solve or dimensions mismatch.
@@ -93,21 +93,26 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
         # Define CVXPY variables
         theta = cp.Variable(self.input_dim)
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
+
         eta = cp.Variable()
-        b_var = cp.Variable((sample_size, sample_size), nonneg=True)
+        B_var = cp.Variable((sample_size, sample_size), nonneg=True)
         s = cp.Variable(sample_size, nonneg=True)
 
         # Define constraints for optimization problem
         cons = [
-            s >= self._cvx_loss(X, y, theta) - (cp.sum(b_var, axis=1) - cp.sum(b_var, axis=0)) / sample_size - eta,
+            s >= self._cvx_loss(X, y, theta, b) - (cp.sum(B_var, axis=1) - cp.sum(B_var, axis=0)) / sample_size - eta,
             s >= 0,
-            b_var >= 0
+            B_var >= 0
         ]
 
         # Define the cost function
         cost = (
             cp.sum(s) / (self.alpha * sample_size) +
-            self.L ** (self.p - 1) * cp.sum(cp.multiply(dist, b_var)) / (sample_size ** 2)
+            self.L ** (self.p - 1) * cp.sum(cp.multiply(dist, B_var)) / (sample_size ** 2)
         )
 
         # Set up and solve the optimization problem
@@ -125,7 +130,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
             # Extract optimization results
             self.theta = theta.value
-            self.b_val = b_var.value
+            self.B_val = B_var.value
             self.threshold_val = eta.value
         except cp.error.SolverError as e:
             raise MarginalCVaRDROError("Optimization failed to solve using MOSEK.") from e
@@ -133,9 +138,13 @@ class MarginalCVaRDRO(BaseLinearDRO):
         if self.theta is None or self.threshold_val is None or self.b_val is None:
             raise MarginalCVaRDROError("Optimization did not converge to a solution.")
 
+        if self.fit_intercept == True:
+            self.b = b.value
+
         return {
             "theta": self.theta.tolist(),
-            "b": self.b_val.tolist(),
+            "B": self.B_val.tolist(),
+            "b": self.b,
             "threshold": self.threshold_val
         }
 

@@ -26,31 +26,33 @@ class WassersteinDRO(BaseLinearDRO):
 
     Attribute:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
+        model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
+        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
         eps (float): Robustness parameter for DRO.
         cost matrix (np.ndarray): the feature importance perturbation matrix with the dimension being (input_dim, input_dim).
         p (float or 'inf'): Norm parameter for controlling the perturbation moment of X.
-        kappa (float): Robustness parameter for the perturbation of Y.
+        kappa (float or 'inf'): Robustness parameter for the perturbation of Y. Note that if we set kappa to be large enough to approximately infinite, this is equivalent to saying that we do not allow changes in Y.
 
     Reference:
     [1] OLS: <https://www.cambridge.org/core/journals/journal-of-applied-probability/article/robust-wasserstein-profile-inference-and-applications-to-machine-learning/4024D05DE4681E67334E45D039295527>
     [2] LAD / SVM / Logistic: <https://jmlr.org/papers/volume20/17-633/17-633.pdf>
     """
 
-    # If we set kappa to be large enough to infinite, this is equivalent to saying that we do not allow changes in Y.
-    def __init__(self, input_dim: int, model_type: str):
+
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK'):
         """
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
         """
-        BaseLinearDRO.__init__(self, input_dim, model_type)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
 
         self.cost_matrix = np.eye(input_dim)
         self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
         self.eps = 0
         self.p = 1
-        self.kappa = 1
+        self.kappa = 'inf'
         
 
     def update(self, config: Dict[str, Any]) -> None:
@@ -74,25 +76,25 @@ class WassersteinDRO(BaseLinearDRO):
             self.eps = float(eps)
         if 'p' in config.keys():
             p = config['p']
-            if not isinstance(p, (float, int)) or p < 1:
+            if p != 'inf' and ((not isinstance(p, (float, int)) or p < 1)):
                 raise WassersteinDROError("Norm parameter 'p' must be float and larger than 1.")
             self.p = float(p)
 
         if 'kappa' in config.keys():
             kappa = config['kappa']
-            if not isinstance(kappa, (float, int)) or kappa < 0:
+            if kappa != 'inf' and ((not isinstance(kappa, (float, int))) or kappa < 0):
                 raise WassersteinDROError("Y-Robustness parameter 'kappa' must be a non-negative float.")
-            elif kappa != 'inf' and self.model_type == 'ols':
+            if kappa != 'inf' and self.model_type == 'ols':
                 warnings.warn("Wasserstein Distributionally Robust OLS does not support changes of Y in the ambiguity set")
             self.kappa = float(kappa)
 
         
-    def penalization(self, theta: np.ndarray) -> float:
+    def penalization(self, theta: cp.Expression) -> float:
         """
         Module for computing the regularization part in the standard Wasserstein DRO problem.
 
         Args:
-            theta (np.ndarray): Feature vector with shape (n_feature,).
+            theta (cp.Expression): Feature vector with shape (n_feature,).
         
         Returns:
             Float: Regularization term part.
@@ -140,26 +142,44 @@ class WassersteinDRO(BaseLinearDRO):
 
 
         theta = cp.Variable(self.input_dim)
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
+
+
+        lamb_da = cp.Variable()
+        cons = [lamb_da >= self.penalization(theta)]
         if self.model_type == 'ols':
-            final_loss = cp.norm(X @ theta - y) / math.sqrt(sample_size) + math.sqrt(self.eps) * self.penalization(theta)
+            final_loss = cp.norm(X @ theta + b - y) / math.sqrt(sample_size) + math.sqrt(self.eps) * lamb_da
 
         else:
             if self.model_type in ['svm', 'logistic']:
                 s = cp.Variable(sample_size)
-                cons = [s >= self._cvx_loss(X, y)]
+                cons += [s >= self._cvx_loss(X, y, theta, b)]
                 if self.kappa != 'inf':
-                    cons += [s >= self._cvx_loss(X, -y) - self.penalization(theta) * self.kappa]
-                final_loss = cp.sum(s) / sample_size + self.eps * self.penalization(theta)
+                    cons += [s >= self._cvx_loss(X, -y, theta, b) - lamb_da * self.kappa]
+                final_loss = cp.sum(s) / sample_size + self.eps * lamb_da
             else:
                 # model type == 'lad' for general p.
-                final_loss = cp.sum(self._cvx_loss(X, y)) / sample_size + self.eps * self.penalization(theta)
+                final_loss = cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size + self.eps * lamb_da
 
-        problem = cp.Problem(cp.Minimize(final_loss), [])
-        problem.solve(solver = self.solver)
+        problem = cp.Problem(cp.Minimize(final_loss), cons)
+        try:
+            problem.solve(solver = self.solver)
+        except cp.error.SolverError as e:
+            raise WassersteinDROError(f"Optimization failed to solve using {self.solver}.") from e
+        
+        if theta.value is None:
+            raise WassersteinDROError("Optimization did not converge to a solution.")
+
         self.theta = theta.value
+        if self.fit_intercept == True:
+            self.b = b.value
 
         model_params = {}
         model_params["theta"] = self.theta.reshape(-1).tolist()
+        model_params["b"] = self.b
         return model_params
     
     def distance_compute(self, X_1: cp.Expression, X_2: np.ndarray, Y_1: cp.Expression, Y_2: float) -> cp.Expression:
@@ -178,7 +198,7 @@ class WassersteinDRO(BaseLinearDRO):
         Raises:
             WassersteinDROError: If the dimensions of two input feature are different.
         """
-        if X_1.shape[-1] != X_2.shape:
+        if X_1.shape[-1] != X_2.shape[-1]:
             raise WassersteinDROError(f"two input feature dimensions are different.")
         # if Y_1 != Y_2 and self.kappa != 'inf':
         #     warnings.warn("Despite labels are different, we do not count their difference since we do not allow change in Y.")
@@ -236,6 +256,8 @@ class WassersteinDRO(BaseLinearDRO):
         elif self.kappa == 'inf' and compute_type == 1:
             raise WassersteinDROError("The corresponding computation method do not support kappa = infty!")
         
+        sample_size, __ = X.shape
+
 
         self.fit(X, y)
         if self.p == 1:
@@ -244,35 +266,33 @@ class WassersteinDRO(BaseLinearDRO):
             dual_norm = 1 / (1 - 1 / self.p)
         else:
             dual_norm = 1
+        norm_theta = np.linalg.norm(self.cost_inv_transform @ self.theta, ord = dual_norm)
 
         if compute_type == 2:
             if self.model_type == 'ols':
-                sample_size, __ = X.shape
                 dual_norm_parameter = np.linalg.norm(self.cost_inv_transform @ self.theta, dual_norm) ** 2
                 new_X = np.zeros((sample_size, self.input_dim))
                 for i in range(sample_size):
                     var_x = cp.Variable(self.input_dim)
                     var_y = cp.Variable()
-                    obj = (y[i] - self.theta @ var_x) ** 2 - dual_norm_parameter * self.distance_compute(var_x, X[i], var_y, y[i])
+                    obj = (y[i] - self.theta @ var_x - self.b) ** 2 - dual_norm_parameter * self.distance_compute(var_x, X[i], var_y, y[i])
                     problem = cp.Problem(cp.Maximize(obj))
                     problem.solve(solver = self.solver)
                     new_X[i] = var_x.value
                 return {'sample_pts': [new_X, y], 'weight': np.ones(sample_size) / sample_size}
 
             else: # linear classification or regression with Lipschitz norm
-                sample_size, __ = X.shape
-                norm_theta = np.linalg.norm(self.cost_inv_transform @ self.theta, ord = dual_norm)
                 # we denote the following case when we do not change Y.
                 new_X = np.zeros((sample_size, self.input_dim))
                 if self.model_type == 'svm':
                     for i in range(sample_size):
                         var_x = cp.Variable(self.input_dim)
                         var_y = cp.Variable()
-                        obj = 1 - y[i] * var_x @ self.theta - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
+                        obj = 1 - y[i] * var_x @ self.theta - self.b - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
                         problem = cp.Problem(cp.Maximize(obj))
                         problem.solve(solver = self.solver)
                         
-                        if 1 - y[i] * var_x.value @ self.theta < 0:
+                        if 1 - y[i] * var_x.value @ self.theta - self.b < 0:
                             new_X[i] = X[i]
                         else:
                             new_X[i] = var_x.value
@@ -282,7 +302,7 @@ class WassersteinDRO(BaseLinearDRO):
                     for i in range(sample_size):
                         var_x = cp.Variable(self.input_dim)
                         var_y = cp.Variable()
-                        obj = self._cvx_loss(var_x, y[i], self.theta) - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
+                        obj = self._cvx_loss(var_x, y[i], self.theta, self.b) - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
                         problem = cp.Problem(cp.Maximize(obj))
                         problem.solve(solver = self.solver)
                         new_X[i] = var_x.value
@@ -306,8 +326,8 @@ class WassersteinDRO(BaseLinearDRO):
                 eta_gamma = gamma / (eta.value + self.kappa - self.eps + gamma + 1)
                 weight = np.concatenate(((1 - alpha.value) / sample_size, alpha.value / sample_size))
                 weight = np.hstack((weight, eta_gamma / sample_size))
-                weight[0] = weight[0] * (1 - eta_gamma.value)
-                weight[sample_size] = weight[sample_size] * (1 - eta_gamma.value)
+                weight[0] = weight[0] * (1 - eta_gamma)
+                weight[sample_size] = weight[sample_size] * (1 - eta_gamma)
                 # solve the following perturbation problem
                 X_star = cp.Variable(self.input_dim)
                 cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) <= 1]
@@ -320,7 +340,7 @@ class WassersteinDRO(BaseLinearDRO):
                 X = np.concatenate((X, X))
                 X = np.vstack((X, new_X))
                 y = np.concatenate((y, -y))
-                y = np.hstack(y, new_y)
+                y = np.hstack((y, new_y))
                 return {'sample_pts': [X, y], 'weight': weight}
 
             elif self.model_type == 'lad':
@@ -365,14 +385,17 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
     Attributes:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
+        model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
+        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
         target ratio (float): target ratio (required to be >=1, against the empirical objective).
  
     Reference: <https://pubsonline.informs.org/doi/10.1287/opre.2021.2238>
 
     """
 
-    def __init__(self, input_dim: int, model_type: str):
-        BaseLinearDRO.__init__(self, input_dim, model_type)
+    def __init__(self, input_dim: int, model_type: str, fit_intercept: bool = True, solver: str = 'MOSEK'):
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.cost_matrix = np.eye(input_dim)
         self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
         # target that the robust error need to achieve
@@ -406,7 +429,11 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
         empirical_rmse = self.fit_oracle(X, y)
         TGT = self.target_ratio * empirical_rmse
         theta = cp.Variable(self.input_dim)
-        cons = [TGT >= cp.sum(self._cvx_loss(X, y)) * sample_size]
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
+        cons = [TGT >= cp.sum(self._cvx_loss(X, y, theta, b)) * sample_size]
         if self.model_type == 'lad':
             obj = cp.norm(cp.hstack([theta, -1]), dual_norm)
         elif self.model_type in ['ols', 'svm', 'logistic']:
@@ -501,23 +528,35 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
             raise WassersteinDROError("Input X and target y must have the same number of samples.")
 
 
-
         theta = cp.Variable(self.input_dim)
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
+
+
+        lamb_da = cp.Variable()
+        cons = [lamb_da >= self.penalization(theta)]
         if self.model_type == 'ols':
-            final_loss = cp.norm(X @ theta - y) / math.sqrt(sample_size) + math.sqrt(self.eps) * self.penalization(theta)
+            final_loss = cp.norm(X @ theta + b - y) / math.sqrt(sample_size) + math.sqrt(self.eps) * lamb_da
 
         else:
             if self.model_type in ['svm', 'logistic']:
                 s = cp.Variable(sample_size)
-                cons = [s >= self._cvx_loss(X, y), s >= self._cvx_loss(X, -y) - self.penalization(theta) * self.kappa]
-                final_loss = cp.sum(s) / sample_size + self.eps * self.penalization(theta)
+                cons += [s >= self._cvx_loss(X, y, theta, b)]
+                if self.kappa != 'inf':
+                    cons += [s >= self._cvx_loss(X, -y, theta, b) - lamb_da * self.kappa]
+                final_loss = cp.sum(s) / sample_size + self.eps * lamb_da
             else:
                 # model type == 'lad' for general p.
-                final_loss = cp.sum(self._cvx_loss(X, y)) / sample_size + self.eps * self.penalization(theta)
+                final_loss = cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size + self.eps * lamb_da
 
-        problem = cp.Problem(cp.Minimize(final_loss), [])
+        problem = cp.Problem(cp.Minimize(final_loss), cons)
+
         problem.solve(solver = self.solver)
         self.theta = theta.value
+        if self.fit_intercept == True:
+            self.b = b
 
         return problem.value
         

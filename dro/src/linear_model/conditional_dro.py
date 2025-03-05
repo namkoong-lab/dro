@@ -39,8 +39,13 @@ class ConditionalCVaRDRO(BaseLinearDRO):
         
         theta = cp.Variable(self.input_dim)
 
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
+
         beta = cp.Variable(len(control_X[0]))
-        cost = cp.sum(self.cvx_loss(X, y, theta)) / (self.alpha) + (self.alpha - 1/self.alpha) * cp.sum(cp.pos(self.cvx_loss(X, y, theta) - control_X @ beta)) + (1 - 1 / self.alpha) * cp.sum(control_X @ beta) 
+        cost = cp.sum(self._cvx_loss(X, y, theta, b)) / (self.alpha) + (self.alpha - 1/self.alpha) * cp.sum(cp.pos(self._cvx_loss(X, y, theta, b) - control_X @ beta)) + (1 - 1 / self.alpha) * cp.sum(control_X @ beta) 
 
         prob = cp.Problem(cp.Minimize(cost / sample_size))
         
@@ -49,6 +54,7 @@ class ConditionalCVaRDRO(BaseLinearDRO):
 
         model_params = {}
         model_params['theta'] = self.theta.reshape(-1).tolist()
+        model_params["b"]: self.b
 
 
         return model_params

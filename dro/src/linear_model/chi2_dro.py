@@ -22,7 +22,7 @@ class Chi2DRO(BaseLinearDRO):
     Reference: <https://www.jmlr.org/papers/volume20/17-750/17-750.pdf>
     """
 
-    def __init__(self, input_dim: int, model_type: str):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True):
         """
         Initialize the Chi2-DRO model with specified input dimension and model type.
 
@@ -69,10 +69,14 @@ class Chi2DRO(BaseLinearDRO):
             raise Chi2DROError("Input X and target y must have the same number of samples.")
 
         theta = cp.Variable(self.input_dim)
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
         eta = cp.Variable()
 
         loss = (np.sqrt(1 + self.eps) / np.sqrt(sample_size) * 
-                cp.norm(cp.pos(self._cvx_loss(X, y, theta) - eta), 2) + eta)
+                cp.norm(cp.pos(self._cvx_loss(X, y, theta, b) - eta), 2) + eta)
         
         problem = cp.Problem(cp.Minimize(loss))
         try:
@@ -84,7 +88,10 @@ class Chi2DRO(BaseLinearDRO):
             raise Chi2DROError("Optimization did not converge to a solution.")
 
         self.theta = theta.value
-        return {"theta": self.theta.reshape(-1).tolist()}
+        if self.fit_intercept == True:
+            self.b = b.value
+
+        return {"theta": self.theta.reshape(-1).tolist(), "b": self.b}
 
     def evaluate(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray, fast: True):
         """Fast evaluate the true model performance for the obtained theta efficiently from data unbiased"""

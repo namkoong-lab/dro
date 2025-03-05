@@ -26,7 +26,7 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
     Reference:<https://arxiv.org/pdf/2311.05573>
     """
 
-    def __init__(self, input_dim: int, model_type: str, eps: float = 0.0, eta: float = 0.0, dual_norm: int = 1):
+    def __init__(self, input_dim: int, model_type: str = 'svm', eps: float = 0.0, eta: float = 0.0, dual_norm: int = 1):
         """
         Initialize the ORWDRO model with specified input dimension and model type.
         """

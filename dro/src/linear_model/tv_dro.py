@@ -19,7 +19,7 @@ class TVDRO(BaseLinearDRO):
         threshold_val (float): Threshold value from the optimization.
     """
 
-    def __init__(self, input_dim: int, model_type: str, eps: float = 0.0):
+    def __init__(self, input_dim: int, model_type: str = 'svm', eps: float = 0.0):
         """
         Initialize the TV-DRO model with specified input dimension and model type.
 
@@ -68,18 +68,22 @@ class TVDRO(BaseLinearDRO):
 
         # Define optimization variables
         theta = cp.Variable(self.input_dim)
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
         eta = cp.Variable()
         u = cp.Variable()
 
         # Set up loss function and constraints based on model type
         if self.model_type in {'ols', 'logistic'}:
             # Loss for regression models
-            loss = (cp.sum(cp.pos(self._cvx_loss(X,y) - eta)) / 
+            loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) / 
                     (sample_size * (1 - self.eps)) + eta)
             constraints = [u >= cp.sum_squares(X[i] @ theta - y[i]) for i in range(sample_size)]
         else:
             # Loss for SVM
-            loss = (cp.sum(cp.pos(self._cvx_loss(X,y) - eta)) /
+            loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) /
                     (sample_size * (1 - self.eps)) + eta)
             constraints = [u >= 1 - cp.multiply(y[i], X[i] @ theta) for i in range(sample_size)]
             constraints += [u >= 0]
@@ -97,8 +101,10 @@ class TVDRO(BaseLinearDRO):
 
         if self.theta is None or self.threshold_val is None:
             raise TVDROError("Optimization did not converge to a solution.")
+        if self.fit_intercept == True:
+            self.b = b.value
 
-        return {"theta": self.theta.tolist(), "threshold": self.threshold_val}
+        return {"theta": self.theta.tolist(), "threshold": self.threshold_val, "b": self.b}
 
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Compute the worst-case distribution based on TV constraint.

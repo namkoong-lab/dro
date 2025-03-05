@@ -22,7 +22,7 @@ class CVaRDRO(BaseLinearDRO):
     Reference: <https://www.risk.net/journal-risk/2161159/optimization-conditional-value-risk>
     """
 
-    def __init__(self, input_dim: int, model_type: str, alpha: float = 1.0):
+    def __init__(self, input_dim: int, model_type: str = 'svm', alpha: float = 1.0):
         """
         Initialize the CVaR DRO model with specified input dimension, model type, and alpha parameter.
 
@@ -73,21 +73,31 @@ class CVaRDRO(BaseLinearDRO):
         theta = cp.Variable(self.input_dim)
         eta = cp.Variable()
 
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
+
         # Define the CVaR loss function
-        loss = cp.sum(cp.pos(self._cvx_loss(X, y, theta) - eta)) / (sample_size * self.alpha) + eta
+        loss = cp.sum(cp.pos(self._cvx_loss(X, y, theta, b) - eta)) / (sample_size * self.alpha) + eta
         problem = cp.Problem(cp.Minimize(loss))
 
         try:
             problem.solve(solver=self.solver)
-            self.theta = theta.value
-            self.threshold_val = eta.value
+
         except cp.SolverError as e:
             raise CVaRDROError("Optimization failed to solve using MOSEK.") from e
 
         if self.theta is None or self.threshold_val is None:
             raise CVaRDROError("Optimization did not converge to a solution.")
+        
+        
+        self.theta = theta.value
+        self.threshold_val = eta.value
+        if self.fit_intercept == True:
+            self.b = b.value
 
-        return {"theta": self.theta.tolist(), "threshold": self.threshold_val}
+        return {"theta": self.theta.tolist(), "threshold": self.threshold_val, "b":self.b}
 
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Compute the worst-case distribution based on CVaR constraint.
