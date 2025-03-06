@@ -67,7 +67,7 @@ class WassersteinDRO(BaseLinearDRO):
         """
         if 'cost_matrix' in config.keys():
             cost_matrix = config['cost_matrix']
-            if not isinstance(cost_matrix, np.ndarray) or cost_matrix != (self.input_dim, self.input_dim) or np.all(np.linalg.eigvals(cost_matrix) > 0):
+            if not isinstance(cost_matrix, np.ndarray) or cost_matrix.shape != (self.input_dim, self.input_dim) or not np.all(np.linalg.eigvals(cost_matrix) > 0):
                 raise WassersteinDROError("Cost Adjust Matrix 'cost matrix' must be a PD matrix")
             self.cost_matrix = cost_matrix
             self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
@@ -103,7 +103,7 @@ class WassersteinDRO(BaseLinearDRO):
 
         """
         if self.p == 1:
-            dual_norm = 'inf'
+            dual_norm = np.inf
         elif self.p != 'inf':
             dual_norm = 1 / (1 - 1 / self.p)
         else:
@@ -115,7 +115,10 @@ class WassersteinDRO(BaseLinearDRO):
             return cp.norm(self.cost_inv_transform @ theta, dual_norm)
         elif self.model_type == 'lad':
             # the dual of the \|\theta, -1\|_dual_norm penalization
-            return cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
+            if self.kappa == 'inf':
+                return cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm))
+            else:
+                return cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
 
 
 
@@ -263,7 +266,7 @@ class WassersteinDRO(BaseLinearDRO):
 
         self.fit(X, y)
         if self.p == 1:
-            dual_norm = 'inf'
+            dual_norm = np.inf
         elif self.p != 'inf':
             dual_norm = 1 / (1 - 1 / self.p)
         else:
@@ -421,7 +424,7 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
     
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         if self.p == 1:
-            dual_norm = 'inf'
+            dual_norm = np.inf
         elif self.p != 'inf':
             dual_norm = 1 / (1 - 1 / self.p)
         else:
@@ -502,7 +505,7 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
 
         """
         if self.p == 1:
-            dual_norm = 'inf'
+            dual_norm = np.inf
         else:
             dual_norm = 1 / (1 - 1 / self.p)
         if self.model_type == 'ols':
