@@ -16,22 +16,26 @@ class CVaRDRO(BaseLinearDRO):
     Attributes:
     input_dim (int): Dimensionality of the input features.
     model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
+    fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+    solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
     alpha (float): Risk level for the CVaR constraint.
     threshold_val (float): Threshold value from the optimization.
 
     Reference: <https://www.risk.net/journal-risk/2161159/optimization-conditional-value-risk>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', alpha: float = 1.0):
+    def __init__(self, input_dim: int, model_type: str = 'svm',fit_intercept: bool = True, solver: str = 'MOSEK', alpha: float = 1.0):
         """
         Initialize the CVaR DRO model with specified input dimension, model type, and alpha parameter.
 
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols').
+            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
             alpha (float): Risk level for CVaR (default is 1.0).
         """
-        super().__init__(input_dim, model_type)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.alpha = alpha
         self.threshold_val = None  # Stores threshold value after fit
 
@@ -84,6 +88,8 @@ class CVaRDRO(BaseLinearDRO):
 
         try:
             problem.solve(solver=self.solver)
+            self.theta = theta.value
+            self.threshold_val = eta.value
 
         except cp.SolverError as e:
             raise CVaRDROError("Optimization failed to solve using MOSEK.") from e
@@ -92,19 +98,19 @@ class CVaRDRO(BaseLinearDRO):
             raise CVaRDROError("Optimization did not converge to a solution.")
         
         
-        self.theta = theta.value
-        self.threshold_val = eta.value
+
         if self.fit_intercept == True:
             self.b = b.value
 
         return {"theta": self.theta.tolist(), "threshold": self.threshold_val, "b":self.b}
 
-    def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+    def worst_distribution(self, X: np.ndarray, y: np.ndarray, precision: float = 1e-5) -> Dict[str, Any]:
         """Compute the worst-case distribution based on CVaR constraint.
 
         Args:
             X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
             y (np.ndarray): Target vector with shape (n_samples,).
+            precision (float): The perturbation amount in case when the loss is too insignificant to count.
 
         Returns:
             Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
@@ -121,8 +127,7 @@ class CVaRDRO(BaseLinearDRO):
             raise CVaRDROError("Threshold value is not set. Ensure 'fit' method has been called.")
 
         # Identify samples with loss above the threshold
-        indices = np.where(per_loss > self.threshold_val)[0]
-
+        indices = np.where(per_loss + precision > self.threshold_val)[0]
         # Compute weights for the worst-case distribution
         weight = np.ones(len(indices)) / len(indices) if len(indices) > 0 else np.array([])
 

@@ -15,11 +15,13 @@ class TVDRO(BaseLinearDRO):
     Attributes:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
+        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
         eps (float): Robustness parameter for TV-DRO.
         threshold_val (float): Threshold value from the optimization.
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', eps: float = 0.0):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', eps: float = 0.0):
         """
         Initialize the TV-DRO model with specified input dimension and model type.
 
@@ -28,7 +30,7 @@ class TVDRO(BaseLinearDRO):
             model_type (str): Type of model ('svm', 'logistic', 'ols').
             eps (float): Ambiguity size for the TV constraint (default is 0.0).
         """
-        super().__init__(input_dim, model_type)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.eps = eps
         self.threshold_val = None  # Stores threshold value after fit
 
@@ -106,12 +108,13 @@ class TVDRO(BaseLinearDRO):
 
         return {"theta": self.theta.tolist(), "threshold": self.threshold_val, "b": self.b}
 
-    def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+    def worst_distribution(self, X: np.ndarray, y: np.ndarray, precision: float = 1e-5) -> Dict[str, Any]:
         """Compute the worst-case distribution based on TV constraint.
 
         Args:
             X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
             y (np.ndarray): Target vector with shape (n_samples,).
+            precision (float): The perturbation amount in case when the loss is too insignificant to count.
 
         Returns:
             Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
@@ -128,7 +131,7 @@ class TVDRO(BaseLinearDRO):
 
         # Identify samples with loss greater than the threshold and compute weights
         max_index = np.argmax(per_loss)
-        indices = np.where(per_loss > self.threshold_val)[0]
+        indices = np.where(per_loss + precision > self.threshold_val)[0]
         total_indices = np.concatenate(([max_index], indices))
 
         # Calculate the weight for worst-case distribution

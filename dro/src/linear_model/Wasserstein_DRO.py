@@ -28,7 +28,7 @@ class WassersteinDRO(BaseLinearDRO):
         input_dim (int): Dimensionality of the input features.
         model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
         fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
+        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
         eps (float): Robustness parameter for DRO.
         cost matrix (np.ndarray): the feature importance perturbation matrix with the dimension being (input_dim, input_dim).
         p (float or 'inf'): Norm parameter for controlling the perturbation moment of X.
@@ -45,6 +45,8 @@ class WassersteinDRO(BaseLinearDRO):
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
+            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
         """
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
 
@@ -442,9 +444,13 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
         problem = cp.Problem(cp.Minimize(obj), cons)
         problem.solve(solver = self.solver)
         self.theta = theta.value
+        if self.fit_intercept == True:
+            self.b = b.value
 
         model_params = {}
         model_params["theta"] = self.theta.reshape(-1).tolist()
+        model_params["b"] = self.b
+    
         return model_params
 
 

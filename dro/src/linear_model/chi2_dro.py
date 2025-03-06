@@ -17,21 +17,24 @@ class Chi2DRO(BaseLinearDRO):
     Attributes:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
+        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
         eps (float): Robustness parameter for DRO.
 
     Reference: <https://www.jmlr.org/papers/volume20/17-750/17-750.pdf>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK'):
         """
         Initialize the Chi2-DRO model with specified input dimension and model type.
 
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
+            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
         """
-
-        super().__init__(input_dim, model_type)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.eps = 0.0
 
     def update(self, config: Dict[str, Any] = {}):
