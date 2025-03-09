@@ -4,8 +4,6 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import warnings
-#from sklearn.metrics import f1_score
-
 from torch.autograd import grad
 from torch.utils.data import Dataset, DataLoader, TensorDataset, random_split
 from sklearn.metrics import f1_score
