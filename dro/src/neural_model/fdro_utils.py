@@ -4,8 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from scipy import optimize as sopt
-from typing import Optional, Callable, Union
-from torch.nn import CrossEntropyLoss
+from typing import Callable
 import warnings
 
 # Constants

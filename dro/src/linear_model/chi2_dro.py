@@ -1,9 +1,7 @@
-from .base import BaseLinearDRO
+from dro.src.linear_model.base import BaseLinearDRO
 import numpy as np
 import cvxpy as cp
 from typing import Dict, Any
-from scipy.spatial.distance import pdist, squareform
-from sklearn.metrics import f1_score
 
 class Chi2DROError(Exception):
     """Base exception class for errors in Chi-squared DRO model."""

@@ -1,8 +1,7 @@
-from .base import BaseLinearDRO
+from dro.src.linear_model.base import BaseLinearDRO
 import numpy as np
 import cvxpy as cp
-from typing import Dict, Any, Optional
-import cvxpy as cp
+from typing import Dict, Any
 
 class ConditionalCVaRDROError(Exception):
     """Exception class for errors in Marginal CVaR DRO model."""

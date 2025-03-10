@@ -1,12 +1,9 @@
-from .base import BaseLinearDRO
+from dro.src.linear_model.base import BaseLinearDRO
 import pandas as pd
 import numpy as np
-import math
 import cvxpy as cp
 import pymc3 as pm
-from scipy.linalg import sqrtm
 from scipy.stats import multivariate_normal
-from scipy.spatial.distance import pdist, squareform
 
 # methods that centered at parametric distribution
 ## we set mixture Gaussian as the parametric distribution.

@@ -7,7 +7,7 @@ import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 from typing import Dict, Union, Tuple, Any
 from sklearn.metrics import f1_score
-from base import BaseLinearDRO
+from dro.src.linear_model.base import BaseLinearDRO
 
 
 class SinkhornDROError(Exception):

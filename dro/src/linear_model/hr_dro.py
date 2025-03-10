@@ -1,7 +1,7 @@
 import cvxpy as cp
 import numpy as np
 from typing import Dict, Any
-from .base import BaseLinearDRO, DataValidationError
+from dro.src.linear_model.base import BaseLinearDRO, DataValidationError
 
 class HRDROError(Exception):
     """Base exception class for errors in HR DRO model."""

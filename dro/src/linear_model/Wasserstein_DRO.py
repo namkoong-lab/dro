@@ -1,4 +1,4 @@
-from .base import BaseLinearDRO
+from dro.src.linear_model.base import BaseLinearDRO
 import numpy as np
 import math
 import cvxpy as cp
