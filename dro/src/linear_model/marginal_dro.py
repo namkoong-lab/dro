@@ -1,7 +1,7 @@
 from .base import BaseLinearDRO
 import numpy as np
 import cvxpy as cp
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from scipy.spatial.distance import pdist, squareform
 
 class MarginalCVaRDROError(Exception):

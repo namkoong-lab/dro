@@ -1,6 +1,5 @@
 import cvxpy as cp
 import numpy as np
-from sklearn.metrics import f1_score
 from typing import Dict, Any
 from .base import BaseLinearDRO, DataValidationError
 

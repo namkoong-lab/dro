@@ -1,4 +1,4 @@
-from src.base import *
+from .base import BaseLinearDRO
 import pandas as pd
 import numpy as np
 import math
@@ -11,10 +11,10 @@ from scipy.spatial.distance import pdist, squareform
 # methods that centered at parametric distribution
 ## we set mixture Gaussian as the parametric distribution.
 
-class Bayesian_KL_DRO(base_DRO):
+class Bayesian_KL_DRO(BaseLinearDRO):
     # https://arxiv.org/abs/2112.08625
     def __init__(self, input_dim, is_regression):
-        base_DRO.__init__(self, input_dim, is_regression)
+        BaseLinearDRO.__init__(self, input_dim, is_regression)
         self.eps = 0.5
         self.posterior_param_num = 1
         self.posterior_sample_ratio = 1
