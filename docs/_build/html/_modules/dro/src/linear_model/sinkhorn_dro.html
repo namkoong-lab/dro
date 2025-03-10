@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dro.src.linear_model.sinkhorn_dro &mdash; dro 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            dro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/data.html">Data Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_classification.classification_basic"><code class="docutils literal notranslate"><span class="pre">classification_basic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_classification.classification_DN21"><code class="docutils literal notranslate"><span class="pre">classification_DN21()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_classification.classification_SNVD20"><code class="docutils literal notranslate"><span class="pre">classification_SNVD20()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_classification.classification_LWLC"><code class="docutils literal notranslate"><span class="pre">classification_LWLC()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_basic"><code class="docutils literal notranslate"><span class="pre">regression_basic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_DN20_1"><code class="docutils literal notranslate"><span class="pre">regression_DN20_1()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_DN20_2"><code class="docutils literal notranslate"><span class="pre">regression_DN20_2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_DN20_3"><code class="docutils literal notranslate"><span class="pre">regression_DN20_3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_LWLC"><code class="docutils literal notranslate"><span class="pre">regression_LWLC()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/linear_model.html">Linear DRO Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DROError"><code class="docutils literal notranslate"><span class="pre">Chi2DROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO"><code class="docutils literal notranslate"><span class="pre">Chi2DRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO.evaluate"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDROError"><code class="docutils literal notranslate"><span class="pre">CVaRDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDRO"><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDROError"><code class="docutils literal notranslate"><span class="pre">KLDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO"><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.update"><code class="docutils literal notranslate"><span class="pre">KLDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">KLDRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.tv_dro.TVDROError"><code class="docutils literal notranslate"><span class="pre">TVDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.tv_dro.TVDRO"><code class="docutils literal notranslate"><span class="pre">TVDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.tv_dro.TVDRO.update"><code class="docutils literal notranslate"><span class="pre">TVDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.tv_dro.TVDRO.fit"><code class="docutils literal notranslate"><span class="pre">TVDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.tv_dro.TVDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">TVDRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDROError"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.hr_dro.HRDROError"><code class="docutils literal notranslate"><span class="pre">HRDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.hr_dro.HR_DRO_LR"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.hr_dro.HR_DRO_LR.update"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.hr_dro.HR_DRO_LR.fit"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.marginal_dro.MarginalCVaRDROError"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.OR_Wasserstein_DRO.ORWDROError"><code class="docutils literal notranslate"><span class="pre">ORWDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.update"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.fit"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.cheap_robust_mean_estimate"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO.cheap_robust_mean_estimate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornDROError"><code class="docutils literal notranslate"><span class="pre">SinkhornDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.LinearModel"><code class="docutils literal notranslate"><span class="pre">LinearModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.LinearModel.forward"><code class="docutils literal notranslate"><span class="pre">LinearModel.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.LinearModel.training"><code class="docutils literal notranslate"><span class="pre">LinearModel.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.predict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.fit()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/neural_model.html">Neural Network DRO Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.DROError"><code class="docutils literal notranslate"><span class="pre">DROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.ParameterError"><code class="docutils literal notranslate"><span class="pre">ParameterError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.DataValidationError"><code class="docutils literal notranslate"><span class="pre">DataValidationError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.Linear"><code class="docutils literal notranslate"><span class="pre">Linear</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.Linear.forward"><code class="docutils literal notranslate"><span class="pre">Linear.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.Linear.training"><code class="docutils literal notranslate"><span class="pre">Linear.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.MLP.forward"><code class="docutils literal notranslate"><span class="pre">MLP.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.MLP.training"><code class="docutils literal notranslate"><span class="pre">MLP.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.criterion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.predict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.f1score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.f1score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.fdro_nn.Chi2NNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO.criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.fdro_nn.CVaRNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO.criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.hrdro_nn.HRNNDRO"><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.hrdro_nn.HRNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.criterion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.hrdro_nn.HRNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.hrdro_nn.HRNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.predict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.wdro_nn.WNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">WNNDRO.criterion()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">dro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">dro.src.linear_model.sinkhorn_dro</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for dro.src.linear_model.sinkhorn_dro</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">TensorDataset</span><span class="p">,</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.base</span> <span class="kn">import</span> <span class="n">BaseLinearDRO</span>
+
+
+<div class="viewcode-block" id="SinkhornDROError"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornDROError">[docs]</a><span class="k">class</span> <span class="nc">SinkhornDROError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base exception class for errors in Sinkhorn DRO model.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="LinearModel"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.LinearModel">[docs]</a><span class="k">class</span> <span class="nc">LinearModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;PyTorch Linear Model for regression tasks.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        linear (nn.Linear): Linear layer implementing y = xA^T + b</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LinearModel.forward"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.LinearModel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Forward pass of the linear model.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SinkhornLinearDRO"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO">[docs]</a><span class="k">class</span> <span class="nc">SinkhornLinearDRO</span><span class="p">(</span><span class="n">BaseLinearDRO</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sinkhorn Distributionally Robust Optimization with Linear Models.</span>
+
+<span class="sd">    Implements three optimization approaches:</span>
+<span class="sd">    - SG (Standard Stochastic Gradient)</span>
+<span class="sd">    - MLMC (Multilevel Monte Carlo)</span>
+<span class="sd">    - RTMLMC (Randomized Truncated MLMC)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (LinearModel): Underlying PyTorch linear model</span>
+<span class="sd">        reg_param (float): Regularization parameter for Wasserstein distance</span>
+<span class="sd">        lambda_param (float): Loss scaling parameter</span>
+<span class="sd">        max_iter (int): Maximum training iterations</span>
+<span class="sd">        device (torch.device): Computation device (CPU/GPU)</span>
+
+<span class="sd">    Reference: &lt;https://arxiv.org/abs/2109.11926&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">input_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">reg_param</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+                 <span class="n">lambda_param</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e2</span><span class="p">,</span>
+                 <span class="n">output_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
+                 <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">1e3</span><span class="p">,</span>
+                 <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-2</span><span class="p">,</span>
+                 <span class="n">k_sample_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+                 <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;svm&quot;</span><span class="p">,</span>
+                 <span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize Sinkhorn DRO model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_dim: Dimension of input features</span>
+<span class="sd">            reg_param: Regularization strength (ε in paper)</span>
+<span class="sd">            lambda_param: Loss scaling parameter (λ in paper)</span>
+<span class="sd">            max_iter: Maximum training iterations</span>
+<span class="sd">            learning_rate: Learning rate for optimizer</span>
+<span class="sd">            k_sample_max: Maximum level for MLMC sampling</span>
+<span class="sd">            model_type: Model type identifier</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SinkhornDROError: For invalid parameter values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">reg_param</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">lambda_param</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="s2">&quot;Regularization parameters must be positive&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LinearModel</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reg_param</span> <span class="o">=</span> <span class="n">reg_param</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda_param</span> <span class="o">=</span> <span class="n">lambda_param</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_sample_max</span> <span class="o">=</span> <span class="n">k_sample_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SinkhornLinearDRO.update"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Update model hyperparameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: Dictionary containing hyperparameters to update</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SinkhornDROError: For invalid parameter types/values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;reg&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="ow">or</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="s2">&quot;reg must be a positive float&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reg_param</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s2">&quot;lambda&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lambda&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="ow">or</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;lambda&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="s2">&quot;lambda must be a positive float&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lambda_param</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lambda&quot;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;k_sample_max&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;k_sample_max&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">))</span> <span class="ow">or</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;k_sample_max&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="s2">&quot;k_sample_max must be a positive integer&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k_sample_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;k_sample_max&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="SinkhornLinearDRO.predict"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generate model predictions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Input data matrix (n_samples, n_features)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Model predictions as numpy array</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SinkhornDROError: For input dimension mismatch</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">in_features</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">in_features</span><span class="si">}</span><span class="s2"> features, got </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">X_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_tensor</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">X_tensor</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SinkhornLinearDRO.score"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Calculate model performance metrics.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Input features</span>
+<span class="sd">            y: Target values</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            MSE for regression tasks, (accuracy, F1) for classification</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ols&quot;</span><span class="p">,</span> <span class="s2">&quot;lad&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">round</span><span class="p">()</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+            <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">predictions</span><span class="o">.</span><span class="n">round</span><span class="p">(),</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">acc</span><span class="p">,</span> <span class="n">f1</span></div>
+
+<div class="viewcode-block" id="SinkhornLinearDRO.fit"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">optimization_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SG&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Train model using specified optimization method.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Training data (n_samples, n_features)</span>
+<span class="sd">            y: Target values (n_samples,)</span>
+<span class="sd">            optimization_type: Optimization method (SG/MLMC/RTMLMC)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary containing learned parameters</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SinkhornDROError: For invalid optimization type or input mismatch</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">dataloader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dataloader</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">optimization_type</span> <span class="o">==</span> <span class="s2">&quot;SG&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sg_optimizer</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">optimization_type</span> <span class="o">==</span> <span class="s2">&quot;MLMC&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_mlmc_optimizer</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">optimization_type</span> <span class="o">==</span> <span class="s2">&quot;RTMLMC&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rtmlmc_optimizer</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid optimization type: </span><span class="si">{</span><span class="n">optimization_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_parameters</span><span class="p">()</span></div>
+
+    <span class="c1">#region Private Methods</span>
+    <span class="k">def</span> <span class="nf">_to_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Convert numpy array to device tensor.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_validate_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Validate input dimensions.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="s2">&quot;X and y must have same number of samples&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">in_features</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SinkhornDROError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">in_features</span><span class="si">}</span><span class="s2"> features, got </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Create PyTorch DataLoader from numpy data.&quot;&quot;&quot;</span>
+        <span class="n">X_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_tensor</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">y_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_tensor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X_tensor</span><span class="p">,</span> <span class="n">y_tensor</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_extract_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Extract model parameters as numpy arrays.&quot;&quot;&quot;</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="n">weights</span><span class="p">,</span> <span class="s2">&quot;bias&quot;</span><span class="p">:</span> <span class="n">bias</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> 
+                     <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lambda_reg</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Compute Sinkhorn loss for given batch.&quot;&quot;&quot;</span>
+        <span class="n">residuals</span> <span class="o">=</span> <span class="p">(</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">targets</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">lambda_reg</span>
+        <span class="n">residual_matrix</span> <span class="o">=</span> <span class="n">residuals</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">residual_matrix</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">m</span><span class="p">))</span> <span class="o">*</span> <span class="n">lambda_reg</span>
+
+    <span class="k">def</span> <span class="nf">_sg_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Stochastic Gradient optimization.&quot;&quot;&quot;</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="n">lambda_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_param</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_param</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_sample_max</span>
+
+                <span class="c1"># Generate perturbed samples</span>
+                <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">((</span><span class="n">m</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_param</span><span class="p">)</span>
+                <span class="n">noisy_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">repeated_target</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># Forward + backward pass</span>
+                <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">noisy_data</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_loss</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">repeated_target</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">lambda_reg</span><span class="p">)</span>
+                <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+                <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_mlmc_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Multilevel Monte Carlo optimization.&quot;&quot;&quot;</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="n">lambda_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_param</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_param</span>
+        <span class="n">n_levels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_sample_max</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                <span class="n">loss_total</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_sample_max</span><span class="p">):</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">k</span>
+                    <span class="n">subset_size</span> <span class="o">=</span> <span class="n">n_levels</span><span class="p">[</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">sub_data</span><span class="p">,</span> <span class="n">sub_target</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="n">subset_size</span><span class="p">],</span> <span class="n">target</span><span class="p">[:</span><span class="n">subset_size</span><span class="p">]</span>
+
+                    <span class="c1"># Multilevel sample generation</span>
+                    <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">((</span><span class="n">m</span><span class="p">,</span> <span class="n">subset_size</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                    <span class="n">noisy_data</span> <span class="o">=</span> <span class="n">sub_data</span> <span class="o">+</span> <span class="n">noise</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_param</span><span class="p">)</span>
+                    <span class="n">repeated_target</span> <span class="o">=</span> <span class="n">sub_target</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                    <span class="c1"># Loss computation</span>
+                    <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">noisy_data</span><span class="p">)</span>
+                    <span class="n">residuals</span> <span class="o">=</span> <span class="p">(</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">repeated_target</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">lambda_reg</span>
+                    <span class="n">residual_matrix</span> <span class="o">=</span> <span class="n">residuals</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">subset_size</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">residual_matrix</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="o">*</span> <span class="n">lambda_reg</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Multilevel correction</span>
+                        <span class="n">half_m</span> <span class="o">=</span> <span class="n">m</span> <span class="o">//</span> <span class="mi">2</span>
+                        <span class="n">loss_high</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">residual_matrix</span><span class="p">[:</span><span class="n">half_m</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">loss_low</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">residual_matrix</span><span class="p">[</span><span class="n">half_m</span><span class="p">:],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">loss_high</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">loss_low</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">*</span> <span class="n">lambda_reg</span>
+
+                    <span class="n">loss_total</span> <span class="o">+=</span> <span class="n">loss</span>
+
+                <span class="n">loss_total</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+                <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_rtmlmc_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Randomized Truncated MLMC optimization.&quot;&quot;&quot;</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">)</span>
+        <span class="n">lambda_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_param</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_param</span>
+        <span class="n">level_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span> <span class="o">**</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_sample_max</span><span class="p">)])</span>
+        <span class="n">level_probs</span> <span class="o">/=</span> <span class="n">level_probs</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+                <span class="c1"># Random level selection</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_sample_max</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">level_probs</span><span class="p">)</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">k</span>
+
+                <span class="c1"># Perturbed sample generation</span>
+                <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">((</span><span class="n">m</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">noisy_data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="n">noise</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_param</span><span class="p">)</span>
+                <span class="n">repeated_target</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># Loss computation with probability weighting</span>
+                <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">noisy_data</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_loss</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">repeated_target</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">lambda_reg</span><span class="p">)</span>
+                <span class="p">(</span><span class="n">loss</span> <span class="o">/</span> <span class="n">level_probs</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+                <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span></div>
+    <span class="c1">#endregion</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Example usage with synthetic regression data.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span>
+    <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">Ridge</span>
+
+    <span class="c1"># Data generation</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="c1"># Model training</span>
+    <span class="n">dro_model</span> <span class="o">=</span> <span class="n">SinkhornLinearDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">k_sample_max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">reg_param</span><span class="o">=</span><span class="mf">.001</span><span class="p">,</span> <span class="n">lambda_param</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;ols&#39;</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">dro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sinkhorn DRO Parameters:&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dro_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+    <span class="c1"># Baseline comparison</span>
+    <span class="n">lr_model</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">()</span>
+    <span class="n">lr_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sklearn Coefficients:&quot;</span><span class="p">,</span> <span class="n">lr_model</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lr_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jiashuo Liu, Tianyu Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

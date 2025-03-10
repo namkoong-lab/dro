@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dro.src.linear_model.kl_dro &mdash; dro 0.1.1 documentation</title>
+  <title>dro.src.linear_model.hr_dro &mdash; dro 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
 
@@ -186,7 +186,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">dro.src.linear_model.kl_dro</li>
+      <li class="breadcrumb-item active">dro.src.linear_model.hr_dro</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -195,143 +195,136 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for dro.src.linear_model.kl_dro</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.base</span> <span class="kn">import</span> <span class="n">BaseLinearDRO</span>
+  <h1>Source code for dro.src.linear_model.hr_dro</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="nn">cp</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="nn">cp</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.base</span> <span class="kn">import</span> <span class="n">BaseLinearDRO</span><span class="p">,</span> <span class="n">DataValidationError</span>
 
-<div class="viewcode-block" id="KLDROError"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDROError">[docs]</a><span class="k">class</span> <span class="nc">KLDROError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base exception class for errors in KL-DRO model.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="HRDROError"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.hr_dro.HRDROError">[docs]</a><span class="k">class</span> <span class="nc">HRDROError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base exception class for errors in HR DRO model.&quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="KLDRO"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO">[docs]</a><span class="k">class</span> <span class="nc">KLDRO</span><span class="p">(</span><span class="n">BaseLinearDRO</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Kullback-Leibler divergence-based Distributionally Robust Optimization (KL-DRO) model.</span>
-
-<span class="sd">    This model minimizes a KL-robust loss function for both regression and classification.</span>
+<div class="viewcode-block" id="HR_DRO_LR"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.hr_dro.HR_DRO_LR">[docs]</a><span class="k">class</span> <span class="nc">HR_DRO_LR</span><span class="p">(</span><span class="n">BaseLinearDRO</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Holistic Robust DRO Linear Regression (HR_DRO_LR) model.</span>
+<span class="sd">    </span>
+<span class="sd">    This model supports DRO with additional robustness constraints for linear regression and binary classification.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        input_dim (int): Dimensionality of the input features.</span>
-<span class="sd">        model_type (str): Model type indicator (e.g., &#39;svm&#39; for SVM, &#39;logistic&#39; for Logistic Regression, &#39;ols&#39; for Linear Regression with L2-loss, &#39;lad&#39; for Linear Regression with L1-loss).</span>
+<span class="sd">        model_type (str, default = &#39;svm&#39;): Model type indicator (&#39;svm&#39; for SVM, &#39;logistic&#39; for Logistic Regression, &#39;ols&#39; for Linear Regression for OLS, &#39;lad&#39; for Linear Regression for LAD).</span>
 <span class="sd">        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).</span>
 <span class="sd">        solver (str, default = &#39;MOSEK&#39;): Optimization solver to solve the problem, default = &#39;MOSEK&#39;.</span>
-<span class="sd">        eps (float): Robustness parameter for KL-DRO.</span>
-<span class="sd">        dual_variable (Optional[float]): Dual variable value from the optimization problem.</span>
+<span class="sd">        r (float): DRO robustness parameter.</span>
+<span class="sd">        alpha (float): Parameter for marginal robustness.</span>
+<span class="sd">        epsilon (float): Tolerance for primary DRO constraints.</span>
+<span class="sd">        epsilon_prime (float): Tolerance for secondary DRO constraints.</span>
 
-<span class="sd">    Reference: &lt;https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf&gt;</span>
+<span class="sd">    Reference: &lt;https://arxiv.org/abs/2207.09560&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;MOSEK&#39;</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;MOSEK&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> 
+                 <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">epsilon_prime</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the KL-DRO model with specified input dimension and model type.</span>
-
 <span class="sd">        Args:</span>
 <span class="sd">            input_dim (int): Dimension of the input features.</span>
 <span class="sd">            model_type (str): Type of model (&#39;svm&#39;, &#39;logistic&#39;, &#39;ols&#39;, &#39;lad&#39;).</span>
 <span class="sd">            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).</span>
 <span class="sd">            solver (str, default = &#39;MOSEK&#39;): Optimization solver to solve the problem, default = &#39;MOSEK&#39;</span>
-<span class="sd">            eps (float): Ambiguity size for the KL constraint (default is 0.0).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">BaseLinearDRO</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>        
-        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dual_variable</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># To store dual variable value after fit</span>
+        <span class="n">BaseLinearDRO</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_prime</span> <span class="o">=</span> <span class="n">epsilon_prime</span>
 
-<div class="viewcode-block" id="KLDRO.update"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Update the model configuration.</span>
+<div class="viewcode-block" id="HR_DRO_LR.update"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.hr_dro.HR_DRO_LR.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}):</span>
+        <span class="c1"># TODO: Add hyper-parameter checking</span>
+        <span class="sd">&quot;&quot;&quot;Update model configuration based on the provided dictionary.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;epsilon&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_prime</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;epsilon_prime&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_prime</span><span class="p">)</span></div>
 
-<span class="sd">        Args:</span>
-<span class="sd">            config (Dict[str, Any]): Configuration dictionary containing &#39;eps&#39; key for robustness parameter.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            KLDROError: If &#39;eps&#39; is provided but is not a non-negative float.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s1">&#39;eps&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-            <span class="n">eps</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;eps&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="ow">or</span> <span class="n">eps</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">KLDROError</span><span class="p">(</span><span class="s2">&quot;Robustness parameter &#39;eps&#39; must be a non-negative float.&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="KLDRO.fit"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Fit the model using CVXPY to solve the robust optimization problem with KL constraint.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            X (np.ndarray): Feature matrix with shape (n_samples, n_features).</span>
-<span class="sd">            y (np.ndarray): Target vector with shape (n_samples,).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: Model parameters dictionary with &#39;theta&#39; and &#39;dual&#39; keys.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            KLDROError: If the optimization problem fails to solve.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sample_size</span><span class="p">,</span> <span class="n">feature_size</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
-        <span class="k">if</span> <span class="n">feature_size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">KLDROError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected input with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="si">}</span><span class="s2"> features, got </span><span class="si">{</span><span class="n">feature_size</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">sample_size</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="n">KLDROError</span><span class="p">(</span><span class="s2">&quot;Input X and target y must have the same number of samples.&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Define variables for optimization</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">eta</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">nonneg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">()</span>
-        <span class="n">per_loss</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span>
-        <span class="n">epi_g</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span>
-
-        <span class="c1"># Constraints for KL-DRO</span>
-        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">cp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">epi_g</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">sample_size</span> <span class="o">*</span> <span class="n">eta</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sample_size</span><span class="p">):</span>
-            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">exponential</span><span class="o">.</span><span class="n">ExpCone</span><span class="p">(</span><span class="n">per_loss</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">epi_g</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
-        <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">per_loss</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cvx_loss</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-
-        <span class="c1"># Define loss objective for minimization</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">eta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span>
-        <span class="n">problem</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">Minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">),</span> <span class="n">constraints</span><span class="p">)</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span><span class="o">.</span><span class="n">value</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dual_variable</span> <span class="o">=</span> <span class="n">eta</span><span class="o">.</span><span class="n">value</span>
-        <span class="k">except</span> <span class="n">cp</span><span class="o">.</span><span class="n">SolverError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">KLDROError</span><span class="p">(</span><span class="s2">&quot;Optimization failed to solve using MOSEK.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual_variable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">KLDROError</span><span class="p">(</span><span class="s2">&quot;Optimization did not converge to a solution.&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">value</span>
-
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">&quot;dual&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual_variable</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">}</span></div>
-
-<div class="viewcode-block" id="KLDRO.worst_distribution"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.worst_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">worst_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Compute the worst-case distribution based on KL divergence.</span>
-
+<div class="viewcode-block" id="HR_DRO_LR.fit"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.hr_dro.HR_DRO_LR.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Fit model to data using CVXPY by solving the DRO optimization problem.</span>
+<span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            X (np.ndarray): Input feature matrix with shape (n_samples, n_features).</span>
 <span class="sd">            y (np.ndarray): Target vector with shape (n_samples,).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: Dictionary containing &#39;sample_pts&#39; and &#39;weight&#39; keys for worst-case distribution.</span>
+<span class="sd">            Dict[str, Any]: Model parameters dictionary with &#39;theta&#39; key.</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            KLDROError: If the worst-case distribution optimization fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># Fit model to obtain theta and dual variable</span>
+        <span class="n">T</span><span class="p">,</span> <span class="n">feature_dim</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="n">feature_dim</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected input with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="si">}</span><span class="s2"> features, got </span><span class="si">{</span><span class="n">feature_dim</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Calculate the loss with current theta</span>
-        <span class="n">per_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loss</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual_variable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">KLDROError</span><span class="p">(</span><span class="s2">&quot;Dual variable is not set. Ensure &#39;fit&#39; method has been called.&quot;</span><span class="p">)</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="c1"># Calculate weights for the worst-case distribution</span>
-        <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">per_loss</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual_variable</span><span class="p">)</span>
-        <span class="n">weight</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>  <span class="c1"># Normalize weights</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">lambda_</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">nonneg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">nonneg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">eta</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">()</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">weight</span><span class="p">}</span></div></div>
+        <span class="c1"># Define the objective function</span>
+        <span class="n">objective</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Minimize</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">+</span> <span class="n">lambda_</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">eta</span><span class="p">)</span>
+
+        <span class="c1"># Constraints setup based on the model type</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">## Appendix D.1 in https://arxiv.org/pdf/2207.09560v4</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;lad&#39;</span><span class="p">}:</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+                <span class="n">constraints</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                    <span class="n">temp</span> <span class="o">&gt;=</span> <span class="n">cp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[</span><span class="n">t</span><span class="p">]),</span>
+                    <span class="n">w</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cp</span><span class="o">.</span><span class="n">rel_entr</span><span class="p">(</span><span class="n">lambda_</span><span class="p">,</span> <span class="p">(</span><span class="n">eta</span> <span class="o">-</span> <span class="n">cp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">2</span><span class="p">))),</span>
+                    <span class="n">w</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cp</span><span class="o">.</span><span class="n">rel_entr</span><span class="p">(</span><span class="n">lambda_</span><span class="p">,</span> <span class="p">(</span><span class="n">eta</span> <span class="o">-</span> <span class="n">temp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_prime</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="o">-</span> <span class="n">beta</span><span class="p">,</span>
+                    <span class="n">eta</span> <span class="o">&gt;=</span> <span class="n">cp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>  <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_prime</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="p">])</span>
+            
+        <span class="c1">## Appendix D.2 in https://arxiv.org/pdf/2207.09560v4</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;svm&#39;</span><span class="p">:</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eta</span> <span class="o">&gt;=</span> <span class="mf">1e-6</span><span class="p">)</span>  <span class="c1"># Stability constraint for eta</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+                <span class="n">constraints</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                    <span class="n">temp</span> <span class="o">&lt;=</span> <span class="n">Y</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">[</span><span class="n">t</span><span class="p">]),</span>
+                    <span class="n">w</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cp</span><span class="o">.</span><span class="n">rel_entr</span><span class="p">(</span><span class="n">lambda_</span><span class="p">,</span> <span class="n">eta</span><span class="p">),</span>
+                    <span class="n">w</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cp</span><span class="o">.</span><span class="n">rel_entr</span><span class="p">(</span><span class="n">lambda_</span><span class="p">,</span> <span class="p">(</span><span class="n">eta</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">Y</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">2</span><span class="p">))),</span>
+                    <span class="n">w</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cp</span><span class="o">.</span><span class="n">rel_entr</span><span class="p">(</span><span class="n">lambda_</span><span class="p">,</span> <span class="p">(</span><span class="n">eta</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">temp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_prime</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="o">-</span> <span class="n">beta</span><span class="p">,</span>
+                    <span class="n">eta</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># TODO: check whether ols works for HR-DRO.</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Model type not supported for HR_DRO_LR.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Solve the optimization problem</span>
+        <span class="n">problem</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">constraints</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span> <span class="n">mosek_params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;MSK_DPAR_INTPNT_CO_TOL_REL_GAP&quot;</span><span class="p">:</span> <span class="mf">1e-8</span><span class="p">},</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">cp</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">SolverError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">HRDROError</span><span class="p">(</span><span class="s2">&quot;Optimization failed to solve using MOSEK.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+        <span class="k">if</span> <span class="n">theta</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">HRDROError</span><span class="p">(</span><span class="s2">&quot;Optimization did not converge to a solution.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Store fitted parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda_</span> <span class="o">=</span> <span class="n">lambda_</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="c1"># Return model parameters in dictionary format</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">}</span></div></div>
 </pre></div>
 
            </div>
