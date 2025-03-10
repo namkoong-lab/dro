@@ -4,3 +4,7 @@ scikit-learn
 torch
 scipy
 cvxpy
+torchvision
+ucimlrepo
+matplotlib
+torchattacks
