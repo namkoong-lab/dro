@@ -181,6 +181,7 @@ class BaseNNDRO:
                     
                     optimizer.zero_grad()
                     outputs = self.model(inputs)
+                    self.current_inputs = inputs # this is for HRNNDRO
                     loss = self.criterion(outputs, labels)
                     loss.backward()
                     optimizer.step()

@@ -1,315 +1,242 @@
+import cvxpy as cp
+import torch
+import torchattacks
+import warnings
+import numpy as np
+from typing import Optional, Dict, Union, List
+from .base_nn import BaseNNDRO, DROError
 
-# HR-DRO neural criterion
-## adapted from https://github.com/RyanLucas3/HR_Neural_Networks/blob/main/HR_Neural_Networks/HR.py
+class HRNNDRO(BaseNNDRO):
+    """Huberian Robust Distributionally Robust Optimization Model
+    
+    Args:
+        input_dim: Input feature dimension
+        num_classes: Number of output classes
+        task_type: "classification" or "regression"
+        model_type: Base model architecture ('mlp', 'resnet', etc)
+        alpha: Robustness to distribution shift (α > 0)
+        r: Robustness to statistical error (r > 0)
+        epsilon: Adversarial perturbation bound (ε ≥ 0)
+        learning_approach: Robust optimization method ("HR" or "HD")
+        adversarial_params: Dictionary containing:
+            - steps: Number of PGD steps
+            - step_size: PGD step size
+            - norm: Adversarial norm ("l2" or "l-inf")
+            - method: Defense method ("PGD" or "FFGSM")
+        train_batch_size: Default training batch size
+        device: Computation device
+    """
 
-class HR_Neural_Networks:
-
-    def __init__(self, NN_model,
-                 train_batch_size,
-                 loss_fn,
-                 normalisation_used,
-                 α_choice,
-                 r_choice,
-                 ϵ_choice,
-                 learning_approach = "HD",
-                 adversarial_steps=10,
-                 adversarial_step_size=0.2,
-                 noise_set = "l-2",
-                 defense_method = "PGD",
-                 output_return = "pytorch_loss_function"
-                 ):
-
-        # End model
-        self.NN_model = NN_model
+    def __init__(
+        self,
+        input_dim: int,
+        num_classes: int,
+        task_type: str = "classification",
+        model_type: str = "mlp",
+        alpha: float = 0.1,
+        r: float = 0.01,
+        epsilon: float = 0.1,
+        learning_approach: str = "HD",
+        adversarial_params: Optional[dict] = None,
+        train_batch_size: int = 64,
+        device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    ):
+        # Initialize base model
+        super().__init__(
+            input_dim=input_dim,
+            num_classes=num_classes,
+            task_type=task_type,
+            model_type=model_type,
+            device=device
+        )
+        
+        # Robustness parameters
+        self.alpha = max(alpha, 1e-6)
+        self.r = max(r, 1e-6)
+        self.epsilon = epsilon
         self.train_batch_size = train_batch_size
-        self.adversarial_steps = adversarial_steps
-        self.adversarial_step_size = adversarial_step_size
-        self.numerical_eps = 0.000001
-        self.noise_set = noise_set
-        self.learning_approach = learning_approach
-        self.output_return = output_return
-        self.defense_method = defense_method
- 
-        if loss_fn == None:
-            print("Loss is defaulted to cross entropy loss. Consider changing if not doing classification.")
-            self.loss_fn = nn.CrossEntropyLoss(reduction="none")
+        self.learning_approach = learning_approach.upper()
+        self.numerical_eps = 1e-6
 
-        else:
-            self.loss_fn = loss_fn
-        
-        # Handling choice of α
-        if α_choice == 0:
-            self.α_choice = self.numerical_eps
-        else:
-            self.α_choice = α_choice
-        
-        # Handling choice of r
-        if r_choice == 0 and α_choice != 0:
-            self.r_choice = 0.001 # For numerical stability. 0 or very small values of r cause algorithm to be slow.
-        else:
-            self.r_choice = r_choice
-            
-        # Handling choice of epsilon. We wont set equal to numerical eps, since running PGD is very slow
-        self.ϵ_choice = ϵ_choice
-        
-        # Initialising either HR or HD to be used in DPP. DPP is an approach where the decision variables,
-        # constraints and problem are set up just once. Only parameters (here loss and worst-case) 
-        # are reinitialised at each step, which is much faster than reinstating the entire problem. 
+        # Adversarial training setup
+        self.adversarial_params = adversarial_params or {
+            'steps': 10,
+            'step_size': 0.02,
+            'norm': 'l2',
+            'method': 'PGD'
+        }
+        self._init_adversarial_attack()
+        self._init_optimization_problem()
+
+    def _init_adversarial_attack(self):
+        """Initialize adversarial attack generator"""
+        params = self.adversarial_params
+        attack_cls = {
+            'PGD': torchattacks.PGDL2 if params['norm'] == 'l2' else torchattacks.PGD,
+            'FFGSM': torchattacks.FFGSM
+        }.get(params['method'], torchattacks.PGD)
+
+        self.attack = attack_cls(
+            self.model,
+            eps=self.epsilon,
+            alpha=params['step_size'],
+            steps=params['steps']
+        )
+
+    def _init_optimization_problem(self):
+        """Initialize CVXPY optimization problem"""
+        N = self.train_batch_size
+        self.p = cp.Variable(N+1, nonneg=True)
+        self.loss_param = cp.Parameter(N)
+        self.worst_case = cp.Parameter()
+
         if self.learning_approach == "HR":
-
-            self._initialise_HR_problem()
-
-        elif self.learning_approach == "HD":
-            
-            self._initialise_HD_problem()
-
-        self._initialise_adversarial_setup()
-
-        if normalisation_used == None:
-            pass
-
+            self._init_hr_constraints(N)
         else:
-            self.adversarial_attack_train.set_normalization_used(
-                mean=normalisation_used[0], std=normalisation_used[1])
+            self._init_hd_constraints(N)
 
-    def _initialise_HR_problem(self):
+    def _init_hr_constraints(self, N: int):
+        """Initialize HR problem constraints"""
+        q = cp.Variable(N+1, nonneg=True)
+        s = cp.Variable(N, nonneg=True)
+        t = cp.Variable(N)
 
-        # The primal - inner maximisation problem.
-        N = self.train_batch_size
+        constraints = [
+            cp.sum(self.p) == 1,
+            cp.sum(q) == 1,
+            cp.sum(t) <= self.r,
+            cp.sum(s) <= self.alpha,
+            cp.sum(s) + q[-1] == self.p[-1],
+            self.p[:-1] + s == q[:-1],
+            cp.ExpCone(-t, (1/N)*np.ones(N), q[:-1])
+        ]
 
-        Pemp = 1/N * np.ones(N)  # Change for a diffrent Pemp
+        self.problem = cp.Problem(
+            cp.Maximize(self.p[:N] @ self.loss_param + self.p[-1] * self.worst_case),
+            constraints
+        )
 
-        # Parameter controlling robustness to misspecification
-        α = cp.Constant(self.α_choice)
-        # Parameter controlling robustness to statistical error
-        r = cp.Constant(self.r_choice)
+    def _init_hd_constraints(self, N: int):
+        """Initialize HD problem constraints"""
+        q = cp.Variable(N+1, nonneg=True)
+        s = cp.Variable(N, nonneg=True)
+        t = cp.Variable(N+1)
 
-        # Primal variables and constraints, indep of problem
-        self.p = cp.Variable(shape=N+1, nonneg=True)
-        q = cp.Variable(shape=N+1, nonneg=True)
-        s = cp.Variable(shape=N, nonneg=True)
+        constraints = [
+            cp.sum(self.p) == 1,
+            cp.sum(q) == 1,
+            cp.sum(t) <= self.r,
+            cp.sum(s) <= self.alpha,
+            q[:-1] + s == (1/N)*np.ones(N),
+            cp.ExpCone(-t, q, self.p)
+        ]
 
-        self.nn_loss = cp.Parameter(shape=N)
-        self.nn_loss.value = [1/N]*N  # Initialising
+        self.problem = cp.Problem(
+            cp.Maximize(self.p[:N] @ self.loss_param + self.p[-1] * self.worst_case),
+            constraints
+        )
 
-        self.worst = cp.Parameter()
-        self.worst.value = 0.01  # Initialising
+    def criterion(self, outputs: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+        """Compute robust loss with dynamic batch handling"""
+        # Generate adversarial examples
+        if self.epsilon > 0:
+            inputs = self.current_inputs  # Saved during forward pass
+            adv_inputs = self.attack(inputs, labels)
+            outputs = self.model(adv_inputs)
 
-        # Objective function
-        objective = cp.Maximize(
-            cp.sum(cp.multiply(self.p[0:N], self.nn_loss)) + self.p[N] * self.worst)
-
-        # Simplex constraints
-        simplex_constraints = [cp.sum(self.p) == 1, cp.sum(q) == 1]
-
-        # KL constr -----
-        t = cp.Variable(name="t", shape=N)
-
-        # Exponential cone constraints
-        exc_constraints = []
-
-        exc_constraints.append(
-            cp.constraints.exponential.ExpCone(-1*t, Pemp, q[:-1]))
-
-        # ------------------------
-        extra_constraints = [cp.sum(t) <= r,
-                             cp.sum(s) <= α,
-                             cp.sum(s) + q[N] == self.p[N],
-                             self.p[0:N] + s == q[0:N]]
-        # ------------------------
-
-        # Combining constraints to a single list
-        complete_constraints = simplex_constraints + exc_constraints + extra_constraints
-
-        # Problem definition
-        self.model = cp.Problem(
-            objective=objective,
-            constraints=complete_constraints)
-
-    def _initialise_HD_problem(self):
-
-        # The primal - inner maximisation problem.
-        N = self.train_batch_size
-
-        Pemp = 1/N * np.ones(N)  # Change for a diffrent Pemp
-
-        # Parameter controlling robustness to misspecification
-        α = cp.Constant(self.α_choice)
-        # Parameter controlling robustness to statistical error
-        r = cp.Constant(self.r_choice)
-
-        # Primal variables and constraints, indep of problem
-        self.p = cp.Variable(shape=N+1, nonneg=True)
-        q = cp.Variable(shape=N+1, nonneg=True)
-        s = cp.Variable(shape=N, nonneg=True)
-
-        self.nn_loss = cp.Parameter(shape=N)
-        self.nn_loss.value = [1/N]*N  # Initialising
-
-        self.worst = cp.Parameter()
-        self.worst.value = 0.01  # Initialising
-
-        # Objective function
-        objective = cp.Maximize(
-            cp.sum(cp.multiply(self.p[0:N], self.nn_loss)) + self.p[N] * self.worst)
-
-        # Simplex constraints
-        simplex_constraints = [cp.sum(self.p) == 1, cp.sum(q) == 1]
-
-        # KL constr -----
-        t = cp.Variable(name="t", shape=N+1)
-
-        # Exponential cone constraints
-        exc_constraints = []
-
-        exc_constraints.append(
-            cp.constraints.exponential.ExpCone(-1*t, q, self.p))
-
-        # ------------------------
-        extra_constraints = [cp.sum(t) <= r,
-                             cp.sum(s) <= α,
-                             q[0:N] + s == Pemp]
-        # ------------------------
-
-        # Combining constraints to a single list
-        complete_constraints = simplex_constraints + exc_constraints + extra_constraints
-
-        # Problem definition
-        self.model = cp.Problem(
-            objective=objective,
-            constraints=complete_constraints)
-
-    def _initialise_adversarial_setup(self):
-        
-        if self.noise_set == "l-2":
-            
-            if self.defense_method == "PGD":
-
-                self.adversarial_attack_train = torchattacks.PGDL2(self.NN_model,
-                                                                   eps=self.ϵ_choice,
-                                                                   alpha=self.adversarial_step_size,
-                                                                   steps=self.adversarial_steps,
-                                                                   random_start=True,
-                                                                   eps_for_division=1e-10)
-                
-            elif self.defense_method == "FFGSM":
-                
-                raise Exception("FGSM for l-2 defense not currently supported")
-                
-            
-        elif self.noise_set == "l-inf":
-            
-            if self.defense_method == "PGD":
-
-                self.adversarial_attack_train = torchattacks.attacks.pgd.PGD(self.NN_model,
-                                                 eps=self.ϵ_choice,
-                                                 alpha=self.adversarial_step_size,
-                                                 steps=self.adversarial_steps,
-                                                 random_start=True)
-            
-            elif self.defense_method == "FFGSM":
-
-                self.adversarial_attack_train = torchattacks.FFGSM(self.NN_model, 
-                                                                   eps=self.ϵ_choice, 
-                                                                   alpha=self.adversarial_step_size)
-
-
-    def HR_criterion(self, inputs = None, 
-                           targets = None, 
-                           inf_loss = None, 
-                           device='cuda'):
-        
-        '''Solving the primal problem.
-           Returning the weighted loss as a tensor Pytorch can autodiff'''
-
-        if self.ϵ_choice > 0:
-  
-            adv = self.adversarial_attack_train(inputs, targets)
-            outputs = self.NN_model(adv)
-            inf_loss = self.loss_fn(outputs, targets)
-
+        if self.task_type == "classification":
+            losses = torch.nn.CrossEntropyLoss(reduction="none")(outputs, labels)
         else:
-            outputs = self.NN_model(inputs)
-            inf_loss = self.loss_fn(outputs, targets)
+            losses = torch.nn.MSELoss(reduction="none")(outputs, labels)
         
-        # May in the end be different from the training batch size,
-        batch_size = len(inf_loss)
-        # For instance for the last batch
-        
-        if batch_size != self.train_batch_size: # If the batches passed are not the same length as the pre-specified
-                                                # train_batch_size, then we need to renitialise the DPP.
-                                                # DPP assumes certain parameters of the problem (here, N) remain fixed.
-                    
-            warnings.warn(
-                "Warning - changing the batch_size from the pre-specified train_batch_size can cause the algorithm to be slower.")
-            
+        # Dynamic batch size handling
+        batch_size = labels.size(0)
+        if batch_size != self.train_batch_size:
+            warnings.warn(f"Batch size changed from {self.train_batch_size} to {batch_size}, reinitializing problem")
             self.train_batch_size = batch_size
-            
-            
-            
-            if self.learning_approach == "HR":
+            self._init_optimization_problem()
 
-                self._initialise_HR_problem()
-
-            elif self.learning_approach == "HD":
-
-                self._initialise_HD_problem()
-
-
-        if self.r_choice > self.numerical_eps or self.α_choice > self.numerical_eps:
-            
-            if self.output_return == 'pytorch_loss_function':
-                self.nn_loss.value = np.array(inf_loss.cpu().detach().numpy()) # DPP step
-            
-            elif self.output_return == 'weights':
-                self.nn_loss.value = inf_loss
-            
-            self.worst.value = np.max(self.nn_loss.value) # DPP step
-            
-            
+        # Solve optimization problem
+        self.loss_param.value = losses.detach().cpu().numpy()
+        self.worst_case.value = losses.max().item()
+        
+        try:
+            self.problem.solve(solver=cp.ECOS, verbose=False)
+        except cp.SolverError:
             try:
-                self.model.solve(solver=cp.ECOS) 
-                # ECOS is normally faster than MOSEK for conic problems (it is built for this purpose),
-                # but generally also more unstable. 
-                # We will revert to MOSEK incase of solving issues.
-                # This should happen very infrequently (<1/1000 calls or so, depending on α, r)
-                
-            except:
-                
-                try:
-                    self.nn_loss.value += self.numerical_eps # Small amt of noise incase its a numerical issue
-                    self.worst.value = np.max(self.nn_loss.value) # Must also re-instate worst-case for DPP
-                    self.model.solve(solver=cp.MOSEK)
-                    # MOSEK is the second fastest,
-                    # But also occasionally fails when α and r are too large.
-                
-                except:
-                    self.model.solve(solver=cp.SCS)
-                    # Last resort. Rarely needed.
- 
+                self.loss_param.value += self.numerical_eps
+                self.problem.solve(solver=cp.MOSEK, verbose=False)
+            except cp.SolverError:
+                self.problem.solve(solver=cp.SCS, verbose=False)
 
-            weights = Variable(torch.from_numpy(self.p.value),
-                               requires_grad=True).to(torch.float32).to(device) # Converting primal weights to tensors
-   
-            
-            if self.output_return == "pytorch_loss_function":
-            
-                return torch.dot(weights[0:batch_size], inf_loss) + torch.max(inf_loss)*weights[batch_size]
-            
-            elif self.output_return == 'weights':
-                
-                 return weights
-            
-            else:
-                raise Exception("Not a valid choice of output, please pass pytorch_loss_function if using Pytorch or weights if using another framework")
+        # Get optimal weights
+        weights = torch.from_numpy(self.p.value).to(self.device)
+        return (weights[:batch_size] * losses).sum() + weights[-1] * losses.max()
 
-        else: # If we use only epsilon (could be zero or not)
-            
-            if self.output_return == "pytorch_loss_function":
-                
-                return (1/self.train_batch_size)*torch.sum(inf_loss) # ERM for Pytorch
-            
-            elif self.output_return == 'weights':
-                
-                return [1/self.train_batch_size for i in range(self.train_batch_size)] # ERM (equal weights)
-                
+    def fit(
+        self,
+        X: Union[np.ndarray, torch.Tensor],
+        y: Union[np.ndarray, torch.Tensor],
+        train_ratio: float = 0.8,
+        lr: float = 1e-3,
+        batch_size: int = None,
+        epochs: int = 100,
+        verbose: bool = True
+    ) -> Dict[str, List[float]]:
+        """Enhanced training loop with adversarial training"""
+        # Use specified batch size or default
+        batch_size = batch_size or self.train_batch_size
+        
+        # Convert inputs to tensor and validate
+        X_tensor = self._convert_to_tensor(X)
+        y_tensor = self._convert_to_tensor(y, 
+            dtype=torch.long if self.task_type == "classification" else None)
+        self._validate_input_shape(X_tensor)
+
+        # Call base class fit with modified parameters
+        return super().fit(
+            X=X_tensor,
+            y=y_tensor,
+            train_ratio=train_ratio,
+            lr=lr,
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=verbose
+        )
+
+    def predict(self, X: Union[np.ndarray, torch.Tensor]) -> np.ndarray:
+        """Adversarial-robust prediction"""
+        X_tensor = self._convert_to_tensor(X)
+        self.current_inputs = X_tensor  # Store for adversarial generation
+        
+        # Generate adversarial examples if needed
+        if self.epsilon > 0:
+            dummy_targets = torch.zeros(X_tensor.size(0), dtype=torch.long).to(self.device)
+            X_tensor = self.attack(X_tensor, dummy_targets)
+        
+        return super().predict(X_tensor)
+    
+
+if __name__ == "__main__":
+    # Example usage
+    X = np.random.randn(1000, 3, 64, 64)  # 100 samples, 10 features
+    y = np.random.randint(0, 2, 1000)  # Binary classification
+
+    model = HRNNDRO(input_dim=3*64*64, num_classes=2, model_type='alexnet', task_type="classification")
+    
+    try:
+        # Training
+        metrics = model.fit(X, y, epochs=100)
+        print(metrics)
+
+        # Inference
+        preds = model.predict(X[:5])
+        print(f"Sample predictions: {preds}")
+
+        # Evaluation
+        acc = model.score(X, y)
+        f1 = model.f1score(X, y)
+        print(f"Final Accuracy: {acc:.2f}, F1 Score: {f1:.2f}")
+        
+    except DROError as e:
+        print(f"Error occurred: {str(e)}")
