@@ -1,6 +1,5 @@
-from .base_nn import device, DROError
-from .base_nn import BaseNNDRO
-from .fdro_utils import RobustLoss
+from dro.src.neural_model.base_nn import device, DROError, BaseNNDRO
+from dro.src.neural_model.fdro_utils import RobustLoss
 import torch 
 import numpy as np 
 

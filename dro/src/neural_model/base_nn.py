@@ -2,10 +2,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-import warnings
-from torch.utils.data import Dataset, DataLoader, TensorDataset, random_split
+from torch.utils.data import DataLoader, TensorDataset, random_split
 from sklearn.metrics import f1_score
-from typing import Optional, Tuple, Union, Dict, List
+from typing import Tuple, Union, Dict, List
 import torchvision.models as models
 
 # Device configuration

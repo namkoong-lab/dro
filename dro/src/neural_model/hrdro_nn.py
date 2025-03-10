@@ -4,7 +4,7 @@ import torchattacks
 import warnings
 import numpy as np
 from typing import Optional, Dict, Union, List
-from .base_nn import BaseNNDRO, DROError
+from dro.src.neural_model.base_nn import BaseNNDRO, DROError
 
 class HRNNDRO(BaseNNDRO):
     """Huberian Robust Distributionally Robust Optimization Model

@@ -1,9 +1,7 @@
-import cvxpy as cp
 import torch
 import torchattacks
 import numpy as np
-from typing import Optional, Dict
-from base_nn import BaseNNDRO, DROError
+from dro.src.neural_model.base_nn import BaseNNDRO, DROError
 
 class WNNDRO(BaseNNDRO):
     """Wasserstein Distributionally Robust Optimization Model
