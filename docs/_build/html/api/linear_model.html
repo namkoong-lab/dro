@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linear DRO Methods &mdash; dro 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Neural Network DRO Methods" href="neural_model.html" />
+    <link rel="prev" title="Data Modules" href="data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            dro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_classification.classification_basic"><code class="docutils literal notranslate"><span class="pre">classification_basic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_classification.classification_DN21"><code class="docutils literal notranslate"><span class="pre">classification_DN21()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_classification.classification_SNVD20"><code class="docutils literal notranslate"><span class="pre">classification_SNVD20()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_classification.classification_LWLC"><code class="docutils literal notranslate"><span class="pre">classification_LWLC()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_regression.regression_basic"><code class="docutils literal notranslate"><span class="pre">regression_basic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_regression.regression_DN20_1"><code class="docutils literal notranslate"><span class="pre">regression_DN20_1()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_regression.regression_DN20_2"><code class="docutils literal notranslate"><span class="pre">regression_DN20_2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_regression.regression_DN20_3"><code class="docutils literal notranslate"><span class="pre">regression_DN20_3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dro.src.data.dataloader_regression.regression_LWLC"><code class="docutils literal notranslate"><span class="pre">regression_LWLC()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Linear DRO Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DROError"><code class="docutils literal notranslate"><span class="pre">Chi2DROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO"><code class="docutils literal notranslate"><span class="pre">Chi2DRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.input_dim"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.input_dim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.model_type"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.model_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.fit_intercept"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.fit_intercept</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.solver"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.solver</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.eps"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.eps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.evaluate"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDROError"><code class="docutils literal notranslate"><span class="pre">CVaRDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO"><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDROError"><code class="docutils literal notranslate"><span class="pre">KLDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO"><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.input_dim"><code class="docutils literal notranslate"><span class="pre">KLDRO.input_dim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.model_type"><code class="docutils literal notranslate"><span class="pre">KLDRO.model_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.fit_intercept"><code class="docutils literal notranslate"><span class="pre">KLDRO.fit_intercept</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.solver"><code class="docutils literal notranslate"><span class="pre">KLDRO.solver</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.eps"><code class="docutils literal notranslate"><span class="pre">KLDRO.eps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.dual_variable"><code class="docutils literal notranslate"><span class="pre">KLDRO.dual_variable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.update"><code class="docutils literal notranslate"><span class="pre">KLDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">KLDRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="neural_model.html">Neural Network DRO Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.DROError"><code class="docutils literal notranslate"><span class="pre">DROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.ParameterError"><code class="docutils literal notranslate"><span class="pre">ParameterError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.DataValidationError"><code class="docutils literal notranslate"><span class="pre">DataValidationError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.Linear"><code class="docutils literal notranslate"><span class="pre">Linear</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.Linear.forward"><code class="docutils literal notranslate"><span class="pre">Linear.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.Linear.training"><code class="docutils literal notranslate"><span class="pre">Linear.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.MLP.forward"><code class="docutils literal notranslate"><span class="pre">MLP.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.MLP.training"><code class="docutils literal notranslate"><span class="pre">MLP.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.criterion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.predict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.f1score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.f1score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.fdro_nn.Chi2NNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO.criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neural_model.html#dro.src.neural_model.fdro_nn.CVaRNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO.criterion()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">dro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Linear DRO Methods</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/linear_model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-dro.src.linear_model.chi2_dro">
+<span id="linear-dro-methods"></span><h1>Linear DRO Methods<a class="headerlink" href="#module-dro.src.linear_model.chi2_dro" title="Permalink to this heading"></a></h1>
+<dl class="py exception">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DROError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.chi2_dro.</span></span><span class="sig-name descname"><span class="pre">Chi2DROError</span></span><a class="reference internal" href="../_modules/dro/src/linear_model/chi2_dro.html#Chi2DROError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DROError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base exception class for errors in Chi-squared DRO model.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.chi2_dro.</span></span><span class="sig-name descname"><span class="pre">Chi2DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dro/src/linear_model/chi2_dro.html#Chi2DRO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></p>
+<p>Chi-squared Distributionally Robust Optimization (chi2-DRO) model.</p>
+<p>This model minimizes a chi-squared robust loss function for both regression and classification.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.input_dim">
+<span class="sig-name descname"><span class="pre">input_dim</span></span><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.input_dim" title="Permalink to this definition"></a></dt>
+<dd><p>Dimensionality of the input features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.model_type">
+<span class="sig-name descname"><span class="pre">model_type</span></span><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.model_type" title="Permalink to this definition"></a></dt>
+<dd><p>Model type indicator (e.g., ‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression with L2-loss, ‘lad’ for Linear Regression with L1-loss).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.fit_intercept">
+<span class="sig-name descname"><span class="pre">fit_intercept</span></span><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.fit_intercept" title="Permalink to this definition"></a></dt>
+<dd><p>Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, default = True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.solver">
+<span class="sig-name descname"><span class="pre">solver</span></span><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.solver" title="Permalink to this definition"></a></dt>
+<dd><p>Optimization solver to solve the problem, default = ‘MOSEK’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str, default = ‘MOSEK’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.eps">
+<span class="sig-name descname"><span class="pre">eps</span></span><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.eps" title="Permalink to this definition"></a></dt>
+<dd><p>Robustness parameter for DRO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Reference: &lt;<a class="reference external" href="https://www.jmlr.org/papers/volume20/17-750/17-750.pdf">https://www.jmlr.org/papers/volume20/17-750/17-750.pdf</a>&gt;</p>
+<p>Initialize the Chi2-DRO model with specified input dimension and model type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of the input features.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – Type of model (‘svm’, ‘logistic’, ‘ols’, ‘lad’).</p></li>
+<li><p><strong>fit_intercept</strong> (<em>bool</em><em>, </em><em>default = True</em>) – Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em>, </em><em>default = 'MOSEK'</em>) – Optimization solver to solve the problem, default = ‘MOSEK’</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dro/src/linear_model/chi2_dro.html#Chi2DRO.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the model configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Configuration dictionary containing ‘eps’ key for robustness parameter.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DROError" title="dro.src.linear_model.chi2_dro.Chi2DROError"><strong>Chi2DROError</strong></a> – If ‘eps’ is provided but is not a non-negative float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/dro/src/linear_model/chi2_dro.html#Chi2DRO.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the model using CVXPY to solve the Chi2 distributionally robust optimization problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Input feature matrix with shape (n_samples, n_features).</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – Target vector with shape (n_samples,).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model parameters dictionary with ‘theta’ key.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DROError" title="dro.src.linear_model.chi2_dro.Chi2DROError"><strong>Chi2DROError</strong></a> – If the optimization problem fails to solve.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dro/src/linear_model/chi2_dro.html#Chi2DRO.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Fast evaluate the true model performance for the obtained theta efficiently from data unbiased</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/dro/src/linear_model/chi2_dro.html#Chi2DRO.worst_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the worst-case distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Input feature matrix with shape (n_samples, n_features).</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – Target vector with shape (n_samples,).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing ‘sample_pts’ and ‘weight’ keys for worst-case distribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DROError" title="dro.src.linear_model.chi2_dro.Chi2DROError"><strong>Chi2DROError</strong></a> – If the worst-case distribution optimization fails.</p>
+</dd>
+</dl>
+<p>Reference: &lt;<a class="reference external" href="https://jmlr.org/papers/volume20/17-750/17-750.pdf">https://jmlr.org/papers/volume20/17-750/17-750.pdf</a>&gt; (Equation (8))</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-dro.src.linear_model.cvar_dro"></span><dl class="py exception">
+<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDROError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.cvar_dro.</span></span><span class="sig-name descname"><span class="pre">CVaRDROError</span></span><a class="reference internal" href="../_modules/dro/src/linear_model/cvar_dro.html#CVaRDROError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDROError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base exception class for errors in CVaR DRO model.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.cvar_dro.</span></span><span class="sig-name descname"><span class="pre">CVaRDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dro/src/linear_model/cvar_dro.html#CVaRDRO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></p>
+<p>Conditional Value-at-Risk (CVaR) Distributionally Robust Optimization (DRO) model.</p>
+<p>This model minimizes a robust loss function for both regression and classification tasks
+under a CVaR constraint.</p>
+<p>Attributes:
+input_dim (int): Dimensionality of the input features.
+model_type (str): Model type indicator (‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression).
+fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+solver (str, default = ‘MOSEK’): Optimization solver to solve the problem, default = ‘MOSEK’.
+alpha (float): Risk level for the CVaR constraint.
+threshold_val (float): Threshold value from the optimization.</p>
+<p>Reference: &lt;<a class="reference external" href="https://www.risk.net/journal-risk/2161159/optimization-conditional-value-risk">https://www.risk.net/journal-risk/2161159/optimization-conditional-value-risk</a>&gt;</p>
+<p>Initialize the CVaR DRO model with specified input dimension, model type, and alpha parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of the input features.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – Type of model (‘svm’, ‘logistic’, ‘ols’).</p></li>
+<li><p><strong>fit_intercept</strong> (<em>bool</em><em>, </em><em>default = True</em>) – Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em>, </em><em>default = 'MOSEK'</em>) – Optimization solver to solve the problem, default = ‘MOSEK’</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Risk level for CVaR (default is 1.0).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/dro/src/linear_model/cvar_dro.html#CVaRDRO.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the model configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary containing ‘alpha’ key for CVaR risk level.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDROError" title="dro.src.linear_model.cvar_dro.CVaRDROError"><strong>CVaRDROError</strong></a> – If ‘alpha’ is not in the valid range (0, 1].</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/dro/src/linear_model/cvar_dro.html#CVaRDRO.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the model using CVXPY to solve the robust optimization problem under CVaR constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Feature matrix with shape (n_samples, n_features).</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – Target vector with shape (n_samples,).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model parameters dictionary with ‘theta’ and ‘threshold’ keys.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDROError" title="dro.src.linear_model.cvar_dro.CVaRDROError"><strong>CVaRDROError</strong></a> – If the optimization problem fails to solve.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/dro/src/linear_model/cvar_dro.html#CVaRDRO.worst_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the worst-case distribution based on CVaR constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Input feature matrix with shape (n_samples, n_features).</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – Target vector with shape (n_samples,).</p></li>
+<li><p><strong>precision</strong> (<em>float</em>) – The perturbation amount in case when the loss is too insignificant to count.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing ‘sample_pts’ and ‘weight’ keys for worst-case distribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDROError" title="dro.src.linear_model.cvar_dro.CVaRDROError"><strong>CVaRDROError</strong></a> – If the worst-case distribution calculation fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-dro.src.linear_model.kl_dro"></span><dl class="py exception">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDROError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.kl_dro.</span></span><span class="sig-name descname"><span class="pre">KLDROError</span></span><a class="reference internal" href="../_modules/dro/src/linear_model/kl_dro.html#KLDROError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDROError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base exception class for errors in KL-DRO model.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.kl_dro.</span></span><span class="sig-name descname"><span class="pre">KLDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dro/src/linear_model/kl_dro.html#KLDRO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></p>
+<p>Kullback-Leibler divergence-based Distributionally Robust Optimization (KL-DRO) model.</p>
+<p>This model minimizes a KL-robust loss function for both regression and classification.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.input_dim">
+<span class="sig-name descname"><span class="pre">input_dim</span></span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.input_dim" title="Permalink to this definition"></a></dt>
+<dd><p>Dimensionality of the input features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.model_type">
+<span class="sig-name descname"><span class="pre">model_type</span></span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.model_type" title="Permalink to this definition"></a></dt>
+<dd><p>Model type indicator (e.g., ‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression with L2-loss, ‘lad’ for Linear Regression with L1-loss).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.fit_intercept">
+<span class="sig-name descname"><span class="pre">fit_intercept</span></span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.fit_intercept" title="Permalink to this definition"></a></dt>
+<dd><p>Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, default = True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.solver">
+<span class="sig-name descname"><span class="pre">solver</span></span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.solver" title="Permalink to this definition"></a></dt>
+<dd><p>Optimization solver to solve the problem, default = ‘MOSEK’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str, default = ‘MOSEK’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.eps">
+<span class="sig-name descname"><span class="pre">eps</span></span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.eps" title="Permalink to this definition"></a></dt>
+<dd><p>Robustness parameter for KL-DRO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.dual_variable">
+<span class="sig-name descname"><span class="pre">dual_variable</span></span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.dual_variable" title="Permalink to this definition"></a></dt>
+<dd><p>Dual variable value from the optimization problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Reference: &lt;<a class="reference external" href="https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf">https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf</a>&gt;</p>
+<p>Initialize the KL-DRO model with specified input dimension and model type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of the input features.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – Type of model (‘svm’, ‘logistic’, ‘ols’, ‘lad’).</p></li>
+<li><p><strong>fit_intercept</strong> (<em>bool</em><em>, </em><em>default = True</em>) – Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em>, </em><em>default = 'MOSEK'</em>) – Optimization solver to solve the problem, default = ‘MOSEK’</p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – Ambiguity size for the KL constraint (default is 0.0).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/dro/src/linear_model/kl_dro.html#KLDRO.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the model configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary containing ‘eps’ key for robustness parameter.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDROError" title="dro.src.linear_model.kl_dro.KLDROError"><strong>KLDROError</strong></a> – If ‘eps’ is provided but is not a non-negative float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/dro/src/linear_model/kl_dro.html#KLDRO.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the model using CVXPY to solve the robust optimization problem with KL constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Feature matrix with shape (n_samples, n_features).</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – Target vector with shape (n_samples,).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model parameters dictionary with ‘theta’ and ‘dual’ keys.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDROError" title="dro.src.linear_model.kl_dro.KLDROError"><strong>KLDROError</strong></a> – If the optimization problem fails to solve.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/dro/src/linear_model/kl_dro.html#KLDRO.worst_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.worst_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the worst-case distribution based on KL divergence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Input feature matrix with shape (n_samples, n_features).</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – Target vector with shape (n_samples,).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing ‘sample_pts’ and ‘weight’ keys for worst-case distribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDROError" title="dro.src.linear_model.kl_dro.KLDROError"><strong>KLDROError</strong></a> – If the worst-case distribution optimization fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data.html" class="btn btn-neutral float-left" title="Data Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="neural_model.html" class="btn btn-neutral float-right" title="Neural Network DRO Methods" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jiashuo Liu, Tianyu Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
