@@ -16,11 +16,11 @@ class WassersteinDRO(BaseLinearDRO):
     
     This model minimizes a Wasserstein-robust loss function for both regression and classification.
 
-    The Wasserstein distance is defined as the minimum probability coupling of two distributions for the distance metric: 
-        d((X_1, Y_1), (X_2, Y_2)) = (|cost_matrix^{1/2} @ (X_1 - X_2)|_p)^{square} + kappa |Y_1 - Y_2|, 
+The Wasserstein distance is defined as the minimum probability coupling of two distributions for the distance metric:
+        d((X_1, Y_1), (X_2, Y_2)) = (|\Sigma^{1/2} (X_1 - X_2)|_p)^{square} + \kappa |Y_1 - Y_2|,
     where parameters are:
-        - cost matrix, (a PSD Matrix); 
-        - kappa;
+        - $\Sigma$: cost matrix, (a PSD Matrix);
+        - $\kappa$;
         - p;
         - square (notation depending on the model type), where square = 2 for 'svm', 'logistic', 'lad'; square = 1 for 'ols'.
 
