@@ -116,9 +116,9 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
         elif self.model_type == 'lad':
             # the dual of the \|\theta, -1\|_dual_norm penalization
             if self.kappa == 'inf':
-                return cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm))
+                return cp.norm(self.cost_inv_transform @ theta, dual_norm)
             else:
-                return cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
+                return cp.maximum(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
 
 
 
@@ -357,13 +357,20 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
                 weight[-1] = gamma / sample_size
                 # solve the following perturbation problem
                 X_star = cp.Variable(self.input_dim)
-                y_star = cp.Variable()
-                cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) + self.kappa * cp.abs(y_star) <= 1]
-                dual_loss = cp.dot(self.theta, X_star) - y_star
+                if self.kappa not in [np.inf, 'inf']:
+                    y_star = cp.Variable()
+                    cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) + self.kappa * cp.abs(y_star) <= 1]
+                else:
+                    y_star = 0
+                    cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) <= 1]
+                dual_loss = self.theta @ X_star - y_star
                 problem = cp.Problem(cp.Maximize(dual_loss), cons)
                 problem.solve(solver = self.solver)
                 new_X = X[0] + self.eps * sample_size / gamma * X_star.value
-                new_y = y[0] + self.eps * sample_size / gamma * y_star.value
+                if self.kappa not in [np.inf, 'inf']:
+                    new_y = y[0] + self.eps * sample_size / gamma * y_star.value
+                else:
+                    new_y = y[0]
                 worst_X = np.vstack((X, new_X))
                 worst_y = np.hstack((y, new_y))
                 return {'sample_pts': [worst_X, worst_y], 'weight': weight}

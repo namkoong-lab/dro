@@ -1,5 +1,5 @@
 from .base import BaseLinearDRO
-from .Bayesian_dro import Bayesian_KL_DRO
+#from .Bayesian_dro import Bayesian_KL_DRO
 from .chi2_dro import Chi2DRO
 from .conditional_dro import ConditionalCVaRDRO
 from .cvar_dro import CVaRDRO
