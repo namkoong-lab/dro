@@ -80,7 +80,10 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
             p = config['p']
             if p != 'inf' and ((not isinstance(p, (float, int)) or p < 1)):
                 raise WassersteinDROError("Norm parameter 'p' must be float and larger than 1.")
-            self.p = float(p)
+            if p != 'inf':
+                self.p = float(p)
+            else:
+                self.p = 'inf'
 
         if 'kappa' in config.keys():
             kappa = config['kappa']
@@ -88,7 +91,10 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
                 raise WassersteinDROError("Y-Robustness parameter 'kappa' must be a non-negative float.")
             if kappa != 'inf' and self.model_type == 'ols':
                 warnings.warn("Wasserstein Distributionally Robust OLS does not support changes of Y in the ambiguity set")
-            self.kappa = float(kappa)
+            if kappa != 'inf':
+                self.kappa = float(kappa)
+            else:
+                self.kappa = 'inf'
 
         
     def penalization(self, theta: cp.Expression) -> float:
@@ -235,13 +241,14 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
             return np.inf
         
 
-    def worst_distribution(self, X: np.ndarray, y: np.ndarray, compute_type: int) -> Dict[str, Any]:
+    def worst_distribution(self, X: np.ndarray, y: np.ndarray, compute_type: str, gamma: float = 0) -> Dict[str, Any]:
         """Compute the worst-case distribution based on Wasserstein Distance
         
         Args:
             X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
             y (np.ndarray): Target vector with shape (n_samples,).
-            compute_type (int): type of computing the worst case distribution, only suitable for 'lad', 'svm', 'logistic'. 1 refers to computing via [1] (which is asymptotically, not exact and not exact and cannot do when kappa = \infty), 2 refers to computing via [2].
+            compute_type (str): type of approach that computes the worst case distribution, 'asymp' refers to computing via [1] (which is asymptotically, not exact and not exact and cannot do when kappa = \infty); only suitable for 'lad', 'svm', 'logistic'. 'exact' refers to computing via [2].
+            gamma (float): adjust parameter when compute_type == 'asymp', positive
 
         Returns:
             Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
@@ -256,10 +263,13 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
         [3] General Worst-case Distributions can be found in: https://pubsonline.informs.org/doi/abs/10.1287/moor.2022.1275, where norm_theta is lambda* here.
         """
 
-        if self.model_type == 'ols' and compute_type == 1:
+        if self.model_type == 'ols' and compute_type == 'asymp':
             warnings.warn("OLS does not support the corresponding computation method.")
-        elif self.kappa == 'inf' and compute_type == 1:
+        elif self.kappa == 'inf' and compute_type == 'asymp' and self.model_type in ['svm', 'logistic']:
             raise WassersteinDROError("The corresponding computation method do not support kappa = infty!")
+        
+        if not isinstance(gamma, (float, int)) or gamma < 0:
+            raise WassersteinDROError("Worst-case parameter 'gamma' must be a non-negative float.")
         
         sample_size, __ = X.shape
 
@@ -273,13 +283,14 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
             dual_norm = 1
         norm_theta = np.linalg.norm(self.cost_inv_transform @ self.theta, ord = dual_norm)
 
-        if compute_type == 2:
+        if compute_type == 'exact':
             if self.model_type == 'ols':
                 dual_norm_parameter = np.linalg.norm(self.cost_inv_transform @ self.theta, dual_norm) ** 2
                 new_X = np.zeros((sample_size, self.input_dim))
                 for i in range(sample_size):
                     var_x = cp.Variable(self.input_dim)
                     var_y = cp.Variable()
+                    # TODO: modify or remove
                     obj = (y[i] - self.theta @ var_x - self.b) ** 2 - dual_norm_parameter * self.distance_compute(var_x, X[i], var_y, y[i])
                     problem = cp.Problem(cp.Maximize(obj))
                     problem.solve(solver = self.solver)
@@ -289,37 +300,45 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
             else: # linear classification or regression with Lipschitz norm
                 # we denote the following case when we do not change Y.
                 new_X = np.zeros((sample_size, self.input_dim))
+                new_y = np.zeros(sample_size)
                 if self.model_type == 'svm':
                     for i in range(sample_size):
                         var_x = cp.Variable(self.input_dim)
                         var_y = cp.Variable()
-                        obj = 1 - y[i] * var_x @ self.theta - self.b - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
+                        # TODO: modify or remove, does not work.
+                        obj = 1 - y[i] * (var_x @ self.theta + self.b) - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
                         problem = cp.Problem(cp.Maximize(obj))
                         problem.solve(solver = self.solver)
                         
-                        if 1 - y[i] * var_x.value @ self.theta - self.b < 0:
+                        if 1 - y[i] * (var_x.value @ self.theta + self.b) < 0:
                             new_X[i] = X[i]
+                            new_y[i] = y[i]
                         else:
                             new_X[i] = var_x.value
-                    return {'sample_pts': [new_X, y], 'weight': np.ones(sample_size) / sample_size}
+                            new_y[i] = var_y.value if var_y.value is not None else y[i]
+                            print('test', var_x.value, X[i])
+                    return {'sample_pts': [new_X, new_y], 'weight': np.ones(sample_size) / sample_size}
 
                 elif self.model_type in ['lad', 'logistic']:
                     for i in range(sample_size):
                         var_x = cp.Variable(self.input_dim)
                         var_y = cp.Variable()
+                        # TODO: modify or remove, does not work.
                         obj = self._cvx_loss(var_x, y[i], self.theta, self.b) - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
                         problem = cp.Problem(cp.Maximize(obj))
                         problem.solve(solver = self.solver)
                         new_X[i] = var_x.value
-                    return {'sample_pts': [new_X, y], 'weight': np.ones(sample_size) / sample_size}
+                        new_y[i] = var_y.value if var_y.value is not None else y[i]
+                    return {'sample_pts': [new_X, new_y], 'weight': np.ones(sample_size) / sample_size}
 
                     
             
-        else:
+        elif compute_type == 'asymp':
             # in the following cases, we take gamma = 1 / sample_size since we want the asymptotic with respect to n
             if self.model_type in ['svm', 'logistic']:
             # Theorem 20 in https://jmlr.org/papers/volume20/17-633/17-633.pdf, where eta refers to theta in their equation, and eta_gamma refers to eta(\gamma)
-                gamma = 1 / sample_size
+                gamma = min(min(gamma, self.eps), 1)
+                #min(min(1 / math.sqrt(sample_size), self.eps), 1)
                 eta = cp.Variable(nonneg = True)
                 alpha = cp.Variable(sample_size, nonneg = True)
 
@@ -333,13 +352,16 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
                 weight = np.hstack((weight, eta_gamma / sample_size))
                 weight[0] = weight[0] * (1 - eta_gamma)
                 weight[sample_size] = weight[sample_size] * (1 - eta_gamma)
+                print(alpha.value, eta_gamma, eta.value)
                 # solve the following perturbation problem
                 X_star = cp.Variable(self.input_dim)
                 cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) <= 1]
                 problem = cp.Problem(cp.Maximize(X_star @ self.theta), cons)
                 problem.solve(solver = self.solver)
-
-                new_X = X[0] + X_star.value * sample_size * eta.value / eta_gamma
+                if eta_gamma != 0:
+                    new_X = X[0] + X_star.value * sample_size * eta.value / eta_gamma
+                else:
+                    new_X = X[0]
                 new_y = y[0]
 
                 X = np.concatenate((X, X))
@@ -350,7 +372,7 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
 
             elif self.model_type == 'lad':
             # Theorem 9 in https://jmlr.org/papers/volume20/17-633/17-633.pdf
-                gamma = 1 / sample_size
+                gamma = gamma
                 weight = np.zeros(sample_size + 1)
                 weight[1:-1] = np.ones(sample_size - 1) / sample_size
                 weight[0] = (1 - gamma) / sample_size
@@ -374,6 +396,9 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
                 worst_X = np.vstack((X, new_X))
                 worst_y = np.hstack((y, new_y))
                 return {'sample_pts': [worst_X, worst_y], 'weight': weight}
+    
+        else:
+            raise WassersteinDROError("We do not support the computation type. The computation type can only be 'asymp' or 'exact'.")
 
 
 class WassersteinDROSatisificingError(Exception):
