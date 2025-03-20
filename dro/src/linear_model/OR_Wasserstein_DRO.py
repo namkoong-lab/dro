@@ -8,7 +8,7 @@ class ORWDROError(Exception):
     """Base exception class for errors in OR-WDRO model."""
     pass
 
-class OR_Wasserstein_DRO(BaseLinearDRO):
+class ORWDRO(BaseLinearDRO):
     """
     Outlier-Robust Wasserstein DRO.
 

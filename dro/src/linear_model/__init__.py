@@ -7,8 +7,8 @@ from .hr_dro import HR_DRO_LR
 from .kl_dro import KLDRO
 from .marginal_dro import MarginalCVaRDRO
 from .mmd_dro import MMD_DRO 
-from .MOT_DRO import MOTDRO
-from .OR_Wasserstein_DRO import OR_Wasserstein_DRO
+from .mot_dro import MOTDRO
+from .or_wasserstein_dro import OR_Wasserstein_DRO
 from .sinkhorn_dro import SinkhornLinearDRO
 from .tv_dro import TVDRO
-from .Wasserstein_DRO import WassersteinDRO, Wasserstein_DRO_satisficing
+from .wasserstein_dro import WassersteinDRO, Wasserstein_DRO_satisficing

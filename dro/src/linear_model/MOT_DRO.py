@@ -16,12 +16,14 @@ class MOTDRO(BaseLinearDRO):
     Attribute:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
+        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
         eps (float): Robustness parameter for DRO.
         cost matrix (np.ndarray): the feature importance perturbation matrix with the dimension being (input_dim, input_dim).
         p (float or 'inf'): Norm parameter for controlling the perturbation moment of X.
-        
         theta1 (float): theta1 \geq 0 controls the strength of Wasserstein Distance
         theta2 (float): theta2 \geq 0 controls the strength of KL Divergence
+
     Reference: <https://arxiv.org/abs/2308.05414>
     """
     def __init__(self, input_dim: int, model_type: str):
@@ -104,7 +106,11 @@ class MOTDRO(BaseLinearDRO):
         t = cp.Variable(1)
         epig_ = cp.Variable([N_train, 1], pos=True)
         self.lambda_ = cp.Variable(1)
-        self.theta = cp.Variable(dim)
+        theta = cp.Variable(dim)
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
         eta = cp.Variable([N_train, 1])
 
         # Constraints
@@ -113,7 +119,7 @@ class MOTDRO(BaseLinearDRO):
         cons.append(self.lambda_ >= 0)
         
         ## our version
-        cons.append(self._cvx_loss(X, y, self.theta) <= epig_)  
+        cons.append(self._cvx_loss(X, y, theta, b) <= epig_)  
         for i in range(N_train):
             cons.append(
                 cp.constraints.exponential.ExpCone(
@@ -127,8 +133,11 @@ class MOTDRO(BaseLinearDRO):
         problem = cp.Problem(cp.Minimize(obj), cons)
 
         problem.solve(solver=self.solver)
-        self.theta = self.theta.value
+        self.theta = theta.value
+        if self.fit_intercept == True:
+            self.b = b.value
 
         model_params = {}
         model_params["theta"] = self.theta.reshape(-1).tolist()
+        model_params["b"] = self.b
         return model_params
