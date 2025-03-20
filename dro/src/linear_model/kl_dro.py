@@ -12,11 +12,11 @@ class KLDRO(BaseLinearDRO):
 
     This model minimizes a KL-robust loss function for both regression and classification.
 
-    Attributes:
+    Args:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
+        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
         eps (float): Robustness parameter for KL-DRO.
         dual_variable (Optional[float]): Dual variable value from the optimization problem.
 
@@ -30,8 +30,8 @@ class KLDRO(BaseLinearDRO):
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
+            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str): Optimization solver to solve the problem, default = 'MOSEK'
             eps (float): Ambiguity size for the KL constraint (default is 0.0).
         """
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)        

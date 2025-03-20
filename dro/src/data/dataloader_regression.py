@@ -7,15 +7,16 @@ def regression_basic(num_samples=100, d=1, noise=0.1, seed=42):
     """
     Basic regression setting.
 
-    Parameters:
-    - num_samples (int): The number of samples
-    - d (int): The dimension of covariates
-    - noise (float): The variance of the noise term
-    - seed (int): Random seed.
+    Args:
+        num_samples (int): The number of samples
+        d (int): The dimension of covariates
+        noise (float): The variance of the noise term
+        seed (int): Random seed.
     
     Returns:
-    - X (numpy.ndarray): A numpy array containing the generated covariate data
-    - y (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariate, target) where:
+            - X (numpy.ndarray): A numpy array containing the generated covariate data
+            - y (numpy.ndarray): A numpy array containing the generated target data
     """
      
     X, y = make_regression(n_samples=num_samples, n_features=d, noise=noise, random_state=seed)
@@ -27,15 +28,16 @@ def regression_DN20_1(num_samples, d=5, noise=0.01, seed=42):
     Following Section 3.1.2 of "Learning Models with Uniform Performance via Distributionally Robust Optimization"
     link: https://arxiv.org/pdf/1810.08750
 
-    Parameters:
-    - num_samples (int): The number of samples
-    - d (int): The dimension of covariates
-    - noise (float): The variance of the noise term
-    - seed (int): Random seed.
+    Args:
+        num_samples (int): The number of samples
+        d (int): The dimension of covariates
+        noise (float): The variance of the noise term
+        seed (int): Random seed.
     
     Returns:
-    - X (numpy.ndarray): A numpy array containing the generated covariate data
-    - y (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariate, target) where:
+            - X (numpy.ndarray): A numpy array containing the generated covariate data
+            - y (numpy.ndarray): A numpy array containing the generated target data
     """
     np.random.seed(seed)
 
@@ -55,15 +57,16 @@ def regression_DN20_2(num_samples, prob=0.1, noise=0.01, seed=42):
     Following Section 3.1.3 of "Learning Models with Uniform Performance via Distributionally Robust Optimization"
     link: https://arxiv.org/pdf/1810.08750
 
-    Parameters:
-    - num_samples (int): The number of samples
-    - prob (float): the minority group ratio in (0,1)
-    - noise (float): The variance of the noise term
-    - seed (int): Random seed.
+    Args:
+        num_samples (int): The number of samples
+        prob (float): the minority group ratio in (0,1)
+        noise (float): The variance of the noise term
+        seed (int): Random seed.
     
     Returns:
-    - X (numpy.ndarray): A numpy array containing the generated covariate data
-    - y (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariate, target) where:
+            - X (numpy.ndarray): A numpy array containing the generated covariate data
+            - y (numpy.ndarray): A numpy array containing the generated target data
     """
 
     np.random.seed(seed)
@@ -84,13 +87,14 @@ def regression_DN20_3(save_dir="./data/", download=True):
 
     Data is from UCI repository: https://archive.ics.uci.edu/dataset/183/communities+and+crime
 
-    Parameters:
-    - save_dir (str): The path to save the data
-    - download (bool): Whether to download the data. If not, will load the data according to the save_dir
+    Args:
+        save_dir (str): The path to save the data
+        download (bool): Whether to download the data. If not, will load the data according to the save_dir
     
     Returns:
-    - X (numpy.ndarray): A numpy array containing the generated covariate data
-    - y (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariate, target) where:
+            - X (numpy.ndarray): A numpy array containing the generated covariate data
+            - y (numpy.ndarray): A numpy array containing the generated target data
     """
     if download:
         communities_and_crime = fetch_ucirepo(id=183) 
@@ -117,23 +121,19 @@ def regression_LWLC(n1=100000, n2=1000, ps=5, pvb=1, pv=4, r=1.7, scramble=False
     Following Section 4.1 (Regression) of "Distributionally Robust Optimization with Data Geometry"
     link: https://proceedings.neurips.cc/paper_files/paper/2022/file/da535999561b932f56efdd559498282e-Paper-Conference.pdf
 
-    n1: total number of samples in the pool
-    n2: number of samples required
-    r: controls the spurious correlation between pvb and y
-    scramble: whether to mix S and V
-
-    Parameters:
-    - n1 (int): The total number of samples in the pool
-    - n2 (int): The number of samples required
-    - ps (int): The dimension of feature S
-    - pvb (int): The dimension of feature Vb
-    - pv (int): The dimension of other features in V (except for Vb)
-    - r (float): The adjustment parameter to control the spurious correlation with |r|>1. Higher |r| denotes stronger spurious correlation, and sign(r) controls the direction of spurious correlation
-    - scramble (bool): Whether to mix the features S and V.
+    Args:
+        n1 (int): The total number of samples in the pool
+        n2 (int): The number of samples required
+        ps (int): The dimension of feature S
+        pvb (int): The dimension of feature Vb
+        pv (int): The dimension of other features in V (except for Vb)
+        r (float): The adjustment parameter to control the spurious correlation with abs(r)>1. Higher abs(r) denotes stronger spurious correlation, and sign(r) controls the direction of spurious correlation
+        scramble (bool): Whether to mix the features S and V.
     
     Returns:
-    - X (numpy.ndarray): A numpy array containing the generated covariate data
-    - y (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariate, target) where:
+            - X (numpy.ndarray): A numpy array containing the generated covariate data
+            - y (numpy.ndarray): A numpy array containing the generated target data
     """
     
     S = np.random.normal(0, 2, [n1, ps])

@@ -5,18 +5,19 @@ def classification_basic(d=2, k=2, num_samples=500, radius=5.0, seed=42, visuali
     """
     Basic classification setting.
 
-    Parameters:
-    - d (int): The dimension of covariates
-    - k (int): The number of classes
-    - num_samples (int): The number of samples
-    - radius (float): The radius of the ball to sample the class center
-    - seed (int): Random seed.
-    - visualize (bool): Whether to visualize the data
-    - save_dir (str): The save path of the visualization figure, if set None, we just visualize instead of storing it.
+    Args:
+        d (int): The dimension of covariates
+        k (int): The number of classes
+        num_samples (int): The number of samples
+        radius (float): The radius of the ball to sample the class center
+        seed (int): Random seed.
+        visualize (bool): Whether to visualize the data
+        save_dir (str): The save path of the visualization figure, if set None, we just visualize instead of storing it.
 
     Returns:
-    - X (numpy.ndarray): A numpy array containing the generated covariate data
-    - y (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariate, target) where:
+            - X (numpy.ndarray): A numpy array containing the generated covariate data
+            - y (numpy.ndarray): A numpy array containing the generated target data
     """
     np.random.seed(seed)
     samples_per_class = num_samples // k 
@@ -45,17 +46,18 @@ def classification_DN21(d, flip_ratio=0.1, num_samples=100, seed=42, visualize=F
     Following Section 3.1.1 of "Learning Models with Uniform Performance via Distributionally Robust Optimization"
     link: https://arxiv.org/pdf/1810.08750
     
-    Parameters:
-    - d (int): The dimension of covariates
-    - flip_ratio (fload): The ratio of labels to be flipped
-    - num_samples (int): The number of samples
-    - seed (int): Random seed.
-    - visualize (bool): Whether to visualize the data
-    - save_dir (str): The save path of the visualization figure
+    Args:
+        d (int): The dimension of covariates
+        flip_ratio (float): The ratio of labels to be flipped
+        num_samples (int): The number of samples
+        seed (int): Random seed.
+        visualize (bool): Whether to visualize the data
+        save_dir (str): The save path of the visualization figure
 
     Returns:
-    - X (numpy.ndarray): A numpy array containing the generated covariate data
-    - y_noisy (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariat, target) where:
+            - X (numpy.ndarray): A numpy array containing the generated covariate data
+            - y_noisy (numpy.ndarray): A numpy array containing the generated target data
     """
 
     np.random.seed(seed)
@@ -81,15 +83,16 @@ def classification_SNVD20(num_samples=500, seed=42, visualize=False, save_dir=".
     Following Section 5.1 of "Certifying Some Distributional Robustness with Principled Adversarial Training"
     link: https://arxiv.org/pdf/1710.10571
 
-    Parameters:
-    - num_samples (int): The number of samples
-    - seed (int): Random seed.
-    - visualize (bool): Whether to visualize the data
-    - save_dir (str): The save path of the visualization figure
+    Args:
+        num_samples (int): The number of samples
+        seed (int): Random seed.
+        visualize (bool): Whether to visualize the data
+        save_dir (str): The save path of the visualization figure
 
     Returns:
-    - X_filtered (numpy.ndarray): A numpy array containing the generated covariate data
-    - y_filtered (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariate, target) where:
+            - X_filtered (numpy.ndarray): A numpy array containing the generated covariate data
+            - y_filtered (numpy.ndarray): A numpy array containing the generated target data
     """
     
     np.random.seed(seed)
@@ -114,7 +117,7 @@ def classification_LWLC(num_samples=10000, d=5, bias=0.5, scramble=True, sigma_s
     Following Section 4.1 (Classification) of "Distributionally Robust Optimization with Data Geometry"
     link: https://proceedings.neurips.cc/paper_files/paper/2022/file/da535999561b932f56efdd559498282e-Paper-Conference.pdf
 
-    Parameters:
+    Args:
     - num_samples (int): The number of samples
     - d (int): The dimension of feature S and V
     - bias (float): The bias ratio in (0,1)
@@ -127,8 +130,9 @@ def classification_LWLC(num_samples=10000, d=5, bias=0.5, scramble=True, sigma_s
     - save_dir (str): The save path of the visualization figure
 
     Returns:
-    - X (numpy.ndarray): A numpy array containing the generated (high-dimensional) covariate data
-    - y (numpy.ndarray): A numpy array containing the generated target data
+        tuple: (covariate, target) where:
+            - X (numpy.ndarray): A numpy array containing the generated (high-dimensional) covariate data
+            - y (numpy.ndarray): A numpy array containing the generated target data
     """
     from scipy.stats import ortho_group
     S = np.float32(ortho_group.rvs(size=1, dim=high_dimension, random_state=1))

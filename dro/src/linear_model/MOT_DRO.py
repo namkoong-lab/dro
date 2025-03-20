@@ -13,7 +13,7 @@ class MOTDRO(BaseLinearDRO):
     OT discrepancy with conditional moment constraint, the cost is set as:
     c(((X_1, Y_1), w), ((X_2, Y_2), \hat w)) = theta1 * w * d((X_1, Y_1), (X_2, Y_2)) + theta2 * (\phi(w) - \phi(\hat w))^+, where \phi() is the KL divergence.
 
-    Attribute:
+    Args:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
         fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
@@ -44,6 +44,7 @@ class MOTDRO(BaseLinearDRO):
         
         Args: 
             config (Dict[str, Any]): Configuration dictionary containing 'theta1', 'theta2', 'eps', 'p', 'kappa' keys for robustness parameter.
+            
         Raises:
             MOTDROError: If any of the configs does not fall into its domain.
         """

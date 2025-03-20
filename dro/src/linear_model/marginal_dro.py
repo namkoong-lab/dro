@@ -15,12 +15,12 @@ class MarginalCVaRDRO(BaseLinearDRO):
     under a CVaR constraint only for the marginal distribution of X.
     
     
-    Attributes:
+    Args:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Type of model (e.g., 'svm', 'logistic', 'ols').
         alpha (float): Risk level for CVaR.
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
+        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
         control_name (Optional[list[int]]): Indices of the control features for marginal DRO.
         p (int): Power parameter for the distance measure.
         L (float): Scaling parameter for the marginal robustness.
@@ -136,17 +136,9 @@ class MarginalCVaRDRO(BaseLinearDRO):
         problem = cp.Problem(cp.Minimize(cost + eta), cons)
         
         try:
-            # solver_options = {
-            #     'MSK_IPAR_PRESOLVE_USE': 1,
-            #     'MSK_DPAR_BASIS_TOL_X': 1e-5,
-            #     'MSK_DPAR_INTPNT_TOL_DFEAS': 1e-5,
-            #     'MSK_DPAR_INTPNT_TOL_PFEAS': 1e-5,
-            #     'MSK_DPAR_INTPNT_TOL_REL_GAP': 1e-5
-            # }
+            
             problem.solve(solver=self.solver)
-            #**solver_options)
-
-            # Extract optimization results
+            
             self.theta = theta.value
             self.B_val = B_var.value
             self.threshold_val = eta.value
@@ -165,32 +157,3 @@ class MarginalCVaRDRO(BaseLinearDRO):
             "b": self.b,
             "threshold": self.threshold_val
         }
-
-    # def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-    #     """Compute the worst-case distribution based on Marginal CVaR constraint.
-
-    #     Args:
-    #         X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
-    #         y (np.ndarray): Target vector with shape (n_samples,).
-
-    #     Returns:
-    #         Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
-
-    #     Raises:
-    #         MarginalCVaRDROError: If required parameters are not set.
-    #     """
-    #     self.fit(X,y)
-    #     sample_size, _ = X.shape
-        
-    #     if self.B_val is None or self.threshold_val is None:
-    #         raise MarginalCVaRDROError("Model parameters are not set. Ensure 'fit' method has been called.")
-
-    #     # Compute per-sample perturbed loss
-    #     per_loss = self._loss(X, y)
-    #     perturb_loss = per_loss - (np.sum(self.B_val, axis=1) - np.sum(self.B_val, axis=0)) / sample_size
-
-    #     # Identify samples exceeding threshold for worst-case distribution
-    #     indices = np.where(perturb_loss > self.threshold_val)[0]
-    #     weight = np.ones(len(indices)) / len(indices) if len(indices) > 0 else np.array([])
-
-    #     return {'sample_pts': [X[indices], y[indices]], 'weight': weight}

@@ -1,25 +1,37 @@
 import numpy as np
 import cvxpy as cp
 import warnings
-from torch.autograd import grad
 from sklearn.metrics import f1_score
 from typing import Optional, Tuple, Union
+import numpy as np
 
 class DROError(Exception):
-    """Base exception class for all errors in DRO models."""
+    """Base exception class for all errors in DRO models.
+    
+    :meta private:
+    """
     pass
 
 
 class ParameterError(DROError):
-    """Exception raised for invalid parameter configurations."""
+    """Exception raised for invalid parameter configurations.
+    
+    :meta private:
+    """
     pass
 
 class InstallError(DROError):
-    """Exception raised for packages / solvers not installed."""
+    """Exception raised for packages / solvers not installed.
+    
+    :meta private:
+    """
     pass
 
 class DataValidationError(DROError):
-    """Exception raised for invalid data format or dimensions."""
+    """Exception raised for invalid data format or dimensions.
+    
+    :meta private:
+    """
     pass
 
 class BaseLinearDRO:
@@ -28,7 +40,7 @@ class BaseLinearDRO:
     This class supports both regression and binary classification tasks. To ensure convex optimization,
     this class only supports linear models, e.g., SVM, Linear Regression, and Logistic Regression.
 
-    Attributes:
+    Args:
         input_dim (int): Dimensionality of the input features.
         model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
         fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).

@@ -26,9 +26,9 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
 
     Attribute:
         input_dim (int): Dimensionality of the input features.
-        model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
+        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD), default = 'svm'.
+        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
         eps (float): Robustness parameter for DRO.
         cost matrix (np.ndarray): the feature importance perturbation matrix with the dimension being (input_dim, input_dim).
         p (float or 'inf'): Norm parameter for controlling the perturbation moment of X.
@@ -45,8 +45,8 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
+            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str): Optimization solver to solve the problem, default = 'MOSEK'
         """
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
 
@@ -411,20 +411,13 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
     Robust satisficing version of Wasserstein DRO
 
     This model minimizes the subject to (approximated version) of the robust satisficing constraint of Wasserstein DRO. The Wasserstein Distance is defined as the minimum probability coupling of two distributions for the distance metric: 
-    d((X_1, Y_1), (X_2, Y_2)) = (|cost_matrix^{1/2} @ (X_1 - X_2)|_p)^{square} + kappa |Y_1 - Y_2|, 
-        where parameters are:
-        - cost matrix, (a PSD Matrix); 
-        - kappa;
-        - p;
-        - square (notation depending on the model type), where square = 2 for 'svm', 'logistic', 'lad'; square = 1 for 'ols'.
-
+    d((X_1, Y_1), (X_2, Y_2)) = (abs(cost_matrix^{1/2} @ (X_1 - X_2))_p)^{square} + kappa abs(Y_1 - Y_2).
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
-        model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
+        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD), default='svm'.
+        fit_intercept (bool): Whether to calculate the intercept for this model, default=True.  If set to False, no intercept will be used in calculations (i.e. data is expected to be centered). 
+        solver (str): Optimization solver to solve the problem, default = 'MOSEK'
         target ratio (float): target ratio (required to be >=1, against the empirical objective).
  
     Reference: <https://pubsonline.informs.org/doi/10.1287/opre.2021.2238>

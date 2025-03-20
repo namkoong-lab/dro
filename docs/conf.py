@@ -15,10 +15,22 @@ release = '0.1.1'
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinx_rtd_theme',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.intersphinx',
+    'sphinx_autodoc_typehints'
 ]
+
+autodoc_type_aliases = {
+    'NDArray': 'numpy.ndarray',
+    'Tensor': 'torch.Tensor'
+}
+
+intersphinx_mapping = {
+    'numpy': ('https://numpy.org/doc/stable/', None),
+    'torch': ('https://pytorch.org/docs/stable/', None),
+    'python': ('https://docs.python.org/3', None)
+}
+
+autodoc_typehints = "both"
 
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
@@ -31,4 +43,6 @@ autodoc_default_options = {
     'undoc-members': True,
     'show-inheritance': True
 }
+
+
 autoclass_content = 'both'  
