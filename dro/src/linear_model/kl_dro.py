@@ -98,7 +98,7 @@ class KLDRO(BaseLinearDRO):
             self.theta = theta.value
             self.dual_variable = eta.value
         except cp.SolverError as e:
-            raise KLDROError("Optimization failed to solve using MOSEK.") from e
+            raise KLDROError(f"Optimization failed to solve using {self.solver}.") from e
 
         if self.theta is None or self.dual_variable is None:
             raise KLDROError("Optimization did not converge to a solution.")
