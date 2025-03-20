@@ -21,7 +21,7 @@ class LinearModel(nn.Module):
     Args:
         linear (nn.Linear): Linear layer implementing y = xA^T + b
     """
-    def __init__(self, input_dim: int, output_dim: int = 1):
+    def __init__(self, input_dim: int, output_dim: int = 1, bias: bool = True):
         super().__init__()
         self.linear = nn.Linear(input_dim, output_dim, bias=True)
 
@@ -50,34 +50,36 @@ class SinkhornLinearDRO(BaseLinearDRO):
 
     def __init__(self,
                  input_dim: int,
+                 model_type: str = "svm",
+                 fit_intercept: bool = True, 
                  reg_param: float = 1e-3,
                  lambda_param: float = 1e2,
                  output_dim: int = 1, 
                  max_iter: int = 1e3,
                  learning_rate: float = 1e-2,
                  k_sample_max: int = 5,
-                 model_type: str = "svm",
                  device = "cpu"):
         """Initialize Sinkhorn DRO model.
 
         Args:
             input_dim: Dimension of input features
+            model_type: (str): Type of model ('svm', 'logistic', 'ols', 'lad').
             reg_param: Regularization strength (ε in paper)
             lambda_param: Loss scaling parameter (λ in paper)
             max_iter: Maximum training iterations
             learning_rate: Learning rate for optimizer
             k_sample_max: Maximum level for MLMC sampling
-            model_type: Model type identifier
+
 
         Raises:
             SinkhornDROError: For invalid parameter values
         """
-        super().__init__(input_dim, model_type)
+        super().__init__(input_dim, model_type, fit_intercept)
         
         if reg_param <= 0 or lambda_param <= 0:
             raise SinkhornDROError("Regularization parameters must be positive")
 
-        self.model = LinearModel(input_dim, output_dim)
+        self.model = LinearModel(input_dim, output_dim, fit_intercept)
         self.reg_param = reg_param
         self.lambda_param = lambda_param
         self.max_iter = max_iter
@@ -206,7 +208,16 @@ class SinkhornLinearDRO(BaseLinearDRO):
     def _compute_loss(self, predictions: torch.Tensor, targets: torch.Tensor, 
                      m: int, lambda_reg: float) -> torch.Tensor:
         """Compute Sinkhorn loss for given batch."""
-        residuals = (predictions - targets) ** 2 / lambda_reg
+        # TODO: double check.
+        if self.model_type == 'ols':
+            residuals = (predictions - targets) ** 2 / lambda_reg
+        elif self.model_type == 'lad':
+            residuals = torch.abs(predictions - targets)/ lambda_reg
+        elif self.model_type == 'logistic':
+            criterion = torch.nn.BCEWithLogitsLoss()
+            residuals = criterion(predictions, targets) / lambda_reg
+        elif self.model_type == 'svm':
+            residuals = torch.clamp(1 - targets * predictions, min = 0)
         residual_matrix = residuals.view(m, -1)
         return torch.mean(torch.logsumexp(residual_matrix, dim=0)-math.log(m)) * lambda_reg
 
