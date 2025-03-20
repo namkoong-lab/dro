@@ -18,13 +18,13 @@ class ConditionalCVaRDRO(BaseLinearDRO):
     with alpha(x) to be beta^T x for simplicity
     alpha corresponds to Gamma in the paper.
 
-    Attributes:
+    Args:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Type of model (e.g., 'svm', 'logistic', 'ols').
         alpha (float): Risk level for CVaR.
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
-        alpha (float, default = 1): Risk level for CVaR.
+        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
+        alpha (float): Risk level for CVaR, default = 1.
         control_name (Optional[list[int]]): Indices of the control features for conditional DRO.
 
 
@@ -35,8 +35,8 @@ class ConditionalCVaRDRO(BaseLinearDRO):
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
+            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
 
         
         """

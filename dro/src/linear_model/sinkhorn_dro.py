@@ -18,7 +18,7 @@ class SinkhornDROError(Exception):
 class LinearModel(nn.Module):
     """PyTorch Linear Model for regression tasks.
     
-    Attributes:
+    Args:
         linear (nn.Linear): Linear layer implementing y = xA^T + b
     """
     def __init__(self, input_dim: int, output_dim: int = 1):
@@ -38,7 +38,7 @@ class SinkhornLinearDRO(BaseLinearDRO):
     - MLMC (Multilevel Monte Carlo)
     - RTMLMC (Randomized Truncated MLMC)
 
-    Attributes:
+    Args:
         model (LinearModel): Underlying PyTorch linear model
         reg_param (float): Regularization parameter for Wasserstein distance
         lambda_param (float): Loss scaling parameter

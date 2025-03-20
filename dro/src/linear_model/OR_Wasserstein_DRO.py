@@ -14,7 +14,7 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
 
     This model minimizes the TV corrupted p-Wasserstein loss function for both regression and classification.
 
-    Attributes:
+    Args:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
         eps (float): Robustness parameter for OR-WDRO. 
@@ -39,9 +39,8 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
 
         Args:
             config (Dict[str, Any]): Configuration dictionary containing 'eps' key for robustness parameter.
-        TODO: other description
         Raises:
-            ORDROError: If 'eps', 'eta' is provided but is not a non-negative float.
+            ORWDROError: If 'eps', 'eta' is provided but is not a non-negative float.
         """
         if 'eps' in config:
             eps = config['eps']
@@ -222,7 +221,7 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
             Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
 
         Raises:
-            ORWError: If the worst-case distribution optimization fails.
+            ORWDROError: If the worst-case distribution optimization fails.
         """
         
         n, d = X.shape
@@ -293,4 +292,4 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
         if problem.value is None:
             raise ORWDROError("Worst-case distribution optimization did not converge to a solution.")
         return q
-        return {'sample_pts': [X, y], 'weight': [[q[i][j].value for j in range(J)] for i in range(n)]}
+        

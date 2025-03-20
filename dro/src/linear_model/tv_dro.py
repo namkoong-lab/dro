@@ -12,11 +12,11 @@ class TVDRO(BaseLinearDRO):
 
     This model minimizes a robust loss function subject to a total variation constraint.
 
-    Attributes:
+    Args:
         input_dim (int): Dimensionality of the input features.
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
+        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
         eps (float): Robustness parameter for TV-DRO.
         threshold_val (float): Threshold value from the optimization.
     """

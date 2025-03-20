@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dro.src.linear_model.base &mdash; dro 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            dro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/data.html">Data Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_classification.classification_basic"><code class="docutils literal notranslate"><span class="pre">classification_basic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_classification.classification_DN21"><code class="docutils literal notranslate"><span class="pre">classification_DN21()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_classification.classification_SNVD20"><code class="docutils literal notranslate"><span class="pre">classification_SNVD20()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_classification.classification_LWLC"><code class="docutils literal notranslate"><span class="pre">classification_LWLC()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_basic"><code class="docutils literal notranslate"><span class="pre">regression_basic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_DN20_1"><code class="docutils literal notranslate"><span class="pre">regression_DN20_1()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_DN20_2"><code class="docutils literal notranslate"><span class="pre">regression_DN20_2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_DN20_3"><code class="docutils literal notranslate"><span class="pre">regression_DN20_3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/data.html#dro.src.data.dataloader_regression.regression_LWLC"><code class="docutils literal notranslate"><span class="pre">regression_LWLC()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/linear_model.html">Linear DRO Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.evaluate"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.load"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.predict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DROError"><code class="docutils literal notranslate"><span class="pre">Chi2DROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO"><code class="docutils literal notranslate"><span class="pre">Chi2DRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO.evaluate"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDROError"><code class="docutils literal notranslate"><span class="pre">CVaRDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDRO"><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDROError"><code class="docutils literal notranslate"><span class="pre">KLDROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO"><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.update"><code class="docutils literal notranslate"><span class="pre">KLDRO.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/linear_model.html#dro.src.linear_model.kl_dro.KLDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">KLDRO.worst_distribution()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/neural_model.html">Neural Network DRO Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.DROError"><code class="docutils literal notranslate"><span class="pre">DROError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.ParameterError"><code class="docutils literal notranslate"><span class="pre">ParameterError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.DataValidationError"><code class="docutils literal notranslate"><span class="pre">DataValidationError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.Linear"><code class="docutils literal notranslate"><span class="pre">Linear</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.Linear.forward"><code class="docutils literal notranslate"><span class="pre">Linear.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.Linear.training"><code class="docutils literal notranslate"><span class="pre">Linear.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.MLP.forward"><code class="docutils literal notranslate"><span class="pre">MLP.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.MLP.training"><code class="docutils literal notranslate"><span class="pre">MLP.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.criterion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.predict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.base_nn.BaseNNDRO.f1score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.f1score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.fdro_nn.Chi2NNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO.criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.fdro_nn.CVaRNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO.criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.hrdro_nn.HRNNDRO"><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.hrdro_nn.HRNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.criterion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.hrdro_nn.HRNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.hrdro_nn.HRNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.predict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/neural_model.html#dro.src.neural_model.wdro_nn.WNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">WNNDRO.criterion()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">dro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">dro.src.linear_model.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for dro.src.linear_model.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="nn">cp</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">class</span> <span class="nc">DROError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base exception class for all errors in DRO models.</span>
+<span class="sd">    </span>
+<span class="sd">    :meta private:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">ParameterError</span><span class="p">(</span><span class="n">DROError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception raised for invalid parameter configurations.</span>
+<span class="sd">    </span>
+<span class="sd">    :meta private:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">InstallError</span><span class="p">(</span><span class="n">DROError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception raised for packages / solvers not installed.</span>
+<span class="sd">    </span>
+<span class="sd">    :meta private:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">DataValidationError</span><span class="p">(</span><span class="n">DROError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception raised for invalid data format or dimensions.</span>
+<span class="sd">    </span>
+<span class="sd">    :meta private:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="BaseLinearDRO"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO">[docs]</a><span class="k">class</span> <span class="nc">BaseLinearDRO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base class for Linear Distributionally Robust Optimization (DRO) models.</span>
+<span class="sd">    </span>
+<span class="sd">    This class supports both regression and binary classification tasks. To ensure convex optimization,</span>
+<span class="sd">    this class only supports linear models, e.g., SVM, Linear Regression, and Logistic Regression.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_dim (int): Dimensionality of the input features.</span>
+<span class="sd">        model_type (str, default = &#39;svm&#39;): Model type indicator (&#39;svm&#39; for SVM, &#39;logistic&#39; for Logistic Regression, &#39;ols&#39; for Linear Regression for OLS, &#39;lad&#39; for Linear Regression for LAD).</span>
+<span class="sd">        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).</span>
+<span class="sd">        solver (str, default = &#39;MOSEK&#39;): Optimization solver to solve the problem, default = &#39;MOSEK&#39;</span>
+<span class="sd">        theta (np.ndarray): Model parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;MOSEK&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">input_dim</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterError</span><span class="p">(</span><span class="s2">&quot;Input dimension must be a positive integer.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="s1">&#39;logistic&#39;</span><span class="p">,</span> <span class="s1">&#39;ols&#39;</span><span class="p">,</span> <span class="s1">&#39;lad&#39;</span><span class="p">}:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">input_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span> <span class="o">=</span> <span class="n">fit_intercept</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">solver</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cp</span><span class="o">.</span><span class="n">installed_solvers</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">InstallError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported solver </span><span class="si">{</span><span class="n">solver</span><span class="si">}</span><span class="s2">. It does not exist in your package. Please change the solver or install </span><span class="si">{</span><span class="n">solver</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
+        
+
+<div class="viewcode-block" id="BaseLinearDRO.update"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update model parameters based on configuration.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>  <span class="c1"># Method to be implemented in subclasses if needed</span></div>
+
+<div class="viewcode-block" id="BaseLinearDRO.fit"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit model to data by solving an optimization problem.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>  <span class="c1"># Method to be implemented in subclasses</span></div>
+
+<div class="viewcode-block" id="BaseLinearDRO.evaluate"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">fast</span><span class="p">:</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate the true model performance for the obtained theta efficiently&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="BaseLinearDRO.load"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load model parameters from a configuration dictionary.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">theta</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,):</span>
+                <span class="k">raise</span> <span class="n">DataValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Theta must have shape (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="si">}</span><span class="s2">,)&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterError</span><span class="p">(</span><span class="s2">&quot;Config must contain &#39;theta&#39; key.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+
+<div class="viewcode-block" id="BaseLinearDRO.predict"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Predict output based on input data and model parameters.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected input with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="si">}</span><span class="s2"> features, got </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;ols&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">scores</span>
+
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">scores</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;svm&#39;</span> <span class="k">else</span> <span class="mf">0.5</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">preds</span></div>
+
+<div class="viewcode-block" id="BaseLinearDRO.score"><a class="viewcode-back" href="../../../../api/linear_model.html#dro.src.linear_model.base.BaseLinearDRO.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Compute accuracy and F1 score for classification tasks, or MSE for regression.&quot;&quot;&quot;</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">DataValidationError</span><span class="p">(</span><span class="s2">&quot;Weights must have the same number of elements as y.&quot;</span><span class="p">)</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;ols&#39;</span><span class="p">:</span>
+            <span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">((</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mse</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;lad&#39;</span><span class="p">:</span>
+            <span class="n">lad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">y</span><span class="p">),</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">lad</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">predictions</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+            <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">f1</span></div>
+    
+
+
+    <span class="k">def</span> <span class="nf">_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Compute the loss for the current model parameters.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;svm&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">in</span> <span class="s1">&#39;logistic&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;ols&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;lad&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Loss function not implemented for the specified model_type value.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">cp</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">cp</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">cp</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">cp</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cp</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Define the CVXPY loss expression for the model.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span> <span class="s2">&quot;Mismatch between feature and input dimension.&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;svm&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cp</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cp</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">b</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;logistic&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cp</span><span class="o">.</span><span class="n">logistic</span><span class="p">(</span><span class="o">-</span><span class="n">cp</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">b</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;ols&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cp</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">X</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;lad&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">X</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;CVXPY loss not implemented for the specified model_type value.&quot;</span><span class="p">)</span></div>
+
+
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Example usage</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BaseLinearDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">acc</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">acc</span><span class="si">}</span><span class="s2">, F1 Score: </span><span class="si">{</span><span class="n">f1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">DROError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jiashuo Liu, Tianyu Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

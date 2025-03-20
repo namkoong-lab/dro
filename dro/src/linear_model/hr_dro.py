@@ -12,11 +12,11 @@ class HR_DRO_LR(BaseLinearDRO):
     
     This model supports DRO with additional robustness constraints for linear regression and binary classification.
 
-    Attributes:
+    Args:
         input_dim (int): Dimensionality of the input features.
-        model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
+        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD), default = 'svm'.
+        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
         r (float): DRO robustness parameter.
         alpha (float): Parameter for marginal robustness.
         epsilon (float): Tolerance for primary DRO constraints.
@@ -31,8 +31,8 @@ class HR_DRO_LR(BaseLinearDRO):
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
+            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str): Optimization solver to solve the problem, default = 'MOSEK'
         """
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.r = r

@@ -13,13 +13,13 @@ class CVaRDRO(BaseLinearDRO):
     This model minimizes a robust loss function for both regression and classification tasks
     under a CVaR constraint.
 
-    Attributes:
-    input_dim (int): Dimensionality of the input features.
-    model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
-    fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-    solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
-    alpha (float): Risk level for the CVaR constraint.
-    threshold_val (float): Threshold value from the optimization.
+    Args:
+        input_dim (int): Dimensionality of the input features.
+        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
+        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
+        alpha (float): Risk level for the CVaR constraint.
+        threshold_val (float): Threshold value from the optimization.
 
     Reference: <https://www.risk.net/journal-risk/2161159/optimization-conditional-value-risk>
     """
@@ -31,8 +31,8 @@ class CVaRDRO(BaseLinearDRO):
         Args:
             input_dim (int): Dimension of the input features.
             model_type (str): Type of model ('svm', 'logistic', 'ols').
-            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
+            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str): Optimization solver to solve the problem, default = 'MOSEK'
             alpha (float): Risk level for CVaR (default is 1.0).
         """
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)

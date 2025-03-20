@@ -5,6 +5,7 @@ import cvxpy as cp
 import pymc3 as pm
 from scipy.stats import multivariate_normal
 
+# TODO
 # methods that centered at parametric distribution
 ## we set mixture Gaussian as the parametric distribution.
 
