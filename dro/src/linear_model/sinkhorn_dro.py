@@ -321,7 +321,7 @@ if __name__ == "__main__":
     # Data generation
     X, y = make_regression(n_samples=1000, n_features=10, noise=1, random_state=42)
     # Model training
-    dro_model = SinkhornLinearDRO(input_dim=10, output_dim=1, k_sample_max=4, reg_param=.001, lambda_param=100, max_iter=1000, model_type='ols')
+    dro_model = SinkhornLinearDRO(input_dim=10, output_dim=1, k_sample_max=4, reg_param=.001, lambda_param=100, max_iter=1000, model_type='lad')
     params = dro_model.fit(X, y, optimization_type="SG")
     print("Sinkhorn DRO Parameters:", params)
     print(dro_model.score(X, y))

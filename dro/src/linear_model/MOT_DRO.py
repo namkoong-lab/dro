@@ -11,7 +11,7 @@ class MOTDROError(Exception):
 class MOTDRO(BaseLinearDRO):
     """
     OT discrepancy with conditional moment constraint, the cost is set as:
-    c(((X_1, Y_1), w), ((X_2, Y_2), \hat w)) = theta1 * w * d((X_1, Y_1), (X_2, Y_2)) + theta2 * (\phi(w) - \phi(\hat w))^+, where \phi() is the KL divergence.
+    c(((X_1, Y_1), w), ((X_2, Y_2), \hat w)) = theta1 * w * d((X_1, Y_1), (X_2, Y_2)) + theta2 * (\phi(w) - \phi(\hat w))^+, where \phi(w) = w log (w) - w + 1 is the KL divergence.
 
     Args:
         input_dim (int): Dimensionality of the input features.
@@ -26,24 +26,26 @@ class MOTDRO(BaseLinearDRO):
 
     Reference: <https://arxiv.org/abs/2308.05414>
     """
-    def __init__(self, input_dim: int, model_type: str):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK'):
         """
         Args:
             input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
+            model_type (str): Type of model ('svm', 'logistic', 'lad').
         """
-        BaseLinearDRO.__init__(self, input_dim, model_type)
-
-        self.theta1 = 2
-        self.theta2 = 2
+        if model_type in ['ols', 'logistic']:
+            raise MOTDROError("MOT DRO does not support OLS, logistic")
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+        self.theta1 = 1
+        self.theta2 = 1
         self.eps = 0        
         self.p = 2
+        self.square = 2
 
     def update(self, config = Dict[str, Any]) -> None:
         """Update the model configuration
         
         Args: 
-            config (Dict[str, Any]): Configuration dictionary containing 'theta1', 'theta2', 'eps', 'p', 'kappa' keys for robustness parameter.
+            config (Dict[str, Any]): Configuration dictionary containing 'theta1', 'theta2', 'eps', 'p', 'kappa', 'square' keys for robustness parameter.
             
         Raises:
             MOTDROError: If any of the configs does not fall into its domain.
@@ -71,6 +73,13 @@ class MOTDRO(BaseLinearDRO):
                 self.p = float(p)
             else:
                 self.p = p
+        
+        if 'square' in config.keys():
+            square = config['square']
+            if square not in [1, 2]:
+                raise MOTDROError("Distance parameter 'square' can only take values in 1,2.")
+            self.square = square
+
 
     def fit(self, X, y):
         """Fit the model using CVXPY to solve the optimal-transportdistributionally robust optimization problem with conditional moment.
@@ -105,35 +114,37 @@ class MOTDRO(BaseLinearDRO):
 
         # Decision variables
         t = cp.Variable(1)
-        epig_ = cp.Variable([N_train, 1], pos=True)
-        self.lambda_ = cp.Variable(1)
+        epig_ = cp.Variable([N_train, 1])
+        self.lambda_ = cp.Variable(1, pos = True)
         theta = cp.Variable(dim)
         if self.fit_intercept == True:
             b = cp.Variable()
         else:
             b = 0
-        eta = cp.Variable([N_train, 1])
+        eta = cp.Variable([N_train, 1], pos = True)
 
         # Constraints
         cons = []
-        cons.append(eta >= 0)
-        cons.append(self.lambda_ >= 0)
         
         ## our version
-        cons.append(self._cvx_loss(X, y, theta, b) <= epig_)  
         for i in range(N_train):
             cons.append(
                 cp.constraints.exponential.ExpCone(
                     epig_[i] - t, self.theta2 * self.lambda_, eta[i]
                 )
             )
-        # TODO: double check
-        cons.append(self.lambda_ * self.theta1 >= cp.norm(self.theta, q))
+            if self.square == 1:
+                cons.append(self.lambda_ * self.theta1 >= cp.norm(self.theta, q))
+                cons.append(self._cvx_loss(X[i], y[i], theta, b) <= epig_)  
+            elif self.square == 2:
+                cons.append(self._cvx_loss(X[i], y[i], theta, b) + cp.quad_over_lin(cp.norm(theta, q), self.lambda_*4*self.theta1) <= epig_[i]) 
+
         cons.append(N_train * self.lambda_ * self.theta2 >= cp.sum(eta))
         obj = self.eps * self.lambda_ + t
         problem = cp.Problem(cp.Minimize(obj), cons)
 
         problem.solve(solver=self.solver)
+        print(problem.status)
         self.theta = theta.value
         if self.fit_intercept == True:
             self.b = b.value

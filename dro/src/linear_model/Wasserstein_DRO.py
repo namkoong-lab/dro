@@ -126,9 +126,6 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
             else:
                 return cp.maximum(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
 
-
-
-
         
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Fit the model using CVXPY to solve the Wasserstein distributionally robust optimization problem.
@@ -406,7 +403,7 @@ class WassersteinDROSatisificingError(Exception):
     pass
 
 
-class Wasserstein_DRO_satisficing(BaseLinearDRO):
+class WassersteinDROsatisficing(BaseLinearDRO):
     """
     Robust satisficing version of Wasserstein DRO
 
