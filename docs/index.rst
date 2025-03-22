@@ -4,9 +4,8 @@ Welcome to DRO Documentation
 ============================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: API Reference
 
-   api/data
-   api/linear_model
-   api/neural_model
+   api/tutorials
+   api/api

@@ -16,12 +16,20 @@ release = '0.1.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinx_autodoc_typehints'
+    'sphinx_autodoc_typehints',
+    'sphinx.ext.mathjax',
+    "myst_parser"
 ]
 
 autodoc_type_aliases = {
     'NDArray': 'numpy.ndarray',
-    'Tensor': 'torch.Tensor'
+    "Expression": "cvxpy.expressions.expression.Expression",
+    'Tensor': 'torch.Tensor',
+    # 'Module': 'torch.nn.Module'
+}
+
+autodoc_default_options = {
+    "no-autoparams": True 
 }
 
 intersphinx_mapping = {
@@ -30,7 +38,12 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None)
 }
 
-autodoc_typehints = "both"
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "markdown",
+}
+
+autodoc_typehints = "description" 
 
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
@@ -41,8 +54,28 @@ html_theme_options = {
 autodoc_default_options = {
     'member-order': 'bysource',
     'undoc-members': True,
-    'show-inheritance': True
+    'show-inheritance': True,
+    "private-members": False 
 }
+
+myst_enable_extensions = [
+    "dollarmath",   
+    "colon_fence",  
+    "html_image",   
+    "linkify",      
+]
+
 
 
 autoclass_content = 'both'  
+
+# add_module_names = False
+
+nitpicky = True
+nitpick_ignore = [
+    ("py:class", "torch.device"),
+    ("py:class", "torch.nn.Module"),
+    ("py:class", "nn.Module"),
+    ("py:class", "Module"),
+    ("py:exc", "LinAlgError")
+]
