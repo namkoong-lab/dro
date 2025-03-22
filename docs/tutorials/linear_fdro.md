@@ -1,6 +1,6 @@
 # f-divergence DRO
 
-We describe the 
+We describe the $f$-divergence DRO here.
 
 
 ## Standard (Generalized)
