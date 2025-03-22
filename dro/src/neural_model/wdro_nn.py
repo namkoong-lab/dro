@@ -4,19 +4,21 @@ import numpy as np
 from dro.src.neural_model.base_nn import BaseNNDRO, DROError
 
 class WNNDRO(BaseNNDRO):
-    """Wasserstein Distributionally Robust Optimization Model
+    r"""Wasserstein Distributionally Robust Optimization Model
     
     Args:
         input_dim: Input feature dimension
         num_classes: Number of output classes
         task_type: "classification" or "regression"
         model_type: Base model architecture ('mlp', 'resnet', etc)
-        epsilon: Adversarial perturbation bound (ε ≥ 0)
+        epsilon: Adversarial perturbation bound ($\epsilon \geq 0$)
         adversarial_params: 
+
             - adversarial_steps: Number of PGD steps
             - adversarial_step_size: PGD step size
             - advresarial_norm: Adversarial norm ("l2" or "l-inf")
             - adversarial_method: Defense method ("PGD" or "FFGSM")
+
         device: Computation device
     """
 

@@ -8,23 +8,26 @@ from dro.src.neural_model.base_nn import BaseNNDRO, DROError
 
 class HRNNDRO(BaseNNDRO):
     """Huberian Robust Distributionally Robust Optimization Model
-    
+
     Args:
         input_dim: Input feature dimension
         num_classes: Number of output classes
         task_type: "classification" or "regression"
         model_type: Base model architecture ('mlp', 'resnet', etc)
-        alpha: Robustness to distribution shift (α > 0)
+        alpha: Robustness to distribution shift ($\alpha$ > 0)
         r: Robustness to statistical error (r > 0)
         epsilon: Adversarial perturbation bound (ε ≥ 0)
         learning_approach: Robust optimization method ("HR" or "HD")
         adversarial_params: Dictionary containing:
+
             - steps: Number of PGD steps
             - step_size: PGD step size
             - norm: Adversarial norm ("l2" or "l-inf")
             - method: Defense method ("PGD" or "FFGSM")
+            
         train_batch_size: Default training batch size
         device: Computation device
+
     """
 
     def __init__(

@@ -14,19 +14,6 @@ class MarginalCVaRDRO(BaseLinearDRO):
     This model minimizes a robust loss function for both regression and classification tasks
     under a CVaR constraint only for the marginal distribution of X.
     
-    
-    Args:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Type of model (e.g., 'svm', 'logistic', 'ols').
-        alpha (float): Risk level for CVaR.
-        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
-        control_name (Optional[list[int]]): Indices of the control features for marginal DRO.
-        p (int): Power parameter for the distance measure.
-        L (float): Scaling parameter for the marginal robustness.
-        threshold_val (float): Threshold value from the optimization.
-
-
     Reference:
     [1] <https://pubsonline.informs.org/doi/10.1287/opre.2022.2363>
     [2] The specific model follows Equation (27) in:
@@ -35,33 +22,131 @@ class MarginalCVaRDRO(BaseLinearDRO):
     
     def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', alpha: float = 1.0, L: float = 10.0, p: int = 2):
         """
-        Args:
-            input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
-            alpha (float, default = 1): Risk level for CVaR.
-            p (int, default = 2): Power parameter for the distance measure.
-            L (float, default = 10): Scaling parameter for the marginal robustness.
+        :param input_dim: Dimension of input features. Must be ≥ 1.
+        :type input_dim: int
+        :param model_type: Base model type. Defaults to 'svm'. Valid options:
+
+            - ``'svm'``: Support Vector Machine (hinge loss)
+
+            - ``'logistic'``: Logistic Regression (log loss)
+
+            - ``'ols'``: Ordinary Least Squares (L2 loss)
+
+            - ``'lad'``: Least Absolute Deviation (L1 loss)
+
+        :type model_type: str
+        :param fit_intercept: Whether to learn intercept term :math:`b`. 
+            Set False for pre-centered data. Defaults to True.
+        :type fit_intercept: bool
+        :param solver: Convex optimization solver. Defaults to 'MOSEK'.
+        :type solver: str
+        :param alpha: CVaR risk level controlling tail expectation. 
+            Must satisfy 0 < α ≤ 1. 
+            Defaults to 1.0.
+        :type alpha: float
+        :param L: Wasserstein radius scaling factor. 
+            Larger values increase distributional robustness. Must satisfy L ≥ 0.
+            Defaults to 10.0.
+        :type L: float
+        :param p: Order of Wasserstein distance. 
+            Supported values: 1 (Earth Mover's Distance) or 2 (Quadratic Wasserstein).
+            Defaults to 2.
+        :type p: int
+        :raises ValueError: 
+
+            - If input_dim < 1
+
+            - If model_type not in allowed set
+
+            - If alpha ∉ (0, 1]
+
+            - If L < 0
+
+            - If p < 1
+
+        Example:
+            >>> model = MarginalCVaRDRO(
+            ...     input_dim=5, 
+            ...     model_type='lad',
+            ...     alpha=0.95,
+            ...     L=5.0,
+            ...     p=1
+            ... )
+            >>> model.L  # 5.0
+            >>> model.p  # 1
         """
+
+        # Parameter validation
+        if input_dim < 1:
+            raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
+        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
+            raise ValueError(f"Invalid model_type: {model_type}")
+        if not (0 < alpha <= 1):
+            raise ValueError(f"alpha must be in (0, 1], got {alpha}")
+        if L < 0:
+            raise ValueError(f"L must be ≥ 0, got {L}")
+        if p < 1:
+            raise ValueError(f"p must be 1 or 2, got {p}")
 
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.alpha = alpha
-        self.control_name = None
         self.L = L
         self.p = p
-        self.threshold_val = None
-        self.B_val = None
+        self.control_name = None  
+        self.threshold_val = None  
+        self.B_val = None  
 
     def update(self, config: Dict[str, Any]) -> None:
-        """Update model configuration with parameters for Marginal DRO.
-        
-        Args:
-            config (Dict[str, Any]): Dictionary containing optional keys: 'control_name', 'L', 'p', 'alpha'.
-        
-        Raises:
-            MarginalCVaRDROError: If any parameter is invalid.
+        """Update Marginal CVaR-DRO model configuration parameters.
+
+        Dynamically adjusts the robustness parameters for marginal distribution shifts. 
+        Preserves existing solutions until next ``fit()`` call.
+
+        :param config: Configuration dictionary with optional keys:
+
+            - ``control_name`` (List[int]): 
+                Indices of features to protect against marginal shifts. Constraints:
+
+                - All indices must satisfy :math:`0 \\leq \\text{index} < \\text{input_dim}`
+
+                - Empty list disables marginal robustness
+
+            - ``L`` (float): 
+                Wasserstein radius scaling factor. Must satisfy :math:`L > 0`
+                Larger values increase conservativeness
+
+            - ``p`` (int): 
+                Wasserstein metric order. Must satisfy :math:`p \\geq 1`
+                Supported values: 1 (EMD), 2 (Quadratic)
+
+            - ``alpha`` (float): 
+                CVaR risk level. Must satisfy :math:`0 < \\alpha \leq 1`
+                :math:`\\alpha \\to 0` focuses on average loss, :math:`\\alpha = 1` is worst-case
+
+        :type config: Dict[str, Any]
+
+        :raises MarginalCVaRDROError: 
+
+            - If ``control_name`` contains invalid indices
+
+            - If ``L`` is non-positive
+
+            - If ``p`` < 1
+
+            - If ``alpha`` ∉ (0, 1]
+
+            - If config contains unsupported keys
+
+        Example:
+            >>> model = MarginalCVaRDRO(input_dim=5, control_name=[1,3])
+            >>> model.update({
+            ...     "L": 15.0,      
+            ...     "alpha": 0.95  
+            ... })
+            >>> model.L  # 15.0
+
         """
+
         if 'control_name' in config:
             control_name = config['control_name']
             if not all(0 <= x < self.input_dim for x in control_name):
@@ -87,18 +172,63 @@ class MarginalCVaRDRO(BaseLinearDRO):
             self.alpha = float(alpha)
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """Fit the model using CVXPY for solving the robust optimization problem with Marginal DRO.
+        """Solve the Marginal CVaR-DRO problem via convex optimization.
 
-        Args:
-            X (np.ndarray): Feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
+        Constructs and solves the following distributionally robust optimization problem:
 
-        Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta', 'b', 'B', and 'threshold' keys.
+        :param X: Training feature matrix of shape `(n_samples, n_features)`.
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
+        
+        :param y: Target vector of shape `(n_samples,)`. Format requirements depend on model_type:
 
-        Raises:
-            MarginalCVaRDROError: If the optimization fails to solve or dimensions mismatch.
+            - Classification (`svm`/`logistic`):
+                
+                - Binary labels in {-1, +1}
+                
+                - No missing values allowed
+
+            - Regression** (`ols`/`lad`):
+                
+                - Continuous real values
+
+                - May contain NaN
+
+        :type y: numpy.ndarray
+
+        :returns: Solution dictionary containing:
+            
+            - ``theta``: Weight vector of shape `(n_features,)`
+
+            - ``b``: Intercept term (exists if `fit_intercept=True`)
+
+            - ``B``: Marginal robustness dual matrix of shape `(n_samples, n_samples)`
+
+            - ``threshold``: CVaR threshold value
+
+            
+        :rtype: Dict[str, Any]
+
+        :raises MarginalCVaRDROError: 
+
+            - If `X.shape[1] != self.input_dim`
+
+            - If `X.shape[0] != y.shape[0]`
+
+            - If optimization fails (problem infeasible/solver error)
+
+            - If `control_name` indices exceed feature dimensions
+
+        Example:
+            >>> model = MarginalCVaRDRO(input_dim=3, control_name=[0,2], L=5.0)
+            >>> X = np.random.randn(100, 3)
+            >>> y = np.sign(np.random.randn(100)) 
+            >>> sol = model.fit(X, y)
+            >>> print(sol["theta"].shape)  # (3,)
+            >>> print(sol["B"].shape)      # (2, 2)
+
         """
+
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
             raise MarginalCVaRDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")

@@ -14,6 +14,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 DEFAULT_TRAIN_RATIO = 0.8
 MIN_IMAGE_SIZE = 32
 
+
 class DROError(Exception):
     """Base exception class for all DRO-related errors."""
     pass
@@ -26,27 +27,33 @@ class DataValidationError(DROError):
     """Raised for invalid data formats or dimensions."""
     pass
 
-class Linear(nn.Module):
-    """Linear Model"""
+class Linear(torch.nn.Module):
+    """Linear Model
+    
+    Bases: :py:class:`torch.nn.Module`
+    """
     
     def __init__(self, 
                  input_dim: int, 
                  num_classes: int):
         super().__init__()
-        self.layer1 = nn.Linear(input_dim, num_classes)
+        self.layer1 = torch.nn.Linear(input_dim, num_classes)
         
     def forward(self, X: torch.Tensor) -> torch.Tensor:
         return self.layer1(X)
         
 
-class MLP(nn.Module):
-    """Multi-Layer Perceptron for neural network-based DRO."""
+class MLP(torch.nn.Module):
+    """Multi-Layer Perceptron for neural network-based DRO.
+    
+    Bases: :py:class:`torch.nn.Module`
+    """
     
     def __init__(self, 
                  input_dim: int, 
                  num_classes: int, 
                  hidden_units: int = 16, 
-                 activation: nn.Module = nn.ReLU(), 
+                 activation: torch.nn.Module = nn.ReLU(), 
                  dropout_rate: float = 0.1):
         super().__init__()
         self.layer1 = nn.Linear(input_dim, hidden_units)

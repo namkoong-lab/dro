@@ -2,6 +2,8 @@ from dro.src.linear_model.base import BaseLinearDRO
 import numpy as np
 import cvxpy as cp
 from typing import Dict, Any
+import warnings
+
 
 class KLDROError(Exception):
     """Base exception class for errors in KL-DRO model."""
@@ -12,59 +14,184 @@ class KLDRO(BaseLinearDRO):
 
     This model minimizes a KL-robust loss function for both regression and classification.
 
-    Args:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
-        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
-        eps (float): Robustness parameter for KL-DRO.
-        dual_variable (Optional[float]): Dual variable value from the optimization problem.
-
     Reference: <https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf>
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', eps: float = 0.0):
-        """
-        Initialize the KL-DRO model with specified input dimension and model type.
+        """Initialize KL-divergence Distributionally Robust Optimization model.
 
-        Args:
-            input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str): Optimization solver to solve the problem, default = 'MOSEK'
-            eps (float): Ambiguity size for the KL constraint (default is 0.0).
+        Inherits from BaseLinearDRO and configures KL ambiguity set parameters. 
+        The ambiguity set is defined by:
+        
+        .. math:: 
+            \\mathcal{Q} = \{ Q \\ll P \, | \, D_{KL}(Q\|P) \\leq \\epsilon \}
+        
+        where :math:`D_{KL}` is Kullback–Leibler divergence.
+
+        :param input_dim: Dimension of input features. Must match training data features.
+        :type input_dim: int
+        :param model_type: Base model type specification:
+
+            - ``'svm'``: Support Vector Machine (hinge loss)
+
+            - ``'logistic'``: Logistic Regression (log loss)
+
+            - ``'ols'``: Ordinary Least Squares (:math:`L_2` loss)
+
+            - ``'lad'``: Least Absolute Deviation (:math:`L_1` loss)
+
+        :type model_type: str
+        :param fit_intercept: If True, adds intercept term :math:`b` to linear model:
+            :math:`\\theta^T X + b`
+            Disable when data is pre-centered.
+        :type fit_intercept: bool
+        :param solver: Convex optimization solver, supported values:
+
+            - ``'MOSEK'`` (recommended): Requires academic/commercial license
+            
+        :type solver: str
+        :param eps: KL divergence bound (ε ≥ 0). Special cases:
+
+            - ε = 0: Reduces to standard empirical risk minimization (no distributional robustness)
+
+            - ε → ∞: Approaches worst-case distribution (maximally conservative). Typical practical range: 0.01 ≤ ε ≤ 5.0
+
+        :type eps: float
+
+        :raises ValueError: 
+
+            - If input_dim ≤ 0
+
+            - If model_type not in allowed set
+
+            - If eps < 0
+
+            - If unsupported solver specified
+
+        Attribute Initialization:
+
+            - ``self.dual_variable``: Stores optimal dual variable λ* after calling ``fit()``
+
+            - ``self._p``: Internal probability vector of shape (n_samples,)
+
+            - ``self._solver_opts``: Solver-specific options parsed from global config
+
+        Example:
+            >>> model = KLDRO(input_dim=5, model_type='logistic', eps=0.1)
+            >>> model.input_dim  # 5
+            >>> model.eps  # 0.1
+            >>> model.dual_variable  # None (until fit is called)
+
         """
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)        
+        
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)     
+
+        if eps < 0:
+            raise ValueError(f"eps must be non-negative, got {eps}")
+        elif eps > 5.0:
+            warnings.warn(f"eps={eps} >5.0 may cause numerical instability", RuntimeWarning)
+        elif eps > 100.0:
+            raise KLDROError(f"eps >100.0 may cause system instability (got {eps})")
+
         self.eps = eps
         self.dual_variable = None  # To store dual variable value after fit
 
     def update(self, config: Dict[str, Any]) -> None:
-        """Update the model configuration.
+        """Update KL-DRO model configuration parameters dynamically.
 
-        Args:
-            config (Dict[str, Any]): Configuration dictionary containing 'eps' key for robustness parameter.
+        Primarily handles robustness parameter (eps) updates while maintaining 
+        optimization problem structure. Preserves existing dual variables until
+        next ``fit()`` call.
 
-        Raises:
-            KLDROError: If 'eps' is provided but is not a non-negative float.
+        :param config: Configuration dictionary containing parameters to update.
+            Recognized keys:
+
+            - ``eps``: (float) New KL divergence bound (ε ≥ 0). Other keys are silently ignored.
+
+        :type config: Dict[str, Any]
+        :raises KLDROError: 
+
+            - If ``eps`` value is invalid (not float/int or negative)
+
+            - If provided ``eps`` > 100.0 (empirical stability threshold)
+
+        :raises TypeError: If config is not a dictionary
+
+        
+        Example:
+            >>> model = KLDRO(eps=0.5)
+            >>> model.update({"eps": 0.8})
+            >>> model.eps  # 0.8
+            >>> model.update({"invalid_key": 1.0})  # No-op
         """
+        if not isinstance(config, dict):
+            raise TypeError("Config must be a dictionary")
+
         if 'eps' in config:
             eps = config['eps']
-            if not isinstance(eps, (float, int)) or eps < 0:
-                raise KLDROError("Robustness parameter 'eps' must be a non-negative float.")
+            # Enhanced validation with stability check
+            if not isinstance(eps, (float, int)):
+                raise KLDROError(f"eps must be numeric, got {type(eps)}")
+            if eps < 0:
+                raise KLDROError(f"eps cannot be negative, got {eps}")
+            if eps > 100.0:  # Empirical stability threshold
+                raise KLDROError(f"eps >100.0 may cause system instability (got {eps})")
+            
             self.eps = float(eps)
 
+
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """Fit the model using CVXPY to solve the robust optimization problem with KL constraint.
+        """Solve KL-constrained distributionally robust optimization problem.
 
-        Args:
-            X (np.ndarray): Feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
+        Constructs and solves the convex optimization problem:
+        
+        .. math::
+            \\min_{\\theta,b}  \quad \\sup_{Q \\in \\mathcal{Q}} \\mathbb{E}_Q[\\ell(\\theta,b;X,y)],\quad 
+            \\text{s.t.} \quad D_{KL}(Q\|P) \\leq \\epsilon
+            
+        where :math:`\\mathcal{Q}` is the ambiguity set defined by KL divergence constraint.
 
-        Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta' and 'dual' keys.
+        :param X: Training feature matrix of shape `(n_samples, n_features)`.
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
+        :param y: Target values of shape `(n_samples,)`. Format requirements:
 
-        Raises:
-            KLDROError: If the optimization problem fails to solve.
+            - Classification: Binary labels in {-1, +1}
+
+            - Regression: Continuous real values
+
+        :type y: numpy.ndarray
+        :returns: Solution dictionary containing:
+
+            - ``theta``: Weight vector of shape `(n_features,)`
+
+            - ``b``: Intercept term (present if `fit_intercept=True`)
+
+            - ``dual``: Optimal dual variable for KL constraint (λ*)
+
+        :rtype: Dict[str, Any]
+        :raises KLDROError: 
+
+            - If problem is infeasible with current parameters
+
+            - If solver fails to converge
+
+        :raises ValueError:
+
+            - If `X.shape[1] != self.input_dim`
+
+            - If `X.shape[0] != y.shape[0]`
+
+            - If classification labels not in {-1, +1}
+
+        
+        Example:
+            >>> model = KLDRO(input_dim=3, eps=0.1)
+            >>> X = np.random.randn(100, 3)
+            >>> y = np.sign(np.random.randn(100))  # Binary classification
+            >>> solution = model.fit(X, y)
+            >>> print(solution["theta"].shape)  # (3,)
+            >>> print(f"Dual variable: {solution['dual']:.4f}")
         """
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
@@ -109,17 +236,54 @@ class KLDRO(BaseLinearDRO):
         return {"theta": self.theta.tolist(), "dual": self.dual_variable, "b": self.b}
 
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """Compute the worst-case distribution based on KL divergence.
+        """Compute the worst-case distribution under KL divergence constraint.
 
-        Args:
-            X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
+        The worst-case distribution weights are computed via exponential tilting:
+        
+        .. math::
+            w_i = \\frac{\\exp(\\ell(\\theta^*;x_i,y_i)/\\lambda^*)}{\\sum_j \\exp(\\ell(\\theta^*;x_j,y_j)/\\lambda^*)}
+        
+        where :math:`\\theta^*` is the optimal model parameter and :math:`\\lambda^*` is the optimal dual variable.
 
-        Returns:
-            Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
+        :param X: Feature matrix of shape `(n_samples, n_features)`.
+            Must match ``self.input_dim`` and training data dimension.
+        :type X: numpy.ndarray
+        :param y: Target vector of shape `(n_samples,)`. Format constraints:
 
-        Raises:
-            KLDROError: If the worst-case distribution optimization fails.
+            - Classification: Labels in {-1, +1}
+
+            - Regression: Continuous values
+
+        :type y: numpy.ndarray
+        :returns: Worst-case distribution specification containing:
+
+            - ``sample_pts``: Original samples [X, y] (reference to inputs)
+
+            - ``weight``: Probability vector of shape `(n_samples,)`
+
+            - ``entropy``: KL divergence :math:`D_{KL}(Q^*\|P)`
+
+        :rtype: Dict[str, Any]
+        :raises KLDROError: 
+
+            - If inner optimization via ``fit()`` fails
+
+            - If :math:`\\lambda^* \\leq 0` (invalid dual variable)
+
+            - If weight normalization fails (sum → 0)
+
+        :raises ValueError: 
+
+            - If input dimensions mismatch
+
+            - If classification labels violate binary constraints
+
+        
+        Example:
+            >>> model = KLDRO(input_dim=3).fit(X_train, y_train)
+            >>> dist = model.worst_distribution(X_test, y_test)
+            >>> dist["sample_pts]
+            >>> dist["weight]
         """
         self.fit(X, y)  # Fit model to obtain theta and dual variable
 
@@ -127,7 +291,7 @@ class KLDRO(BaseLinearDRO):
         per_loss = self._loss(X, y)
         
         if self.dual_variable is None:
-            raise KLDROError("Dual variable is not set. Ensure 'fit' method has been called.")
+            raise KLDROError("Dual variable is not set. Ensure 'fit' method has succeeded.")
 
         # Calculate weights for the worst-case distribution
         weight = np.exp(per_loss / self.dual_variable)

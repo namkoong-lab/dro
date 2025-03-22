@@ -40,15 +40,18 @@ class BaseLinearDRO:
     This class supports both regression and binary classification tasks. To ensure convex optimization,
     this class only supports linear models, e.g., SVM, Linear Regression, and Logistic Regression.
 
-    Args:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str, default = 'svm'): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD).
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'
-        theta (np.ndarray): Model parameters.
-
     """
     def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK'):
+        """
+        :param input_dim: Dimensionality of the input features.
+        :type input_dim: int
+        :param model_type: Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD), default = 'svm'.
+        :type model_type: str
+        :param fit_intercept: Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered), default = True.
+        :type fit_intercept: bool
+        :param solver: Optimization solver to solve the problem, default = 'MOSEK'.
+        :type solver: str 
+        """
         if input_dim <= 0:
             raise ParameterError("Input dimension must be a positive integer.")
         if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
@@ -65,19 +68,39 @@ class BaseLinearDRO:
         
 
     def update(self, config: dict):
-        """Update model parameters based on configuration."""
+        """Update model parameters based on configuration.
+        
+        :param config: The model configuration
+        :type config: dict
+        """
         pass  # Method to be implemented in subclasses if needed
 
     def fit(self, X: np.ndarray, y: np.ndarray):
-        """Fit model to data by solving an optimization problem."""
+        """Fit model to data by solving an optimization problem.
+        
+        :param X: input covariates
+        :type X: :py:class:`numpy.ndarray` 
+        :param y: input labels
+        :type y: :py:class:`numpy.ndarray` 
+        """
         pass  # Method to be implemented in subclasses
 
-    def evaluate(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray, fast: True):
-        """Evaluate the true model performance for the obtained theta efficiently"""
+    def evaluate(self, X: np.ndarray, y: np.ndarray):
+        """Evaluate the true model performance for the obtained model
+        
+        :param X: input covariates for evaluation
+        :type y: :py:class:`numpy.ndarray` 
+        :param y: input labels for evaluation
+        :type y: :py:class:`numpy.ndarray` 
+        """
         pass
 
     def load(self, config: dict):
-        """Load model parameters from a configuration dictionary."""
+        """Load model parameters from a configuration dictionary.
+        
+        :param config: The model configuration to load
+        :type config: dict
+        """
         try:
             theta = np.array(config['theta'])
             if theta.shape != (self.input_dim,):
@@ -87,7 +110,13 @@ class BaseLinearDRO:
             raise ParameterError("Config must contain 'theta' key.") from e
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Predict output based on input data and model parameters."""
+        """Predict output based on input data and model parameters.
+        
+        :param X: Input covariates
+        :type X: :py:class:`numpy.ndarray` 
+        :returns: the predicted labels
+        :rtype: :py:class:`numpy.ndarray` 
+        """
         if X.shape[1] != self.input_dim:
             raise DataValidationError(f"Expected input with {self.input_dim} features, got {X.shape[1]}.")
 
@@ -99,7 +128,29 @@ class BaseLinearDRO:
         return preds
 
     def score(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> Union[float, Tuple[float, float]]:
-        """Compute accuracy and F1 score for classification tasks, or MSE for regression."""
+        """Compute accuracy and F1 score for classification tasks, or MSE for regression.
+        
+        :param X: Input feature matrix of shape (n_samples, n_features)
+        :type X: :py:class:`numpy.ndarray` 
+        :param y: Target labels/values of shape (n_samples,)
+        :type y: :py:class:`numpy.ndarray` 
+        :param weights: Sample weight vector of shape (n_samples,), None indicates equal weights
+        :type weights: Optional[:py:class:`numpy.ndarray`], defaults to None
+
+        :returns: 
+
+            - For classification: Tuple containing (accuracy, F1-score)
+
+            - For regression: Mean Squared Error (MSE)
+            
+        :rtype: Union[float, Tuple[float, float]]
+
+        :raises ValueError: If task type is not properly configured
+
+        Example:
+            >>> Classification model: Returns (0.95, 0.93)
+            >>> Regression model: Returns 3.1415
+        """
         predictions = self.predict(X)
         if weights is not None:
             if weights.shape[0] != y.shape[0]:
@@ -120,8 +171,26 @@ class BaseLinearDRO:
 
 
     def _loss(self, X: np.ndarray, y: np.ndarray) -> np.ndarray:
-        """Compute the loss for the current model parameters."""
+        """Compute the loss values for individual samples using current model parameters.
 
+        :param X: Input feature matrix of shape (n_samples, n_features)
+        :type X: :py:class:`numpy.ndarray`
+        :param y: Target values of shape (n_samples,)
+        :type y: :py:class:`numpy.ndarray`
+
+        :returns: Loss values for each sample in the batch, shape (n_samples,)
+        :rtype: :py:class:`numpy.ndarray`
+
+        :raises ValueError: If input dimensions are incompatible
+
+        Example:
+            >>> model = BaseLinearDRO()
+            >>> X = np.array([[1, 2], [3, 4]])
+            >>> y = np.array([0, 1])
+            >>> losses = model._loss(X, y)
+            >>> losses.shape
+            (2,)
+        """
         if self.model_type == 'svm':
             return np.maximum(1 - y * (X @ self.theta + self.b), 0)
         elif self.model_type in 'logistic':
@@ -134,7 +203,24 @@ class BaseLinearDRO:
             raise NotImplementedError("Loss function not implemented for the specified model_type value.")
 
     def _cvx_loss(self, X: cp.Expression, y: cp.Expression, theta: cp.Expression, b: cp.Expression) -> cp.Expression:
-        """Define the CVXPY loss expression for the model."""
+        """Construct the convex loss expression for optimization using CVXPY.
+        
+        :param X: Feature matrix expression of shape (n_samples, n_features)
+        :type X: :py:class:`cvxpy.expressions.expression.Expression`
+        :param y: Target values expression of shape (n_samples,)
+        :type y: :py:class:`cvxpy.expressions.expression.Expression`
+        :param theta: Model parameters vector expression of shape (n_features,)
+        :type theta: :py:class:`cvxpy.expressions.expression.Expression`
+        :param b: Intercept term scalar expression
+        :type b: :py:class:`cvxpy.expressions.expression.Expression`
+
+        :returns: Loss expression for the optimization problem
+        :rtype: :py:class:`cvxpy.expressions.expression.Expression`
+
+        :raises ValueError: If expression dimensions are incompatible
+        :raises TypeError: If any input is not a CVXPY Expression
+
+        """
         assert X.shape[-1] == self.input_dim, "Mismatch between feature and input dimension."
 
         if self.model_type == 'svm':

@@ -12,16 +12,19 @@ class WassersteinDROError(Exception):
 
 
 class WassersteinDRO(BaseLinearDRO):
-    """Wasserstein Distributionally Robust Optimization (WDRO) model
+    r"""Wasserstein Distributionally Robust Optimization (WDRO) model
     
     This model minimizes a Wasserstein-robust loss function for both regression and classification.
 
-The Wasserstein distance is defined as the minimum probability coupling of two distributions for the distance metric:
+    The Wasserstein distance is defined as the minimum probability coupling of two distributions for the distance metric:
+
+    .. math::
         d((X_1, Y_1), (X_2, Y_2)) = (|\Sigma^{1/2} (X_1 - X_2)|_p)^{square} + \kappa |Y_1 - Y_2|,
+
     where parameters are:
         - $\Sigma$: cost matrix, (a PSD Matrix);
         - $\kappa$;
-        - p;
+        - $p$;
         - square (notation depending on the model type), where square = 2 for 'svm', 'logistic', 'lad'; square = 1 for 'ols'.
 
     Attribute:
@@ -97,12 +100,12 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
                 self.kappa = 'inf'
 
         
-    def penalization(self, theta: cp.Expression) -> float:
+    def _penalization(self, theta: cp.Expression) -> float:
         """
         Module for computing the regularization part in the standard Wasserstein DRO problem.
 
         Args:
-            theta (cp.Expression): Feature vector with shape (n_feature,).
+            theta (:py:class:`cvxpy.Expression`): Feature vector with shape (n_feature,).
         
         Returns:
             Float: Regularization term part.
@@ -120,7 +123,6 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
         elif self.model_type in ['svm', 'logistic']:
             return cp.norm(self.cost_inv_transform @ theta, dual_norm)
         elif self.model_type == 'lad':
-            # the dual of the \|\theta, -1\|_dual_norm penalization
             if self.kappa == 'inf':
                 return cp.norm(self.cost_inv_transform @ theta, dual_norm)
             else:
@@ -160,7 +162,7 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
 
 
         lamb_da = cp.Variable()
-        cons = [lamb_da >= self.penalization(theta)]
+        cons = [lamb_da >= self._penalization(theta)]
         if self.model_type == 'ols':
             final_loss = cp.norm(X @ theta + b - y) / math.sqrt(sample_size) + math.sqrt(self.eps) * lamb_da
 
@@ -193,18 +195,18 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
         model_params["b"] = self.b
         return model_params
     
-    def distance_compute(self, X_1: cp.Expression, X_2: np.ndarray, Y_1: cp.Expression, Y_2: float) -> cp.Expression:
+    def _distance_compute(self, X_1: cp.Expression, X_2: np.ndarray, Y_1: cp.Expression, Y_2: float) -> cp.Expression:
         """
         Computing the distance between two points (X_1, Y_1), (X_2, Y_2) under our defined metric in cvxpy problem
 
         Args:
-            X_1 (cp.Expression): Input feature-1 (n_feature,);
-            Y_1 (float): Input label-1;
-            X_2 (cp.Expression): Input feature-2 (n_feature,);
+            X_1 (:py:class:`cvxpy.expressions.expression.Expression`): Input feature-1 (n_feature,);
+            X_2 (np.ndarray): Input feature-2 (n_feature,);
+            Y_1 (:py:class:`cvxpy.expressions.expression.Expression`): Input label-1;
             Y_2 (float): Input label-2;
 
         Returns:
-            Float: d((X_1, Y_1), (X_2, Y_2))
+            :py:class:`cvxpy.expressions.expression.Expression`: Distance value
             
         Raises:
             WassersteinDROError: If the dimensions of two input feature are different.
@@ -291,7 +293,7 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
                     var_x = cp.Variable(self.input_dim)
                     var_y = cp.Variable()
                     # TODO: modify or remove
-                    obj = (y[i] - self.theta @ var_x - self.b) ** 2 - dual_norm_parameter * self.distance_compute(var_x, X[i], var_y, y[i])
+                    obj = (y[i] - self.theta @ var_x - self.b) ** 2 - dual_norm_parameter * self._distance_compute(var_x, X[i], var_y, y[i])
                     problem = cp.Problem(cp.Maximize(obj))
                     problem.solve(solver = self.solver)
                     new_X[i] = var_x.value
@@ -306,7 +308,7 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
                         var_x = cp.Variable(self.input_dim)
                         var_y = cp.Variable()
                         # TODO: modify or remove, does not work.
-                        obj = 1 - y[i] * (var_x @ self.theta + self.b) - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
+                        obj = 1 - y[i] * (var_x @ self.theta + self.b) - norm_theta * self._distance_compute(var_x, X[i], var_y, y[i])
                         problem = cp.Problem(cp.Maximize(obj))
                         problem.solve(solver = self.solver)
                         
@@ -324,7 +326,7 @@ The Wasserstein distance is defined as the minimum probability coupling of two d
                         var_x = cp.Variable(self.input_dim)
                         var_y = cp.Variable()
                         # TODO: modify or remove, does not work.
-                        obj = self._cvx_loss(var_x, y[i], self.theta, self.b) - norm_theta * self.distance_compute(var_x, X[i], var_y, y[i])
+                        obj = self._cvx_loss(var_x, y[i], self.theta, self.b) - norm_theta * self._distance_compute(var_x, X[i], var_y, y[i])
                         problem = cp.Problem(cp.Maximize(obj))
                         problem.solve(solver = self.solver)
                         new_X[i] = var_x.value
@@ -411,7 +413,9 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
     Robust satisficing version of Wasserstein DRO
 
     This model minimizes the subject to (approximated version) of the robust satisficing constraint of Wasserstein DRO. The Wasserstein Distance is defined as the minimum probability coupling of two distributions for the distance metric: 
-    d((X_1, Y_1), (X_2, Y_2)) = (abs(cost_matrix^{1/2} @ (X_1 - X_2))_p)^{square} + kappa abs(Y_1 - Y_2).
+
+    .. math::
+        d((X_1, Y_1), (X_2, Y_2)) = (abs(cost_matrix^{1/2} @ (X_1 - X_2))_p)^{square} + kappa abs(Y_1 - Y_2).
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
@@ -518,7 +522,7 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
         model_params["theta"] = self.theta.reshape(-1).tolist()
         return model_params
     
-    def penalization(self, theta: np.ndarray) -> float:
+    def _penalization(self, theta: np.ndarray) -> float:
         """
         Module for computing the regularization part in the standard Wasserstein DRO problem.
 
@@ -538,7 +542,6 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
         elif self.model_type in ['svm', 'logistic']:
             return cp.norm(self.cost_inv_transform @ theta, dual_norm)
         elif self.model_type == 'lad':
-            # the dual of the \|\theta, -1\|_dual_norm penalization
             return cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
             
 
@@ -570,7 +573,7 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
 
 
         lamb_da = cp.Variable()
-        cons = [lamb_da >= self.penalization(theta)]
+        cons = [lamb_da >= self._penalization(theta)]
         if self.model_type == 'ols':
             final_loss = cp.norm(X @ theta + b - y) / math.sqrt(sample_size) + math.sqrt(self.eps) * lamb_da
 
@@ -597,7 +600,7 @@ class Wasserstein_DRO_satisficing(BaseLinearDRO):
     
     def worst_distribution(self, X, y):
         warnings.warn("We do not compute worst case distribution for robust satisficing model since the distribution constraint is set to be held for any distribution.")
-
+        pass 
 
         # REQUIRED TO BE CALLED after solving the DRO problem
         # return a dict {"sample_pts": [np.array([pts_num, input_dim]), np.array(pts_num)], 'weight': np.array(pts_num)}

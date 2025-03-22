@@ -18,65 +18,170 @@ class ConditionalCVaRDRO(BaseLinearDRO):
     with alpha(x) to be beta^T x for simplicity
     alpha corresponds to Gamma in the paper.
 
-    Args:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Type of model (e.g., 'svm', 'logistic', 'ols').
-        alpha (float): Risk level for CVaR.
-        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
-        alpha (float): Risk level for CVaR, default = 1.
-        control_name (Optional[list[int]]): Indices of the control features for conditional DRO.
-
-
     Reference: <https://arxiv.org/pdf/2209.01754.pdf>
     """
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK'):
-        """
-        Args:
-            input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
 
+    def __init__(self, input_dim: int, model_type: str = 'svm', 
+                 fit_intercept: bool = True, solver: str = 'MOSEK'):
+        """Initialize the linear DRO model.
+
+        :param input_dim: Number of input features. Must be ≥ 1.
+        :type input_dim: int
+        :param model_type: Type of base model. Valid options: 
+            'svm', 'logistic', 'ols', 'lad'. Defaults to 'svm'.
+        :type model_type: str
+        :param fit_intercept: Whether to learn an intercept term. 
+            Set False for pre-centered data. Defaults to True.
+        :type fit_intercept: bool
+        :param solver: Optimization solver. 
+            See class-level documentation for recommended options. Defaults to 'MOSEK'.
+        :type solver: str
+        :raises ValueError: 
+            - If ``input_dim`` < 1
+            - If ``model_type`` is not in ['svm', 'logistic', 'ols', 'lad']
         
+        Example:
+            >>> model = ConditionalCVaRDRO(input_dim=5, model_type='logistic')
+            >>> print(model.model_type)
+            'logistic'
+            >>> print(model.alpha)
+            1.0
         """
+
+        if input_dim < 1:
+            raise ValueError("input_dim must be ≥ 1")
+        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
+            raise ValueError(f"Unsupported model_type: {model_type}")
+
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
-        self.alpha = 1
-        self.control_name = None
-    
+        self.alpha = 1.0      
+        self.control_name = None  
+
     def update(self, config: Dict[str, Any]) -> None:
-        """Update model configuration with parameters for Conditional DRO.
+        """Update Conditional CVaR-DRO model configuration.
         
-        Args:
-            config (Dict[str, Any]): Dictionary containing optional keys: 'control_name', 'alpha'.
-        
-        Raises:
-            ConditionalCVaRDROError: If any parameter is invalid.
+        Modifies control features and risk sensitivity parameters dynamically. 
+        Changes affect subsequent optimization but require manual re-fitting.
+
+        :param config: Dictionary of configuration updates. Valid keys:
+
+            - ``control_name``: Indices of controlled features (0 ≤ index < input_dim)
+
+            - ``alpha``: Risk level for CVaR constraint (0 < alpha ≤ 1)
+
+        :type config: Dict[str, Any]
+        :raises ConditionalCVaRDROError: 
+
+            - If ``control_name`` contains invalid indices
+
+            - If ``alpha`` is outside (0, 1]
+
+            - If unrecognized configuration keys are provided
+
+        Control Features:
+
+            - Controlled features (``control_name``) are protected from distribution shifts
+
+            - Indices must satisfy: :math:`0 \\leq \\text{index} < \\text{input_dim}`
+
+        Example:
+            >>> model = ConditionalCVaRDRO(input_dim=5)
+            >>> model.update({
+            ...     'control_name': [0, 2],  # Protect 1st and 3rd features
+            ...     'alpha': 0.95
+            ... })
+            >>> model.update({'control_name': [5]})  # Invalid index for input_dim=5
+            Traceback (most recent call last):
+                ...
+            ConditionalCVaRDROError: All indices in 'control_name' must be in [0, input_dim - 1]
+
+        .. note::
+
+            - Setting ``control_name=None`` disables feature protection
+
+            - Lower ``alpha`` values reduce conservatism (focus on average risk)
+
+            - Configuration changes invalidate previous solutions (requires re-fitting)
+
         """
         if 'control_name' in config:
             control_name = config['control_name']
-            if not all(0 <= x < self.input_dim for x in control_name):
-                raise ConditionalCVaRDROError("All indices in 'control_name' must be in the range [0, input_dim - 1].")
+            if control_name is not None:
+                if not all(0 <= x < self.input_dim for x in control_name):
+                    raise ConditionalCVaRDROError(
+                        f"All indices in 'control_name' must be in [0, {self.input_dim-1}]"
+                    )
             self.control_name = control_name
 
         if 'alpha' in config:
             alpha = config['alpha']
             if not (0 < alpha <= 1):
-                raise ConditionalCVaRDROError("Parameter 'alpha' must be in the range (0, 1].")
+                raise ConditionalCVaRDROError("Parameter 'alpha' must be in (0, 1]")
             self.alpha = float(alpha)
     
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """Fit the model using CVXPY for solving the robust optimization problem with Conditional DRO.
+        """Solve the Conditional CVaR-constrained DRO problem via convex optimization.
+        
+        Constructs and optimizes a distributionally robust model that minimizes the 
+        worst-case conditional expected loss, where the ambiguity set is constrained 
+        by both CVaR and feature control parameters.
 
-        Args:
-            X (np.ndarray): Feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
+        :param X: Training feature matrix of shape `(n_samples, n_features)`. 
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
 
-        Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta', 'b' keys.
+        :param y: Target values of shape `(n_samples,)`. Format requirements:
 
-        Raises:
-            ConditionalCVaRDROError: If the optimization fails to solve or dimensions mismatch.
+            - Classification: ±1 labels
+
+            - Regression: Continuous values
+
+        :type y: numpy.ndarray
+
+        :returns: Dictionary containing trained parameters:
+
+            - ``theta``: Weight vector of shape `(n_features,)`
+
+            - ``b``: Intercept term (exists if `fit_intercept=True`)
+
+            - ``cvar_threshold``: Optimal CVaR threshold value
+
+        :rtype: Dict[str, Any]
+        :raises ConditionalCVaRDROError: 
+            - If optimization fails (solver error/infeasible)
+            - If `X` and control features have dimension mismatch
+        :raises ValueError:
+            - If `X.shape[1] != self.input_dim`
+            - If `X.shape[0] != y.shape[0]`
+
+        Optimization Formulation:
+            .. math::
+                \\min_{\\theta,b} \ \\sup_{Q \in \\mathcal{Q}} \\mathbb{E}_Q[\\ell(\\theta,b;X,y)]
+                
+            where the ambiguity set :math:`\mathcal{Q}` satisfies:
+
+            .. math::
+                \\text{CVaR}_\\alpha(\\ell) \\leq \\tau \quad \\text{and} \quad X_{\\text{control}} = \\mathbb{E}_P[X_{\\text{control}}]
+
+            - :math:`X_{\\text{control}}` = features specified by `control_name`
+
+            - :math:`\\tau` = CVaR threshold (optimization variable)
+
+        Example:
+            >>> model = ConditionalCVaRDRO(input_dim=5, control_name=[0,2], alpha=0.9)
+            >>> X_train = np.random.randn(100, 5)
+            >>> y_train = np.sign(np.random.randn(100)) 
+            >>> params = model.fit(X_train, y_train)
+            >>> assert params["theta"].shape == (5,)
+            >>> assert "b" in params
+            >>> print(f"CVaR threshold: {params['cvar_threshold']:.4f}")
+
+        .. note::
+
+            - Controlled features (``control_name``) are assumed fixed under distribution shifts
+
+            - Solution cache is invalidated after calling :meth:`update`
+            
         """
         sample_size, feature_size = X.shape
 

@@ -15,39 +15,70 @@ class BayesianDROError(Exception):
     pass
 
 class Bayesian_DRO(BaseLinearDRO):
-    """
-    
+    """    
     This model minimizes a Bayesian version for regression and other types of losses
 
-    Attributes:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
-        eps (float): Robustness parameter for KL-DRO.
-        distance_type (str, default = 'KL'): distance type in DRO model, default = 'KL'. Also support 'chi2'.
-
-    
     Reference: <https://epubs.siam.org/doi/10.1137/21M1465548>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', eps: float = 0.0):
-        """
-        Initialize the Bayesian-DRO model with specified input dimension and model type.
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', eps: float = 0.0, distance_type: str = 'KL'):
+        """Initialize the Bayesian DRO model.
 
-        Args:
-
+        :param input_dim: Dimensionality of the input features.
+        :type input_dim: int
+        :param model_type: Type of base model. Supported values: 'svm', 'logistic', 'ols', 'lad'('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss). Defaults to 'svm'.
+        :type model_type: str
+        :param fit_intercept: Whether to fit an intercept term. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered). Defaults to True.
+        :type fit_intercept: bool
+        :param solver: Optimization solver. Supported solvers: 'MOSEK'.
+        :type solver: str
+        :param eps: Robustness parameter for KL-divergence ambiguity set. A higher value increases robustness. Defaults to 0.0 (non-robust).
+        :type eps: float
+        :param distance_type: Distance type in DRO model, default = 'KL'. Also support 'chi2'. Default to 'KL'.
+        :type distance_type: str
         """
+        
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)        
         self.eps = eps
         self.posterior_param_num = 1
         self.posterior_sample_ratio = 1
         self.distribution_class = 'Gaussian'
-        self.distance_type = 'KL'
+        self.distance_type = distance_type
 
     def update(self, config: Dict[str, Any]) -> None:
-        """Update the model configuration.
-        
+        """Update the model configuration dynamically.
+    
+        Modify parameters like robustness level (`eps`), optimization solver, distance metric type, 
+        or other algorithm settings during runtime.
+
+        :param config: Dictionary containing configuration key-value pairs to update. Supported keys include: 
+
+            - ``eps``: Robustness parameter (non-negative float)
+
+            - ``solver``: Optimization solver (e.g., 'MOSEK', 'SCS')
+
+            - ``distance_type``: Distance metric ('KL' or 'chi2')
+
+            - ``distribution_class``: Distribution class
+
+            - ``posterior_sample_ratio``
+
+            - ``posterior_param_num``
+
+            - Other model-specific parameters
+
+        :type config: Dict[str, Any]
+        :raises ValueError: If the configuration contains invalid keys, unsupported values, 
+            or negative values for parameters like ``eps``.
+
+        .. note::
+
+            - Updating some parameters (e.g., ``solver``) may trigger reinitialization of the optimizer.
+
+            - For safety, avoid modifying ``input_dim`` or ``model_type`` after initialization.
+
+        Example:
+            >>> model.update({"eps": 0.5, "distance_type": "chi2", "solver": "MOSEK"})
         """
 
         if 'distribution_class' in config.keys():
@@ -61,8 +92,34 @@ class Bayesian_DRO(BaseLinearDRO):
             self.posterior_param_num = config['posterior_param_num']
     
     def resample(self, X, y):
-        """
-        obtain a new X, y with self.posterior_param_num * sample_size * input_dim
+        """Generate resampled data based on posterior parameters.
+
+        This method produces new feature and target arrays whose dimensions are determined by the model's posterior parameters, input dimensionality, and the sample size of the original data.
+
+        :param X: Original feature matrix of shape `(sample_size, input_dim)`.
+        :type X: numpy.ndarray
+        :param y: Original target values of shape `(sample_size,)` or `(sample_size, n_targets)`.
+        :type y: numpy.ndarray
+
+        :returns: A tuple containing the resampled feature matrix and target array. 
+
+            - Resampled X has shape `(posterior_param_num, sample_size, input_dim)`
+
+            - Resampled y has shape `(posterior_param_num, sample_size)` (for single-target) or `(posterior_param_num, sample_size, n_targets)`
+
+        :rtype: tuple[numpy.ndarray, numpy.ndarray]
+
+        :raises ValueError: 
+
+            - If `X` and `y` have inconsistent sample sizes (first dimension mismatch).
+
+            - If `posterior_param_num` is not initialized (e.g., model not yet fitted).
+
+        Example:
+            >>> # After fitting a Bayesian_DRO model
+            >>> X_new, y_new = model.resample(X_train, y_train)
+            >>> print(X_new.shape)  # (n_params, 1000, 10) if sample_size=1000, input_dim=10
+            >>> print(y_new.shape)  # (n_params, 1000)
         """
         sample_size, __ = X.shape
         if self.model_class == 'Gaussian':
@@ -93,6 +150,49 @@ class Bayesian_DRO(BaseLinearDRO):
 
 
     def fit(self, X, y):
+        """Train the Bayesian DRO model by solving the convex optimization problem.
+
+        :param X: Feature matrix of shape `(original_sample_size, input_dim)`.
+        :type X: numpy.ndarray
+        :param y: Target values of shape `(original_sample_size,)` for classification or `(original_sample_size, n_targets)` for regression.
+        :type y: numpy.ndarray
+
+        :returns: Dictionary containing the trained parameters:
+
+            - ``theta``: Weight vector of shape `(input_dim,)`
+
+            - ``b``: Intercept scalar (only if `fit_intercept=True`)
+
+        :rtype: Dict[str, Union[List[float], float]]
+        :raises BayesianDROError: If the optimization solver fails to converge.
+
+        :raises ValueError: 
+
+            - If `X` and `y` have inconsistent sample sizes.
+
+            - If resampled data dimensions are incompatible with `posterior_param_num`.
+
+        Optimization Formulation:
+            Minimize:
+                ``(1/K) * Σ t_k + η * eps``  
+                where K = `posterior_param_num`, eps = `self.eps`
+                
+            Subject to:
+
+                - Exponential cone constraints: ``ExpCone(per_loss - t, η, epi_g)``
+
+                - Loss bounds: ``per_loss ≥ model-specific loss (e.g., SVM hinge loss)``
+
+                - Ambiguity set: ``Σ epi_g ≤ sample_size``
+        
+        Example:
+            >>> model = Bayesian_DRO(input_dim=10, eps=0.1)
+            >>> X_train = np.random.randn(100, 10)
+            >>> y_train = np.sign(np.random.randn(100))
+            >>> params = model.fit(X_train, y_train)
+            >>> print(params["theta"])  # e.g., [0.5, -1.2, ..., 0.8]
+            >>> print(params["b"])      # e.g., 0.3
+        """
         X, y = self.resample(X, y)
 
         sample_size = self.posterior_sample_ratio * sample_size
@@ -110,12 +210,7 @@ class Bayesian_DRO(BaseLinearDRO):
         cons = []
 
         cons.append(per_loss >= self._cvx_loss(X, y, theta, b))
-                # if self.is_regression == True:
-                #     cons.append(per_loss[i][j] >= (y[i][j] - X[i][j] @ theta) ** 2)
-                # else:
-                #     # svm loss
-                #     cons.append(per_loss[i][j] >= cp.pos(1 - cp.multiply(y[i][j], X[i][j] @ theta)))
-
+                
         for i in range(self.posterior_param_num):
             cons += [cp.sum(epi_g[i]) <= sample_size]
         for i in range(self.posterior_param_num):

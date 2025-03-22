@@ -9,44 +9,109 @@ class MOTDROError(Exception):
 
 ## MOT DRO
 class MOTDRO(BaseLinearDRO):
-    """
-    OT discrepancy with conditional moment constraint, the cost is set as:
-    c(((X_1, Y_1), w), ((X_2, Y_2), \hat w)) = theta1 * w * d((X_1, Y_1), (X_2, Y_2)) + theta2 * (\phi(w) - \phi(\hat w))^+, where \phi() is the KL divergence.
+    """Optimal Transport DRO with Conditional Moment Constraints.
 
-    Args:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression with L2-loss, 'lad' for Linear Regression with L1-loss).
-        eps (float): Robustness parameter for DRO.
-        cost matrix (np.ndarray): the feature importance perturbation matrix with the dimension being (input_dim, input_dim).
-        p (float or 'inf'): Norm parameter for controlling the perturbation moment of X.
-        theta1 (float): theta1 \geq 0 controls the strength of Wasserstein Distance
-        theta2 (float): theta2 \geq 0 controls the strength of KL Divergence
-
-    Reference: <https://arxiv.org/abs/2308.05414>
-    """
-    def __init__(self, input_dim: int, model_type: str):
-        """
-        Args:
-            input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-        """
-        BaseLinearDRO.__init__(self, input_dim, model_type)
-
-        self.theta1 = 2
-        self.theta2 = 2
-        self.eps = 0        
-        self.p = 2
-
-    def update(self, config = Dict[str, Any]) -> None:
-        """Update the model configuration
+    Implements DRO with composite transportation cost:
+    
+    .. math::
+        c\\big(((X_1,Y_1),w), ((X_2,Y_2),\\hat{w})\\big) = \\theta_1 w \\cdot d((X_1,Y_1),(X_2,Y_2)) 
+         + \\theta_2 (\\phi(w) - \\phi(\\hat{w}))^+
         
-        Args: 
-            config (Dict[str, Any]): Configuration dictionary containing 'theta1', 'theta2', 'eps', 'p', 'kappa' keys for robustness parameter.
-            
-        Raises:
-            MOTDROError: If any of the configs does not fall into its domain.
-        """
+    where :math:`\\phi(\\cdot)` is the KL divergence.
 
+    :ivar theta1: Wasserstein distance scaling factor (:math:`\\theta_1 \\geq 0`)
+    :vartype theta1: float
+    :ivar theta2: KL divergence penalty coefficient (:math:`\\theta_2 \\geq 0`)
+    :vartype theta2: float
+    :ivar eps: Robustness radius for OT ambiguity set (:math:`\\epsilon \\geq 0`)
+    :vartype eps: float
+    :ivar p: Norm order for feature perturbation. Valid values: 2 (L2), 'inf' (L_inf)
+    :vartype p: Union[float, str]
+
+    .. _MOTDRO_Paper: https://arxiv.org/abs/2308.05414
+    """
+
+    def __init__(self, input_dim: int, model_type: str):
+        """Initialize MOTDRO with composite transportation cost.
+
+        :param input_dim: Dimension of input features. Must be ≥ 1.
+        :type input_dim: int
+        :param model_type: Base model type. Supported:
+            
+            - ``'svm'``: Support Vector Machine (hinge loss)
+
+            - ``'logistic'``: Logistic Regression (log loss)
+
+            - ``'ols'``: Ordinary Least Squares (L2 loss)
+
+            - ``'lad'``: Least Absolute Deviation (L1 loss)
+
+        :type model_type: str
+        :raises ValueError: 
+
+            - If ``input_dim`` < 1
+
+            - If ``model_type`` not in allowed set
+
+        Default Parameters:
+            - ``theta1``: 2.0 (Wasserstein scaling)
+            - ``theta2``: 2.0 (KL penalty)
+            - ``eps``: 0.0 (non-robust baseline)
+            - ``p``: 2 (L2 norm perturbation)
+
+        Example:
+            >>> model = MOTDRO(input_dim=10, model_type='logistic')
+            >>> model.theta1 = 1.5 
+            >>> model.p = 'inf'    
+
+        """
+        super().__init__(input_dim, model_type)
+        
+        self.theta1 = 2.0    
+        self.theta2 = 2.0    
+        self.eps = 0.0       
+        self.p = 2           
+
+    def update(self, config: Dict[str, Any]) -> None:
+        """Update MOTDRO model configuration with coupled parameters.
+
+        :param config: Dictionary containing parameters to update. Valid keys:
+            
+            - ``theta1`` (float > 1): 
+                Wasserstein distance scaling factor. Updates trigger:
+                :math:`\\theta_2 = \\frac{1}{1 - 1/\\theta_1}`
+            
+            - ``theta2`` (float > 1): 
+                KL divergence penalty coefficient. Updates trigger:
+                :math:`\\theta_1 = \\frac{1}{1 - 1/\\theta_2}`
+            
+            - ``eps`` (float ≥ 0): 
+                Robustness radius for OT ambiguity set
+            
+            - ``p`` (float ≥1 or 'inf'): 
+                Perturbation norm order (1 ≤ p ≤ ∞)
+
+        :raises MOTDROError: 
+            - If ``theta1`` ≤ 1 or ``theta2`` ≤ 1
+            - If ``theta1``/``theta2`` relationship becomes invalid
+            - If ``eps`` < 0 or non-numeric
+            - If ``p`` < 1 (when numeric) or not 'inf'
+            - If parameter types are incorrect
+
+        Parameter Coupling:
+            - :math:`\\theta_1` and :math:`\\theta_2` are related through:
+                :math:`\\theta_1 = \\frac{1}{1 - 1/\\theta_2}`
+            - Updating one automatically adjusts the other
+
+        Example:
+            >>> model.update({
+            ...     'theta1': 2.5,       
+            ...     'p': 'inf',          
+            ...     'eps': 0.3           
+            ... })
+
+        """
+        
         if "theta1" in config.keys():
             self.theta1 = config["theta1"]
             self.theta2 = 1/(1-1/self.theta1)
@@ -71,17 +136,26 @@ class MOTDRO(BaseLinearDRO):
                 self.p = p
 
     def fit(self, X, y):
-        """Fit the model using CVXPY to solve the optimal-transportdistributionally robust optimization problem with conditional moment.
+        """Fit the MMD-DRO model to the data.
+        
+        :param X: Training feature matrix of shape `(n_samples, n_features)`.
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
 
-        Args:
-            X (np.ndarray): Input feature matrix with shape (N_train, dim).
-            y (np.ndarray): Target vector with shape (N_train,).
+        :param y: Target values of shape `(n_samples,)`. Format requirements:
 
-        Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta' key.
+            - Classification: ±1 labels
 
-        Raises:
-            WassersteinDROError: If the optimization problem fails to solve.        
+            - Regression: Continuous values
+
+        :type y: numpy.ndarray
+
+        :returns: Dictionary containing trained parameters:
+        
+            - ``theta``: Weight vector of shape `(n_features,)`
+        
+        :rtype: Dict[str, Any]
+
         """
         N_train = X.shape[0]
         dim = X.shape[1]

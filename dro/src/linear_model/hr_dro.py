@@ -12,53 +12,206 @@ class HR_DRO_LR(BaseLinearDRO):
     
     This model supports DRO with additional robustness constraints for linear regression and binary classification.
 
-    Args:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD), default = 'svm'.
-        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
-        r (float): DRO robustness parameter.
-        alpha (float): Parameter for marginal robustness.
-        epsilon (float): Tolerance for primary DRO constraints.
-        epsilon_prime (float): Tolerance for secondary DRO constraints.
-
     Reference: <https://arxiv.org/abs/2207.09560>
     """
     
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', r: float = 1.0, alpha: float = 1.0, 
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, 
+                 solver: str = 'MOSEK', r: float = 1.0, alpha: float = 1.0, 
                  epsilon: float = 0.5, epsilon_prime: float = 1.0):
+        """Initialize advanced DRO model with dual robustness parameters.
+
+        :param input_dim: Number of input features. Must be ≥ 1.
+        :type input_dim: int
+        :param model_type: Base model type. Defaults to 'svm'.
+        :type model_type: str
+        :param fit_intercept: Whether to fit intercept term. Defaults to True.
+        :type fit_intercept: bool
+        :param solver: Optimization solver. Defaults to 'MOSEK'.
+        :type solver: str
+        :param r: Ambiguity set curvature parameter. Must satisfy r ≥ 0. Defaults to 1.0.
+        :type r: float
+        :param alpha: Risk level parameter. Must satisfy 0 < alpha ≤ 1. Defaults to 1.0.
+        :type alpha: float
+        :param epsilon: Wasserstein radius for distribution shifts. Must be ≥ 0. Defaults to 0.5.
+        :type epsilon: float
+        :param epsilon_prime: Robustness budget for moment constraints. Must be ≥ 0. Defaults to 1.0.
+        :type epsilon_prime: float
+
+        :raises ValueError: 
+
+            - If any parameter violates numerical constraints (r < 0, alpha ∉ (0,1], etc.)
+
+            - If model_type is not in allowed set
+
+            - If input_dim < 1
+
+        Example:
+            >>> model = HR_DRO_LR(
+            ...     input_dim=5, 
+            ...     model_type='logistic',
+            ...     r=0.5, 
+            ...     epsilon=0.3,
+            ...     epsilon_prime=0.8
+            ... )
+            >>> print(model.r, model.epsilon_prime)
+            0.5 0.8
         """
-        Args:
-            input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str): Optimization solver to solve the problem, default = 'MOSEK'
-        """
+        # Parameter validation
+        if input_dim < 1:
+            raise ValueError("input_dim must be ≥ 1")
+        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
+            raise ValueError(f"Invalid model_type: {model_type}")
+        if r < 0 or alpha <= 0 or alpha > 1 or epsilon < 0 or epsilon_prime < 0:
+            raise ValueError("Parameters must satisfy: r ≥ 0, 0 < alpha ≤ 1, epsilon ≥ 0, epsilon_prime ≥ 0")
+
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.r = r
         self.alpha = alpha
         self.epsilon = epsilon
         self.epsilon_prime = epsilon_prime
-
-    def update(self, config: Dict[str, Any] = {}):
-        # TODO: Add hyper-parameter checking
-        """Update model configuration based on the provided dictionary."""
-        self.r = config.get("r", self.r)
-        self.alpha = config.get("alpha", self.alpha)
-        self.epsilon = config.get("epsilon", self.epsilon)
-        self.epsilon_prime = config.get("epsilon_prime", self.epsilon_prime)
-
-    def fit(self, X: np.ndarray, Y: np.ndarray) -> Dict[str, Any]:
-        """Fit model to data using CVXPY by solving the DRO optimization problem.
+    
+    def update(self, config: Dict[str, Any] = {}) -> None:
+        """Dynamically update robustness parameters of the Advanced DRO model.
         
-        Args:
-            X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
+        Modifies multi-level ambiguity set parameters while preserving existing model state.
+        Changes require manual re-fitting to take effect.
 
-        Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta' key.
+        :param config: Dictionary containing parameter updates. Supported keys:
+
+            - ``r``: Curvature parameter for ambiguity set (must be ≥ 0)
+
+            - ``alpha``: Risk level for CVaR-like constraints (must satisfy 0 < alpha ≤ 1)
+
+            - ``epsilon``: Wasserstein radius for distribution shifts (must be ≥ 0)
+
+            - ``epsilon_prime``: Moment constraint robustness budget (must be ≥ 0)
+
+        :type config: Dict[str, Any]
+
+        :raises ValueError: 
+
+            - If any parameter violates numerical constraints
+
+            - If invalid parameter types are provided
+
+        Parameter Relationships:
+
+            - Larger ``epsilon`` allows more distribution shift
+
+            - Higher ``r`` creates more conservative ambiguity set geometries
+
+            - ``epsilon_prime`` controls second-order moment robustness
+
+        Example:
+            >>> model = HR_DRO_LR(input_dim=5, r=1.0, epsilon=0.5)
+            >>> model.update({"r": 0.8, "epsilon": 0.6})  # Valid update
+            >>> model.update({"alpha": 1.5})  # Invalid alpha
+            Traceback (most recent call last):
+                ...
+            ValueError: alpha must be in (0, 1], got 1.5
+
+        .. note::
+
+            - Empty config dictionary will preserve current parameters
+
+            - Partial updates are allowed (only modify specified parameters)
+
+            - Always validate parameters before optimization phase
 
         """
+        # Parameter validation
+        new_r = config.get("r", self.r)
+        new_alpha = config.get("alpha", self.alpha)
+        new_epsilon = config.get("epsilon", self.epsilon)
+        new_epsilon_prime = config.get("epsilon_prime", self.epsilon_prime)
+
+        if new_r < 0:
+            raise ValueError(f"r must be ≥ 0, got {new_r}")
+        if not (0 < new_alpha <= 1):
+            raise ValueError(f"alpha must be in (0, 1], got {new_alpha}")
+        if new_epsilon < 0 or new_epsilon_prime < 0:
+            raise ValueError(f"Epsilon parameters must be ≥ 0, got ε={new_epsilon}, ε'={new_epsilon_prime}")
+
+        # Apply validated parameters
+        self.r = new_r
+        self.alpha = new_alpha
+        self.epsilon = new_epsilon
+        self.epsilon_prime = new_epsilon_prime
+        
+    def fit(self, X: np.ndarray, Y: np.ndarray) -> Dict[str, Any]:
+        """Solve the dual-ambiguity DRO problem via convex optimization.
+
+        :param X: Training feature matrix of shape `(n_samples, n_features)`.
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
+
+        :param Y: Target values of shape `(n_samples,)`. Format requirements:
+
+            - Classification: ±1 labels
+
+            - Regression: Continuous values
+
+        :type Y: numpy.ndarray
+
+        :returns: Dictionary containing trained parameters:
+        
+            - ``theta``: Weight vector of shape `(n_features,)`
+        
+            - ``b``: Intercept term (if `fit_intercept=True`)
+
+        :rtype: Dict[str, Any]
+
+        :raises HRDROError: 
+
+            - If optimization fails due to solver errors
+
+            - If problem becomes infeasible with current parameters
+
+        :raises ValueError:
+
+            - If `X.shape[1] != self.input_dim`
+
+            - If `X.shape[0] != Y.shape[0]`
+
+            - If parameters violate `r ≥ 0`, `epsilon ≥ 0`, etc.
+
+        Optimization Formulation:
+            .. math::
+                \\min_{\\theta,b} \\sup_{Q \\in \\mathcal{Q}} \\mathbb{E}_Q[\\ell(\\theta,b;X,Y)]
+                
+            where the ambiguity set :math:`\\mathcal{Q}` satisfies:
+
+            .. math::
+                W(P,Q) \\leq \\epsilon 
+
+            .. math::    
+                \\text{CVaR}_\\alpha(\\ell) \\leq \\tau + r\\epsilon' 
+
+            .. math::
+                \\mathbb{E}_Q[\\phi(X)] \\leq \\mathbb{E}_P[\\phi(X)] + \\epsilon'
+                
+            - :math:`W(P,Q)` = Wasserstein distance between distributions
+
+            - :math:`r` = curvature parameter from `self.r`
+
+            - :math:`\\phi(\\cdot)` = moment constraint function
+
+        Example:
+            >>> model = HR_DRO_LR(input_dim=3, r=0.5, epsilon=0.4)
+            >>> X_train = np.random.randn(100, 3)
+            >>> y_train = np.sign(np.random.randn(100))  # Binary labels
+            >>> params = model.fit(X_train, y_train)
+            >>> print(params["theta"].shape)  # (3,)
+            >>> print("dual_vars" in params)  # True
+
+        .. note::
+
+            - Solution time grows cubically with `n_samples`
+
+            - Set `epsilon=0` to disable Wasserstein constraints
+
+        """
+        # Implementation code...
         T, feature_dim = X.shape
         if feature_dim != self.input_dim:
             raise DataValidationError(f"Expected input with {self.input_dim} features, got {feature_dim}.")
