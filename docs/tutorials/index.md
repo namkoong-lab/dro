@@ -43,7 +43,7 @@ We support DRO methods including:
 * Generalized $f$-DRO: CVaR-DRO, Marginal DRO (CVaR), Conditional DRO (CVaR);
 * MMD-DRO;
 * Bayesian-based DRO: Bayesian-PDRO, PDRO
-* Mixed-DRO: Sinkhorn-DRO, Holistic DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
+* Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
 
 ## Neural Network
 
