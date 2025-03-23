@@ -19,16 +19,24 @@ class ORWDRO(BaseLinearDRO):
         model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
         eps (float): Robustness parameter for OR-WDRO. 
         eta (float): Fraction of outlier for OR-WDRO.
-        dual norm (int): used in the optimization
+        dual norm (int): used in the optimization, default = 1 (can only take values in 1, 2).
 
     Reference:<https://arxiv.org/pdf/2311.05573>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', eps: float = 0.0, eta: float = 0.0, dual_norm: int = 1):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', eps: float = 0.0, eta: float = 0.0, dual_norm: int = 1):
         """
         Initialize the ORWDRO model with specified input dimension and model type.
+        Args:
+            input_dim (int): Dimension of the input features.
+            model_type (str): Type of model ('svm', 'lad').
+            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
+            solver (str): Optimization solver to solve the problem, default = 'MOSEK'
         """
-        BaseLinearDRO.__init__(self, input_dim, model_type)
+        if model_type in ['ols', 'logistic']:
+            raise ORWDROError("OR WDRO does not support OLS, logistic")
+
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.eps = eps
         self.eta = eta
         self.dual_norm = dual_norm
@@ -38,7 +46,7 @@ class ORWDRO(BaseLinearDRO):
         """Update the model configuration.
 
         Args:
-            config (Dict[str, Any]): Configuration dictionary containing 'eps' key for robustness parameter.
+            config (Dict[str, Any]): Configuration dictionary containing 'eps', 'eta' key for robustness parameter.
         Raises:
             ORWDROError: If 'eps', 'eta' is provided but is not a non-negative float.
         """
@@ -57,7 +65,15 @@ class ORWDRO(BaseLinearDRO):
             if dual_norm not in [1, 2]:
                 raise ORWDROError("dual_norm must be 1 or 2")
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        # TODO: description
+        """Fit model to data using CVXPY by solving the DRO problem.
+
+        Args:
+            X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
+            y (np.ndarray): Target vector with shape (n_samples,).
+
+        Returns:
+            Dict[str, Any]: Model parameters dictionary with 'theta' key.
+        """
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
             raise ORWDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
@@ -65,6 +81,10 @@ class ORWDRO(BaseLinearDRO):
             raise ORWDROError("Input X and target y must have the same number of samples.")
     
         z_0, sgn = self.cheap_robust_mean_estimate(X, y)
+
+        if self.fit_intercept == True:
+            X = np.hstack((X, np.ones(sample_size).reshape(-1, 1)))
+
         if self.model_type == 'lad':
             Z = np.hstack([X, y.reshape(-1, 1)])
         elif self.model_type == 'svm':
@@ -82,15 +102,15 @@ class ORWDRO(BaseLinearDRO):
         s        = cp.Variable(shape=(sample_size,), nonneg=True)    # s(i) >= 0
         # We'll store zeta_G and zeta_W in 3D shape (d, n, J).
         # CVXPY does allow multi-dimensional Variables, but indexing must be handled carefully.
-        zeta_G = [cp.Variable(shape=(feature_size + 1 - sgn, sample_size)) for _ in range(2)]
-        zeta_W = [cp.Variable(shape=(feature_size + 1 - sgn, sample_size)) for _ in range(2)]
+        zeta_G = [cp.Variable(shape=(feature_size + 1 + self.fit_intercept - sgn, sample_size)) for _ in range(2)]
+        zeta_W = [cp.Variable(shape=(feature_size + 1 + self.fit_intercept - sgn, sample_size)) for _ in range(2)]
 
         # for reformulating rotated SOC
         aux_W = cp.Variable(shape = (2,sample_size), nonneg = True)
         # tau: shape (n, J), both entries >= 0
         tau = cp.Variable(shape=(sample_size, J), nonneg=True)
         # theta: shape (d-1, )
-        theta = cp.Variable(shape=(feature_size,))
+        theta = cp.Variable(shape=(feature_size + self.fit_intercept,))
 
         # ----------------------------------------------------------------------
         # 3) Objective function
@@ -169,7 +189,7 @@ class ORWDRO(BaseLinearDRO):
         # ----------------------------------------------------------------------
         problem = cp.Problem(objective, constraints)
         try: 
-            problem.solve(solver = cp.GUROBI)
+            problem.solve(solver = self.solver)
             self.theta = theta.value
         except cp.SolverError as e:
             raise ORWDROError("Optimization failed to solve using MOSEK.") from e

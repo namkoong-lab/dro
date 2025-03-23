@@ -10,43 +10,71 @@ class HRDROError(Exception):
 class HR_DRO_LR(BaseLinearDRO):
     """Holistic Robust DRO Linear Regression (HR_DRO_LR) model.
     
-    This model supports DRO with additional robustness constraints for linear regression and binary classification.
+    This model supports HR DRO with additional robustness constraints for linear regression and binary classification. (Theorem 7)
 
     Args:
         input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD), default = 'svm'.
+        model_type (str): Model type indicator ('svm' for SVM, 'lad' for Linear Regression for LAD), default = 'svm'.
         fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
         solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
-        r (float): DRO robustness parameter.
-        alpha (float): Parameter for marginal robustness.
-        epsilon (float): Tolerance for primary DRO constraints.
-        epsilon_prime (float): Tolerance for secondary DRO constraints.
+        r (float): DRO robustness parameter for statistical error
+        alpha (float): DRO robustness parameter for misspecification
+        epsilon (float): DRO robustness parameter for noise
+        epsilon_prime (float): DRO robustnes parameter for determining the uncertainty region.
 
     Reference: <https://arxiv.org/abs/2207.09560>
     """
     
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', r: float = 1.0, alpha: float = 1.0, 
-                 epsilon: float = 0.5, epsilon_prime: float = 1.0):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', r: float = 1.0, alpha: float = 0.0, 
+                 epsilon: float = 0.5):
         """
+        Initialize the ORWDRO model with specified input dimension and model type.
         Args:
             input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
+            model_type (str): Type of model ('svm', 'lad').
             fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
             solver (str): Optimization solver to solve the problem, default = 'MOSEK'
         """
+        if model_type in ['ols', 'logistic']:
+            raise HRDROError("HR DRO does not support OLS, logistic")
+
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.r = r
         self.alpha = alpha
         self.epsilon = epsilon
-        self.epsilon_prime = epsilon_prime
+        self.epsilon_prime = epsilon
 
     def update(self, config: Dict[str, Any] = {}):
-        # TODO: Add hyper-parameter checking
-        """Update model configuration based on the provided dictionary."""
-        self.r = config.get("r", self.r)
-        self.alpha = config.get("alpha", self.alpha)
-        self.epsilon = config.get("epsilon", self.epsilon)
-        self.epsilon_prime = config.get("epsilon_prime", self.epsilon_prime)
+        """Update model configuration based on the provided dictionary.
+        
+        Args:
+            config (Dict[str, Any]): Configuration dictionary containing 'r', 'alpha', 'epsilon', 'epsilon_prime' keys for robustness parameter.
+
+        Raises:
+            HRDROError: If any of the configs does not fall into its domain.
+        """
+        if "r" in config.keys():
+            r = config["r"]
+            if not isinstance(r, (float, int)) or r < 0:
+                raise HRDROError("Robustness parameter of statistical error 'r' must be a non-negative float.")
+            self.r = float(r)
+
+        if "alpha" in config.keys():
+            alpha = config["alpha"]
+            if not isinstance(alpha, (float, int)) or alpha < 0 or alpha > 1:
+                raise HRDROError("Robustness parameter of misspecification 'alpha' must be between 0 and 1.")
+        
+        if "epsilon" in config.keys():
+            epsilon = config["epsilon"]
+            if not isinstance(r, (float, int)) or epsilon < 0:
+                raise HRDROError("Robustness parameter of statistical error 'epsilon' must be a non-negative float.")
+            self.epsilon = float(epsilon)
+
+        if "epsilon_prime" in config.keys():
+            epsilon_prime = config["epsilon_prime"]
+            if not isinstance(r, (float, int)) or epsilon < 0 or epsilon_prime < self.epsilon:
+                raise HRDROError("Robustness parameter of statistical error 'epsilon' must be a non-negative float and larger than epsilon prime")
+            self.epsilon_prime = float(epsilon_prime)
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> Dict[str, Any]:
         """Fit model to data using CVXPY by solving the DRO optimization problem.
@@ -101,16 +129,13 @@ class HR_DRO_LR(BaseLinearDRO):
                     w[t] >= cp.rel_entr(lambda_, (eta - 1 + temp - self.epsilon_prime * cp.norm(theta, 2))) - beta,
                     eta >= 1 - Y[t] * (theta.T @ X[t] + b) + self.epsilon * cp.norm(theta, 2)
                 ])
-        else:
-            # TODO: check whether ols works for HR-DRO.
-            raise NotImplementedError("Model type not supported for HR_DRO_LR.")
 
         # Solve the optimization problem
         problem = cp.Problem(objective, constraints)
         try:
-            problem.solve(solver=self.solver, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8}, verbose=True)
+            problem.solve(solver=self.solver)
         except cp.error.SolverError as e:
-            raise HRDROError("Optimization failed to solve using MOSEK.") from e
+            raise HRDROError(f"Optimization failed to solve using {self.solver}.") from e
 
         if theta.value is None:
             raise HRDROError("Optimization did not converge to a solution.")
