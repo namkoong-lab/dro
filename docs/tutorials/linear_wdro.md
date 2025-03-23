@@ -1,17 +1,17 @@
 # Wasserstein DRO
+In Wasserstein DRO, 
+$Q(d, \epsilon) = \{Q: W(Q, \hat P)\leq \epsilon\}$.
 
+Specifically, Wasserstein distance is defined as follows:
 For $Z_1 = (X_1, Y_1), Z_2 = (X_2, Y_2)$, 
 
-$W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)]$
+$$W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)],$$
+where for ``lad``, ``svm``, ``logistic``, the inner distance is captured by the norm: $d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|.$
+For ``ols``, the inner distance is captured by the norm square: 
+$d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|$. 
 
-$d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|$,
-
-And the norm is defined on the product space $\mathcal{X} \times \mathbb{R}$ by:
-
-$$
-\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.
-$$
-
+No matter in each case, the norm is defined on the product space $\mathcal{X} \times \mathbb{R}$ by:
+$$\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.$$
 Here $\|x\|_{\Sigma, p} = \|\Sigma^{1/2}x\|_p$. Furthermore, we can show that the dual norm $\|(\cdot, \cdot)\|_*$ is given by:
 
 $$
@@ -20,42 +20,39 @@ $$
 
 with $\frac{1}{p} + \frac{1}{q} = 1$.
 
-
-
-```python
-
-```
+The norm is defined by the parameter tuple $(\Sigma, p, \kappa)$,
 
 ## Standard Version
 
 ### Hyperparameter
+* $\Sigma$: the feature importance perturbation matrix with the dimension being the (dimX, dimX).
+* $p$: Norm parameter for controlling the perturbation moment of X.
+* $\kappa$: Robustness parameter for the perturbation of Y.
+* $\epsilon$: Ambiguity size of Wasserstein ball. 
 
+For OLS, Theorem 1 in [1] there provides the corresponding reformulations. We set $\kappa = \infty$, i.e., not allow changes in $Y$. 
 
-In the basic Wasserstein-DRO model,
-* we apply $d(P, Q) = W_c(P, Q)$, where $W_c$ is the Wasserstein distance with the induced cost function inside it being $c((X_1, Y_1), (X_2, Y_2)) = X_1^{\top} \Lambda X_2$, the default $\Lambda$ is taken as the unit matrix and $c(\cdot, \cdot)$ then becomes squared Euclidean distance. That is, we only allow the perturbation of $X$ but not $Y$.   
-
-Theorem 1 in [1] there provides the corresponding reformulations.
-
-For the augmented Wasserstein-DRO model,
-* we still use $d(P, Q)$ being the Wasserstein distance $W_c$ but now we allow the change of $y$. More specifically, we set $c((X_1, Y_1), (X_2, Y_2)) = X_1^{\top}\Lambda X_2 + \kappa|Y_1 - Y_2|$, and we introduce another hyperparameter $\kappa$ to adjust the change in $Y$. Note that when $\kappa = \infty$, it reduces to the previous case.
-
-[2] provide various loss functions to reformulate the problem.
+For loss functions in LAD, Logistic, and SVM models, [2] provide to reformulate the problem.
 
 ### Worst case Distribution
-[2] asymptotic 
+When we set ``compute_type == asymp``, [2] provides asymptotic worst-case distribution for linear regression and classification (Theorems 9 and 20), where we take $\gamma \in (0, 1]$ as the hyperparameter to tune in each case.
 
-In other papers, exact worst-case reformulation.
+``compute_type == exact`` is depreciated right now.
 
 ## Robust Satisficing Version
-For the Satisficing Wasserstein-DRO model, 
-* we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:
 
-$$
-\max \epsilon, \text{s.t.}~\min_{\theta} \max_{P: P \in U_{\epsilon}} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))] \geq \tau,
-$$
+For the Satisficing Wasserstein-DRO model [3], we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:
+$$\max {\epsilon,\quad \text{s.t.}~E_{(X,Y) \sim P}[\ell_{tr}(\theta;(X, Y))] \leq \tau + \epsilon W(P, \widehat P), \forall P}.$$
 
-where we do not set $\epsilon$ as the hyperparameter but as an optimization goal such that to minimize the worst-case performance. Instead, we set $\tau$ as the hyperparameter, which is set as the multiplication of the best empirical performance with $E_{(X, Y)\sim \hat P_n}[\ell(\theta_{ERM};(X, Y))]$. To solve this optimization problem, at each binary search, we prefix $\epsilon \in [0, M]$ and compute the corresponding left-hand objective value and then reduce the potential $\epsilon$ half by half.
-* Reference: Long, Daniel Zhuoyu, Melvyn Sim, and Minglong Zhou. "Robust satisficing." Operations Research 71.1 (2023): 61-82.
+For (approximated) regression / classification, we can show the optimization problem above is equivalent to:
+$$\max \{\|\theta\|_{\Sigma^{-1/2},p},\quad \text{s.t.}~ E_{(X,Y) \sim \widehat P}[\ell_{tr}(\theta;(X, Y))] \leq \tau\}.$$
+
+### Hyperparameter
+In the satisfying version,  we do not set $\epsilon$ as the hyperparameter but as an optimization goal such that to minimize the worst-case performance. 
+* $\Sigma$: the feature importance perturbation matrix with the dimension being the (dimX, dimX).
+* $p$: Norm parameter for controlling the perturbation moment of X.
+* $\kappa$: Robustness parameter for the perturbation of Y.
+* $\tau$: $\tau \geq 1$ is set as the multiplication of the best empirical performance with $E_{(X, Y)\sim \hat P_n}[\ell(\theta_{ERM};(X, Y))]$. 
 
 
 

@@ -10,7 +10,7 @@ class HRDROError(Exception):
 class HR_DRO_LR(BaseLinearDRO):
     """Holistic Robust DRO Linear Regression (HR_DRO_LR) model.
     
-    This model supports DRO with additional robustness constraints for linear regression and binary classification.
+    This model supports HR DRO with additional robustness constraints for linear regression and binary classification. (Theorem 7)
 
     Reference: <https://arxiv.org/abs/2207.09560>
     """
@@ -61,6 +61,8 @@ class HR_DRO_LR(BaseLinearDRO):
             raise ValueError("input_dim must be ≥ 1")
         if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
             raise ValueError(f"Invalid model_type: {model_type}")
+        if model_type in ['ols', 'logistic']:
+            raise HRDROError("HR DRO does not support OLS, logistic")
         if r < 0 or alpha <= 0 or alpha > 1 or epsilon < 0 or epsilon_prime < 0:
             raise ValueError("Parameters must satisfy: r ≥ 0, 0 < alpha ≤ 1, epsilon ≥ 0, epsilon_prime ≥ 0")
 
@@ -254,16 +256,13 @@ class HR_DRO_LR(BaseLinearDRO):
                     w[t] >= cp.rel_entr(lambda_, (eta - 1 + temp - self.epsilon_prime * cp.norm(theta, 2))) - beta,
                     eta >= 1 - Y[t] * (theta.T @ X[t] + b) + self.epsilon * cp.norm(theta, 2)
                 ])
-        else:
-            # TODO: check whether ols works for HR-DRO.
-            raise NotImplementedError("Model type not supported for HR_DRO_LR.")
 
         # Solve the optimization problem
         problem = cp.Problem(objective, constraints)
         try:
-            problem.solve(solver=self.solver, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8}, verbose=True)
+            problem.solve(solver=self.solver)
         except cp.error.SolverError as e:
-            raise HRDROError("Optimization failed to solve using MOSEK.") from e
+            raise HRDROError(f"Optimization failed to solve using {self.solver}.") from e
 
         if theta.value is None:
             raise HRDROError("Optimization did not converge to a solution.")
