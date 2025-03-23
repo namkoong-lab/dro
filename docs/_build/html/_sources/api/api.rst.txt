@@ -26,66 +26,81 @@ Linear DRO Methods
    :members: 
    :undoc-members:
    :show-inheritance:
+   :exclude-members: Chi2DROError
+
 
 .. automodule:: dro.src.linear_model.cvar_dro
    :members: 
    :undoc-members:
    :show-inheritance:
+   :exclude-members: CVaRDROError
+
 
 .. automodule:: dro.src.linear_model.kl_dro
    :members: 
    :undoc-members:
    :show-inheritance:
+   :exclude-members: KLDROError
 
 .. automodule:: dro.src.linear_model.tv_dro
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: TVDROError
 
 .. automodule:: dro.src.linear_model.conditional_dro
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: ConditionalCVaRDROError
 
 .. automodule:: dro.src.linear_model.hr_dro
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: HRDROError
 
 .. automodule:: dro.src.linear_model.marginal_dro
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: MarginalCVaRDROError
 
 .. automodule:: dro.src.linear_model.mmd_dro
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance: 
+   :exclude-members: MMDDROError
 
-.. automodule:: dro.src.linear_model.MOT_DRO
+.. automodule:: dro.src.linear_model.mot_dro
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: MOTDROError
 
-.. automodule:: dro.src.linear_model.OR_Wasserstein_DRO
+.. automodule:: dro.src.linear_model.or_wasserstein_dro
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: ORWDROError
 
 .. automodule:: dro.src.linear_model.sinkhorn_dro
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance: 
+   :exclude-members: SinkhornDROError
 
-.. automodule:: dro.src.linear_model.Wasserstein_DRO
+.. automodule:: dro.src.linear_model.wasserstein_dro
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance: 
+   :exclude-members: WassersteinDROError
 
-.. automodule:: dro.src.linear_model.Bayesian_dro
+.. automodule:: dro.src.linear_model.bayesian_dro
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance: 
+   :exclude-members: BayesianDROError
    
 
 Neural Network DRO Methods

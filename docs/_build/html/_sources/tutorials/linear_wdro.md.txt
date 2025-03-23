@@ -7,9 +7,17 @@ $W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)]$
 $d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|$,
 
 And the norm is defined on the product space $\mathcal{X} \times \mathbb{R}$ by:
-$$\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.$$
+
+$$
+\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.
+$$
+
 Here $\|x\|_{\Sigma, p} = \|\Sigma^{1/2}x\|_p$. Furthermore, we can show that the dual norm $\|(\cdot, \cdot)\|_*$ is given by:
-$$\|(u,v)\|_* = \max\{\|u\|_{\Sigma, q}, \frac{v}{\kappa}\}$$
+
+$$
+\|(u,v)\|_* = \max\{\|u\|_{\Sigma, q}, \frac{v}{\kappa}\}
+$$
+
 with $\frac{1}{p} + \frac{1}{q} = 1$.
 
 
@@ -41,7 +49,11 @@ In other papers, exact worst-case reformulation.
 ## Robust Satisficing Version
 For the Satisficing Wasserstein-DRO model, 
 * we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:
-$$\max \epsilon, \text{s.t.}~\min_{\theta} \max_{P: P \in U_{\epsilon}} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))] \geq \tau,$$
+
+$$
+\max \epsilon, \text{s.t.}~\min_{\theta} \max_{P: P \in U_{\epsilon}} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))] \geq \tau,
+$$
+
 where we do not set $\epsilon$ as the hyperparameter but as an optimization goal such that to minimize the worst-case performance. Instead, we set $\tau$ as the hyperparameter, which is set as the multiplication of the best empirical performance with $E_{(X, Y)\sim \hat P_n}[\ell(\theta_{ERM};(X, Y))]$. To solve this optimization problem, at each binary search, we prefix $\epsilon \in [0, M]$ and compute the corresponding left-hand objective value and then reduce the potential $\epsilon$ half by half.
 * Reference: Long, Daniel Zhuoyu, Melvyn Sim, and Minglong Zhou. "Robust satisficing." Operations Research 71.1 (2023): 61-82.
 

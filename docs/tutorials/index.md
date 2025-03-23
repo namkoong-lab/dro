@@ -1,9 +1,18 @@
 # Formulation
 
 Given the empirical distribution $\hat P$ from the data $\{(x_i, y_i)\}$, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:
-$$\min_{f \in \mathcal{F}}\max_{Q \in \mathcal{P}}\mathbb{E}_Q[\ell(f(X), Y)],$$
+
+$$
+\min_{f \in \mathcal{F}}\max_{Q \in \mathcal{P}}\mathbb{E}_Q[\ell(f(X), Y)],
+$$
+
 where $\mathcal{P}$ is denoted as the ambiguity set. Usually, it satisfies the following structure:
-$$\mathcal{P}(d, \epsilon) = \{Q: d(Q, \hat P) \leq \epsilon\}. $$
+
+$$
+\mathcal{P}(d, \epsilon) = \{Q: d(Q, \hat P) \leq \epsilon\}. 
+$$
+
+
 Here, $d(\cdot, \cdot)$ is a notion of distance between probability measures and $\epsilon$ captures the size of the ambiguity set.
 
 Given each function class $\mathcal{F}$, we classify all the models into the following cases, where each case can be further classified given each distance type $d$.
@@ -43,7 +52,7 @@ We support DRO methods including:
 * Generalized $f$-DRO: CVaR-DRO, Marginal DRO (CVaR), Conditional DRO (CVaR);
 * MMD-DRO;
 * Bayesian-based DRO: Bayesian-PDRO, PDRO
-* Mixed-DRO: Sinkhorn-DRO, Holistic DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
+* Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
 
 ## Neural Network
 

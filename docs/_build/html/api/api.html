@@ -58,8 +58,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html">Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html">f-divergence DRO</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../tutorials/linear_fdro.html#standard-generalized">Standard (Generalized)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/linear_fdro.html#standard-generalized">Standard (Generalized)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../tutorials/linear_fdro.html#formulation">Formulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorials/linear_fdro.html#hyperparameters">Hyperparameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorials/linear_fdro.html#worst-case-illustration">Worst-case illustration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorials/linear_fdro.html#evaluation">Evaluation</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../tutorials/linear_fdro.html#partial-dro">Partial DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/linear_fdro.html#reference">Reference:</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html">Wasserstein DRO</a><ul>
@@ -101,13 +108,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.evaluate"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.evaluate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.load"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.load()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.predict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.score()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.evaluate"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.evaluate()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DROError"><code class="docutils literal notranslate"><span class="pre">Chi2DROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO"><code class="docutils literal notranslate"><span class="pre">Chi2DRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.fit()</span></code></a></li>
@@ -115,66 +121,56 @@
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDROError"><code class="docutils literal notranslate"><span class="pre">CVaRDROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO"><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDROError"><code class="docutils literal notranslate"><span class="pre">KLDROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO"><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.update"><code class="docutils literal notranslate"><span class="pre">KLDRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">KLDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.tv_dro.TVDROError"><code class="docutils literal notranslate"><span class="pre">TVDROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.tv_dro.TVDRO"><code class="docutils literal notranslate"><span class="pre">TVDRO</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.tv_dro.TVDRO.threshold_val"><code class="docutils literal notranslate"><span class="pre">TVDRO.threshold_val</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.tv_dro.TVDRO.update"><code class="docutils literal notranslate"><span class="pre">TVDRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.tv_dro.TVDRO.fit"><code class="docutils literal notranslate"><span class="pre">TVDRO.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.tv_dro.TVDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">TVDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.conditional_dro.ConditionalCVaRDROError"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO.fit()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.hr_dro.HRDROError"><code class="docutils literal notranslate"><span class="pre">HRDROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.hr_dro.HR_DRO_LR"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.hr_dro.HR_DRO_LR.update"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.hr_dro.HR_DRO_LR.fit"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR.fit()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDROError"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDRO"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO.fit()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.mmd_dro.MMDDROError"><code class="docutils literal notranslate"><span class="pre">MMDDROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.mmd_dro.MMD_DRO"><code class="docutils literal notranslate"><span class="pre">MMD_DRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.mmd_dro.MMD_DRO.update"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.mmd_dro.MMD_DRO.fit"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.fit()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.MOT_DRO.MOTDROError"><code class="docutils literal notranslate"><span class="pre">MOTDROError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.MOT_DRO.MOTDRO"><code class="docutils literal notranslate"><span class="pre">MOTDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.MOT_DRO.MOTDRO.update"><code class="docutils literal notranslate"><span class="pre">MOTDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.MOT_DRO.MOTDRO.fit"><code class="docutils literal notranslate"><span class="pre">MOTDRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.mot_dro.MOTDRO"><code class="docutils literal notranslate"><span class="pre">MOTDRO</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.mot_dro.MOTDRO.update"><code class="docutils literal notranslate"><span class="pre">MOTDRO.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.mot_dro.MOTDRO.fit"><code class="docutils literal notranslate"><span class="pre">MOTDRO.fit()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.OR_Wasserstein_DRO.ORWDROError"><code class="docutils literal notranslate"><span class="pre">ORWDROError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.update"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.fit"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.cheap_robust_mean_estimate"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO.cheap_robust_mean_estimate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">OR_Wasserstein_DRO.worst_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.or_wasserstein_dro.ORWDRO"><code class="docutils literal notranslate"><span class="pre">ORWDRO</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.or_wasserstein_dro.ORWDRO.update"><code class="docutils literal notranslate"><span class="pre">ORWDRO.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.or_wasserstein_dro.ORWDRO.fit"><code class="docutils literal notranslate"><span class="pre">ORWDRO.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.or_wasserstein_dro.ORWDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">ORWDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.SinkhornDROError"><code class="docutils literal notranslate"><span class="pre">SinkhornDROError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.LinearModel"><code class="docutils literal notranslate"><span class="pre">LinearModel</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.LinearModel.forward"><code class="docutils literal notranslate"><span class="pre">LinearModel.forward()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.LinearModel.training"><code class="docutils literal notranslate"><span class="pre">LinearModel.training</span></code></a></li>
@@ -187,28 +183,26 @@
 <li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.fit()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDROError"><code class="docutils literal notranslate"><span class="pre">WassersteinDROError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.lipschitz_norm"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.lipschitz_norm()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.worst_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.lipschitz_norm"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.lipschitz_norm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDROSatisificingError"><code class="docutils literal notranslate"><span class="pre">WassersteinDROSatisificingError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing"><code class="docutils literal notranslate"><span class="pre">Wasserstein_DRO_satisficing</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.update"><code class="docutils literal notranslate"><span class="pre">Wasserstein_DRO_satisficing.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit"><code class="docutils literal notranslate"><span class="pre">Wasserstein_DRO_satisficing.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit_depreciate"><code class="docutils literal notranslate"><span class="pre">Wasserstein_DRO_satisficing.fit_depreciate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit_oracle"><code class="docutils literal notranslate"><span class="pre">Wasserstein_DRO_satisficing.fit_oracle()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.worst_distribution"><code class="docutils literal notranslate"><span class="pre">Wasserstein_DRO_satisficing.worst_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROSatisificingError"><code class="docutils literal notranslate"><span class="pre">WassersteinDROSatisificingError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_depreciate"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit_depreciate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit_oracle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.Bayesian_dro.BayesianDROError"><code class="docutils literal notranslate"><span class="pre">BayesianDROError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.Bayesian_dro.Bayesian_DRO"><code class="docutils literal notranslate"><span class="pre">Bayesian_DRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Bayesian_dro.Bayesian_DRO.update"><code class="docutils literal notranslate"><span class="pre">Bayesian_DRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Bayesian_dro.Bayesian_DRO.resample"><code class="docutils literal notranslate"><span class="pre">Bayesian_DRO.resample()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.Bayesian_dro.Bayesian_DRO.fit"><code class="docutils literal notranslate"><span class="pre">Bayesian_DRO.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dro.src.linear_model.bayesian_dro.BayesianDRO"><code class="docutils literal notranslate"><span class="pre">BayesianDRO</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.update"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.resample"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.resample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.fit"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.fit()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -539,20 +533,6 @@ this class only supports linear models, e.g., SVM, Linear Regression, and Logist
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.evaluate" title="Permalink to this definition"></a></dt>
-<dd><p>Evaluate the true model performance for the obtained model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>) – input covariates for evaluation</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input labels for evaluation</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.load">
 <span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.load" title="Permalink to this definition"></a></dt>
 <dd><p>Load model parameters from a configuration dictionary.</p>
@@ -615,17 +595,24 @@ this class only supports linear models, e.g., SVM, Linear Regression, and Logist
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Fast evaluate the true model performance for the obtained theta efficiently from data unbiased</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
+<li><p><strong>fast</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.chi2_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.chi2_dro.</span></span><span class="sig-name descname"><span class="pre">Chi2DROError</span></span><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in Chi-squared DRO model.
-:meta private:</p>
 </dd></dl>
 
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.chi2_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.chi2_dro.Chi2DRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.chi2_dro.</span></span><span class="sig-name descname"><span class="pre">Chi2DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.chi2_dro.Chi2DRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
@@ -685,7 +672,7 @@ Changes will affect subsequent operations (e.g., re-fitting the model).</p>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DROError" title="dro.src.linear_model.chi2_dro.Chi2DROError"><strong>Chi2DROError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>Chi2DROError</strong> – <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">eps</span></code> is not a non-negative numeric value</p></li>
 <li><p>If unrecognized configuration keys are provided</p></li>
 </ul>
@@ -743,7 +730,7 @@ Shape must be <cite>(n_samples,)</cite>.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DROError" title="dro.src.linear_model.chi2_dro.Chi2DROError"><strong>Chi2DROError</strong></a> – <ul>
+<li><p><strong>Chi2DROError</strong> – <ul>
 <li><p>If the optimization solver fails to converge</p></li>
 <li><p>If the problem is infeasible due to invalid hyperparameters</p></li>
 </ul>
@@ -862,7 +849,7 @@ are expected; for classification, ±1 labels.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.chi2_dro.Chi2DROError" title="dro.src.linear_model.chi2_dro.Chi2DROError"><strong>Chi2DROError</strong></a> – <ul>
+<li><p><strong>Chi2DROError</strong> – <ul>
 <li><p>If the optimization solver fails to converge</p></li>
 <li><p>If the solution is infeasible or returns null weights</p></li>
 </ul>
@@ -910,14 +897,7 @@ are expected; for classification, ±1 labels.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.cvar_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.cvar_dro.</span></span><span class="sig-name descname"><span class="pre">CVaRDROError</span></span><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in CVaR DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.cvar_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.cvar_dro.</span></span><span class="sig-name descname"><span class="pre">CVaRDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
@@ -962,7 +942,7 @@ Defaults to 1.0 (equivalent to worst-case optimization).</p></li>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDROError" title="dro.src.linear_model.cvar_dro.CVaRDROError"><strong>CVaRDROError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>CVaRDROError</strong> – <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">alpha</span></code> is not in (0, 1]</p></li>
 <li><p>If unrecognized configuration keys are provided (future-proofing)</p></li>
 </ul>
@@ -1025,7 +1005,7 @@ for regression, use continuous values.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDROError" title="dro.src.linear_model.cvar_dro.CVaRDROError"><strong>CVaRDROError</strong></a> – <ul>
+<li><p><strong>CVaRDROError</strong> – <ul>
 <li><p>If the optimization solver fails to converge</p></li>
 <li><p>If the problem is infeasible with current <cite>alpha</cite></p></li>
 </ul>
@@ -1101,7 +1081,7 @@ Compensates for numerical instability in loss computations. Defaults to 1e-5.</p
 <dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDROError" title="dro.src.linear_model.cvar_dro.CVaRDROError"><strong>CVaRDROError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>CVaRDROError</strong> – <ul class="simple">
 <li><p>If model hasn’t been fitted (threshold_val is None)</p></li>
 <li><p>If all sample losses fall below CVaR threshold (empty distribution)</p></li>
 </ul>
@@ -1146,14 +1126,7 @@ Compensates for numerical instability in loss computations. Defaults to 1e-5.</p
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.kl_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.kl_dro.</span></span><span class="sig-name descname"><span class="pre">KLDROError</span></span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in KL-DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.kl_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.kl_dro.</span></span><span class="sig-name descname"><span class="pre">KLDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
@@ -1239,7 +1212,7 @@ Recognized keys:</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDROError" title="dro.src.linear_model.kl_dro.KLDROError"><strong>KLDROError</strong></a> – <ul>
+<li><p><strong>KLDROError</strong> – <ul>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">eps</span></code> value is invalid (not float/int or negative)</p></li>
 <li><p>If provided <code class="docutils literal notranslate"><span class="pre">eps</span></code> &gt; 100.0 (empirical stability threshold)</p></li>
 </ul>
@@ -1298,7 +1271,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDROError" title="dro.src.linear_model.kl_dro.KLDROError"><strong>KLDROError</strong></a> – <ul>
+<li><p><strong>KLDROError</strong> – <ul>
 <li><p>If problem is infeasible with current parameters</p></li>
 <li><p>If solver fails to converge</p></li>
 </ul>
@@ -1360,7 +1333,7 @@ Must match <code class="docutils literal notranslate"><span class="pre">self.inp
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDROError" title="dro.src.linear_model.kl_dro.KLDROError"><strong>KLDROError</strong></a> – <ul>
+<li><p><strong>KLDROError</strong> – <ul>
 <li><p>If inner optimization via <code class="docutils literal notranslate"><span class="pre">fit()</span></code> fails</p></li>
 <li><p>If <span class="math notranslate nohighlight">\(\lambda^* \leq 0\)</span> (invalid dual variable)</p></li>
 <li><p>If weight normalization fails (sum → 0)</p></li>
@@ -1387,62 +1360,83 @@ Must match <code class="docutils literal notranslate"><span class="pre">self.inp
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.tv_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.tv_dro.TVDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.tv_dro.</span></span><span class="sig-name descname"><span class="pre">TVDROError</span></span><a class="headerlink" href="#dro.src.linear_model.tv_dro.TVDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in Total Variation (TV) DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.tv_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.tv_dro.TVDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.tv_dro.</span></span><span class="sig-name descname"><span class="pre">TVDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.tv_dro.TVDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
-<p>Total Variation (TV) Distributionally Robust Optimization (DRO) model.</p>
-<p>This model minimizes a robust loss function subject to a total variation constraint.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>input_dim (int): Dimensionality of the input features.
-model_type (str): Model type indicator (e.g., ‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression).
-fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-solver (str): Optimization solver to solve the problem, default = ‘MOSEK’.
-eps (float): Robustness parameter for TV-DRO.
-threshold_val (float): Threshold value from the optimization.</p>
-</dd>
-</dl>
-<p>Initialize the TV-DRO model with specified input dimension and model type.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>input_dim (int): Dimension of the input features.
-model_type (str): Type of model (‘svm’, ‘logistic’, ‘ols’).
-eps (float): Ambiguity size for the TV constraint (default is 0.0).</p>
-</dd>
-</dl>
+<p>Total Variation Distributionally Robust Optimization (TV-DRO) model.</p>
+<p>Implements DRO with TV ambiguity set defined as:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P} = \{ Q \, | \, \text{TV}(Q, P) \leq \epsilon \}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\text{TV}\)</span> is the total variation distance.</p>
+<p>Initialize TV-constrained DRO model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – </p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
-<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Feature space dimension. Must be ≥ 1</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model type. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Support Vector Machine (hinge loss)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic Regression (log loss)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'ols'</span></code>: Ordinary Least Squares (L2 loss)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least Absolute Deviation (L1 loss)</p></li>
+</ul>
+</p></li>
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>.
+Disable for pre-centered data. Defaults to True.</p></li>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Convex optimization solver. Recommended:
+- <code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (commercial)</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – <p>TV ambiguity radius. Special cases:</p>
+<ul>
+<li><p>0: Standard empirical risk minimization</p></li>
+<li><p>&gt;0: Controls distributional robustness</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<li><p>If input_dim &lt; 1</p></li>
+<li><p>If model_type not in {‘svm’, ‘logistic’, ‘ols’, ‘lad’}</p></li>
+<li><p>If eps &lt; 0</p></li>
+</ul>
+</p>
+</dd>
 </dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">TVDRO</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">eps</span>  <span class="c1"># 0.1</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dro.src.linear_model.tv_dro.TVDRO.threshold_val">
+<span class="sig-name descname"><span class="pre">threshold_val</span></span><a class="headerlink" href="#dro.src.linear_model.tv_dro.TVDRO.threshold_val" title="Permalink to this definition"></a></dt>
+<dd><p>Decision boundary threshold (set during fitting)</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.tv_dro.TVDRO.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.tv_dro.TVDRO.update" title="Permalink to this definition"></a></dt>
 <dd><p>Update the model configuration.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing configuration updates. Supported keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: Robustness parameter controlling the size of the chi-squared ambiguity set (must be ≥ 0)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TVDROError</strong> – If ‘eps’ is not in the valid range (0, 1).</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – </p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Args:</dt><dd><p>config (Dict[str, Any]): Configuration dictionary containing ‘eps’ key for robustness parameter.</p>
-</dd>
-<dt>Raises:</dt><dd><p>TVDROError: If ‘eps’ is not in the valid range (0, 1).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1452,25 +1446,33 @@ eps (float): Ambiguity size for the TV constraint (default is 0.0).</p>
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.tv_dro.TVDRO.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Fit the model using CVXPY to solve the robust optimization problem with TV constraint.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
+Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
+<li><p><strong>Y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
+<ul>
+<li><p>Classification: ±1 labels</p></li>
+<li><p>Regression: Continuous values</p></li>
+</ul>
+</p></li>
 <li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Dictionary containing trained parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code>: Weight vector of shape <cite>(n_features,)</cite></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">threshold</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">b</span></code></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+</dd>
 </dl>
-<dl class="simple">
-<dt>Args:</dt><dd><p>X (np.ndarray): Feature matrix with shape (n_samples, n_features).
-y (np.ndarray): Target vector with shape (n_samples,).</p>
-</dd>
-<dt>Returns:</dt><dd><p>Dict[str, Any]: Model parameters dictionary with ‘theta’ and ‘threshold’ keys.</p>
-</dd>
-<dt>Raises:</dt><dd><p>TVDROError: If the optimization problem fails to solve.</p>
-</dd>
-</dl>
+<p>.raises: TVDROError: If the optimization problem fails to solve.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1478,39 +1480,33 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 <span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.tv_dro.TVDRO.worst_distribution" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the worst-case distribution based on TV constraint.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Feature matrix of shape <cite>(n_samples, n_features)</cite>. 
+Must match the model’s <cite>input_dim</cite> (n_features).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Target vector of shape <cite>(n_samples,)</cite>. For regression tasks, continuous values 
+are expected; for classification, ±1 labels.</p></li>
 <li><p><strong>precision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Dictionary containing:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sample_pts</span></code>: Original data points as a tuple <code class="docutils literal notranslate"><span class="pre">(X,</span> <span class="pre">y)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weight</span></code>: Worst-case probability weights of shape <cite>(n_samples,)</cite></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+</dd>
 </dl>
-<dl class="simple">
-<dt>Args:</dt><dd><p>X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
-y (np.ndarray): Target vector with shape (n_samples,).
-precision (float): The perturbation amount in case when the loss is too insignificant to count.</p>
-</dd>
-<dt>Returns:</dt><dd><p>Dict[str, Any]: Dictionary containing ‘sample_pts’ and ‘weight’ keys for worst-case distribution.</p>
-</dd>
-<dt>Raises:</dt><dd><p>TVDROError: If the worst-case distribution calculation fails.</p>
-</dd>
-</dl>
+<p>.raises: TVDROError: If the worst-case distribution calculation fails.</p>
 </dd></dl>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.conditional_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.conditional_dro.ConditionalCVaRDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.conditional_dro.</span></span><span class="sig-name descname"><span class="pre">ConditionalCVaRDROError</span></span><a class="headerlink" href="#dro.src.linear_model.conditional_dro.ConditionalCVaRDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Exception class for errors in Marginal CVaR DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.conditional_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.conditional_dro.ConditionalCVaRDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.conditional_dro.</span></span><span class="sig-name descname"><span class="pre">ConditionalCVaRDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
@@ -1568,7 +1564,7 @@ Changes affect subsequent optimization but require manual re-fitting.</p>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.conditional_dro.ConditionalCVaRDROError" title="dro.src.linear_model.conditional_dro.ConditionalCVaRDROError"><strong>ConditionalCVaRDROError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ConditionalCVaRDROError</strong> – <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">control_name</span></code> contains invalid indices</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">alpha</span></code> is outside (0, 1]</p></li>
 <li><p>If unrecognized configuration keys are provided</p></li>
@@ -1644,7 +1640,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.conditional_dro.ConditionalCVaRDROError" title="dro.src.linear_model.conditional_dro.ConditionalCVaRDROError"><strong>ConditionalCVaRDROError</strong></a> – <ul>
+<li><p><strong>ConditionalCVaRDROError</strong> – <ul>
 <li><p>If optimization fails (solver error/infeasible)</p></li>
 <li><p>If <cite>X</cite> and control features have dimension mismatch</p></li>
 </ul>
@@ -1690,14 +1686,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.hr_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.hr_dro.HRDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.hr_dro.</span></span><span class="sig-name descname"><span class="pre">HRDROError</span></span><a class="headerlink" href="#dro.src.linear_model.hr_dro.HRDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in HR DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.hr_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.hr_dro.HR_DRO_LR">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.hr_dro.</span></span><span class="sig-name descname"><span class="pre">HR_DRO_LR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_prime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.hr_dro.HR_DRO_LR" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
@@ -1828,7 +1817,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.hr_dro.HRDROError" title="dro.src.linear_model.hr_dro.HRDROError"><strong>HRDROError</strong></a> – <ul>
+<li><p><strong>HRDROError</strong> – <ul>
 <li><p>If optimization fails due to solver errors</p></li>
 <li><p>If problem becomes infeasible with current parameters</p></li>
 </ul>
@@ -1879,14 +1868,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.marginal_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.marginal_dro.MarginalCVaRDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.marginal_dro.</span></span><span class="sig-name descname"><span class="pre">MarginalCVaRDROError</span></span><a class="headerlink" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Exception class for errors in Marginal CVaR DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.marginal_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.marginal_dro.MarginalCVaRDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.marginal_dro.</span></span><span class="sig-name descname"><span class="pre">MarginalCVaRDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
@@ -1989,7 +1971,7 @@ Supported values: 1 (EMD), 2 (Quadratic)</p>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDROError" title="dro.src.linear_model.marginal_dro.MarginalCVaRDROError"><strong>MarginalCVaRDROError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>MarginalCVaRDROError</strong> – <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">control_name</span></code> contains invalid indices</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">L</span></code> is non-positive</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">p</span></code> &lt; 1</p></li>
@@ -2061,7 +2043,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDROError" title="dro.src.linear_model.marginal_dro.MarginalCVaRDROError"><strong>MarginalCVaRDROError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>MarginalCVaRDROError</strong> – <ul class="simple">
 <li><p>If <cite>X.shape[1] != self.input_dim</cite></p></li>
 <li><p>If <cite>X.shape[0] != y.shape[0]</cite></p></li>
 <li><p>If optimization fails (problem infeasible/solver error)</p></li>
@@ -2085,14 +2067,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.mmd_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.mmd_dro.MMDDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.mmd_dro.</span></span><span class="sig-name descname"><span class="pre">MMDDROError</span></span><a class="headerlink" href="#dro.src.linear_model.mmd_dro.MMDDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Exception class for errors in Marginal CVaR DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.mmd_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.mmd_dro.MMD_DRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.mmd_dro.</span></span><span class="sig-name descname"><span class="pre">MMD_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bound'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.mmd_dro.MMD_DRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
@@ -2229,16 +2204,9 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.MOT_DRO"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.MOT_DRO.MOTDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.MOT_DRO.</span></span><span class="sig-name descname"><span class="pre">MOTDROError</span></span><a class="headerlink" href="#dro.src.linear_model.MOT_DRO.MOTDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in Wasserstein DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.MOT_DRO.MOTDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.MOT_DRO.</span></span><span class="sig-name descname"><span class="pre">MOTDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.MOT_DRO.MOTDRO" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-dro.src.linear_model.mot_dro"></span><dl class="py class">
+<dt class="sig sig-object py" id="dro.src.linear_model.mot_dro.MOTDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.mot_dro.</span></span><span class="sig-name descname"><span class="pre">MOTDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.mot_dro.MOTDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Optimal Transport DRO with Conditional Moment Constraints.</p>
 <p>Implements DRO with composite transportation cost:</p>
@@ -2259,50 +2227,53 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
 <li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – </p></li>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
 </ul>
 </dd>
 </dl>
-<p>Initialize MOTDRO with composite transportation cost.</p>
+<p>Initialize MOT-DRO with restricted model types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimension of input features. Must be ≥ 1.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model type. Defaults to ‘svm’. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Support Vector Machine (hinge loss)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic Regression (log loss)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'ols'</span></code>: Ordinary Least Squares (L2 loss)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least Absolute Deviation (L1 loss)</p></li>
 </ul>
 </p></li>
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn intercept term. 
+Set False for pre-centered data. Defaults to True.</p></li>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Convex optimization solver. Defaults to ‘MOSEK’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>MOTDROError</strong> – <ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">model_type</span></code> in [‘ols’, ‘logistic’]</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">input_dim</span></code> &lt; 1</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">model_type</span></code> not in allowed set</p></li>
 </ul>
 </p>
 </dd>
 </dl>
-<dl>
-<dt>Default Parameters:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">theta1</span></code>: 2.0 (Wasserstein scaling)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">theta2</span></code>: 2.0 (KL penalty)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: 0.0 (non-robust baseline)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: 2 (L2 norm perturbation)</p></li>
+<p>Default Parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">theta1</span></code>: 1.0 (minimum Wasserstein scaling)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">square</span></code>: 2.0 (quadratic regularization strength)</p></li>
 </ul>
-</dd>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MOTDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">theta1</span> <span class="o">=</span> <span class="mf">1.5</span> 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="s1">&#39;inf&#39;</span>    
+</div></blockquote>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MOTDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">theta1</span> <span class="o">=</span> <span class="mf">1.5</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">square</span> <span class="o">=</span> <span class="mf">1.0</span>  
 </pre></div>
 </div>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.MOT_DRO.MOTDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.MOT_DRO.MOTDRO.update" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.mot_dro.MOTDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.mot_dro.MOTDRO.update" title="Permalink to this definition"></a></dt>
 <dd><p>Update MOTDRO model configuration with coupled parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2334,7 +2305,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#dro.src.linear_model.MOT_DRO.MOTDROError" title="dro.src.linear_model.MOT_DRO.MOTDROError"><strong>MOTDROError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>MOTDROError</strong> – <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">theta1</span></code> ≤ 1 or <code class="docutils literal notranslate"><span class="pre">theta2</span></code> ≤ 1</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">theta1</span></code>/<code class="docutils literal notranslate"><span class="pre">theta2</span></code> relationship becomes invalid</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">eps</span></code> &lt; 0 or non-numeric</p></li>
@@ -2369,8 +2340,8 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.MOT_DRO.MOTDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.MOT_DRO.MOTDRO.fit" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.mot_dro.MOTDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.mot_dro.MOTDRO.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Fit the MMD-DRO model to the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2400,86 +2371,145 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.OR_Wasserstein_DRO"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.OR_Wasserstein_DRO.ORWDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.OR_Wasserstein_DRO.</span></span><span class="sig-name descname"><span class="pre">ORWDROError</span></span><a class="headerlink" href="#dro.src.linear_model.OR_Wasserstein_DRO.ORWDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in OR-WDRO model.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.OR_Wasserstein_DRO.</span></span><span class="sig-name descname"><span class="pre">OR_Wasserstein_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dual_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-dro.src.linear_model.or_wasserstein_dro"></span><dl class="py class">
+<dt class="sig sig-object py" id="dro.src.linear_model.or_wasserstein_dro.ORWDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.or_wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">ORWDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dual_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.or_wasserstein_dro.ORWDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
-<p>Outlier-Robust Wasserstein DRO.</p>
-<p>This model minimizes the TV corrupted p-Wasserstein loss function for both regression and classification.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>input_dim (int): Dimensionality of the input features.
-model_type (str): Model type indicator (e.g., ‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression).
-eps (float): Robustness parameter for OR-WDRO. 
-eta (float): Fraction of outlier for OR-WDRO.
-dual norm (int): used in the optimization</p>
-</dd>
-</dl>
-<p>Reference:&lt;<a class="reference external" href="https://arxiv.org/pdf/2311.05573">https://arxiv.org/pdf/2311.05573</a>&gt;</p>
-<p>Initialize the ORWDRO model with specified input dimension and model type.</p>
+<p>Outlier-Robust Wasserstein Distributionally Robust Optimization (OR-WDRO) model.</p>
+<p>Implements TV-corrupted p-Wasserstein DRO with dual norm constraints:</p>
+<div class="math notranslate nohighlight">
+\[\min_{\theta} \sup_{Q \in \mathcal{B}_\epsilon(P)} \mathbb{E}_Q[\ell(\theta;X,y)]
++ \eta \cdot \text{TV}(P,Q)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{B}_\epsilon(P)\)</span> is the Wasserstein ball and <span class="math notranslate nohighlight">\(\text{TV}\)</span> is total variation.</p>
+<p>ORWDRO_Paper: <a class="reference external" href="https://arxiv.org/pdf/2311.05573">https://arxiv.org/pdf/2311.05573</a></p>
+<p>Initialize OR-WDRO model with anomaly-robust parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
-<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
-<li><p><strong>eta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
-<li><p><strong>dual_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Feature space dimension. Must be ≥ 1</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base learner type. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'ols'</span></code>: Squared loss (regression)</p></li>
+</ul>
+</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – <p>Wasserstein robustness radius. Defaults to 0.0</p>
+<ul>
+<li><p>0: Standard empirical risk minimization</p></li>
+<li><p>&gt;0: Controls distributional robustness</p></li>
+</ul>
+</p></li>
+<li><p><strong>eta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Expected outlier fraction. 
+Must satisfy <span class="math notranslate nohighlight">\(0 \leq \eta \leq 0.5\)</span>. Defaults to 0.0</p></li>
+<li><p><strong>dual_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – <p>Wasserstein dual norm order. Valid values:</p>
+<ul>
+<li><p>1: ℓ¹-Wasserstein (transportation cost)</p></li>
+<li><p>2: ℓ²-Wasserstein (default)</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<li><p>If input_dim &lt; 1</p></li>
+<li><p>If model_type not in allowed set</p></li>
+<li><p>If eps &lt; 0 or eta &lt; 0 or eta &gt; 0.5</p></li>
+<li><p>If dual_norm ∉ {1, 2}</p></li>
+</ul>
+</p>
+</dd>
 </dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">ORWDRO</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">eta</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dual_norm</span><span class="o">=</span><span class="mi">2</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">sigma</span>  <span class="c1"># sqrt(5) ≈ 2.236</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Computation complexity scales as <span class="math notranslate nohighlight">\(O(\epsilon^{-2})\)</span></p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">eta=0</span></code> to disable outlier robustness</p></li>
+</ul>
+</div>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.update" title="Permalink to this definition"></a></dt>
-<dd><p>Update the model configuration.</p>
+<dt class="sig sig-object py" id="dro.src.linear_model.or_wasserstein_dro.ORWDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.or_wasserstein_dro.ORWDRO.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update robustness parameters for OR-WDRO optimization.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing parameters to update. Valid keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'eps'</span></code>: New Wasserstein radius (ε ≥ 0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'eta'</span></code>: New outlier fraction (0 ≤ η ≤ 0.5)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'dual_norm'</span></code>: Norm order (1 or 2)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<li><p>If parameter values violate type or range constraints</p></li>
+<li><p>If unknown parameters are provided</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – </p>
-</dd>
 </dl>
-<dl class="simple">
-<dt>Args:</dt><dd><p>config (Dict[str, Any]): Configuration dictionary containing ‘eps’ key for robustness parameter.</p>
-</dd>
-<dt>Raises:</dt><dd><p>ORWDROError: If ‘eps’, ‘eta’ is provided but is not a non-negative float.</p>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;dual_norm&#39;</span><span class="p">:</span> <span class="mi">2</span>
+<span class="gp">... </span><span class="p">})</span>  <span class="c1"># Updates multiple parameters atomically</span>
+</pre></div>
+</div>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Fit model to data by solving an optimization problem.</p>
-<dl class="field-list simple">
+<dt class="sig sig-object py" id="dro.src.linear_model.or_wasserstein_dro.ORWDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.or_wasserstein_dro.ORWDRO.fit" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input covariates</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input labels</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
+Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
+<li><p><strong>Y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
+<ul>
+<li><p>Classification: ±1 labels</p></li>
+<li><p>Regression: Continuous values</p></li>
+</ul>
+</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Dictionary containing trained parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code>: Weight vector of shape <cite>(n_features,)</cite></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.cheap_robust_mean_estimate">
-<span class="sig-name descname"><span class="pre">cheap_robust_mean_estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.cheap_robust_mean_estimate" title="Permalink to this definition"></a></dt>
-<dd><p>robust mean estimation with 2 * self.eta trimming.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.worst_distribution">
-<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.OR_Wasserstein_DRO.OR_Wasserstein_DRO.worst_distribution" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.or_wasserstein_dro.ORWDRO.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.or_wasserstein_dro.ORWDRO.worst_distribution" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the worst-case distribution.</p>
 <p>Reference: Theorem 3 in <a class="reference external" href="https://arxiv.org/pdf/2311.05573">https://arxiv.org/pdf/2311.05573</a></p>
 <dl class="field-list simple">
@@ -2506,16 +2536,9 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.sinkhorn_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">SinkhornDROError</span></span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in Sinkhorn DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
+<span class="target" id="module-dro.src.linear_model.sinkhorn_dro"></span><dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.LinearModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">LinearModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.LinearModel" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">LinearModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.LinearModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>PyTorch Linear Model for regression tasks.</p>
 <dl class="simple">
@@ -2528,6 +2551,7 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
 <li><p><strong>output_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -2554,155 +2578,262 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">SinkhornLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_sample_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">SinkhornLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_sample_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Sinkhorn Distributionally Robust Optimization with Linear Models.</p>
-<p>Implements three optimization approaches:
-- SG (Standard Stochastic Gradient)
-- MLMC (Multilevel Monte Carlo)
-- RTMLMC (Randomized Truncated MLMC)</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>model (LinearModel): Underlying PyTorch linear model
-reg_param (float): Regularization parameter for Wasserstein distance
-lambda_param (float): Loss scaling parameter
-max_iter (int): Maximum training iterations
-device (torch.device): Computation device (CPU/GPU)</p>
-</dd>
-</dl>
 <p>Reference: &lt;<a class="reference external" href="https://arxiv.org/abs/2109.11926">https://arxiv.org/abs/2109.11926</a>&gt;</p>
-<p>Initialize Sinkhorn DRO model.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>input_dim: Dimension of input features
-reg_param: Regularization strength (ε in paper)
-lambda_param: Loss scaling parameter (λ in paper)
-max_iter: Maximum training iterations
-learning_rate: Learning rate for optimizer
-k_sample_max: Maximum level for MLMC sampling
-model_type: Model type identifier</p>
-</dd>
-<dt>Raises:</dt><dd><p>SinkhornDROError: For invalid parameter values</p>
-</dd>
-</dl>
+<p>Initialize Sinkhorn Distributionally Robust Optimization model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
-<li><p><strong>reg_param</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
-<li><p><strong>lambda_param</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
-<li><p><strong>output_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
-<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
-<li><p><strong>k_sample_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimension of input feature space (d)</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Support Vector Machine (hinge loss)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic Regression (cross-entropy loss)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'ols'</span></code>: Ordinary Least Squares (L2 loss)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least Absolute Deviation (L1 loss)</p></li>
+</ul>
+</p></li>
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn bias term <span class="math notranslate nohighlight">\(b\)</span>. 
+Disable for pre-centered data. Defaults to True.</p></li>
+<li><p><strong>reg_param</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Entropic regularization strength <span class="math notranslate nohighlight">\(\epsilon\)</span> 
+controlling transport smoothness. Must be &gt; 0. Defaults to 1e-3.</p></li>
+<li><p><strong>lambda_param</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Loss scaling factor <span class="math notranslate nohighlight">\(\lambda\)</span> 
+balancing Wasserstein distance and loss. Must be &gt; 0. Defaults to 1e2.</p></li>
+<li><p><strong>output_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimension of model output. 
+1 for regression/binary classification. Defaults to 1.</p></li>
+<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Maximum number of Sinkhorn iterations. 
+Should be ≥ 100. Defaults to 1e3.</p></li>
+<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Step size for gradient-based optimization. 
+Typical range: [1e-4, 1e-1]. Defaults to 1e-2.</p></li>
+<li><p><strong>k_sample_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Maximum level for Multilevel Monte Carlo sampling. 
+Higher values improve accuracy but increase computation. Defaults to 5.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Computation device. 
+Supported: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> or <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>. Defaults to ‘cpu’.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<li><p>If any parameter violates numerical constraints (ε ≤ 0, λ ≤ 0, etc.)</p></li>
+<li><p>If model_type is not in supported set</p></li>
+</ul>
+</p>
+</dd>
 </dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">reg_param</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">lambda_param</span><span class="o">=</span><span class="mf">50.0</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># &#39;cpu&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Setting <code class="docutils literal notranslate"><span class="pre">device='torch.device(cuda)'</span></code> requires PyTorch with GPU support (CUDA-enabled)</p></li>
+<li><p>It is recommended to retain the default k_sample_max=5 to balance accuracy and computational efficiency</p></li>
+</ul>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update" title="Permalink to this definition"></a></dt>
-<dd><p>Update model hyperparameters.</p>
+<dd><p>Update hyperparameters for Sinkhorn optimization.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing parameter updates. Valid keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'reg'</span></code>: Entropic regularization strength (ε &gt; 0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'lambda'</span></code>: Loss scaling factor (λ &gt; 0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'k_sample_max'</span></code>: Maximum MLMC sampling level (integer ≥ 1)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If any parameter value violates type or range constraints</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – </p>
+</dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;reg&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;lambda&#39;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;k_sample_max&#39;</span><span class="p">:</span> <span class="mi">3</span>
+<span class="gp">... </span><span class="p">})</span>  <span class="c1"># Explicit type conversion handled internally</span>
+</pre></div>
+</div>
 </dd>
 </dl>
-<dl class="simple">
-<dt>Args:</dt><dd><p>config: Dictionary containing hyperparameters to update</p>
-</dd>
-<dt>Raises:</dt><dd><p>SinkhornDROError: For invalid parameter types/values</p>
-</dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For GPU-accelerated computation, specify it during initialization instead of this function</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict" title="Permalink to this definition"></a></dt>
-<dd><p>Generate model predictions.</p>
+<dd><p>Generate predictions using the optimized Sinkhorn DRO model.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Input feature matrix. Should have shape (n_samples, n_features)
+where n_features must match model’s input dimension.
+Supported dtype: float32/float64</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Model predictions. Shape depends on task:</p>
+<ul class="simple">
+<li><p>Regression: (n_samples, 1)</p></li>
+<li><p>Classification: (n_samples,) with 0/1 labels</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a></p>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Args:</dt><dd><p>X: Input data matrix (n_samples, n_features)</p>
-</dd>
-<dt>Returns:</dt><dd><p>Model predictions as numpy array</p>
-</dd>
-<dt>Raises:</dt><dd><p>SinkhornDROError: For input dimension mismatch</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<li><p>If input dimension mismatch occurs (n_features != model_dim)</p></li>
+<li><p>If input contains NaN/Inf values</p></li>
+</ul>
+</p>
 </dd>
 </dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>  <span class="c1"># Shape: (10, 1) for regression</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Input data is automatically converted to PyTorch tensors</p></li>
+<li><p>For large datasets (&gt;1M samples), use batch prediction</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score">
 <span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate model performance metrics.</p>
+<dd><p>Evaluate model performance on given data.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Input feature matrix. Shape: (n_samples, n_features)
+Must match model’s expected input dimension</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target values. Shape requirements:</p>
+<ul>
+<li><p>Regression: (n_samples,) or (n_samples, 1)</p></li>
+<li><p>Classification: (n_samples,) with binary labels (0/1)</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
-</dl>
-<dl class="simple">
-<dt>Args:</dt><dd><p>X: Input features
-y: Target values</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Performance metrics:</p>
+<ul class="simple">
+<li><p>Regression: Mean Squared Error (MSE) as float</p></li>
+<li><p>Classification: Tuple of (accuracy%, macro-F1 score) in [0,1] range</p></li>
+</ul>
+</p>
 </dd>
-<dt>Returns:</dt><dd><p>MSE for regression tasks, (accuracy, F1) for classification</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>, Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>]]</p>
 </dd>
 </dl>
+<dl>
+<dt>Example:    </dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Regression</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_reg</span><span class="p">,</span> <span class="n">y_reg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;ols&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mse</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_reg</span><span class="p">,</span> <span class="n">y_reg</span><span class="p">)</span>  <span class="c1"># e.g. 0.153</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Classification  </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_clf</span><span class="p">,</span> <span class="n">y_clf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">acc</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_clf</span><span class="p">,</span> <span class="n">y_clf</span><span class="p">)</span>  <span class="c1"># e.g. (0.92, 0.89)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>For regression tasks, outputs are not thresholded</p></li>
+<li><p>Computation uses all available samples (no mini-batching)</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimization_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Train model using specified optimization method.</p>
+<dd><p>Train the Sinkhorn DRO model with specified optimization strategy.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – </p></li>
-<li><p><strong>optimization_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix. Shape: (n_samples, n_features)
+Should match model’s input dimension (n_features == input_dim)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target values. Shape requirements:</p>
+<ul>
+<li><p>Regression: (n_samples,) continuous values</p></li>
+<li><p>Classification: (n_samples,) binary labels (0/1)</p></li>
+</ul>
+</p></li>
+<li><p><strong>optimization_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Optimization algorithm selection (Defaults to ‘SG’):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'SG'</span></code>: Standard Stochastic Gradient (baseline)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'MLMC'</span></code>: Multilevel Monte Carlo acceleration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'RTMLMC'</span></code>: Real-Time MLMC with adaptive sampling</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Learned parameters containing:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'theta'</span></code>: Model coefficients (n_features,)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'bias'</span></code>: Intercept term (if fit_intercept=True)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<li><p>If X/y have mismatched sample counts (n_samples)</p></li>
+<li><p>If optimization_type not in {‘SG’, ‘MLMC’, ‘RTMLMC’}</p></li>
+<li><p>If input_dim ≠ X.shape[1]</p></li>
+</ul>
+</p>
+</dd>
 </dl>
-<dl class="simple">
-<dt>Args:</dt><dd><p>X: Training data (n_samples, n_features)
-y: Target values (n_samples,)
-optimization_type: Optimization method (SG/MLMC/RTMLMC)</p>
-</dd>
-<dt>Returns:</dt><dd><p>Dictionary containing learned parameters</p>
-</dd>
-<dt>Raises:</dt><dd><p>SinkhornDROError: For invalid optimization type or input mismatch</p>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="s1">&#39;MLMC&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">])</span>  <span class="c1"># [-0.12, 1.45, ...]</span>
+</pre></div>
+</div>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.Wasserstein_DRO"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.WassersteinDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.Wasserstein_DRO.</span></span><span class="sig-name descname"><span class="pre">WassersteinDROError</span></span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in Wasserstein DRO model.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.WassersteinDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.Wasserstein_DRO.</span></span><span class="sig-name descname"><span class="pre">WassersteinDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-dro.src.linear_model.wasserstein_dro"></span><dl class="py class">
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Wasserstein Distributionally Robust Optimization (WDRO) model</p>
 <p>This model minimizes a Wasserstein-robust loss function for both regression and classification.</p>
@@ -2748,8 +2879,8 @@ solver (str): Optimization solver to solve the problem, default = ‘MOSEK’</p
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.update" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.update" title="Permalink to this definition"></a></dt>
 <dd><p>Update the model configuration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -2768,8 +2899,8 @@ solver (str): Optimization solver to solve the problem, default = ‘MOSEK’</p
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.fit" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Fit the model using CVXPY to solve the Wasserstein distributionally robust optimization problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -2794,8 +2925,8 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.lipschitz_norm">
-<span class="sig-name descname"><span class="pre">lipschitz_norm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.lipschitz_norm" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO.lipschitz_norm">
+<span class="sig-name descname"><span class="pre">lipschitz_norm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.lipschitz_norm" title="Permalink to this definition"></a></dt>
 <dd><p>Computing the Lipschitz norm of the loss function</p>
 <dl class="simple">
 <dt>Returns:</dt><dd><p>Float: the size of the Lipschitz norm of the loss function</p>
@@ -2804,8 +2935,8 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.worst_distribution">
-<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDRO.worst_distribution" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the worst-case distribution based on Wasserstein Distance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -2841,15 +2972,15 @@ WassersteinDROError: the compute_type == 1 does not support kappa = infty.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.WassersteinDROSatisificingError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.Wasserstein_DRO.</span></span><span class="sig-name descname"><span class="pre">WassersteinDROSatisificingError</span></span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.WassersteinDROSatisificingError" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROSatisificingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDROSatisificingError</span></span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROSatisificingError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Base exception class for errors in Wasserstein DRO (Robust Satisficing) model.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.Wasserstein_DRO.</span></span><span class="sig-name descname"><span class="pre">Wasserstein_DRO_satisficing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDROsatisficing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Robust satisficing version of Wasserstein DRO</p>
 <p>This model minimizes the subject to (approximated version) of the robust satisficing constraint of Wasserstein DRO. The Wasserstein Distance is defined as the minimum probability coupling of two distributions for the distance metric:</p>
@@ -2875,8 +3006,8 @@ target ratio (float): target ratio (required to be &gt;=1, against the empirical
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.update" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update" title="Permalink to this definition"></a></dt>
 <dd><p>Update model parameters based on configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2889,8 +3020,8 @@ target ratio (float): target ratio (required to be &gt;=1, against the empirical
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Fit model to data by solving an optimization problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2906,8 +3037,8 @@ target ratio (float): target ratio (required to be &gt;=1, against the empirical
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit_depreciate">
-<span class="sig-name descname"><span class="pre">fit_depreciate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit_depreciate" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_depreciate">
+<span class="sig-name descname"><span class="pre">fit_depreciate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_depreciate" title="Permalink to this definition"></a></dt>
 <dd><p>Find the best epsilon that matches the desired robust objective via bisection (depreciated)</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
@@ -2919,8 +3050,8 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit_oracle">
-<span class="sig-name descname"><span class="pre">fit_oracle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.fit_oracle" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle">
+<span class="sig-name descname"><span class="pre">fit_oracle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle" title="Permalink to this definition"></a></dt>
 <dd><p>Depreciated, find the optimal thet given the ambiguity constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -2943,22 +3074,15 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.worst_distribution">
-<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Wasserstein_DRO.Wasserstein_DRO_satisficing.worst_distribution" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<span class="target" id="module-dro.src.linear_model.Bayesian_dro"></span><dl class="py exception">
-<dt class="sig sig-object py" id="dro.src.linear_model.Bayesian_dro.BayesianDROError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.Bayesian_dro.</span></span><span class="sig-name descname"><span class="pre">BayesianDROError</span></span><a class="headerlink" href="#dro.src.linear_model.Bayesian_dro.BayesianDROError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>Base exception class for errors in BayesianDRO model.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.Bayesian_dro.Bayesian_DRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.Bayesian_dro.</span></span><span class="sig-name descname"><span class="pre">Bayesian_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Bayesian_dro.Bayesian_DRO" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-dro.src.linear_model.bayesian_dro"></span><dl class="py class">
+<dt class="sig sig-object py" id="dro.src.linear_model.bayesian_dro.BayesianDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.bayesian_dro.</span></span><span class="sig-name descname"><span class="pre">BayesianDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.bayesian_dro.BayesianDRO" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>This model minimizes a Bayesian version for regression and other types of losses</p>
 <p>Reference: &lt;<a class="reference external" href="https://epubs.siam.org/doi/10.1137/21M1465548">https://epubs.siam.org/doi/10.1137/21M1465548</a>&gt;</p>
@@ -2976,8 +3100,8 @@ y (np.ndarray): Target vector with shape (n_samples,).</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Bayesian_dro.Bayesian_DRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Bayesian_dro.Bayesian_DRO.update" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.bayesian_dro.BayesianDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.update" title="Permalink to this definition"></a></dt>
 <dd><p>Update the model configuration dynamically.</p>
 <p>Modify parameters like robustness level (<cite>eps</cite>), optimization solver, distance metric type, 
 or other algorithm settings during runtime.</p>
@@ -3019,8 +3143,8 @@ or negative values for parameters like <code class="docutils literal notranslate
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Bayesian_dro.Bayesian_DRO.resample">
-<span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Bayesian_dro.Bayesian_DRO.resample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.bayesian_dro.BayesianDRO.resample">
+<span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.resample" title="Permalink to this definition"></a></dt>
 <dd><p>Generate resampled data based on posterior parameters.</p>
 <p>This method produces new feature and target arrays whose dimensions are determined by the model’s posterior parameters, input dimensionality, and the sample size of the original data.</p>
 <dl class="field-list simple">
@@ -3050,7 +3174,7 @@ or negative values for parameters like <code class="docutils literal notranslate
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># After fitting a Bayesian_DRO model</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># After fitting a BayesianDRO model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_new</span><span class="p">,</span> <span class="n">y_new</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">X_new</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (n_params, 1000, 10) if sample_size=1000, input_dim=10</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y_new</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (n_params, 1000)</span>
@@ -3061,8 +3185,8 @@ or negative values for parameters like <code class="docutils literal notranslate
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.Bayesian_dro.Bayesian_DRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.Bayesian_dro.Bayesian_DRO.fit" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="dro.src.linear_model.bayesian_dro.BayesianDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Train the Bayesian DRO model by solving the convex optimization problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3084,7 +3208,7 @@ or negative values for parameters like <code class="docutils literal notranslate
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#dro.src.linear_model.Bayesian_dro.BayesianDROError" title="dro.src.linear_model.Bayesian_dro.BayesianDROError"><strong>BayesianDROError</strong></a> – If the optimization solver fails to converge.</p></li>
+<li><p><strong>BayesianDROError</strong> – If the optimization solver fails to converge.</p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
 <li><p>If <cite>X</cite> and <cite>y</cite> have inconsistent sample sizes.</p></li>
 <li><p>If resampled data dimensions are incompatible with <cite>posterior_param_num</cite>.</p></li>
@@ -3108,7 +3232,7 @@ where K = <cite>posterior_param_num</cite>, eps = <cite>self.eps</cite></p>
 </ul>
 </div></blockquote>
 </dd>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">Bayesian_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">BayesianDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>

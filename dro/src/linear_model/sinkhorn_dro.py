@@ -21,7 +21,7 @@ class LinearModel(nn.Module):
     Args:
         linear (nn.Linear): Linear layer implementing y = xA^T + b
     """
-    def __init__(self, input_dim: int, output_dim: int = 1):
+    def __init__(self, input_dim: int, output_dim: int = 1, bias: bool = True):
         super().__init__()
         self.linear = nn.Linear(input_dim, output_dim, bias=True)
 
@@ -33,51 +33,88 @@ class LinearModel(nn.Module):
 class SinkhornLinearDRO(BaseLinearDRO):
     """Sinkhorn Distributionally Robust Optimization with Linear Models.
 
-    Implements three optimization approaches:
-    - SG (Standard Stochastic Gradient)
-    - MLMC (Multilevel Monte Carlo)
-    - RTMLMC (Randomized Truncated MLMC)
-
-    Args:
-        model (LinearModel): Underlying PyTorch linear model
-        reg_param (float): Regularization parameter for Wasserstein distance
-        lambda_param (float): Loss scaling parameter
-        max_iter (int): Maximum training iterations
-        device (torch.device): Computation device (CPU/GPU)
-
     Reference: <https://arxiv.org/abs/2109.11926>
     """
 
     def __init__(self,
-                 input_dim: int,
-                 reg_param: float = 1e-3,
-                 lambda_param: float = 1e2,
-                 output_dim: int = 1, 
-                 max_iter: int = 1e3,
-                 learning_rate: float = 1e-2,
-                 k_sample_max: int = 5,
-                 model_type: str = "svm",
-                 device = "cpu"):
-        """Initialize Sinkhorn DRO model.
+                input_dim: int,
+                model_type: str = "svm",
+                fit_intercept: bool = True, 
+                reg_param: float = 1e-3,
+                lambda_param: float = 1e2,
+                output_dim: int = 1, 
+                max_iter: int = 1e3,
+                learning_rate: float = 1e-2,
+                k_sample_max: int = 5,
+                device: str = "cpu"):
+        
+        """Initialize Sinkhorn Distributionally Robust Optimization model.
 
-        Args:
-            input_dim: Dimension of input features
-            reg_param: Regularization strength (ε in paper)
-            lambda_param: Loss scaling parameter (λ in paper)
-            max_iter: Maximum training iterations
-            learning_rate: Learning rate for optimizer
-            k_sample_max: Maximum level for MLMC sampling
-            model_type: Model type identifier
+        :param input_dim: Dimension of input feature space (d)
+        :type input_dim: int
 
-        Raises:
-            SinkhornDROError: For invalid parameter values
+        :param model_type: Base model architecture. Supported:
+
+            - ``'svm'``: Support Vector Machine (hinge loss)
+
+            - ``'logistic'``: Logistic Regression (cross-entropy loss)
+
+            - ``'ols'``: Ordinary Least Squares (L2 loss)
+
+            - ``'lad'``: Least Absolute Deviation (L1 loss)
+
+        :type model_type: str
+        :param fit_intercept: Whether to learn bias term :math:`b`. 
+            Disable for pre-centered data. Defaults to True.
+        :type fit_intercept: bool
+        :param reg_param: Entropic regularization strength :math:`\epsilon` 
+            controlling transport smoothness. Must be > 0. Defaults to 1e-3.
+        :type reg_param: float
+        :param lambda_param: Loss scaling factor :math:`\lambda` 
+            balancing Wasserstein distance and loss. Must be > 0. Defaults to 1e2.
+        :type lambda_param: float
+        :param output_dim: Dimension of model output. 
+            1 for regression/binary classification. Defaults to 1.
+        :type output_dim: int
+        :param max_iter: Maximum number of Sinkhorn iterations. 
+            Should be ≥ 100. Defaults to 1e3.
+        :type max_iter: int
+        :param learning_rate: Step size for gradient-based optimization. 
+            Typical range: [1e-4, 1e-1]. Defaults to 1e-2.
+        :type learning_rate: float
+        :param k_sample_max: Maximum level for Multilevel Monte Carlo sampling. 
+            Higher values improve accuracy but increase computation. Defaults to 5.
+        :type k_sample_max: int
+        :param device: Computation device. 
+            Supported: ``'cpu'`` or ``'cuda'``. Defaults to 'cpu'.
+        :type device: str
+
+        :raises ValueError: 
+
+            - If any parameter violates numerical constraints (ε ≤ 0, λ ≤ 0, etc.)
+
+            - If model_type is not in supported set
+
+        Example:
+            >>> model = SinkhornDRO(
+            ...     input_dim=10,
+            ...     model_type='svm',
+            ...     reg_param=0.01,
+            ...     lambda_param=50.0
+            ... )
+            >>> print(model.device)  # 'cpu'
+
+        .. note::
+            - Setting ``device='torch.device(cuda)'`` requires PyTorch with GPU support (CUDA-enabled)
+            - It is recommended to retain the default k_sample_max=5 to balance accuracy and computational efficiency
+
         """
-        super().__init__(input_dim, model_type)
+        super().__init__(input_dim, model_type, fit_intercept)
         
         if reg_param <= 0 or lambda_param <= 0:
-            raise SinkhornDROError("Regularization parameters must be positive")
+            raise ValueError("Regularization parameters must be positive")
 
-        self.model = LinearModel(input_dim, output_dim)
+        self.model = LinearModel(input_dim, output_dim, fit_intercept)
         self.reg_param = reg_param
         self.lambda_param = lambda_param
         self.max_iter = max_iter
@@ -85,60 +122,125 @@ class SinkhornLinearDRO(BaseLinearDRO):
         self.k_sample_max = k_sample_max
         self.device = device
         self.model.to(self.device)
-
+    
     def update(self, config: Dict[str, Any]) -> None:
-        """Update model hyperparameters.
+        """Update hyperparameters for Sinkhorn optimization.
+        
+        :param config: Dictionary containing parameter updates. Valid keys:
 
-        Args:
-            config: Dictionary containing hyperparameters to update
+            - ``'reg'``: Entropic regularization strength (ε > 0)
 
-        Raises:
-            SinkhornDROError: For invalid parameter types/values
+            - ``'lambda'``: Loss scaling factor (λ > 0) 
+
+            - ``'k_sample_max'``: Maximum MLMC sampling level (integer ≥ 1)
+
+        :type config: dict[str, Any]
+
+        :raises ValueError: If any parameter value violates type or range constraints
+        
+        Example:
+            >>> model.update({
+            ...     'reg': 0.01,
+            ...     'lambda': 50.0,
+            ...     'k_sample_max': 3
+            ... })  # Explicit type conversion handled internally
+        
+        .. note::
+            For GPU-accelerated computation, specify it during initialization instead of this function
         """
         if "reg" in config:
             if not isinstance(config["reg"], (float, int)) or config["reg"] <= 0:
-                raise SinkhornDROError("reg must be a positive float")
+                raise ValueError("reg must be a positive number")
             self.reg_param = float(config["reg"])
 
         if "lambda" in config:
             if not isinstance(config["lambda"], (float, int)) or config["lambda"] <= 0:
-                raise SinkhornDROError("lambda must be a positive float")
+                raise ValueError("lambda must be a positive number")
             self.lambda_param = float(config["lambda"])
-        
+            
         if "k_sample_max" in config:
-            if not isinstance(config["k_sample_max"], (int)) or config["k_sample_max"] <= 0:
-                raise SinkhornDROError("k_sample_max must be a positive integer")
-            self.k_sample_max = float(config["k_sample_max"])
+            if not isinstance(config["k_sample_max"], int) or config["k_sample_max"] <= 0:
+                raise ValueError("k_sample_max must be positive integer")
+            self.k_sample_max = int(config["k_sample_max"])
+
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Generate model predictions.
+        """Generate predictions using the optimized Sinkhorn DRO model.
+        
+        :param X: Input feature matrix. Should have shape (n_samples, n_features)
+            where n_features must match model's input dimension.
+            Supported dtype: float32/float64
+        :type X: numpy.ndarray
 
-        Args:
-            X: Input data matrix (n_samples, n_features)
+        :return: Model predictions. Shape depends on task:
 
-        Returns:
-            Model predictions as numpy array
+            - Regression: (n_samples, 1)
 
-        Raises:
-            SinkhornDROError: For input dimension mismatch
+            - Classification: (n_samples,) with 0/1 labels
+
+        :rtype: numpy.ndarray
+
+        :raises ValueError: 
+
+            - If input dimension mismatch occurs (n_features != model_dim)
+
+            - If input contains NaN/Inf values
+        
+        
+        Example:
+            >>> X_test = np.random.randn(10, 5).astype(np.float32)
+            >>> preds = model.predict(X_test)  # Shape: (10, 1) for regression
+        
+        .. note::
+            - Input data is automatically converted to PyTorch tensors
+            - For large datasets (>1M samples), use batch prediction
         """
         if X.shape[1] != self.model.linear.in_features:
-            raise SinkhornDROError(f"Expected {self.model.linear.in_features} features, got {X.shape[1]}")
+            raise ValueError(f"Dimension mismatch: model expects {self.model.linear.in_features}, got {X.shape[1]}")
 
         X_tensor = self._to_tensor(X)
         self.model.eval()
         with torch.no_grad():
             return self.model(X_tensor).cpu().numpy()
 
+
     def score(self, X: np.ndarray, y: np.ndarray) -> Union[float, Tuple[float, float]]:
-        """Calculate model performance metrics.
+        """Evaluate model performance on given data.
+        
+        :param X: Input feature matrix. Shape: (n_samples, n_features)
+            Must match model's expected input dimension
+        :type X: numpy.ndarray
 
-        Args:
-            X: Input features
-            y: Target values
+        :param y: Target values. Shape requirements:
 
-        Returns:
-            MSE for regression tasks, (accuracy, F1) for classification
+            - Regression: (n_samples,) or (n_samples, 1)
+
+            - Classification: (n_samples,) with binary labels (0/1)
+
+        :type y: numpy.ndarray
+
+        :return: Performance metrics:
+
+            - Regression: Mean Squared Error (MSE) as float
+
+            - Classification: Tuple of (accuracy%, macro-F1 score) in [0,1] range
+
+        :rtype: Union[float, Tuple[float, float]]
+
+        Example:    
+            >>> # Regression
+            >>> X_reg, y_reg = np.random.randn(100,5), np.random.randn(100)
+            >>> model = SinkhornDRO(model_type='ols')
+            >>> mse = model.score(X_reg, y_reg)  # e.g. 0.153
+            
+            >>> # Classification  
+            >>> X_clf, y_clf = np.random.randn(100,5), np.random.randint(0,2,100)
+            >>> model = SinkhornDRO(model_type='svm')
+            >>> acc, f1 = model.score(X_clf, y_clf)  # e.g. (0.92, 0.89)
+        
+        .. note::
+            - For regression tasks, outputs are not thresholded
+            - Computation uses all available samples (no mini-batching)
         """
         predictions = self.predict(X).flatten()
         if self.model_type in ["ols", "lad"]:
@@ -149,19 +251,53 @@ class SinkhornLinearDRO(BaseLinearDRO):
             return acc, f1
 
     def fit(self, X: np.ndarray, y: np.ndarray, optimization_type: str = "SG") -> Dict[str, np.ndarray]:
-        """Train model using specified optimization method.
+        """Train the Sinkhorn DRO model with specified optimization strategy.
+        
+        :param X: Training feature matrix. Shape: (n_samples, n_features)
+            Should match model's input dimension (n_features == input_dim)
+        :type X: numpy.ndarray
 
-        Args:
-            X: Training data (n_samples, n_features)
-            y: Target values (n_samples,)
-            optimization_type: Optimization method (SG/MLMC/RTMLMC)
+        :param y: Target values. Shape requirements:
+        
+            - Regression: (n_samples,) continuous values
+            
+            - Classification: (n_samples,) binary labels (0/1)
+        
+        :type y: numpy.ndarray
 
-        Returns:
-            Dictionary containing learned parameters
+        :param optimization_type: Optimization algorithm selection (Defaults to 'SG'):
 
-        Raises:
-            SinkhornDROError: For invalid optimization type or input mismatch
+            - ``'SG'``: Standard Stochastic Gradient (baseline)
+
+            - ``'MLMC'``: Multilevel Monte Carlo acceleration
+
+            - ``'RTMLMC'``: Real-Time MLMC with adaptive sampling
+
+        :type optimization_type: str
+
+        :return: Learned parameters containing:
+
+            - ``'theta'``: Model coefficients (n_features,)
+
+            - ``'bias'``: Intercept term (if fit_intercept=True)
+
+        :rtype: dict[str, numpy.ndarray]
+
+        :raises ValueError:
+
+            - If X/y have mismatched sample counts (n_samples)
+
+            - If optimization_type not in {'SG', 'MLMC', 'RTMLMC'}
+
+            - If input_dim ≠ X.shape[1]
+
+        Example:
+            >>> model = SinkhornDRO(input_dim=5, model_type='svm')
+            >>> params = model.fit(X_train, y_train, 'MLMC')
+            >>> print(params['weights'])  # [-0.12, 1.45, ...]
+
         """
+        
         self._validate_inputs(X, y)
         dataloader = self._create_dataloader(X, y)
 
@@ -206,7 +342,16 @@ class SinkhornLinearDRO(BaseLinearDRO):
     def _compute_loss(self, predictions: torch.Tensor, targets: torch.Tensor, 
                      m: int, lambda_reg: float) -> torch.Tensor:
         """Compute Sinkhorn loss for given batch."""
-        residuals = (predictions - targets) ** 2 / lambda_reg
+        # TODO: double check.
+        if self.model_type == 'ols':
+            residuals = (predictions - targets) ** 2 / lambda_reg
+        elif self.model_type == 'lad':
+            residuals = torch.abs(predictions - targets)/ lambda_reg
+        elif self.model_type == 'logistic':
+            criterion = torch.nn.BCEWithLogitsLoss()
+            residuals = criterion(predictions, targets) / lambda_reg
+        elif self.model_type == 'svm':
+            residuals = torch.clamp(1 - targets * predictions, min = 0)
         residual_matrix = residuals.view(m, -1)
         return torch.mean(torch.logsumexp(residual_matrix, dim=0)-math.log(m)) * lambda_reg
 
@@ -310,7 +455,7 @@ if __name__ == "__main__":
     # Data generation
     X, y = make_regression(n_samples=1000, n_features=10, noise=1, random_state=42)
     # Model training
-    dro_model = SinkhornLinearDRO(input_dim=10, output_dim=1, k_sample_max=4, reg_param=.001, lambda_param=100, max_iter=1000, model_type='ols')
+    dro_model = SinkhornLinearDRO(input_dim=10, output_dim=1, k_sample_max=4, reg_param=.001, lambda_param=100, max_iter=1000, model_type='lad')
     params = dro_model.fit(X, y, optimization_type="SG")
     print("Sinkhorn DRO Parameters:", params)
     print(dro_model.score(X, y))

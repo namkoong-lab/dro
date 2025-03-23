@@ -234,6 +234,22 @@ class BaseLinearDRO:
         else:
             raise NotImplementedError("CVXPY loss not implemented for the specified model_type value.")
 
+    def evaluate(self, X: np.ndarray, y: np.ndarray, fast: bool = True):
+        """Fast evaluate the true model performance for the obtained theta efficiently from data unbiased"""
+        sample_num, __ = X.shape
+        predictions = self.predict(X)
+        if self.model_type == 'ols':
+            errors = (predictions - y) ** 2
+            if self.fit_intercept == True:
+                X_intercept = np.ones(sample_num).reshape(-1, 1)
+                X = np.hstack((X, X_intercept))
+            cov_inv = np.linalg.pinv(np.cov(X.T))
+            grad_square = np.multiply(errors.reshape(-1, 1), X).T @ np.multiply(errors.reshape(-1, 1), X)
+            
+            bias = 2 * np.trace(cov_inv @ grad_square)/(sample_num ** 3)
+            print(bias)
+        return np.mean(errors) + bias
+
 
 
 
