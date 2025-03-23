@@ -5,13 +5,17 @@ $Q(d, \epsilon) = \{Q: W(Q, \hat P)\leq \epsilon\}$.
 Specifically, Wasserstein distance is defined as follows:
 For $Z_1 = (X_1, Y_1), Z_2 = (X_2, Y_2)$, 
 
-$$W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)],$$
+$$
+W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)],
+$$
 where for ``lad``, ``svm``, ``logistic``, the inner distance is captured by the norm: $d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|.$
 For ``ols``, the inner distance is captured by the norm square: 
 $d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|$. 
 
 No matter in each case, the norm is defined on the product space $\mathcal{X} \times \mathbb{R}$ by:
-$$\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.$$
+$$
+\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.
+$$
 Here $\|x\|_{\Sigma, p} = \|\Sigma^{1/2}x\|_p$. Furthermore, we can show that the dual norm $\|(\cdot, \cdot)\|_*$ is given by:
 
 $$
@@ -42,10 +46,14 @@ When we set ``compute_type == asymp``, [2] provides asymptotic worst-case distri
 ## Robust Satisficing Version
 
 For the Satisficing Wasserstein-DRO model [3], we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:
-$$\max {\epsilon,\quad \text{s.t.}~E_{(X,Y) \sim P}[\ell_{tr}(\theta;(X, Y))] \leq \tau + \epsilon W(P, \widehat P), \forall P}.$$
+$$
+\max {\epsilon,\quad \text{s.t.}~E_{(X,Y) \sim P}[\ell_{tr}(\theta;(X, Y))] \leq \tau + \epsilon W(P, \widehat P), \forall P}.
+$$
 
 For (approximated) regression / classification, we can show the optimization problem above is equivalent to:
-$$\max \{\|\theta\|_{\Sigma^{-1/2},p},\quad \text{s.t.}~ E_{(X,Y) \sim \widehat P}[\ell_{tr}(\theta;(X, Y))] \leq \tau\}.$$
+$$
+\max \{\|\theta\|_{\Sigma^{-1/2},p},\quad \text{s.t.}~ E_{(X,Y) \sim \widehat P}[\ell_{tr}(\theta;(X, Y))] \leq \tau\}.
+$$
 
 ### Hyperparameter
 In the satisfying version,  we do not set $\epsilon$ as the hyperparameter but as an optimization goal such that to minimize the worst-case performance. 
