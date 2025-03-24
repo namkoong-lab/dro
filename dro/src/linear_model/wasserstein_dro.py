@@ -19,7 +19,7 @@ class WassersteinDRO(BaseLinearDRO):
     The Wasserstein distance is defined as the minimum probability coupling of two distributions for the distance metric:
 
     .. math::
-        d((X_1, Y_1), (X_2, Y_2)) = (|\Sigma^{1/2} (X_1 - X_2)|_p)^{square} + \kappa |Y_1 - Y_2|,
+        d((X_1, Y_1), (X_2, Y_2)) = (\|\Sigma^{1/2} (X_1 - X_2)\|_p)^{square} + \kappa |Y_1 - Y_2|,
 
     where parameters are:
         - $\Sigma$: cost matrix, (a PSD Matrix);
@@ -412,7 +412,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
     This model minimizes the subject to (approximated version) of the robust satisficing constraint of Wasserstein DRO. The Wasserstein Distance is defined as the minimum probability coupling of two distributions for the distance metric: 
 
     .. math::
-        d((X_1, Y_1), (X_2, Y_2)) = (abs(cost_matrix^{1/2} @ (X_1 - X_2))_p)^{square} + kappa abs(Y_1 - Y_2).
+        d((X_1, Y_1), (X_2, Y_2)) = (\|\Sigma^{1/2} (X_1 - X_2)\|_p)^{square} + \kappa |Y_1 - Y_2|,
 
     Attributes:
         input_dim (int): Dimensionality of the input features.
