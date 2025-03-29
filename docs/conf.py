@@ -46,11 +46,22 @@ source_suffix = {
 
 autodoc_typehints = "description" 
 
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
+# html_theme_options = {
+    # 'navigation_depth': 4,
+    # 'collapse_navigation': False
+# }
+
+
+html_theme = 'piccolo_theme'
 html_theme_options = {
-    'navigation_depth': 4,
-    'collapse_navigation': False
+    "source_url": 'https://github.com/namkoong-lab/dro',
+    "source_icon": "github",
+    "globaltoc_collapse": False,
+    "banner_text": 'A GIFT to the whole DRO community!',
+    "banner_hiding": "permanent"
 }
+
 
 autodoc_default_options = {
     'member-order': 'bysource',

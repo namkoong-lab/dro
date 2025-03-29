@@ -1,264 +1,280 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bayesian-based DRO &mdash; dro 0.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+    <title>Bayesian-based DRO &#8212; dro 0.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="DRO with a mixture of distance metrics" href="linear_mixdro.html" />
     <link rel="prev" title="MMD-DRO" href="linear_mmddro.html" /> 
-</head>
+  </head><body data-dark_mode_code_blocks="true">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            dro
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<div id="top_nav">
+    
+        <div id="notification_banner" data-banner-hiding="permanent" v-show="!permanentlyHidden">
+    <p v-if="visible" id="content">A GIFT to the whole DRO community!</p>
+    <a class="close" href="#" @click.prevent="toggleVisible()">[[ visible ? '&#x25B2; HIDE' : '&#x25BC; SHOW BANNER' ]]</a>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+
+<script>
+(function() {
+    const topNav = document.querySelector('#top_nav')
+    const notificationContent = document.querySelector('#notification_banner p#content').innerText
+    const localStorageKey = 'readNotification'
+    const bannerHiding = document.querySelector('#notification_banner').dataset['bannerHiding']
+    const cssVariableName = '--navbarHeight'
+    const rootElement = document.documentElement
+
+    /*************************************************************************/
+    // Local storage for remembering if the user has read the notification.
+
+    function checkAlreadyRead() {
+        return localStorage.getItem(localStorageKey) == notificationContent
+    }
+
+    function setRead() {
+        localStorage.setItem(localStorageKey, notificationContent)
+    }
+
+    function clearRead() {
+        localStorage.removeItem(localStorageKey)
+    }
+
+    const alreadyRead = checkAlreadyRead()
+    const permanentlyHidden = alreadyRead && bannerHiding == 'permanent'
+
+    /*************************************************************************/
+    // Updating a CSS variable so other elements adjust to the nav bar height.
+
+    function updateNavbarHeight() {
+        // Only update it if the delta is significant. Otherwise it causes
+        // unnecessary browser repaints.
+        const documentStyles = getComputedStyle(rootElement)
+        // We store the value in REM, so need to convert to pixels
+        const currentValue = parseFloat(
+            documentStyles.getPropertyValue(cssVariableName)
+        ) * parseFloat(documentStyles.fontSize)
+
+        const newValue = topNav.clientHeight
+
+        if (newValue - 5 > currentValue) {
+            console.log(`Updating ${cssVariableName} - overlapping`)
+            rootElement.style.setProperty(
+                cssVariableName, newValue + "px"
+            );
+        } else if (currentValue - newValue >= 30) {
+            console.log(`Updating ${cssVariableName} - gap too large`)
+            rootElement.style.setProperty(
+                cssVariableName, newValue + "px"
+            );
+        }
+    }
+
+    /*************************************************************************/
+    // After loading the page, and resizing the window, recalculate the nav bar
+    // height.
+
+    if (!permanentlyHidden) {
+        // This height is approximately correct when there's a banner, so
+        // shouldn't require any page reflow:
+        rootElement.style.setProperty(
+            '--navbarHeight', "5.5rem"
+        );
+
+        document.addEventListener("DOMContentLoaded", function() {
+            updateNavbarHeight()
+        });
+
+        var interval = undefined
+
+        window.addEventListener('resize', () => {
+            if (interval) {
+                clearTimeout(interval)
+            }
+            interval = setTimeout(() => {
+                console.log("Finished resizing")
+                updateNavbarHeight()
+            }, 100)
+        })
+    }
+
+    /*************************************************************************/
+
+    PetiteVue.createApp({
+        visible: !alreadyRead,
+        permanentlyHidden: permanentlyHidden,
+        bannerHiding: bannerHiding,
+        $delimiters: ['[[', ']]'],
+        toggleVisible() {
+            this.visible = !this.visible
+
+            if (this.visible) {
+                clearRead()
+            } else {
+                setRead()
+            }
+
+            if (!this.visible && bannerHiding == 'permanent') {
+                this.permanentlyHidden = true
+            }
+
+            // Run this after Vue has had time to update the DOM:
+            setTimeout(
+                updateNavbarHeight,
+                0
+            )
+        }
+    }).mount('#notification_banner')
+})()
+</script>
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.1.1 documentation</a></h1>
+            <a id="source_link" href="https://github.com/namkoong-lab/dro">
+    
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+            <path fill="white" d="M 244.8,8 C 106.1,8 0,113.3 0,252 c 0,110.9 69.8,205.8 169.5,239.2 12.8,2.3 17.3,-5.6 17.3,-12.1 0,-6.2 -0.3,-40.4 -0.3,-61.4 0,0 -70,15 -84.7,-29.8 0,0 -11.4,-29.1 -27.8,-36.6 0,0 -22.9,-15.7 1.6,-15.4 0,0 24.9,2 38.6,25.8 21.9,38.6 58.6,27.5 72.9,20.9 2.3,-16 8.8,-27.1 16,-33.7 -55.9,-6.2 -112.3,-14.3 -112.3,-110.5 0,-27.5 7.6,-41.3 23.6,-58.9 -2.6,-6.5 -11.1,-33.3 2.6,-67.9 20.9,-6.5 69,27 69,27 20,-5.6 41.5,-8.5 62.8,-8.5 21.3,0 42.8,2.9 62.8,8.5 0,0 48.1,-33.6 69,-27 13.7,34.7 5.2,61.4 2.6,67.9 16,17.7 25.8,31.5 25.8,58.9 0,96.5 -58.9,104.2 -114.8,110.5 9.2,7.9 17,22.9 17,46.4 0,33.7 -0.3,75.4 -0.3,83.6 0,6.5 4.6,14.4 17.3,12.1 C 428.2,457.8 496,362.9 496,252 496,113.3 383.5,8 244.8,8 Z"/>
+        </svg>
+    
+</a>
+        
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="index.html#holistic-model-pipeline">Holistic Model Pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="index.html#linear">Linear</a></li>
-<li class="toctree-l3"><a class="reference internal" href="index.html#neural-network">Neural Network</a></li>
-<li class="toctree-l3"><a class="reference internal" href="index.html#reference">Reference:</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="linear_fdro.html#standard-generalized">Standard (Generalized)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="linear_fdro.html#formulation">Formulation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="linear_fdro.html#hyperparameters">Hyperparameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="linear_fdro.html#worst-case-illustration">Worst-case illustration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="linear_fdro.html#evaluation">Evaluation</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="linear_fdro.html#partial-dro">Partial DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="linear_fdro.html#reference">Reference:</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="linear_wdro.html#standard-version">Standard Version</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="linear_wdro.html#hyperparameter">Hyperparameter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="linear_wdro.html#worst-case-distribution">Worst case Distribution</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="linear_wdro.html#robust-satisficing-version">Robust Satisficing Version</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="linear_wdro.html#id1">Hyperparameter</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="linear_wdro.html#reference">Reference</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Bayesian-based DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="linear_mixdro.html#sinkhorn-dro">Sinkhorn-DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="linear_mixdro.html#holistic-dro">Holistic-DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="linear_mixdro.html#mot-dro">MOT-DRO</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html#module-dro.src.data.dataloader_classification">Data Modules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_classification.classification_basic"><code class="docutils literal notranslate"><span class="pre">classification_basic()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_classification.classification_DN21"><code class="docutils literal notranslate"><span class="pre">classification_DN21()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_classification.classification_SNVD20"><code class="docutils literal notranslate"><span class="pre">classification_SNVD20()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_classification.classification_LWLC"><code class="docutils literal notranslate"><span class="pre">classification_LWLC()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_regression.regression_basic"><code class="docutils literal notranslate"><span class="pre">regression_basic()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_regression.regression_DN20_1"><code class="docutils literal notranslate"><span class="pre">regression_DN20_1()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_regression.regression_DN20_2"><code class="docutils literal notranslate"><span class="pre">regression_DN20_2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_regression.regression_DN20_3"><code class="docutils literal notranslate"><span class="pre">regression_DN20_3()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.data.dataloader_regression.regression_LWLC"><code class="docutils literal notranslate"><span class="pre">regression_LWLC()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html#module-dro.src.linear_model.base">Linear DRO Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.base.BaseLinearDRO"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.base.BaseLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.base.BaseLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.base.BaseLinearDRO.load"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.base.BaseLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.predict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.base.BaseLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.score()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.base.BaseLinearDRO.evaluate"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.evaluate()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO"><code class="docutils literal notranslate"><span class="pre">Chi2DRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO.evaluate"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.evaluate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">Chi2DRO.worst_distribution()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO"><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.worst_distribution()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.kl_dro.KLDRO"><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.kl_dro.KLDRO.update"><code class="docutils literal notranslate"><span class="pre">KLDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.kl_dro.KLDRO.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.kl_dro.KLDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">KLDRO.worst_distribution()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.tv_dro.TVDRO"><code class="docutils literal notranslate"><span class="pre">TVDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.tv_dro.TVDRO.threshold_val"><code class="docutils literal notranslate"><span class="pre">TVDRO.threshold_val</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.tv_dro.TVDRO.update"><code class="docutils literal notranslate"><span class="pre">TVDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.tv_dro.TVDRO.fit"><code class="docutils literal notranslate"><span class="pre">TVDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.tv_dro.TVDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">TVDRO.worst_distribution()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO.fit()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.hr_dro.HR_DRO_LR"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.hr_dro.HR_DRO_LR.update"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.hr_dro.HR_DRO_LR.fit"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR.fit()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO.fit()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.mmd_dro.MMD_DRO"><code class="docutils literal notranslate"><span class="pre">MMD_DRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.mmd_dro.MMD_DRO.update"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.mmd_dro.MMD_DRO.fit"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.fit()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.mot_dro.MOTDRO"><code class="docutils literal notranslate"><span class="pre">MOTDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.mot_dro.MOTDRO.update"><code class="docutils literal notranslate"><span class="pre">MOTDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.mot_dro.MOTDRO.fit"><code class="docutils literal notranslate"><span class="pre">MOTDRO.fit()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO"><code class="docutils literal notranslate"><span class="pre">ORWDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.update"><code class="docutils literal notranslate"><span class="pre">ORWDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.fit"><code class="docutils literal notranslate"><span class="pre">ORWDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">ORWDRO.worst_distribution()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.predict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.score()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.fit()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.worst_distribution()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_depreciate"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit_depreciate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit_oracle()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.worst_distribution()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO"><code class="docutils literal notranslate"><span class="pre">BayesianDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO.update"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO.resample"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.resample()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO.fit"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.fit()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html#module-dro.src.neural_model.base_nn">Neural Network DRO Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.Linear"><code class="docutils literal notranslate"><span class="pre">Linear</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.Linear.forward"><code class="docutils literal notranslate"><span class="pre">Linear.forward()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.MLP.forward"><code class="docutils literal notranslate"><span class="pre">MLP.forward()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.predict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.score()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.f1score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.f1score()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO"><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.predict()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
         </div>
       </div>
-    </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">dro</a>
-      </nav>
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../api/tutorials.html">Tutorial</a></li>
-      <li class="breadcrumb-item active">Bayesian-based DRO</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/tutorials/linear_pdro.md.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
   <section class="tex2jax_ignore mathjax_ignore" id="bayesian-based-dro">
-<h1>Bayesian-based DRO<a class="headerlink" href="#bayesian-based-dro" title="Permalink to this heading"></a></h1>
+<h1>Bayesian-based DRO<a class="headerlink" href="#bayesian-based-dro" title="Permalink to this heading">¶</a></h1>
 <p>Bayesian-PDRO:</p>
 <ul class="simple">
 <li><p>Reference: Shapiro, Alexander, Enlu Zhou, and Yifan Lin. “Bayesian distributionally robust optimization.” SIAM Journal on Optimization 33.2 (2023): 1279-1304.</p></li>
@@ -266,34 +282,37 @@
 </section>
 
 
-           </div>
+            <div class="clearer"></div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="linear_mmddro.html" class="btn btn-neutral float-left" title="MMD-DRO" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="linear_mixdro.html" class="btn btn-neutral float-right" title="DRO with a mixture of distance metrics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2025, Jiashuo Liu, Tianyu Wang.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+    
 
-</body>
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="linear_mmddro.html">
+                    <span class="icon">&lt;</span><span>MMD-DRO</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="linear_mixdro.html"><span>DRO with a mixture of distance metrics</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
 </html>
