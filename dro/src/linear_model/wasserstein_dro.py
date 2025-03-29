@@ -22,84 +22,164 @@ class WassersteinDRO(BaseLinearDRO):
         d((X_1, Y_1), (X_2, Y_2)) = (\|\Sigma^{1/2} (X_1 - X_2)\|_p)^{square} + \kappa |Y_1 - Y_2|,
 
     where parameters are:
-        - $\Sigma$: cost matrix, (a PSD Matrix);
-        - $\kappa$;
-        - $p$;
+
+        - :math:`\Sigma`: cost matrix, (a PSD Matrix);
+
+        - :math:`\kappa`;
+
+        - :math:`p`;
+
         - square (notation depending on the model type), where square = 2 for 'svm', 'logistic', 'lad'; square = 1 for 'ols'.
 
-    Attribute:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD), default = 'svm'.
-        fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str): Optimization solver to solve the problem, default = 'MOSEK'.
-        eps (float): Robustness parameter for DRO.
-        cost matrix (np.ndarray): the feature importance perturbation matrix with the dimension being (input_dim, input_dim).
-        p (float or 'inf'): Norm parameter for controlling the perturbation moment of X.
-        kappa (float or 'inf'): Robustness parameter for the perturbation of Y. Note that if we set kappa to be large enough to approximately infinite, this is equivalent to saying that we do not allow changes in Y.
-
     Reference:
+
     [1] OLS: <https://www.cambridge.org/core/journals/journal-of-applied-probability/article/robust-wasserstein-profile-inference-and-applications-to-machine-learning/4024D05DE4681E67334E45D039295527>
+
     [2] LAD / SVM / Logistic: <https://jmlr.org/papers/volume20/17-633/17-633.pdf>
     """
 
+    def __init__(self, input_dim: int, model_type: str = 'svm', 
+                 fit_intercept: bool = True, solver: str = 'MOSEK'):
+        """Initialize Mahalanobis-Wasserstein DRO model.
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK'):
+        :param input_dim: Dimension of feature space. Must satisfy :math:`\text{input\_dim} \geq 1`
+        :type input_dim: int
+
+        :param model_type: Base model architecture. Supported:
+
+            - ``'svm'``: Hinge loss (classification)
+
+            - ``'logistic'``: Logistic loss (classification)
+
+            - ``'ols'``: Least squares (regression)
+
+            - ``'lad'``: Least absolute deviation (regression)
+
+        :type model_type: str
+
+        :param fit_intercept: Whether to learn intercept term :math:`b`.
+            Set to ``False`` for pre-centered data. Defaults to True.
+        :type fit_intercept: bool
+
+        :param solver: Convex optimization solver. Valid options:
+        
+                - ``'MOSEK'`` (commercial, recommended)
+        
+        :type solver: str
+
+        :raises ValueError:
+
+            - If input_dim < 1
+
+            - If model_type not in allowed set
+
+            - If unsupported solver is selected
+
+        Example:
+            >>> model = WassersteinDRO(
+            ...     input_dim=5,
+            ...     model_type='svm',
+            ...     solver='MOSEK'
+            ... )
+            >>> model.cost_matrix.shape  # (5, 5)
+
+        .. note::
+            - Changing ``cost_matrix`` after initialization requires calling ``update()``
         """
-        Args:
-            input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols', 'lad').
-            fit_intercept (bool): Whether to calculate the intercept for this model, default = True. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-            solver (str): Optimization solver to solve the problem, default = 'MOSEK'
-        """
+        if input_dim < 1:
+            raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
+        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
+            raise ValueError(f"Invalid model_type: {model_type}")
+
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
-
+        
         self.cost_matrix = np.eye(input_dim)
         self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
-        self.eps = 0
-        self.p = 1
-        self.kappa = 'inf'
-        
+        self.eps = 0 
+        self.p = 1  
+        self.kappa = 'inf' 
 
     def update(self, config: Dict[str, Any]) -> None:
-        """Update the model configuration
+        """Update Wasserstein-DRO model parameters dynamically.
         
-        Args: 
-            config (Dict[str, Any]): Configuration dictionary containing 'cost_matrix', 'eps', 'p', 'kappa' keys for robustness parameter.
-        Raises:
-            WassersteinDROError: If any of the configs does not fall into its domain.
+        :param config: Configuration dictionary with keys:
+
+            - ``'cost_matrix'``: Mahalanobis metric matrix :math:`\Sigma^{-1} \succ 0`
+
+                - Shape: (input_dim, input_dim)
+
+                - Type: numpy.ndarray
+
+            - ``'eps'``: Wasserstein radius :math:`\epsilon \geq 0`
+
+            - ``'p'``: Wasserstein order :math:`p \geq 1` or ``'inf'``
+
+            - ``'kappa'``: Y-ambiguity radius :math:`\kappa \geq 0` or ``'inf'``
+
+        :type config: dict[str, Any]
+
+        :raises ValueError:
+
+            - If cost_matrix is not positive definite
+
+            - If eps < 0
+
+            - If p < 1 and p ≠ 'inf'
+
+            - If kappa < 0 and kappa ≠ 'inf'
+
+        :raises TypeError:
+
+            - If cost_matrix is not numpy array
+
+            - If numeric parameters are not float/int
+        
+    
+        Example:
+            >>> model = WassersteinDRO(input_dim=3)
+            >>> new_config = {
+            ...     'eps': 0.5,
+            ...     'p': 2,
+            ...     'cost_matrix': np.diag([1, 2, 3])
+            ... }
+            >>> model.update(new_config)
+            >>> model.p  # 2.0
         """
-        if 'cost_matrix' in config.keys():
+
+        if 'cost_matrix' in config:
             cost_matrix = config['cost_matrix']
-            if not isinstance(cost_matrix, np.ndarray) or cost_matrix.shape != (self.input_dim, self.input_dim) or not np.all(np.linalg.eigvals(cost_matrix) > 0):
-                raise WassersteinDROError("Cost Adjust Matrix 'cost matrix' must be a PD matrix")
+            if not isinstance(cost_matrix, np.ndarray):
+                raise TypeError("cost_matrix must be numpy.ndarray")
+            if cost_matrix.shape != (self.input_dim, self.input_dim):
+                raise ValueError(f"cost_matrix must have shape ({self.input_dim}, {self.input_dim})")
+            if not np.all(np.linalg.eigvals(cost_matrix) > 0):
+                raise ValueError("cost_matrix must be positive definite")
+            
             self.cost_matrix = cost_matrix
             self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
-        if 'eps' in config.keys():
+
+        if 'eps' in config:
             eps = config['eps']
-            if not isinstance(eps, (float, int)) or eps < 0:
-                raise WassersteinDROError("Robustness parameter 'eps' must be a non-negative float.")
+            if not isinstance(eps, (float, int)):
+                raise TypeError("eps must be numeric")
+            if eps < 0:
+                raise ValueError(f"eps must be ≥ 0, got {eps}")
             self.eps = float(eps)
-        if 'p' in config.keys():
+
+        if 'p' in config:
             p = config['p']
-            if p != 'inf' and ((not isinstance(p, (float, int)) or p < 1)):
-                raise WassersteinDROError("Norm parameter 'p' must be float and larger than 1.")
-            if p != 'inf':
-                self.p = float(p)
-            else:
-                self.p = 'inf'
+            if p != 'inf' and (not isinstance(p, (float, int)) or p < 1):
+                raise ValueError(f"p must be ≥1 or 'inf', got {p}")
+            self.p = float(p) if p != 'inf' else 'inf'
 
-        if 'kappa' in config.keys():
+        if 'kappa' in config:
             kappa = config['kappa']
-            if kappa != 'inf' and ((not isinstance(kappa, (float, int))) or kappa < 0):
-                raise WassersteinDROError("Y-Robustness parameter 'kappa' must be a non-negative float.")
+            if kappa != 'inf' and (not isinstance(kappa, (float, int)) or kappa < 0):
+                raise ValueError(f"kappa must be ≥0 or 'inf', got {kappa}")
             if kappa != 'inf' and self.model_type == 'ols':
-                warnings.warn("Wasserstein Distributionally Robust OLS does not support changes of Y in the ambiguity set")
-            if kappa != 'inf':
-                self.kappa = float(kappa)
-            else:
-                self.kappa = 'inf'
-
-        
+                warnings.warn("Y-ambiguity is disabled for OLS models", UserWarning)
+            self.kappa = float(kappa) if kappa != 'inf' else 'inf'
+     
     def _penalization(self, theta: cp.Expression) -> float:
         """
         Module for computing the regularization part in the standard Wasserstein DRO problem.
@@ -130,17 +210,29 @@ class WassersteinDRO(BaseLinearDRO):
 
         
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """Fit the model using CVXPY to solve the Wasserstein distributionally robust optimization problem.
+        """Fit the model using CVXPY to solve the WDRO problem.
 
-        Args:
-            X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
+        :param X: Training feature matrix of shape `(n_samples, n_features)`.
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
 
-        Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta' key.
+        :param Y: Target values of shape `(n_samples,)`. Format requirements:
 
-        Raises:
-            WassersteinDROError: If the optimization problem fails to solve.        
+            - Classification: ±1 labels
+
+            - Regression: Continuous values
+
+        :type Y: numpy.ndarray
+
+        :returns: Dictionary containing trained parameters:
+        
+            - ``theta``: Weight vector of shape `(n_features,)`
+            
+            - ``b``
+            
+        :rtype: Dict[str, Any]
+        
+        .raises: WassersteinDROError: If the optimization problem fails to solve.
         """
 
         sample_size, feature_size = X.shape
@@ -171,7 +263,6 @@ class WassersteinDRO(BaseLinearDRO):
                     cons += [s >= self._cvx_loss(X, -y, theta, b) - lamb_da * self.kappa]
                 final_loss = cp.sum(s) / sample_size + self.eps * lamb_da
             else:
-                # model type == 'lad' for general p.
                 final_loss = cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size + self.eps * lamb_da
 
         problem = cp.Problem(cp.Minimize(final_loss), cons)
@@ -226,7 +317,7 @@ class WassersteinDRO(BaseLinearDRO):
         return component_X + component_Y
         
 
-    def lipschitz_norm(self):
+    def _lipschitz_norm(self):
         """
         Computing the Lipschitz norm of the loss function
 
@@ -238,28 +329,75 @@ class WassersteinDRO(BaseLinearDRO):
             return 1
         else:
             return np.inf
+    
+    def worst_distribution(self, X: np.ndarray, y: np.ndarray, 
+                      compute_type: str, gamma: float = 0) -> Dict[str, Any]:
+        """Compute worst-case distribution under Wasserstein ambiguity set.
+
+        :param X: Input feature matrix. Shape: (n_samples, n_features)
+            Must satisfy ``n_features == input_dim``
+        :type X: numpy.ndarray
+
+        :param y: Target vector. Shape: (n_samples,)
+
+            - Classification: binary labels (-1/1)
+
+            - Regression: continuous values
+
+        :type y: numpy.ndarray
+
+        :param compute_type: Computation methodology. Options:
+
+            - ``'asymp'``: Asymptotic approximation (faster, less accurate)
+                *Supported models*: ``['svm', 'logistic', 'lad']``
+
+            - ``'exact'``: Exact dual solution (slower, precise)
+
+        :type compute_type: str
+        :param gamma: Regularization parameter for asymptotic method. 
+            Must satisfy :math:`\gamma > 0` when ``compute_type='asymp'``.
+            Defaults to 0.
+        :type gamma: float
+
+        :return: Dictionary containing:
+
+            - ``'sample_pts'``: Worst-case sample locations. Shape: (m, n_features)
+
+            - ``'weights'``: Probability weights. Shape: (m,) with :math:`\sum w_i = 1`
+
+        :rtype: dict[str, Any]
+
+        :raises ValueError:
+
+            - If ``compute_type='asymp'`` with ``model_type='ols'``
+
+            - If ``compute_type='asymp'`` and ``kappa == 'inf'``
+
+            - If gamma ≤ 0 when required
+
+        :raises TypeError:
+
+            - If input dimensions mismatch
         
-
-    def worst_distribution(self, X: np.ndarray, y: np.ndarray, compute_type: str, gamma: float = 0) -> Dict[str, Any]:
-        """Compute the worst-case distribution based on Wasserstein Distance
         
-        Args:
-            X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
-            compute_type (str): type of approach that computes the worst case distribution, 'asymp' refers to computing via [1] (which is asymptotically, not exact and not exact and cannot do when kappa = \infty); only suitable for 'lad', 'svm', 'logistic'. 'exact' refers to computing via [2].
-            gamma (float): adjust parameter when compute_type == 'asymp', positive
-
-        Returns:
-            Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
-
-        Raises:
-            Warnings: when ols is set for the compute_type == 1
-            WassersteinDROError: the compute_type == 1 does not support kappa = infty.
+        Example:
+            >>> X, y = np.random.randn(100, 3), np.random.randint(0,2,100)
+            >>> model = WassersteinDRO(model_type='svm', input_dim=3)
+            >>> wc_dist = model.worst_distribution(X, y, 'asymp', gamma=0.1)
+            >>> wc_dist['weights'].sum()  # Approximately 1.0
+        
+        .. note::
+            - Asymptotic method ignores curvature regularization (κ=infty)
+            - Exact method requires ``solver='MOSEK'`` for conic constraints
 
         Reference of Worst-case Distribution:
+
         [1] SVM / Logistic / LAD: Theorem 20 (ii) in https://jmlr.org/papers/volume20/17-633/17-633.pdf, where eta is the theta in eq(27) and gamma = 0 in that equation.
+
         [2] In all cases, we use a reduced dual case (e.g., Remark 5.2 of https://arxiv.org/pdf/2308.05414) to compute their worst-case distribution.
+
         [3] General Worst-case Distributions can be found in: https://pubsonline.informs.org/doi/abs/10.1287/moor.2022.1275, where norm_theta is lambda* here.
+
         """
 
         if self.model_type == 'ols' and compute_type == 'asymp':
@@ -342,7 +480,7 @@ class WassersteinDRO(BaseLinearDRO):
                 alpha = cp.Variable(sample_size, nonneg = True)
 
                 # svm / logistic L = 1
-                dual_loss = self.lipschitz_norm() * eta * norm_theta + cp.sum(cp.multiply(1 - alpha, self._loss(X, y))) / sample_size + cp.sum(cp.multiply(alpha, self._loss(X, -y))) / sample_size
+                dual_loss = self._lipschitz_norm() * eta * norm_theta + cp.sum(cp.multiply(1 - alpha, self._loss(X, y))) / sample_size + cp.sum(cp.multiply(alpha, self._loss(X, -y))) / sample_size
                 cons = [alpha <= 1, eta + self.kappa * cp.sum(alpha) / sample_size == self.eps - gamma]
                 problem = cp.Problem(cp.Maximize(dual_loss), cons)
                 problem.solve(solver = self.solver)
@@ -414,26 +552,75 @@ class WassersteinDROsatisficing(BaseLinearDRO):
     .. math::
         d((X_1, Y_1), (X_2, Y_2)) = (\|\Sigma^{1/2} (X_1 - X_2)\|_p)^{square} + \kappa |Y_1 - Y_2|,
 
-    Attributes:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator ('svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression for OLS, 'lad' for Linear Regression for LAD), default='svm'.
-        fit_intercept (bool): Whether to calculate the intercept for this model, default=True.  If set to False, no intercept will be used in calculations (i.e. data is expected to be centered). 
-        solver (str): Optimization solver to solve the problem, default = 'MOSEK'
-        target ratio (float): target ratio (required to be >=1, against the empirical objective).
- 
     Reference: <https://pubsonline.informs.org/doi/10.1287/opre.2021.2238>
 
     """
+    def __init__(self, input_dim: int, model_type: str, 
+                fit_intercept: bool = True, solver: str = 'MOSEK'):
+        """Initialize Robust satisficing version of Wasserstein DRO.
 
-    def __init__(self, input_dim: int, model_type: str, fit_intercept: bool = True, solver: str = 'MOSEK'):
+        :param input_dim: Feature space dimension. Must satisfy :math:`d \geq 1`
+
+        :type input_dim: int
+
+        :param model_type: Base model architecture. Supported:
+
+            - ``'svm'``
+
+            - ``'logistic'``
+
+            - ``'ols'``
+
+            - ``'lad'``
+
+        :type model_type: str
+        :param fit_intercept: Whether to learn intercept :math:`b`.
+            Disable for standardized data. Defaults to True.
+        :type fit_intercept: bool
+
+        :param solver: Convex optimization solver. Options:
+
+            - ``'MOSEK'`` (commercial, recommended)
+
+        :type solver: str
+
+        :raises ValueError:
+
+            - If input_dim < 1
+
+            - If model_type not in allowed set
+
+            - If invalid solver selected
+
+        Initialization Defaults:
+            1. Cost matrix initialized as identity :math:`I_d`
+            2. Target ratio :math:`\tau = 1/0.8` (20% performance margin)
+            3. Wasserstein order :math:`p=1` (earth mover's distance)
+
+        Example:
+            >>> model = WassersteinDROsatisficing(
+            ...     input_dim=5,
+            ...     model_type='svm',
+            ...     solver='ECOS'
+            ... )
+            >>> model.cost_matrix.shape  # (5, 5)
+
+        """
+        # Parameter validation
+        if input_dim < 1:
+            raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
+        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
+            raise ValueError(f"Invalid model_type: {model_type}")
+
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
-        self.cost_matrix = np.eye(input_dim)
+        
+        # Initialize metric components
+        self.cost_matrix = np.eye(input_dim)  
         self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
-        # target that the robust error need to achieve
-        self.target_ratio = 1 / 0.8
-        self.eps = 100
-        self.p = 1
-        self.kappa = 1
+        self.target_ratio = 1 / 0.8  
+        self.eps = 100  
+        self.p = 1 
+        self.kappa = 1  
 
     def update(self, config: Dict[str, Any]) -> None:
         if 'cost_matrix' in config.keys():
@@ -490,6 +677,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
 
         Args:
             X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
+
             y (np.ndarray): Target vector with shape (n_samples,).
 
         Returns:
@@ -542,12 +730,13 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             return cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
             
 
-    def fit_oracle(self, X: np.ndarray, y: np.ndarray) -> float:
+    def fit_oracle(self, X, y):
         """
         Depreciated, find the optimal thet given the ambiguity constraint.
 
         Args:
             X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
+
             y (np.ndarray): Target vector with shape (n_samples,).
 
         Returns:

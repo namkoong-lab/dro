@@ -2,7 +2,8 @@ LICENSE
 MANIFEST.in
 README.md
 setup.py
-doc/__init__.py
+docs/__init__.py
+docs/conf.py
 dro/README.md
 dro/__init__.py
 dro.egg-info/PKG-INFO
@@ -22,6 +23,7 @@ dro/src/linear_model/OR_Wasserstein_DRO.py
 dro/src/linear_model/Wasserstein_DRO.py
 dro/src/linear_model/__init__.py
 dro/src/linear_model/base.py
+dro/src/linear_model/bayesian_dro.py
 dro/src/linear_model/chi2_dro.py
 dro/src/linear_model/conditional_dro.py
 dro/src/linear_model/cvar_dro.py
@@ -29,8 +31,11 @@ dro/src/linear_model/hr_dro.py
 dro/src/linear_model/kl_dro.py
 dro/src/linear_model/marginal_dro.py
 dro/src/linear_model/mmd_dro.py
+dro/src/linear_model/mot_dro.py
+dro/src/linear_model/or_wasserstein_dro.py
 dro/src/linear_model/sinkhorn_dro.py
 dro/src/linear_model/tv_dro.py
+dro/src/linear_model/wasserstein_dro.py
 dro/src/neural_model/__init__.py
 dro/src/neural_model/base_nn.py
 dro/src/neural_model/fdro_nn.py

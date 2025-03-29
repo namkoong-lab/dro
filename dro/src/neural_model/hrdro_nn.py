@@ -7,27 +7,7 @@ from typing import Optional, Dict, Union, List
 from dro.src.neural_model.base_nn import BaseNNDRO, DROError
 
 class HRNNDRO(BaseNNDRO):
-    """Huberian Robust Distributionally Robust Optimization Model
-
-    Args:
-        input_dim: Input feature dimension
-        num_classes: Number of output classes
-        task_type: "classification" or "regression"
-        model_type: Base model architecture ('mlp', 'resnet', etc)
-        alpha: Robustness to distribution shift ($\alpha$ > 0)
-        r: Robustness to statistical error (r > 0)
-        epsilon: Adversarial perturbation bound (ε ≥ 0)
-        learning_approach: Robust optimization method ("HR" or "HD")
-        adversarial_params: Dictionary containing:
-
-            - steps: Number of PGD steps
-            - step_size: PGD step size
-            - norm: Adversarial norm ("l2" or "l-inf")
-            - method: Defense method ("PGD" or "FFGSM")
-            
-        train_batch_size: Default training batch size
-        device: Computation device
-
+    """Holistic Robust DRO.
     """
 
     def __init__(
@@ -44,7 +24,102 @@ class HRNNDRO(BaseNNDRO):
         train_batch_size: int = 64,
         device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ):
-        # Initialize base model
+        """Initialize Holistic Robust DRO.
+
+        :param input_dim: Input feature dimension :math:`d \geq 1`
+
+        :type input_dim: int
+
+        :param num_classes: Output dimension:
+
+            - Classification: :math:`K \geq 2` (number of classes)
+
+            - Regression: Automatically set to 1
+
+        :type num_classes: int
+
+        :param task_type: Learning task type. Supported:
+
+            - ``'classification'``: Cross-entropy loss
+
+            - ``'regression'``: MSE loss
+
+        :type task_type: str
+
+        :param model_type: Neural architecture type. Supported:
+
+            - ``'mlp'``: Multi-Layer Perceptron (default)
+
+            - ``linear``
+
+            - ``resnet``
+
+            - ``alexnet``
+
+        :type model_type: str
+
+        :param device: Target computation device, defaults to CPU
+        
+        :type device: torch.device
+
+        :param alpha: Robustness regularization coefficient :math:`\\alpha > 0`,
+            controls model conservativeness. Defaults to 0.1.
+        
+        :type alpha: float
+        
+        :param r: Statistical error radius :math:`r > 0` for distribution shift,
+            defaults to 0.01.
+        
+        :type r: float
+        
+        :param epsilon: Contamination ratio :math:`\\epsilon \in [0,1)`,
+            proportion of adversarial samples. Defaults to 0.1.
+        
+        :type epsilon: float
+
+        :param learning_approach: Robust optimization method. Options:
+
+            - ``"HR"``: Huberian Robust optimization
+
+            - ``"HD"``: Hybrid DRO (default)
+
+        :type learning_approach: str
+
+        :param adversarial_params: Adversarial training configuration:
+            Defaults to ``{"steps":7, "step_size":0.03, "norm":"l-inf", "method":"PGD"}``
+
+        :type adversarial_params: dict
+
+        :param train_batch_size: Training batch size :math:`B \geq 1`,
+            defaults to 64.
+
+        :type train_batch_size: int
+        
+        
+        :raises ValueError:
+            - If alpha ≤ 0
+            - If r ≤ 0
+            - If ε ∉ [0,1)
+            - If invalid learning_approach
+
+        Example (CIFAR-10)::
+            >>> adv_params = {"steps":5, "norm":"l2", "method":"PGD"}
+            >>> model = HRNNDRO(
+            ...     input_dim=3072, 
+            ...     num_classes=10,
+            ...     alpha=0.5,
+            ...     epsilon=0.2,
+            ...     adversarial_params=adv_params
+            ... )
+        """
+        # Parameter validation
+        if alpha <= 0:
+            raise ValueError(f"alpha must be >0, got {alpha}")
+        if r <= 0:
+            raise ValueError(f"r must be >0, got {r}")
+        if not 0 <= epsilon < 1:
+            raise ValueError(f"epsilon in [0,1), got {epsilon}")
+            
         super().__init__(
             input_dim=input_dim,
             num_classes=num_classes,
@@ -70,6 +145,7 @@ class HRNNDRO(BaseNNDRO):
         }
         self._init_adversarial_attack()
         self._init_optimization_problem()
+
 
     def _init_adversarial_attack(self):
         """Initialize adversarial attack generator"""
@@ -139,7 +215,7 @@ class HRNNDRO(BaseNNDRO):
             constraints
         )
 
-    def criterion(self, outputs: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+    def _criterion(self, outputs: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
         """Compute robust loss with dynamic batch handling"""
         # Generate adversarial examples
         if self.epsilon > 0:
@@ -187,6 +263,7 @@ class HRNNDRO(BaseNNDRO):
         verbose: bool = True
     ) -> Dict[str, List[float]]:
         """Enhanced training loop with adversarial training"""
+        
         # Use specified batch size or default
         batch_size = batch_size or self.train_batch_size
         

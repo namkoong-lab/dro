@@ -28,34 +28,116 @@ class DataValidationError(DROError):
     pass
 
 class Linear(torch.nn.Module):
-    """Linear Model
-    
-    Bases: :py:class:`torch.nn.Module`
+    """Fully-connected neural layer for classification/regression.
+
+    Implements the linear transformation:
+
+    .. math::
+        Y = XW^\\top + b
+
+    where:
+
+        - :math:`X \in \mathbb{R}^{N \\times d}`: input features
+
+        - :math:`W \in \mathbb{R}^{K \\times d}`: weight matrix
+
+        - :math:`b \in \mathbb{R}^K`: bias term
+        
+        - :math:`Y \in \mathbb{R}^{N \\times K}`: output logits
+
+    :param input_dim: Dimension of input features :math:`d`. Must be ≥ 1.
+    :type input_dim: int
+    :param num_classes: Number of output classes :math:`K`. 
+        Use 1 for binary classification.
+    :type num_classes: int
+
+    Example::
+        >>> model = Linear(input_dim=5, num_classes=3)
+        >>> x = torch.randn(32, 5)  # batch_size=32
+        >>> y = model(x)
+        >>> y.shape
+        torch.Size([32, 3])
+
     """
-    
-    def __init__(self, 
-                 input_dim: int, 
-                 num_classes: int):
+    def __init__(self, input_dim: int, num_classes: int):
         super().__init__()
+        if input_dim < 1:
+            raise ValueError(f"input_dim must be ≥1, got {input_dim}")
+        if num_classes < 1:
+            raise ValueError(f"num_classes must be ≥1, got {num_classes}")
+            
         self.layer1 = torch.nn.Linear(input_dim, num_classes)
         
     def forward(self, X: torch.Tensor) -> torch.Tensor:
-        return self.layer1(X)
+        """Forward pass of the linear layer.
         
+        :param X: Input tensor of shape :math:`(N, d)`
+            where :math:`N` = batch size
+        :type X: torch.Tensor
+        :return: Output logits of shape :math:`(N, K)`
+        :rtype: torch.Tensor
+        """
+        return self.layer1(X)
+
 
 class MLP(torch.nn.Module):
-    """Multi-Layer Perceptron for neural network-based DRO.
+    """Multi-Layer Perceptron with dropout regularization.
     
-    Bases: :py:class:`torch.nn.Module`
+    Implements the forward computation:
+
+    .. math::
+        h_1 &= \sigma(W_1 x + b_1) \\\\
+        h_2 &= \sigma(W_2 h_1 + b_2) \\\\
+        y &= W_o h_2 + b_o
+
+    where:
+        - :math:`\sigma`: activation function (default: ReLU)
+        - :math:`p \in [0,1)`: dropout probability
+        - :math:`x \in \mathbb{R}^d`: input features
+        - :math:`y \in \mathbb{R}^K`: output logits
+
+    :param input_dim: Input feature dimension :math:`d \geq 1`
+    :type input_dim: int
+    :param num_classes: Output dimension :math:`K \geq 1`
+    :type num_classes: int
+    :param hidden_units: Hidden layer dimension :math:`h \geq 1`, 
+        defaults to 16
+    :type hidden_units: int
+    :param activation: Nonlinear activation module, 
+        defaults to :py:class:`torch.nn.ReLU`
+    :type activation: torch.nn.Module
+    :param dropout_rate: Dropout probability :math:`p \in [0,1)`, 
+        defaults to 0.1
+    :type dropout_rate: float
+
+    Example::
+        >>> model = MLP(
+        ...     input_dim=64,
+        ...     num_classes=10,
+        ...     hidden_units=32,
+        ...     activation=nn.GELU(),
+        ...     dropout_rate=0.2
+        ... )
+        >>> x = torch.randn(128, 64)  # batch_size=128
+        >>> y = model(x)
+        >>> y.shape
+        torch.Size([128, 10])
+
     """
-    
-    def __init__(self, 
-                 input_dim: int, 
-                 num_classes: int, 
-                 hidden_units: int = 16, 
-                 activation: torch.nn.Module = nn.ReLU(), 
-                 dropout_rate: float = 0.1):
+    def __init__(self, input_dim: int, num_classes: int, 
+                hidden_units: int = 16, 
+                activation: torch.nn.Module = nn.ReLU(),
+                dropout_rate: float = 0.1):
         super().__init__()
+        if input_dim < 1:
+            raise ValueError(f"input_dim must be ≥1, got {input_dim}")
+        if num_classes < 1:
+            raise ValueError(f"num_classes must be ≥1, got {num_classes}")
+        if hidden_units < 1:
+            raise ValueError(f"hidden_units must be ≥1, got {hidden_units}")
+        if not 0 <= dropout_rate < 1:
+            raise ValueError(f"dropout_rate ∈ [0,1), got {dropout_rate}")
+
         self.layer1 = nn.Linear(input_dim, hidden_units)
         self.activation = activation
         self.dropout = nn.Dropout(dropout_rate)
@@ -63,38 +145,122 @@ class MLP(torch.nn.Module):
         self.output = nn.Linear(hidden_units, num_classes)
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
+        """Forward propagation with dropout regularization.
+        
+        :param X: Input tensor of shape :math:`(N, d)`
+            where :math:`N` = batch size
+        :type X: torch.Tensor
+        :return: Output logits of shape :math:`(N, K)`
+        :rtype: torch.Tensor
+        
+        """
         X = self.activation(self.layer1(X.float()))
         X = self.dropout(X)
         X = self.activation(self.layer2(X))
         return self.output(X)
 
+
 class BaseNNDRO:
-    """Neural Network Distributionally Robust Optimization base model.
+    """Neural Network-based Distributionally Robust Optimization (DRO) framework.
     
-    Supports both classification and regression tasks with various architectures.
+    Implements the core DRO optimization objective:
+
+    .. math::
+        \\min_{\\theta} \\sup_{Q \\in \\mathcal{B}_\\epsilon(P)} \\mathbb{E}_Q[\\ell(f_\\theta(X), y)]
+
+    where:
+
+        - :math:`f_\theta`: Parametric neural network
+
+        - :math:`\mathcal{B}_\epsilon(P)`: Wasserstein ambiguity set
+
     """
-    
+
     def __init__(self, 
-                 input_dim: int, 
-                 num_classes: int, 
-                 task_type: str = "classification",
-                 model_type: str = 'mlp', 
-                 device: torch.device = device):
+                input_dim: int, 
+                num_classes: int, 
+                task_type: str = "classification",
+                model_type: str = 'mlp', 
+                device: torch.device = torch.device("cpu")):
+        """Initialize neural DRO framework.
+
+        :param input_dim: Input feature dimension :math:`d \geq 1`
+        :type input_dim: int
+        :param num_classes: Output dimension:
+            - Classification: :math:`K \geq 2` (number of classes)
+            - Regression: Automatically set to 1
+        :type num_classes: int
+        :param task_type: Learning task type. Supported:
+            - ``'classification'``: Cross-entropy loss
+            - ``'regression'``: MSE loss
+        :type task_type: str
+        :param model_type: Neural architecture type. Supported:
+
+            - ``'mlp'``: Multi-Layer Perceptron (default)
+
+            - ``linear``
+
+            - ``resnet``
+
+            - ``alexnet``
+
+        :type model_type: str
+        :param device: Target computation device, defaults to CPU
+        :type device: torch.device
+        :raises ValueError:
+            - If input_dim < 1
+            - If classification task with num_classes < 2
+            - If unsupported model_type
+
+        Example (Classification)::
+            
+            >>> model = BaseNNDRO(
+            ...     input_dim=64,
+            ...     num_classes=10,
+            ...     task_type="classification",
+            ...     model_type="mlp",
+            ...     device=torch.device("cuda")
+            ... )
+
+        Example (Regression)::
+        
+            >>> model = BaseNNDRO(
+            ...     input_dim=8,
+            ...     num_classes=5,  # Auto-override to 1
+            ...     task_type="regression"
+            ... )
+
+        """
+        # Parameter validation
+        if input_dim < 1:
+            raise ValueError(f"input_dim must be ≥1, got {input_dim}")
+        if task_type == "classification" and num_classes < 2:
+            raise ValueError(f"num_classes must be ≥2 for classification, got {num_classes}")
+
         self.input_dim = input_dim
-        self.num_classes = num_classes
+        self.num_classes = num_classes if task_type == "classification" else 1
         self.device = device
         self.model_type = model_type
-        
-        assert task_type in ["classification", "regression"]
         self.task_type = task_type
-        if self.task_type == "regression":
-            self.num_classes = 1    
-        
+
         self._initialize_model(model_type)
         self.model.to(self.device)
 
     def _initialize_model(self, model_type: str):
-        """Initialize the specified model architecture."""
+        """Initialize the specified model architecture.
+        
+        .param model_type: Supported:
+
+            - ``mlp``
+
+            - ``linear``
+
+            - ``resnet``
+
+            - ``alexnet``
+
+        .type model_type: str
+        """
         if model_type == 'mlp':
             self.model = MLP(self.input_dim, self.num_classes)
         elif model_type == 'linear':
@@ -127,33 +293,86 @@ class BaseNNDRO:
                     f"Input resolution insufficient. Minimum: {MIN_IMAGE_SIZE}x{MIN_IMAGE_SIZE}. "
                     f"Received: {h}x{w}."
                 )
-    def criterion(self, outputs, labels):
+    
+    def _criterion(self, outputs, labels):
         if self.task_type == "classification":
             return nn.CrossEntropyLoss()(outputs, labels)
         else:
             return nn.MSELoss()(outputs, labels)
 
+
     def fit(self, 
-           X: Union[np.ndarray, torch.Tensor], 
-           y: Union[np.ndarray, torch.Tensor], 
-           train_ratio: float = DEFAULT_TRAIN_RATIO,
-           lr: float = 1e-3,
-           batch_size: int = 32,
-           epochs: int = 100,
-           verbose: bool = True) -> Dict[str, List[float]]:
-        """Complete training implementation with early stopping and model checkpointing.
+        X: Union[np.ndarray, torch.Tensor], 
+        y: Union[np.ndarray, torch.Tensor], 
+        train_ratio: float = DEFAULT_TRAIN_RATIO,
+        lr: float = 1e-3,
+        batch_size: int = 32,
+        epochs: int = 100,
+        verbose: bool = True) -> Dict[str, List[float]]:
+        """Train neural DRO model with Wasserstein robust optimization.
         
-        Args:
-            X: Input features
-            y: Target labels
-            train_ratio: Ratio of training data split
-            lr: Learning rate
-            batch_size: Training batch size
-            epochs: Maximum number of epochs
-            verbose: Whether to print training progress
+        :param X: Input feature matrix/tensor. Shape: 
+
+            - :math:`(N, d)` where :math:`N` = total samples
+
+            - Supports both numpy arrays and torch tensors
+
+        :type X: Union[numpy.ndarray, torch.Tensor]
+
+        :param y: Target labels. Shape:
+
+            - Classification: :math:`(N,)` (class indices). Note that y in {0,1} here.
+
+            - Regression: :math:`(N,)` or :math:`(N, 1)`
+
+        :type y: Union[numpy.ndarray, torch.Tensor]
+        :param train_ratio: Train-validation split ratio :math:`\in (0,1)`, 
+            defaults to 0.8
+        :type train_ratio: float
+        :param lr: Learning rate :math:`\eta > 0`, defaults to 1e-3
+        :type lr: float
+        :param batch_size: Mini-batch size :math:`B \geq 1`, 
+            defaults to 32
+        :type batch_size: int
+        :param epochs: Maximum training epochs :math:`T \geq 1`, 
+            defaults to 100
+        :type epochs: int
+        :param verbose: Whether to print epoch-wise metrics, 
+            defaults to True
+        :type verbose: bool
+
+        :return: Dictionary containing:
+
+            - ``'acc, f1'``: for classification
+
+            - ``'mse'``: for regression
+
+        :rtype: Dict[str, List[float]]
+
+        :raises ValueError:
+
+            - If input dimensions mismatch
+
+            - If train_ratio ∉ (0,1)
+
+            - If batch_size > dataset size
+
+            - If learning rate ≤ 0
+
+        Example (Classification)::
             
-        Returns:
-            Training metrics dictionary
+            >>> X, y = np.random.randn(1000, 64), np.random.randint(0,2,1000)
+            >>> model = BaseNNDRO(input_dim=64, num_classes=2)
+            >>> metrics = model.fit(X, y, lr=5e-4, epochs=50)
+            >>> plt.plot(metrics['val_accuracy'])
+
+        Example (Regression)::
+        
+            >>> X = torch.randn(500, 8)
+            >>> y = X @ torch.randn(8,1) + 0.1*torch.randn(500,1)
+            >>> model = BaseNNDRO(input_dim=8, task_type='regression')
+            >>> model.fit(X, y.squeeze(), batch_size=64)
+
         """
         # Convert and validate input data
         X = self._convert_to_tensor(X)
@@ -188,7 +407,7 @@ class BaseNNDRO:
                     optimizer.zero_grad()
                     outputs = self.model(inputs)
                     self.current_inputs = inputs # this is for HRNNDRO
-                    loss = self.criterion(outputs, labels)
+                    loss = self._criterion(outputs, labels)
                     loss.backward()
                     optimizer.step()
                     

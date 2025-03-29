@@ -4,22 +4,7 @@ import numpy as np
 from dro.src.neural_model.base_nn import BaseNNDRO, DROError
 
 class WNNDRO(BaseNNDRO):
-    r"""Wasserstein Distributionally Robust Optimization Model
-    
-    Args:
-        input_dim: Input feature dimension
-        num_classes: Number of output classes
-        task_type: "classification" or "regression"
-        model_type: Base model architecture ('mlp', 'resnet', etc)
-        epsilon: Adversarial perturbation bound ($\epsilon \geq 0$)
-        adversarial_params: 
-
-            - adversarial_steps: Number of PGD steps
-            - adversarial_step_size: PGD step size
-            - advresarial_norm: Adversarial norm ("l2" or "l-inf")
-            - adversarial_method: Defense method ("PGD" or "FFGSM")
-
-        device: Computation device
+    r"""Wasserstein Neural DRO with Adversarial Robustness. 
     """
 
     def __init__(
@@ -35,22 +20,92 @@ class WNNDRO(BaseNNDRO):
         adversarial_method: str = 'PGD',
         device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ):
-        # Initialize base model
-        super().__init__(
-            input_dim=input_dim,
-            num_classes=num_classes,
-            task_type=task_type,
-            model_type=model_type,
-            device=device
-        )
+        """Initialize Wasserstein DRO model with adversarial training.
+
+        :param input_dim: Input feature dimension :math:`d \geq 1`
+        :type input_dim: int
+        :param num_classes: Output dimension:
+            - Classification: :math:`K \geq 2` (number of classes)
+            - Regression: Automatically set to 1
+        :type num_classes: int
+        :param task_type: Learning task type. Supported:
+            - ``'classification'``: Cross-entropy loss
+            - ``'regression'``: MSE loss
+        :type task_type: str
+        :param model_type: Neural architecture type. Supported:
+
+            - ``'mlp'``: Multi-Layer Perceptron (default)
+
+            - ``linear``
+
+            - ``resnet``
+
+            - ``alexnet``
+
+        :type model_type: str
+        :param device: Target computation device, defaults to CPU
+        :type device: torch.device
+
+        :param epsilon: Wasserstein radius :math:`\epsilon \geq 0` controlling distributional robustness.
+            Larger values increase model conservativeness. Defaults to 0.1.
+        :type epsilon: float
+        :param adversarial_steps: Number of PGD attack iterations :math:`T_{adv} \geq 1`.
+            Defaults to 10.
+        :type adversarial_steps: int
+        :param adversarial_step_size: PGD step size :math:`\eta_{adv} > 0`.
+            Defaults to 0.02.
+        :type adversarial_step_size: float
+
+        :param adversarial_norm: Adversarial perturbation norm type. Options:
+
+            - ``'l2'``: :math:`\ell_2`-ball constraint
+
+            - ``'l-inf'``: :math:`\ell_\infty`-ball constraint
+
+        :type adversarial_norm: str
+
+        :param adversarial_method: Adversarial example generation method. Options:
+
+            - ``'PGD'``: Projected Gradient Descent (default)
+
+            - ``'FGSM'``: Fast Gradient Sign Method
+
+        :type adversarial_method: str
         
-        # Robustness parameters
-        self.epsilon = epsilon
-        self.adversarial_steps = adversarial_steps
-        self.adversarial_step_size = adversarial_step_size
-        self.adversarial_norm = adversarial_norm
-        self.adversarial_method = adversarial_method
         
+        :raises ValueError:
+            - If epsilon < 0
+            - If adversarial_steps < 1
+            - If adversarial_step_size ≤ 0
+            - If invalid norm/method type
+
+        Example (MNIST)::
+            >>> model = WNNDRO(
+            ...     input_dim=784,
+            ...     num_classes=10,
+            ...     epsilon=0.5,
+            ...     adversarial_norm="l-inf",
+            ...     adversarial_steps=7
+            ... )
+        
+        """
+        # Parameter validation
+        if epsilon < 0:
+            raise ValueError(f"epsilon must be ≥0, got {epsilon}")
+        if adversarial_steps < 1:
+            raise ValueError(f"adversarial_steps must be ≥1, got {adversarial_steps}")
+        if adversarial_step_size <= 0:
+            raise ValueError(f"adversarial_step_size must be >0, got {adversarial_step_size}")
+
+        super().__init__(input_dim, num_classes, task_type, model_type, device)
+        
+        # Initialize adversarial components
+        self.epsilon = epsilon                  
+        self.adversarial_steps = adversarial_steps      
+        self.adversarial_step_size = adversarial_step_size  
+        self.adversarial_norm = adversarial_norm        
+        self.adversarial_method = adversarial_method    
+
         self._init_adversarial_attack()
         
     def _init_adversarial_attack(self):
@@ -67,7 +122,7 @@ class WNNDRO(BaseNNDRO):
             steps=self.adversarial_steps
         )
 
-    def criterion(self, outputs: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+    def _criterion(self, outputs: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
         """Compute robust loss with dynamic batch handling"""
         # Generate adversarial examples
         if self.epsilon > 0:

@@ -13,6 +13,16 @@ Classifier: Operating System :: POSIX :: Linux
 Requires-Python: >=3
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: scikit-learn
+Requires-Dist: torch
+Requires-Dist: scipy
+Requires-Dist: cvxpy
+Requires-Dist: torchvision
+Requires-Dist: ucimlrepo
+Requires-Dist: matplotlib
+Requires-Dist: torchattacks
 
 ## DRO: A Package for Distributionally Robust Optimization in Machine Learning
 

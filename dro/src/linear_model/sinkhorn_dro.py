@@ -23,7 +23,7 @@ class LinearModel(nn.Module):
     """
     def __init__(self, input_dim: int, output_dim: int = 1, bias: bool = True):
         super().__init__()
-        self.linear = nn.Linear(input_dim, output_dim, bias=True)
+        self.linear = nn.Linear(input_dim, output_dim, bias=bias)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass of the linear model."""
