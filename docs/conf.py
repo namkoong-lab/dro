@@ -6,6 +6,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.abspath('../dro/src'))  
+print(sys.path)
 
 project = 'dro'
 copyright = '2025, Jiashuo Liu, Tianyu Wang'
@@ -29,7 +30,7 @@ autodoc_type_aliases = {
 }
 
 autodoc_default_options = {
-    "no-autoparams": True 
+    "no-autoparams": True
 }
 
 intersphinx_mapping = {
@@ -93,4 +94,5 @@ nitpick_ignore = [
     ('py:exc', 'WassersteinDROError'),
     ('py:exc', 'DROError'),
     ('py:exc', 'CVaRDROError'),
+    ('py:exc', 'LinearModel')
 ]

@@ -88,13 +88,13 @@ Linear DRO Methods
    :members:
    :undoc-members:
    :show-inheritance: 
-   :exclude-members: SinkhornDROError
+   :exclude-members: SinkhornDROError, LinearModel
 
 .. automodule:: dro.src.linear_model.wasserstein_dro
    :members:
    :undoc-members:
    :show-inheritance: 
-   :exclude-members: WassersteinDROError
+   :exclude-members: WassersteinDROError, WassersteinDROSatisificingError
 
 .. automodule:: dro.src.linear_model.bayesian_dro
    :members:

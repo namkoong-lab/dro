@@ -76,7 +76,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#worst-case-distribution">Worst case Distribution</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#robust-satisficing-version">Robust Satisficing Version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#robust-satisficing-version">Robust Satisficing Version</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Hyperparameter</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>
@@ -172,11 +175,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">ORWDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.LinearModel"><code class="docutils literal notranslate"><span class="pre">LinearModel</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.LinearModel.forward"><code class="docutils literal notranslate"><span class="pre">LinearModel.forward()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.LinearModel.training"><code class="docutils literal notranslate"><span class="pre">LinearModel.training</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.predict()</span></code></a></li>
@@ -187,11 +185,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.lipschitz_norm"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.lipschitz_norm()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROSatisificingError"><code class="docutils literal notranslate"><span class="pre">WassersteinDROSatisificingError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit()</span></code></a></li>
@@ -211,40 +207,27 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/api.html#module-dro.src.neural_model.base_nn">Neural Network DRO Methods</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.Linear"><code class="docutils literal notranslate"><span class="pre">Linear</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.Linear.forward"><code class="docutils literal notranslate"><span class="pre">Linear.forward()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.Linear.training"><code class="docutils literal notranslate"><span class="pre">Linear.training</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.MLP.forward"><code class="docutils literal notranslate"><span class="pre">MLP.forward()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.MLP.training"><code class="docutils literal notranslate"><span class="pre">MLP.training</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.criterion()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.predict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.score()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.f1score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.f1score()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.fdro_nn.Chi2NNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO.criterion()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.fdro_nn.CVaRNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO.criterion()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO"><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.criterion()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.predict()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/api.html#dro.src.neural_model.wdro_nn.WNNDRO.criterion"><code class="docutils literal notranslate"><span class="pre">WNNDRO.criterion()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/api.html#dro.src.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -278,58 +261,67 @@
              
   <section class="tex2jax_ignore mathjax_ignore" id="wasserstein-dro">
 <h1>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Permalink to this heading"></a></h1>
-<p>For <span class="math notranslate nohighlight">\(Z_1 = (X_1, Y_1), Z_2 = (X_2, Y_2)\)</span>,</p>
-<p><span class="math notranslate nohighlight">\(W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)]\)</span></p>
-<p><span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|\)</span>,</p>
-<p>And the norm is defined on the product space <span class="math notranslate nohighlight">\(\mathcal{X} \times \mathbb{R}\)</span> by:</p>
+<p>In Wasserstein DRO,
+<span class="math notranslate nohighlight">\(Q(d, \epsilon) = \{Q: W(Q, \hat P)\leq \epsilon\}\)</span>.</p>
+<p>Specifically, Wasserstein distance is defined as follows:
+For <span class="math notranslate nohighlight">\(Z_1 = (X_1, Y_1), Z_2 = (X_2, Y_2)\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[
-\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.
+W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)],
 \]</div>
-<p>Here <span class="math notranslate nohighlight">\(\|x\|_{\Sigma, p} = \|\Sigma^{1/2}x\|_p\)</span>. Furthermore, we can show that the dual norm <span class="math notranslate nohighlight">\(\|(\cdot, \cdot)\|_*\)</span> is given by:</p>
+<p>where for <code class="docutils literal notranslate"><span class="pre">lad</span></code>, <code class="docutils literal notranslate"><span class="pre">svm</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic</span></code>, the inner distance is captured by the norm: <span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|.\)</span>
+For <code class="docutils literal notranslate"><span class="pre">ols</span></code>, the inner distance is captured by the norm square:
+<span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|\)</span>.</p>
+<p>No matter in each case, the norm is defined on the product space <span class="math notranslate nohighlight">\(\mathcal{X} \times \mathbb{R}\)</span> by:
+$<span class="math notranslate nohighlight">\(
+\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.
+\)</span><span class="math notranslate nohighlight">\(
+Here \)</span>|x|_{\Sigma, p} = |\Sigma^{1/2}x|<em>p<span class="math notranslate nohighlight">\(. Furthermore, we can show that the dual norm \)</span>|(\cdot, \cdot)|</em>*$ is given by:</p>
 <div class="math notranslate nohighlight">
 \[
 \|(u,v)\|_* = \max\{\|u\|_{\Sigma, q}, \frac{v}{\kappa}\}
 \]</div>
 <p>with <span class="math notranslate nohighlight">\(\frac{1}{p} + \frac{1}{q} = 1\)</span>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
+<p>The norm is defined by the parameter tuple <span class="math notranslate nohighlight">\((\Sigma, p, \kappa)\)</span>,</p>
 <section id="standard-version">
 <h2>Standard Version<a class="headerlink" href="#standard-version" title="Permalink to this heading"></a></h2>
 <section id="hyperparameter">
 <h3>Hyperparameter<a class="headerlink" href="#hyperparameter" title="Permalink to this heading"></a></h3>
-<p>In the basic Wasserstein-DRO model,</p>
 <ul class="simple">
-<li><p>we apply <span class="math notranslate nohighlight">\(d(P, Q) = W_c(P, Q)\)</span>, where <span class="math notranslate nohighlight">\(W_c\)</span> is the Wasserstein distance with the induced cost function inside it being <span class="math notranslate nohighlight">\(c((X_1, Y_1), (X_2, Y_2)) = X_1^{\top} \Lambda X_2\)</span>, the default <span class="math notranslate nohighlight">\(\Lambda\)</span> is taken as the unit matrix and <span class="math notranslate nohighlight">\(c(\cdot, \cdot)\)</span> then becomes squared Euclidean distance. That is, we only allow the perturbation of <span class="math notranslate nohighlight">\(X\)</span> but not <span class="math notranslate nohighlight">\(Y\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma\)</span>: the feature importance perturbation matrix with the dimension being the (dimX, dimX).</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span>: Norm parameter for controlling the perturbation moment of X.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\kappa\)</span>: Robustness parameter for the perturbation of Y.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: Ambiguity size of Wasserstein ball.</p></li>
 </ul>
-<p>Theorem 1 in [1] there provides the corresponding reformulations.</p>
-<p>For the augmented Wasserstein-DRO model,</p>
-<ul class="simple">
-<li><p>we still use <span class="math notranslate nohighlight">\(d(P, Q)\)</span> being the Wasserstein distance <span class="math notranslate nohighlight">\(W_c\)</span> but now we allow the change of <span class="math notranslate nohighlight">\(y\)</span>. More specifically, we set <span class="math notranslate nohighlight">\(c((X_1, Y_1), (X_2, Y_2)) = X_1^{\top}\Lambda X_2 + \kappa|Y_1 - Y_2|\)</span>, and we introduce another hyperparameter <span class="math notranslate nohighlight">\(\kappa\)</span> to adjust the change in <span class="math notranslate nohighlight">\(Y\)</span>. Note that when <span class="math notranslate nohighlight">\(\kappa = \infty\)</span>, it reduces to the previous case.</p></li>
-</ul>
-<p>[2] provide various loss functions to reformulate the problem.</p>
+<p>For OLS, Theorem 1 in [1] there provides the corresponding reformulations. We set <span class="math notranslate nohighlight">\(\kappa = \infty\)</span>, i.e., not allow changes in <span class="math notranslate nohighlight">\(Y\)</span>.</p>
+<p>For loss functions in LAD, Logistic, and SVM models, [2] provide to reformulate the problem.</p>
 </section>
 <section id="worst-case-distribution">
 <h3>Worst case Distribution<a class="headerlink" href="#worst-case-distribution" title="Permalink to this heading"></a></h3>
-<p>[2] asymptotic</p>
-<p>In other papers, exact worst-case reformulation.</p>
+<p>When we set <code class="docutils literal notranslate"><span class="pre">compute_type</span> <span class="pre">==</span> <span class="pre">asymp</span></code>, [2] provides asymptotic worst-case distribution for linear regression and classification (Theorems 9 and 20), where we take <span class="math notranslate nohighlight">\(\gamma \in (0, 1]\)</span> as the hyperparameter to tune in each case.</p>
+<p><code class="docutils literal notranslate"><span class="pre">compute_type</span> <span class="pre">==</span> <span class="pre">exact</span></code> is depreciated right now.</p>
 </section>
 </section>
 <section id="robust-satisficing-version">
 <h2>Robust Satisficing Version<a class="headerlink" href="#robust-satisficing-version" title="Permalink to this heading"></a></h2>
-<p>For the Satisficing Wasserstein-DRO model,</p>
+<p>For the Satisficing Wasserstein-DRO model [3], we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:
+$<span class="math notranslate nohighlight">\(
+\max {\epsilon,\quad \text{s.t.}~E_{(X,Y) \sim P}[\ell_{tr}(\theta;(X, Y))] \leq \tau + \epsilon W(P, \widehat P), \forall P}.
+\)</span>$</p>
+<p>For (approximated) regression / classification, we can show the optimization problem above is equivalent to:
+$<span class="math notranslate nohighlight">\(
+\max \{\|\theta\|_{\Sigma^{-1/2},p},\quad \text{s.t.}~ E_{(X,Y) \sim \widehat P}[\ell_{tr}(\theta;(X, Y))] \leq \tau\}.
+\)</span>$</p>
+<section id="id1">
+<h3>Hyperparameter<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<p>In the satisfying version,  we do not set <span class="math notranslate nohighlight">\(\epsilon\)</span> as the hyperparameter but as an optimization goal such that to minimize the worst-case performance.</p>
 <ul class="simple">
-<li><p>we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma\)</span>: the feature importance perturbation matrix with the dimension being the (dimX, dimX).</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span>: Norm parameter for controlling the perturbation moment of X.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\kappa\)</span>: Robustness parameter for the perturbation of Y.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau\)</span>: <span class="math notranslate nohighlight">\(\tau \geq 1\)</span> is set as the multiplication of the best empirical performance with <span class="math notranslate nohighlight">\(E_{(X, Y)\sim \hat P_n}[\ell(\theta_{ERM};(X, Y))]\)</span>.</p></li>
 </ul>
-<div class="math notranslate nohighlight">
-\[
-\max \epsilon, \text{s.t.}~\min_{\theta} \max_{P: P \in U_{\epsilon}} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))] \geq \tau,
-\]</div>
-<p>where we do not set <span class="math notranslate nohighlight">\(\epsilon\)</span> as the hyperparameter but as an optimization goal such that to minimize the worst-case performance. Instead, we set <span class="math notranslate nohighlight">\(\tau\)</span> as the hyperparameter, which is set as the multiplication of the best empirical performance with <span class="math notranslate nohighlight">\(E_{(X, Y)\sim \hat P_n}[\ell(\theta_{ERM};(X, Y))]\)</span>. To solve this optimization problem, at each binary search, we prefix <span class="math notranslate nohighlight">\(\epsilon \in [0, M]\)</span> and compute the corresponding left-hand objective value and then reduce the potential <span class="math notranslate nohighlight">\(\epsilon\)</span> half by half.</p>
-<ul class="simple">
-<li><p>Reference: Long, Daniel Zhuoyu, Melvyn Sim, and Minglong Zhou. “Robust satisficing.” Operations Research 71.1 (2023): 61-82.</p></li>
-</ul>
+</section>
 </section>
 <section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this heading"></a></h2>
