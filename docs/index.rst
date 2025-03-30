@@ -1,11 +1,11 @@
 .. DRO documentation master file
 
-Welcome to DRO Documentation
-============================
+Welcome to DRO Package Documentation
+=========================================
 
 .. toctree::
-   :maxdepth: 3
-   :caption: API Reference
+   :maxdepth: 2
+   :caption: Jiashuo and Tianyu
 
    api/tutorials
    api/api

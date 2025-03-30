@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Welcome to DRO Documentation &#8212; dro 0.1.1 documentation</title>
+    <title>Welcome to DRO Package Documentation &#8212; dro 0.1.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -24,7 +24,7 @@
 
 <div id="top_nav">
     
-        <div id="notification_banner" data-banner-hiding="permanent" v-show="!permanentlyHidden">
+        <div id="notification_banner" data-banner-hiding="temporal" v-show="!permanentlyHidden">
     <p v-if="visible" id="content">A GIFT to the whole DRO community!</p>
     <a class="close" href="#" @click.prevent="toggleVisible()">[[ visible ? '&#x25B2; HIDE' : '&#x25BC; SHOW BANNER' ]]</a>
 </div>
@@ -246,7 +246,7 @@
 
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Jiashuo and Tianyu</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/tutorials.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/index.html">Formulation</a></li>
@@ -260,7 +260,38 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/personal_loss.html">Personal Loss</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/data_api.html">Data Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/dataloader_classification.html">Classification Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/dataloader_regression.html">Regression Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/linear_dro.html">Linear DRO Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/base_linear.html">Linear DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/chi2dro_linear.html">Chi-square DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/cvardro_linear.html">CVaR DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/tvdro.html">TV DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/mmddro.html">MMD DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/wdro_linear.html">Wasserstein DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/conditionaldro.html">Conditional CVaR DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/hrdro.html">Holistic Robust DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/marginaldro.html">Marginal DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/motdro.html">MOT DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/or_wdro.html">Outlier-Robust WDRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/sinkhorn_dro.html">Sinkhorn DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/bayesian_dro.html">Bayesian DRO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/nn_dro.html">Neural Network DRO Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/base_nn.html">NN DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/fdro_nn.html">f-Divergence DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/hrdro_nn.html">Holistic Robust DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/wdro_nn.html">Wasserstein DRO</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -272,85 +303,27 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="welcome-to-dro-documentation">
-<h1>Welcome to DRO Documentation<a class="headerlink" href="#welcome-to-dro-documentation" title="Permalink to this heading">¶</a></h1>
+  <section id="welcome-to-dro-package-documentation">
+<h1>Welcome to DRO Package Documentation<a class="headerlink" href="#welcome-to-dro-package-documentation" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Jiashuo and Tianyu</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/tutorials.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/index.html">Formulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/index.html#holistic-model-pipeline">Holistic Model Pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/index.html#linear">Linear</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/index.html#neural-network">Neural Network</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/index.html#reference">Reference:</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/linear_fdro.html">f-divergence DRO</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_fdro.html#standard-generalized">Standard (Generalized)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_fdro.html#partial-dro">Partial DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_fdro.html#reference">Reference:</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/linear_wdro.html">Wasserstein DRO</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_wdro.html#standard-version">Standard Version</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_wdro.html#robust-satisficing-version">Robust Satisficing Version</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_wdro.html#reference">Reference</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/linear_fdro.html">f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/linear_mmddro.html">MMD-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/linear_pdro.html">Bayesian-based DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/linear_mixdro.html">DRO with a mixture of distance metrics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_mixdro.html#sinkhorn-dro">Sinkhorn-DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_mixdro.html#holistic-dro">Holistic-DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/linear_mixdro.html#mot-dro">MOT-DRO</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/neural_model.html">Neural Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/personal_loss.html">Personal Loss</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/api.html#module-dro.src.data.dataloader_classification">Data Modules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_classification.classification_basic"><code class="docutils literal notranslate"><span class="pre">classification_basic()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_classification.classification_DN21"><code class="docutils literal notranslate"><span class="pre">classification_DN21()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_classification.classification_SNVD20"><code class="docutils literal notranslate"><span class="pre">classification_SNVD20()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_classification.classification_LWLC"><code class="docutils literal notranslate"><span class="pre">classification_LWLC()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_regression.regression_basic"><code class="docutils literal notranslate"><span class="pre">regression_basic()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_regression.regression_DN20_1"><code class="docutils literal notranslate"><span class="pre">regression_DN20_1()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_regression.regression_DN20_2"><code class="docutils literal notranslate"><span class="pre">regression_DN20_2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_regression.regression_DN20_3"><code class="docutils literal notranslate"><span class="pre">regression_DN20_3()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.data.dataloader_regression.regression_LWLC"><code class="docutils literal notranslate"><span class="pre">regression_LWLC()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/api.html#module-dro.src.linear_model.base">Linear DRO Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.base.BaseLinearDRO"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO"><code class="docutils literal notranslate"><span class="pre">Chi2DRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO"><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.kl_dro.KLDRO"><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.tv_dro.TVDRO"><code class="docutils literal notranslate"><span class="pre">TVDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO"><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.hr_dro.HR_DRO_LR"><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO"><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.mmd_dro.MMD_DRO"><code class="docutils literal notranslate"><span class="pre">MMD_DRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.mot_dro.MOTDRO"><code class="docutils literal notranslate"><span class="pre">MOTDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO"><code class="docutils literal notranslate"><span class="pre">ORWDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO"><code class="docutils literal notranslate"><span class="pre">BayesianDRO</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/api.html#module-dro.src.neural_model.base_nn">Neural Network DRO Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.neural_model.base_nn.Linear"><code class="docutils literal notranslate"><span class="pre">Linear</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.neural_model.base_nn.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.neural_model.base_nn.BaseNNDRO"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO"><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/api.html#dro.src.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_api.html">Data Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/linear_dro.html">Linear DRO Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/nn_dro.html">Neural Network DRO Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -382,7 +355,7 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang.
+        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
 

@@ -28,7 +28,7 @@
 
 <div id="top_nav">
     
-        <div id="notification_banner" data-banner-hiding="permanent" v-show="!permanentlyHidden">
+        <div id="notification_banner" data-banner-hiding="temporal" v-show="!permanentlyHidden">
     <p v-if="visible" id="content">A GIFT to the whole DRO community!</p>
     <a class="close" href="#" @click.prevent="toggleVisible()">[[ visible ? '&#x25B2; HIDE' : '&#x25BC; SHOW BANNER' ]]</a>
 </div>
@@ -232,7 +232,7 @@
 
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Jiashuo and Tianyu</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/tutorials.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/index.html">Formulation</a></li>
@@ -246,7 +246,38 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/personal_loss.html">Personal Loss</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/data_api.html">Data Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/dataloader_classification.html">Classification Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/dataloader_regression.html">Regression Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/linear_dro.html">Linear DRO Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/base_linear.html">Linear DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/chi2dro_linear.html">Chi-square DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/cvardro_linear.html">CVaR DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/tvdro.html">TV DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/mmddro.html">MMD DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/wdro_linear.html">Wasserstein DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/conditionaldro.html">Conditional CVaR DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/hrdro.html">Holistic Robust DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/marginaldro.html">Marginal DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/motdro.html">MOT DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/or_wdro.html">Outlier-Robust WDRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/sinkhorn_dro.html">Sinkhorn DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/bayesian_dro.html">Bayesian DRO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/nn_dro.html">Neural Network DRO Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/base_nn.html">NN DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/fdro_nn.html">f-Divergence DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/hrdro_nn.html">Holistic Robust DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/wdro_nn.html">Wasserstein DRO</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -311,7 +342,7 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang.
+        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
 

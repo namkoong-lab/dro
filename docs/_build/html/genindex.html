@@ -22,7 +22,7 @@
 
 <div id="top_nav">
     
-        <div id="notification_banner" data-banner-hiding="permanent" v-show="!permanentlyHidden">
+        <div id="notification_banner" data-banner-hiding="temporal" v-show="!permanentlyHidden">
     <p v-if="visible" id="content">A GIFT to the whole DRO community!</p>
     <a class="close" href="#" @click.prevent="toggleVisible()">[[ visible ? '&#x25B2; HIDE' : '&#x25BC; SHOW BANNER' ]]</a>
 </div>
@@ -244,7 +244,7 @@
 
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Jiashuo and Tianyu</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/tutorials.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/index.html">Formulation</a></li>
@@ -258,7 +258,38 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/personal_loss.html">Personal Loss</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/data_api.html">Data Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/dataloader_classification.html">Classification Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/dataloader_regression.html">Regression Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/linear_dro.html">Linear DRO Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/base_linear.html">Linear DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/chi2dro_linear.html">Chi-square DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/cvardro_linear.html">CVaR DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/tvdro.html">TV DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/mmddro.html">MMD DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/wdro_linear.html">Wasserstein DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/conditionaldro.html">Conditional CVaR DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/hrdro.html">Holistic Robust DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/marginaldro.html">Marginal DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/motdro.html">MOT DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/or_wdro.html">Outlier-Robust WDRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/sinkhorn_dro.html">Sinkhorn DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/bayesian_dro.html">Bayesian DRO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/nn_dro.html">Neural Network DRO Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/base_nn.html">NN DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/fdro_nn.html">f-Divergence DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/hrdro_nn.html">Holistic Robust DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/apis/wdro_nn.html">Wasserstein DRO</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -295,13 +326,13 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.base.BaseLinearDRO">BaseLinearDRO (class in dro.src.linear_model.base)</a>
+      <li><a href="api/apis/base_linear.html#dro.src.linear_model.base.BaseLinearDRO">BaseLinearDRO (class in dro.src.linear_model.base)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.neural_model.base_nn.BaseNNDRO">BaseNNDRO (class in dro.src.neural_model.base_nn)</a>
+      <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.BaseNNDRO">BaseNNDRO (class in dro.src.neural_model.base_nn)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO">BayesianDRO (class in dro.src.linear_model.bayesian_dro)</a>
+      <li><a href="api/apis/bayesian_dro.html#dro.src.linear_model.bayesian_dro.BayesianDRO">BayesianDRO (class in dro.src.linear_model.bayesian_dro)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -309,25 +340,25 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO">Chi2DRO (class in dro.src.linear_model.chi2_dro)</a>
+      <li><a href="api/apis/chi2dro_linear.html#dro.src.linear_model.chi2_dro.Chi2DRO">Chi2DRO (class in dro.src.linear_model.chi2_dro)</a>
 </li>
-      <li><a href="api/api.html#dro.src.neural_model.fdro_nn.Chi2NNDRO">Chi2NNDRO (class in dro.src.neural_model.fdro_nn)</a>
+      <li><a href="api/apis/fdro_nn.html#dro.src.neural_model.fdro_nn.Chi2NNDRO">Chi2NNDRO (class in dro.src.neural_model.fdro_nn)</a>
 </li>
-      <li><a href="api/api.html#dro.src.data.dataloader_classification.classification_basic">classification_basic() (in module dro.src.data.dataloader_classification)</a>
+      <li><a href="api/apis/dataloader_classification.html#dro.src.data.dataloader_classification.classification_basic">classification_basic() (in module dro.src.data.dataloader_classification)</a>
 </li>
-      <li><a href="api/api.html#dro.src.data.dataloader_classification.classification_DN21">classification_DN21() (in module dro.src.data.dataloader_classification)</a>
+      <li><a href="api/apis/dataloader_classification.html#dro.src.data.dataloader_classification.classification_DN21">classification_DN21() (in module dro.src.data.dataloader_classification)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.data.dataloader_classification.classification_LWLC">classification_LWLC() (in module dro.src.data.dataloader_classification)</a>
+      <li><a href="api/apis/dataloader_classification.html#dro.src.data.dataloader_classification.classification_LWLC">classification_LWLC() (in module dro.src.data.dataloader_classification)</a>
 </li>
-      <li><a href="api/api.html#dro.src.data.dataloader_classification.classification_SNVD20">classification_SNVD20() (in module dro.src.data.dataloader_classification)</a>
+      <li><a href="api/apis/dataloader_classification.html#dro.src.data.dataloader_classification.classification_SNVD20">classification_SNVD20() (in module dro.src.data.dataloader_classification)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO">ConditionalCVaRDRO (class in dro.src.linear_model.conditional_dro)</a>
+      <li><a href="api/apis/conditionaldro.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO">ConditionalCVaRDRO (class in dro.src.linear_model.conditional_dro)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO">CVaRDRO (class in dro.src.linear_model.cvar_dro)</a>
+      <li><a href="api/apis/cvardro_linear.html#dro.src.linear_model.cvar_dro.CVaRDRO">CVaRDRO (class in dro.src.linear_model.cvar_dro)</a>
 </li>
-      <li><a href="api/api.html#dro.src.neural_model.fdro_nn.CVaRNNDRO">CVaRNNDRO (class in dro.src.neural_model.fdro_nn)</a>
+      <li><a href="api/apis/fdro_nn.html#dro.src.neural_model.fdro_nn.CVaRNNDRO">CVaRNNDRO (class in dro.src.neural_model.fdro_nn)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -339,70 +370,70 @@
     dro.src.data.dataloader_classification
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.data.dataloader_classification">module</a>
+        <li><a href="api/apis/dataloader_classification.html#module-dro.src.data.dataloader_classification">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.data.dataloader_regression
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.data.dataloader_regression">module</a>
+        <li><a href="api/apis/dataloader_regression.html#module-dro.src.data.dataloader_regression">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.base
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.base">module</a>
+        <li><a href="api/apis/base_linear.html#module-dro.src.linear_model.base">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.bayesian_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.bayesian_dro">module</a>
+        <li><a href="api/apis/bayesian_dro.html#module-dro.src.linear_model.bayesian_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.chi2_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.chi2_dro">module</a>
+        <li><a href="api/apis/chi2dro_linear.html#module-dro.src.linear_model.chi2_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.conditional_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.conditional_dro">module</a>
+        <li><a href="api/apis/conditionaldro.html#module-dro.src.linear_model.conditional_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.cvar_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.cvar_dro">module</a>
+        <li><a href="api/apis/cvardro_linear.html#module-dro.src.linear_model.cvar_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.hr_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.hr_dro">module</a>
+        <li><a href="api/apis/hrdro.html#module-dro.src.linear_model.hr_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.kl_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.kl_dro">module</a>
+        <li><a href="api/apis/kldro_linear.html#module-dro.src.linear_model.kl_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.marginal_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.marginal_dro">module</a>
+        <li><a href="api/apis/marginaldro.html#module-dro.src.linear_model.marginal_dro">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -411,70 +442,70 @@
     dro.src.linear_model.mmd_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.mmd_dro">module</a>
+        <li><a href="api/apis/mmddro.html#module-dro.src.linear_model.mmd_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.mot_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.mot_dro">module</a>
+        <li><a href="api/apis/motdro.html#module-dro.src.linear_model.mot_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.or_wasserstein_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.or_wasserstein_dro">module</a>
+        <li><a href="api/apis/or_wdro.html#module-dro.src.linear_model.or_wasserstein_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.sinkhorn_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.sinkhorn_dro">module</a>
+        <li><a href="api/apis/sinkhorn_dro.html#module-dro.src.linear_model.sinkhorn_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.tv_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.tv_dro">module</a>
+        <li><a href="api/apis/tvdro.html#module-dro.src.linear_model.tv_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.linear_model.wasserstein_dro
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.linear_model.wasserstein_dro">module</a>
+        <li><a href="api/apis/wdro_linear.html#module-dro.src.linear_model.wasserstein_dro">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.neural_model.base_nn
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.neural_model.base_nn">module</a>
+        <li><a href="api/apis/base_nn.html#module-dro.src.neural_model.base_nn">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.neural_model.fdro_nn
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.neural_model.fdro_nn">module</a>
+        <li><a href="api/apis/fdro_nn.html#module-dro.src.neural_model.fdro_nn">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.neural_model.hrdro_nn
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.neural_model.hrdro_nn">module</a>
+        <li><a href="api/apis/hrdro_nn.html#module-dro.src.neural_model.hrdro_nn">module</a>
 </li>
       </ul></li>
       <li>
     dro.src.neural_model.wdro_nn
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.neural_model.wdro_nn">module</a>
+        <li><a href="api/apis/wdro_nn.html#module-dro.src.neural_model.wdro_nn">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -483,10 +514,10 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.base.BaseLinearDRO.evaluate">evaluate() (dro.src.linear_model.base.BaseLinearDRO method)</a>
+      <li><a href="api/apis/base_linear.html#dro.src.linear_model.base.BaseLinearDRO.evaluate">evaluate() (dro.src.linear_model.base.BaseLinearDRO method)</a>
 
       <ul>
-        <li><a href="api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO.evaluate">(dro.src.linear_model.chi2_dro.Chi2DRO method)</a>
+        <li><a href="api/apis/chi2dro_linear.html#dro.src.linear_model.chi2_dro.Chi2DRO.evaluate">(dro.src.linear_model.chi2_dro.Chi2DRO method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -495,54 +526,54 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.f1score">f1score() (dro.src.neural_model.base_nn.BaseNNDRO method)</a>
+      <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.BaseNNDRO.f1score">f1score() (dro.src.neural_model.base_nn.BaseNNDRO method)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.base.BaseLinearDRO.fit">fit() (dro.src.linear_model.base.BaseLinearDRO method)</a>
+      <li><a href="api/apis/base_linear.html#dro.src.linear_model.base.BaseLinearDRO.fit">fit() (dro.src.linear_model.base.BaseLinearDRO method)</a>
 
       <ul>
-        <li><a href="api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO.fit">(dro.src.linear_model.bayesian_dro.BayesianDRO method)</a>
+        <li><a href="api/apis/bayesian_dro.html#dro.src.linear_model.bayesian_dro.BayesianDRO.fit">(dro.src.linear_model.bayesian_dro.BayesianDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO.fit">(dro.src.linear_model.chi2_dro.Chi2DRO method)</a>
+        <li><a href="api/apis/chi2dro_linear.html#dro.src.linear_model.chi2_dro.Chi2DRO.fit">(dro.src.linear_model.chi2_dro.Chi2DRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.fit">(dro.src.linear_model.conditional_dro.ConditionalCVaRDRO method)</a>
+        <li><a href="api/apis/conditionaldro.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.fit">(dro.src.linear_model.conditional_dro.ConditionalCVaRDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO.fit">(dro.src.linear_model.cvar_dro.CVaRDRO method)</a>
+        <li><a href="api/apis/cvardro_linear.html#dro.src.linear_model.cvar_dro.CVaRDRO.fit">(dro.src.linear_model.cvar_dro.CVaRDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.hr_dro.HR_DRO_LR.fit">(dro.src.linear_model.hr_dro.HR_DRO_LR method)</a>
+        <li><a href="api/apis/hrdro.html#dro.src.linear_model.hr_dro.HR_DRO_LR.fit">(dro.src.linear_model.hr_dro.HR_DRO_LR method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.kl_dro.KLDRO.fit">(dro.src.linear_model.kl_dro.KLDRO method)</a>
+        <li><a href="api/apis/kldro_linear.html#dro.src.linear_model.kl_dro.KLDRO.fit">(dro.src.linear_model.kl_dro.KLDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.fit">(dro.src.linear_model.marginal_dro.MarginalCVaRDRO method)</a>
+        <li><a href="api/apis/marginaldro.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.fit">(dro.src.linear_model.marginal_dro.MarginalCVaRDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.mmd_dro.MMD_DRO.fit">(dro.src.linear_model.mmd_dro.MMD_DRO method)</a>
+        <li><a href="api/apis/mmddro.html#dro.src.linear_model.mmd_dro.MMD_DRO.fit">(dro.src.linear_model.mmd_dro.MMD_DRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.mot_dro.MOTDRO.fit">(dro.src.linear_model.mot_dro.MOTDRO method)</a>
+        <li><a href="api/apis/motdro.html#dro.src.linear_model.mot_dro.MOTDRO.fit">(dro.src.linear_model.mot_dro.MOTDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.fit">(dro.src.linear_model.or_wasserstein_dro.ORWDRO method)</a>
+        <li><a href="api/apis/or_wdro.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.fit">(dro.src.linear_model.or_wasserstein_dro.ORWDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit">(dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
+        <li><a href="api/apis/sinkhorn_dro.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit">(dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.tv_dro.TVDRO.fit">(dro.src.linear_model.tv_dro.TVDRO method)</a>
+        <li><a href="api/apis/tvdro.html#dro.src.linear_model.tv_dro.TVDRO.fit">(dro.src.linear_model.tv_dro.TVDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit">(dro.src.linear_model.wasserstein_dro.WassersteinDRO method)</a>
+        <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit">(dro.src.linear_model.wasserstein_dro.WassersteinDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit">(dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
+        <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit">(dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.fit">(dro.src.neural_model.base_nn.BaseNNDRO method)</a>
+        <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.BaseNNDRO.fit">(dro.src.neural_model.base_nn.BaseNNDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO.fit">(dro.src.neural_model.hrdro_nn.HRNNDRO method)</a>
+        <li><a href="api/apis/hrdro_nn.html#dro.src.neural_model.hrdro_nn.HRNNDRO.fit">(dro.src.neural_model.hrdro_nn.HRNNDRO method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_depreciate">fit_depreciate() (dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
+      <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_depreciate">fit_depreciate() (dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle">fit_oracle() (dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
+      <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle">fit_oracle() (dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
 </li>
-      <li><a href="api/api.html#dro.src.neural_model.base_nn.Linear.forward">forward() (dro.src.neural_model.base_nn.Linear method)</a>
+      <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.Linear.forward">forward() (dro.src.neural_model.base_nn.Linear method)</a>
 
       <ul>
-        <li><a href="api/api.html#dro.src.neural_model.base_nn.MLP.forward">(dro.src.neural_model.base_nn.MLP method)</a>
+        <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.MLP.forward">(dro.src.neural_model.base_nn.MLP method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -551,11 +582,11 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.hr_dro.HR_DRO_LR">HR_DRO_LR (class in dro.src.linear_model.hr_dro)</a>
+      <li><a href="api/apis/hrdro.html#dro.src.linear_model.hr_dro.HR_DRO_LR">HR_DRO_LR (class in dro.src.linear_model.hr_dro)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO">HRNNDRO (class in dro.src.neural_model.hrdro_nn)</a>
+      <li><a href="api/apis/hrdro_nn.html#dro.src.neural_model.hrdro_nn.HRNNDRO">HRNNDRO (class in dro.src.neural_model.hrdro_nn)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -563,7 +594,7 @@
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.kl_dro.KLDRO">KLDRO (class in dro.src.linear_model.kl_dro)</a>
+      <li><a href="api/apis/kldro_linear.html#dro.src.linear_model.kl_dro.KLDRO">KLDRO (class in dro.src.linear_model.kl_dro)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -571,11 +602,11 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.neural_model.base_nn.Linear">Linear (class in dro.src.neural_model.base_nn)</a>
+      <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.Linear">Linear (class in dro.src.neural_model.base_nn)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.base.BaseLinearDRO.load">load() (dro.src.linear_model.base.BaseLinearDRO method)</a>
+      <li><a href="api/apis/base_linear.html#dro.src.linear_model.base.BaseLinearDRO.load">load() (dro.src.linear_model.base.BaseLinearDRO method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -583,60 +614,60 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO">MarginalCVaRDRO (class in dro.src.linear_model.marginal_dro)</a>
+      <li><a href="api/apis/marginaldro.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO">MarginalCVaRDRO (class in dro.src.linear_model.marginal_dro)</a>
 </li>
-      <li><a href="api/api.html#dro.src.neural_model.base_nn.MLP">MLP (class in dro.src.neural_model.base_nn)</a>
+      <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.MLP">MLP (class in dro.src.neural_model.base_nn)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.mmd_dro.MMD_DRO">MMD_DRO (class in dro.src.linear_model.mmd_dro)</a>
+      <li><a href="api/apis/mmddro.html#dro.src.linear_model.mmd_dro.MMD_DRO">MMD_DRO (class in dro.src.linear_model.mmd_dro)</a>
 </li>
       <li>
     module
 
       <ul>
-        <li><a href="api/api.html#module-dro.src.data.dataloader_classification">dro.src.data.dataloader_classification</a>
+        <li><a href="api/apis/dataloader_classification.html#module-dro.src.data.dataloader_classification">dro.src.data.dataloader_classification</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.data.dataloader_regression">dro.src.data.dataloader_regression</a>
+        <li><a href="api/apis/dataloader_regression.html#module-dro.src.data.dataloader_regression">dro.src.data.dataloader_regression</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.base">dro.src.linear_model.base</a>
+        <li><a href="api/apis/base_linear.html#module-dro.src.linear_model.base">dro.src.linear_model.base</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.bayesian_dro">dro.src.linear_model.bayesian_dro</a>
+        <li><a href="api/apis/bayesian_dro.html#module-dro.src.linear_model.bayesian_dro">dro.src.linear_model.bayesian_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.chi2_dro">dro.src.linear_model.chi2_dro</a>
+        <li><a href="api/apis/chi2dro_linear.html#module-dro.src.linear_model.chi2_dro">dro.src.linear_model.chi2_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.conditional_dro">dro.src.linear_model.conditional_dro</a>
+        <li><a href="api/apis/conditionaldro.html#module-dro.src.linear_model.conditional_dro">dro.src.linear_model.conditional_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.cvar_dro">dro.src.linear_model.cvar_dro</a>
+        <li><a href="api/apis/cvardro_linear.html#module-dro.src.linear_model.cvar_dro">dro.src.linear_model.cvar_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.hr_dro">dro.src.linear_model.hr_dro</a>
+        <li><a href="api/apis/hrdro.html#module-dro.src.linear_model.hr_dro">dro.src.linear_model.hr_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.kl_dro">dro.src.linear_model.kl_dro</a>
+        <li><a href="api/apis/kldro_linear.html#module-dro.src.linear_model.kl_dro">dro.src.linear_model.kl_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.marginal_dro">dro.src.linear_model.marginal_dro</a>
+        <li><a href="api/apis/marginaldro.html#module-dro.src.linear_model.marginal_dro">dro.src.linear_model.marginal_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.mmd_dro">dro.src.linear_model.mmd_dro</a>
+        <li><a href="api/apis/mmddro.html#module-dro.src.linear_model.mmd_dro">dro.src.linear_model.mmd_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.mot_dro">dro.src.linear_model.mot_dro</a>
+        <li><a href="api/apis/motdro.html#module-dro.src.linear_model.mot_dro">dro.src.linear_model.mot_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.or_wasserstein_dro">dro.src.linear_model.or_wasserstein_dro</a>
+        <li><a href="api/apis/or_wdro.html#module-dro.src.linear_model.or_wasserstein_dro">dro.src.linear_model.or_wasserstein_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.sinkhorn_dro">dro.src.linear_model.sinkhorn_dro</a>
+        <li><a href="api/apis/sinkhorn_dro.html#module-dro.src.linear_model.sinkhorn_dro">dro.src.linear_model.sinkhorn_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.tv_dro">dro.src.linear_model.tv_dro</a>
+        <li><a href="api/apis/tvdro.html#module-dro.src.linear_model.tv_dro">dro.src.linear_model.tv_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.linear_model.wasserstein_dro">dro.src.linear_model.wasserstein_dro</a>
+        <li><a href="api/apis/wdro_linear.html#module-dro.src.linear_model.wasserstein_dro">dro.src.linear_model.wasserstein_dro</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.neural_model.base_nn">dro.src.neural_model.base_nn</a>
+        <li><a href="api/apis/base_nn.html#module-dro.src.neural_model.base_nn">dro.src.neural_model.base_nn</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.neural_model.fdro_nn">dro.src.neural_model.fdro_nn</a>
+        <li><a href="api/apis/fdro_nn.html#module-dro.src.neural_model.fdro_nn">dro.src.neural_model.fdro_nn</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.neural_model.hrdro_nn">dro.src.neural_model.hrdro_nn</a>
+        <li><a href="api/apis/hrdro_nn.html#module-dro.src.neural_model.hrdro_nn">dro.src.neural_model.hrdro_nn</a>
 </li>
-        <li><a href="api/api.html#module-dro.src.neural_model.wdro_nn">dro.src.neural_model.wdro_nn</a>
+        <li><a href="api/apis/wdro_nn.html#module-dro.src.neural_model.wdro_nn">dro.src.neural_model.wdro_nn</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.mot_dro.MOTDRO">MOTDRO (class in dro.src.linear_model.mot_dro)</a>
+      <li><a href="api/apis/motdro.html#dro.src.linear_model.mot_dro.MOTDRO">MOTDRO (class in dro.src.linear_model.mot_dro)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -644,7 +675,7 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO">ORWDRO (class in dro.src.linear_model.or_wasserstein_dro)</a>
+      <li><a href="api/apis/or_wdro.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO">ORWDRO (class in dro.src.linear_model.or_wasserstein_dro)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -652,14 +683,14 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.base.BaseLinearDRO.predict">predict() (dro.src.linear_model.base.BaseLinearDRO method)</a>
+      <li><a href="api/apis/base_linear.html#dro.src.linear_model.base.BaseLinearDRO.predict">predict() (dro.src.linear_model.base.BaseLinearDRO method)</a>
 
       <ul>
-        <li><a href="api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict">(dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
+        <li><a href="api/apis/sinkhorn_dro.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict">(dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.predict">(dro.src.neural_model.base_nn.BaseNNDRO method)</a>
+        <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.BaseNNDRO.predict">(dro.src.neural_model.base_nn.BaseNNDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.neural_model.hrdro_nn.HRNNDRO.predict">(dro.src.neural_model.hrdro_nn.HRNNDRO method)</a>
+        <li><a href="api/apis/hrdro_nn.html#dro.src.neural_model.hrdro_nn.HRNNDRO.predict">(dro.src.neural_model.hrdro_nn.HRNNDRO method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -668,19 +699,19 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.data.dataloader_regression.regression_basic">regression_basic() (in module dro.src.data.dataloader_regression)</a>
+      <li><a href="api/apis/dataloader_regression.html#dro.src.data.dataloader_regression.regression_basic">regression_basic() (in module dro.src.data.dataloader_regression)</a>
 </li>
-      <li><a href="api/api.html#dro.src.data.dataloader_regression.regression_DN20_1">regression_DN20_1() (in module dro.src.data.dataloader_regression)</a>
+      <li><a href="api/apis/dataloader_regression.html#dro.src.data.dataloader_regression.regression_DN20_1">regression_DN20_1() (in module dro.src.data.dataloader_regression)</a>
 </li>
-      <li><a href="api/api.html#dro.src.data.dataloader_regression.regression_DN20_2">regression_DN20_2() (in module dro.src.data.dataloader_regression)</a>
+      <li><a href="api/apis/dataloader_regression.html#dro.src.data.dataloader_regression.regression_DN20_2">regression_DN20_2() (in module dro.src.data.dataloader_regression)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.data.dataloader_regression.regression_DN20_3">regression_DN20_3() (in module dro.src.data.dataloader_regression)</a>
+      <li><a href="api/apis/dataloader_regression.html#dro.src.data.dataloader_regression.regression_DN20_3">regression_DN20_3() (in module dro.src.data.dataloader_regression)</a>
 </li>
-      <li><a href="api/api.html#dro.src.data.dataloader_regression.regression_LWLC">regression_LWLC() (in module dro.src.data.dataloader_regression)</a>
+      <li><a href="api/apis/dataloader_regression.html#dro.src.data.dataloader_regression.regression_LWLC">regression_LWLC() (in module dro.src.data.dataloader_regression)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO.resample">resample() (dro.src.linear_model.bayesian_dro.BayesianDRO method)</a>
+      <li><a href="api/apis/bayesian_dro.html#dro.src.linear_model.bayesian_dro.BayesianDRO.resample">resample() (dro.src.linear_model.bayesian_dro.BayesianDRO method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -688,17 +719,17 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.base.BaseLinearDRO.score">score() (dro.src.linear_model.base.BaseLinearDRO method)</a>
+      <li><a href="api/apis/base_linear.html#dro.src.linear_model.base.BaseLinearDRO.score">score() (dro.src.linear_model.base.BaseLinearDRO method)</a>
 
       <ul>
-        <li><a href="api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score">(dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
+        <li><a href="api/apis/sinkhorn_dro.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score">(dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.neural_model.base_nn.BaseNNDRO.score">(dro.src.neural_model.base_nn.BaseNNDRO method)</a>
+        <li><a href="api/apis/base_nn.html#dro.src.neural_model.base_nn.BaseNNDRO.score">(dro.src.neural_model.base_nn.BaseNNDRO method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO">SinkhornLinearDRO (class in dro.src.linear_model.sinkhorn_dro)</a>
+      <li><a href="api/apis/sinkhorn_dro.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO">SinkhornLinearDRO (class in dro.src.linear_model.sinkhorn_dro)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -706,11 +737,11 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.tv_dro.TVDRO.threshold_val">threshold_val (dro.src.linear_model.tv_dro.TVDRO attribute)</a>
+      <li><a href="api/apis/tvdro.html#dro.src.linear_model.tv_dro.TVDRO.threshold_val">threshold_val (dro.src.linear_model.tv_dro.TVDRO attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.tv_dro.TVDRO">TVDRO (class in dro.src.linear_model.tv_dro)</a>
+      <li><a href="api/apis/tvdro.html#dro.src.linear_model.tv_dro.TVDRO">TVDRO (class in dro.src.linear_model.tv_dro)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -718,36 +749,36 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.base.BaseLinearDRO.update">update() (dro.src.linear_model.base.BaseLinearDRO method)</a>
+      <li><a href="api/apis/base_linear.html#dro.src.linear_model.base.BaseLinearDRO.update">update() (dro.src.linear_model.base.BaseLinearDRO method)</a>
 
       <ul>
-        <li><a href="api/api.html#dro.src.linear_model.bayesian_dro.BayesianDRO.update">(dro.src.linear_model.bayesian_dro.BayesianDRO method)</a>
+        <li><a href="api/apis/bayesian_dro.html#dro.src.linear_model.bayesian_dro.BayesianDRO.update">(dro.src.linear_model.bayesian_dro.BayesianDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO.update">(dro.src.linear_model.chi2_dro.Chi2DRO method)</a>
+        <li><a href="api/apis/chi2dro_linear.html#dro.src.linear_model.chi2_dro.Chi2DRO.update">(dro.src.linear_model.chi2_dro.Chi2DRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.update">(dro.src.linear_model.conditional_dro.ConditionalCVaRDRO method)</a>
+        <li><a href="api/apis/conditionaldro.html#dro.src.linear_model.conditional_dro.ConditionalCVaRDRO.update">(dro.src.linear_model.conditional_dro.ConditionalCVaRDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO.update">(dro.src.linear_model.cvar_dro.CVaRDRO method)</a>
+        <li><a href="api/apis/cvardro_linear.html#dro.src.linear_model.cvar_dro.CVaRDRO.update">(dro.src.linear_model.cvar_dro.CVaRDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.hr_dro.HR_DRO_LR.update">(dro.src.linear_model.hr_dro.HR_DRO_LR method)</a>
+        <li><a href="api/apis/hrdro.html#dro.src.linear_model.hr_dro.HR_DRO_LR.update">(dro.src.linear_model.hr_dro.HR_DRO_LR method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.kl_dro.KLDRO.update">(dro.src.linear_model.kl_dro.KLDRO method)</a>
+        <li><a href="api/apis/kldro_linear.html#dro.src.linear_model.kl_dro.KLDRO.update">(dro.src.linear_model.kl_dro.KLDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.update">(dro.src.linear_model.marginal_dro.MarginalCVaRDRO method)</a>
+        <li><a href="api/apis/marginaldro.html#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.update">(dro.src.linear_model.marginal_dro.MarginalCVaRDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.mmd_dro.MMD_DRO.update">(dro.src.linear_model.mmd_dro.MMD_DRO method)</a>
+        <li><a href="api/apis/mmddro.html#dro.src.linear_model.mmd_dro.MMD_DRO.update">(dro.src.linear_model.mmd_dro.MMD_DRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.mot_dro.MOTDRO.update">(dro.src.linear_model.mot_dro.MOTDRO method)</a>
+        <li><a href="api/apis/motdro.html#dro.src.linear_model.mot_dro.MOTDRO.update">(dro.src.linear_model.mot_dro.MOTDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.update">(dro.src.linear_model.or_wasserstein_dro.ORWDRO method)</a>
+        <li><a href="api/apis/or_wdro.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.update">(dro.src.linear_model.or_wasserstein_dro.ORWDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update">(dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
+        <li><a href="api/apis/sinkhorn_dro.html#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update">(dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.tv_dro.TVDRO.update">(dro.src.linear_model.tv_dro.TVDRO method)</a>
+        <li><a href="api/apis/tvdro.html#dro.src.linear_model.tv_dro.TVDRO.update">(dro.src.linear_model.tv_dro.TVDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.update">(dro.src.linear_model.wasserstein_dro.WassersteinDRO method)</a>
+        <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.update">(dro.src.linear_model.wasserstein_dro.WassersteinDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update">(dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
+        <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update">(dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -756,26 +787,26 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO">WassersteinDRO (class in dro.src.linear_model.wasserstein_dro)</a>
+      <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO">WassersteinDRO (class in dro.src.linear_model.wasserstein_dro)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing">WassersteinDROsatisficing (class in dro.src.linear_model.wasserstein_dro)</a>
+      <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing">WassersteinDROsatisficing (class in dro.src.linear_model.wasserstein_dro)</a>
 </li>
-      <li><a href="api/api.html#dro.src.neural_model.wdro_nn.WNNDRO">WNNDRO (class in dro.src.neural_model.wdro_nn)</a>
+      <li><a href="api/apis/wdro_nn.html#dro.src.neural_model.wdro_nn.WNNDRO">WNNDRO (class in dro.src.neural_model.wdro_nn)</a>
 </li>
-      <li><a href="api/api.html#dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution">worst_distribution() (dro.src.linear_model.chi2_dro.Chi2DRO method)</a>
+      <li><a href="api/apis/chi2dro_linear.html#dro.src.linear_model.chi2_dro.Chi2DRO.worst_distribution">worst_distribution() (dro.src.linear_model.chi2_dro.Chi2DRO method)</a>
 
       <ul>
-        <li><a href="api/api.html#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution">(dro.src.linear_model.cvar_dro.CVaRDRO method)</a>
+        <li><a href="api/apis/cvardro_linear.html#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution">(dro.src.linear_model.cvar_dro.CVaRDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.kl_dro.KLDRO.worst_distribution">(dro.src.linear_model.kl_dro.KLDRO method)</a>
+        <li><a href="api/apis/kldro_linear.html#dro.src.linear_model.kl_dro.KLDRO.worst_distribution">(dro.src.linear_model.kl_dro.KLDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.worst_distribution">(dro.src.linear_model.or_wasserstein_dro.ORWDRO method)</a>
+        <li><a href="api/apis/or_wdro.html#dro.src.linear_model.or_wasserstein_dro.ORWDRO.worst_distribution">(dro.src.linear_model.or_wasserstein_dro.ORWDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.tv_dro.TVDRO.worst_distribution">(dro.src.linear_model.tv_dro.TVDRO method)</a>
+        <li><a href="api/apis/tvdro.html#dro.src.linear_model.tv_dro.TVDRO.worst_distribution">(dro.src.linear_model.tv_dro.TVDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution">(dro.src.linear_model.wasserstein_dro.WassersteinDRO method)</a>
+        <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution">(dro.src.linear_model.wasserstein_dro.WassersteinDRO method)</a>
 </li>
-        <li><a href="api/api.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution">(dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
+        <li><a href="api/apis/wdro_linear.html#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution">(dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -805,7 +836,7 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang.
+        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
 

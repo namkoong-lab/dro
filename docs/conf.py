@@ -9,8 +9,8 @@ sys.path.insert(0, os.path.abspath('../dro/src'))
 print(sys.path)
 
 project = 'dro'
-copyright = '2025, Jiashuo Liu, Tianyu Wang'
-author = 'Jiashuo Liu, Tianyu Wang'
+copyright = '2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet'
+author = 'Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet'
 release = '0.1.1'
 
 
@@ -59,7 +59,7 @@ html_theme_options = {
     "source_icon": "github",
     "globaltoc_collapse": False,
     "banner_text": 'A GIFT to the whole DRO community!',
-    "banner_hiding": "permanent"
+    "banner_hiding": "temporal"
 }
 
 
