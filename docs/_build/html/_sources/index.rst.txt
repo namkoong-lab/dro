@@ -8,4 +8,5 @@ Welcome to DRO Package Documentation
    :caption: Jiashuo and Tianyu
 
    api/tutorials
+   api/example
    api/api

@@ -19,7 +19,9 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx_autodoc_typehints',
     'sphinx.ext.mathjax',
-    "myst_parser"
+    "myst_parser",
+    'nbsphinx',
+    'sphinx_copybutton' 
 ]
 
 autodoc_type_aliases = {
@@ -77,6 +79,11 @@ myst_enable_extensions = [
     "linkify",      
 ]
 
+nbsphinx_execute = 'auto'
+nbsphinx_kernel_name = 'python3'
+nbsphinx_timeout = 600
+nbsphinx_prompt_width = "0"
+nbsphinx_include_pattern = [] 
 
 
 autoclass_content = 'both'  
