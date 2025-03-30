@@ -206,12 +206,13 @@ class Chi2DRO(BaseLinearDRO):
         """
 
         sample_num, __ = X.shape
+        predictions = self.predict(X)
         errors = (predictions - y) ** 2
         if self.model_type == 'ols':
             predictions = self.predict(X)
             cov_inv = np.linalg.pinv(np.cov(X.T))
-            grad_square = np.dot(X.T, errors * X)
-            bias = 2 * np.trace(cov_inv @ grad_square)/ len(sample_num ** 2)
+            grad_square = np.dot(X.T, errors.reshape(-1,1) * X)
+            bias = 2 * np.trace(cov_inv @ grad_square)/ (sample_num ** 2)
         return np.mean(errors) + bias
 
 

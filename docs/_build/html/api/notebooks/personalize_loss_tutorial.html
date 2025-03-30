@@ -335,15 +335,9 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="nn">cp</span>
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s2">&quot;../../../dro&quot;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
-
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="nn">cp</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.Wasserstein_DRO</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
@@ -371,11 +365,11 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [-0.48891007299787476, 0.0], &#39;b&#39;: array(1.9556403)}
-{&#39;theta&#39;: [-0.47103180655319055, 0.0], &#39;b&#39;: array(1.88412725)}
-{&#39;theta&#39;: [-0.4651670885530432, 0.0], &#39;b&#39;: array(1.86066836)}
-{&#39;theta&#39;: [-0.4620192279713162, 0.0], &#39;b&#39;: array(1.84807691)}
-{&#39;theta&#39;: [-0.4599744797040242, 0.0], &#39;b&#39;: array(1.83989792)}
+{&#39;theta&#39;: [-0.4889100722052225, 0.0], &#39;b&#39;: array(1.9556403)}
+{&#39;theta&#39;: [-0.4710318069318671, 0.0], &#39;b&#39;: array(1.88412726)}
+{&#39;theta&#39;: [-0.4651670885521472, 0.0], &#39;b&#39;: array(1.86066836)}
+{&#39;theta&#39;: [-0.4620192280358392, 0.0], &#39;b&#39;: array(1.84807691)}
+{&#39;theta&#39;: [-0.4599744797051139, 0.0], &#39;b&#39;: array(1.83989792)}
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -383,7 +377,7 @@
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/Users/wty6162/Desktop/DRO_solver/dro/dro/src/linear_model/base.py:49: UserWarning: Unsupported model_type: quantile. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.
+/Users/jiashuo/dro/dro/src/linear_model/base.py:58: UserWarning: Unsupported model_type: quantile. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.
   warnings.warn(f&#34;Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.&#34;, UserWarning)
 </pre></div></div>
 </div>

@@ -331,22 +331,16 @@
 <section id="Sinkhorn-DRO">
 <h2>Sinkhorn DRO<a class="headerlink" href="#Sinkhorn-DRO" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s2">&quot;../../../../dro/&quot;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.sinkhorn_dro</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.sinkhorn_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Ridge</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">Ridge</span>
 <span class="c1"># Data generation</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
 <span class="c1"># Model training</span>
 <span class="n">dro_model</span> <span class="o">=</span> <span class="n">SinkhornLinearDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">k_sample_max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">reg_param</span><span class="o">=</span><span class="mf">.001</span><span class="p">,</span> <span class="n">lambda_param</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;lad&#39;</span><span class="p">)</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">dro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">)</span>
@@ -366,10 +360,10 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Sinkhorn DRO Parameters: {&#39;theta&#39;: array([33.68254  , 31.991789 , 29.35907  , 75.16828  ,  7.1587925,
-       10.2164135, 76.18989  ,  9.457142 ,  5.111819 , 58.3504   ],
-      dtype=float32), &#39;bias&#39;: array([0.02418859], dtype=float32)}
-0.9683442762295996
+Sinkhorn DRO Parameters: {&#39;theta&#39;: array([33.62842  , 32.07984  , 29.337708 , 75.20312  ,  7.1283865,
+       10.303551 , 76.18889  ,  9.4795065,  5.1007333, 58.23321  ],
+      dtype=float32), &#39;bias&#39;: array([-0.06006475], dtype=float32)}
+0.970199884678563
 Sklearn Coefficients: [33.63648075 32.05820144 29.38822328 75.17312611  7.16263766 10.24411887
  76.22903811  9.4250155   5.12332423 58.27112617]
 0.9999457911466745
@@ -380,41 +374,15 @@ Sklearn Coefficients: [33.63648075 32.05820144 29.38822328 75.17312611  7.162637
 <h2>MOT-DRO<a class="headerlink" href="#MOT-DRO" title="Permalink to this heading">¶</a></h2>
 <p>Based on Theorem 5.2, the current MOT-DRO does not support OLS (not satisfying Assumption 5.1) and does not allow when the uncertainties in Y also change.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mot_dro_model</span><span class="o">.</span><span class="n">square</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-2
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span><span class="p">,</span> <span class="n">make_classification</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">Ridge</span>
 <span class="c1"># Data generation</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-
-
-
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s2">&quot;../../../../dro/&quot;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">dro.src.linear_model.mot_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">mot_dro_model</span> <span class="o">=</span> <span class="n">MOTDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;lad&#39;</span><span class="p">,</span> <span class="n">fit_intercept</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -432,22 +400,22 @@ optimal
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [76.21549008802516,
-  53.29365206722688,
-  5.247024476719606,
-  52.46410467428327,
-  71.74006746557663,
-  1.214010437742156,
-  63.72428607060585,
-  14.065875967406525,
-  2.9976521566974133,
-  44.93666594066296],
- &#39;b&#39;: array(1.29102913)}
+{&#39;theta&#39;: [76.21548985345878,
+  53.29365202998623,
+  5.247024494762593,
+  52.46410461035137,
+  71.74006738420996,
+  1.214010364770905,
+  63.72428598909404,
+  14.06587595353978,
+  2.997652104182758,
+  44.93666589113934],
+ &#39;b&#39;: array(1.29102914)}
 </pre></div></div>
 </div>
 </section>

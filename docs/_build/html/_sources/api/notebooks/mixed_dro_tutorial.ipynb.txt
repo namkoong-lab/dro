@@ -23,17 +23,17 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Sinkhorn DRO Parameters: {'theta': array([33.68254  , 31.991789 , 29.35907  , 75.16828  ,  7.1587925,\n",
-      "       10.2164135, 76.18989  ,  9.457142 ,  5.111819 , 58.3504   ],\n",
-      "      dtype=float32), 'bias': array([0.02418859], dtype=float32)}\n",
-      "0.9683442762295996\n",
+      "Sinkhorn DRO Parameters: {'theta': array([33.62842  , 32.07984  , 29.337708 , 75.20312  ,  7.1283865,\n",
+      "       10.303551 , 76.18889  ,  9.4795065,  5.1007333, 58.23321  ],\n",
+      "      dtype=float32), 'bias': array([-0.06006475], dtype=float32)}\n",
+      "0.970199884678563\n",
       "Sklearn Coefficients: [33.63648075 32.05820144 29.38822328 75.17312611  7.16263766 10.24411887\n",
       " 76.22903811  9.4250155   5.12332423 58.27112617]\n",
       "0.9999457911466745\n"
@@ -41,19 +41,13 @@
     }
    ],
    "source": [
-    "import numpy as np\n",
-    "import os\n",
-    "# Set the new path\n",
-    "new_path = \"../../../../dro/\"\n",
-    "# Change the current working directory\n",
-    "os.chdir(new_path)\n",
-    "\n",
     "from dro.src.linear_model.sinkhorn_dro import *\n",
     "from sklearn.datasets import make_regression\n",
+    "from sklearn.linear_model import Ridge\n",
     "\n",
-    "from sklearn.linear_model import LinearRegression, Ridge\n",
     "# Data generation\n",
     "X, y = make_regression(n_samples=1000, n_features=10, noise=1, random_state=42)\n",
+    "\n",
     "# Model training\n",
     "dro_model = SinkhornLinearDRO(input_dim=10, output_dim=1, k_sample_max=4, reg_param=.001, lambda_param=100, max_iter=1000, model_type='lad')\n",
     "params = dro_model.fit(X, y, optimization_type=\"SG\")\n",
@@ -78,27 +72,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "2"
-      ]
-     },
-     "execution_count": 3,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "mot_dro_model.square"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 12,
+   "execution_count": 4,
    "metadata": {},
    "outputs": [
     {
@@ -111,20 +85,20 @@
     {
      "data": {
       "text/plain": [
-       "{'theta': [76.21549008802516,\n",
-       "  53.29365206722688,\n",
-       "  5.247024476719606,\n",
-       "  52.46410467428327,\n",
-       "  71.74006746557663,\n",
-       "  1.214010437742156,\n",
-       "  63.72428607060585,\n",
-       "  14.065875967406525,\n",
-       "  2.9976521566974133,\n",
-       "  44.93666594066296],\n",
-       " 'b': array(1.29102913)}"
+       "{'theta': [76.21548985345878,\n",
+       "  53.29365202998623,\n",
+       "  5.247024494762593,\n",
+       "  52.46410461035137,\n",
+       "  71.74006738420996,\n",
+       "  1.214010364770905,\n",
+       "  63.72428598909404,\n",
+       "  14.06587595353978,\n",
+       "  2.997652104182758,\n",
+       "  44.93666589113934],\n",
+       " 'b': array(1.29102914)}"
       ]
      },
-     "execution_count": 12,
+     "execution_count": 4,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -132,19 +106,10 @@
    "source": [
     "import numpy as np\n",
     "import os\n",
+    "from sklearn.datasets import make_regression\n",
     "\n",
-    "from sklearn.datasets import make_regression, make_classification\n",
-    "\n",
-    "from sklearn.linear_model import LinearRegression, Ridge\n",
     "# Data generation\n",
     "X, y = make_regression(n_samples=100, n_features=10, random_state=42)\n",
-    "\n",
-    "\n",
-    "\n",
-    "# Set the new path\n",
-    "new_path = \"../../../../dro/\"\n",
-    "# Change the current working directory\n",
-    "os.chdir(new_path)\n",
     "\n",
     "from dro.src.linear_model.mot_dro import *\n",
     "mot_dro_model = MOTDRO(input_dim = 10, model_type = 'lad', fit_intercept = True)\n",
@@ -169,7 +134,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.9.7"
+   "version": "3.10.14"
   },
   "orig_nbformat": 4,
   "vscode": {

@@ -100,10 +100,6 @@ class BayesianDRO(BaseLinearDRO):
             self.posterior_param_num = config['posterior_param_num']
     
 
-    
-
-
-
     def resample(self, X, y):
         """Generate resampled data based on posterior parameters.
 
@@ -226,8 +222,8 @@ class BayesianDRO(BaseLinearDRO):
             >>> print(params["theta"])  # e.g., [0.5, -1.2, ..., 0.8]
             >>> print(params["b"])      # e.g., 0.3
         """
-        X, y = self.resample(X, y)
-
+        sample_size = X.shape[0]
+        X, y = self.resample(X, y)        
         sample_size = self.posterior_sample_ratio * sample_size
 
         theta = cp.Variable(self.input_dim)

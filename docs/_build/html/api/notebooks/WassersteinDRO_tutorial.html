@@ -328,17 +328,11 @@
   <section id="WDRO">
 <h1>WDRO<a class="headerlink" href="#WDRO" title="Permalink to this heading">¶</a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s2">&quot;/Users/wty6162/Desktop/DRO_solver/dro&quot;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.Wasserstein_DRO</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <br/></pre></div>
 </div>
 </div>
@@ -348,7 +342,7 @@
 <section id="Load-Data">
 <h2>Load Data<a class="headerlink" href="#Load-Data" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.data.dataloader_regression</span> <span class="kn">import</span> <span class="n">regression_basic</span>
@@ -372,7 +366,7 @@
 <h2>Model Fit<a class="headerlink" href="#Model-Fit" title="Permalink to this heading">¶</a></h2>
 <p>Recall <span class="math notranslate nohighlight">\(X\)</span> being the feature and <span class="math notranslate nohighlight">\(Y\)</span> being the outcome, we allow both <span class="math notranslate nohighlight">\(Y = \theta^{\top}X\)</span> and <span class="math notranslate nohighlight">\(Y = \theta^{\top}X + b\)</span> by setting <code class="docutils literal notranslate"><span class="pre">fit_intercept</span></code> (default = True).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model1</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
@@ -382,12 +376,12 @@
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [-1.2080033634343326, 1.2080033651301767], &#39;b&#39;: array(1.15966124)}
+{&#39;theta&#39;: [-1.208003584870942, 1.2080035865776435], &#39;b&#39;: array(1.15966179)}
 </pre></div></div>
 </div>
 </section>
@@ -395,7 +389,7 @@
 <h2>Worst-case Distribution and Visualization<a class="headerlink" href="#Worst-case-Distribution-and-Visualization" title="Permalink to this heading">¶</a></h2>
 <p>For SVM / Logistic / LAD, we provide two different worst-case distribution computations, 1 stands for asymptotic approximation, 2 stands for the exact calculation while requiring solving n optimization problems.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model1</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
@@ -411,31 +405,31 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[6.05127084e-11 8.09877239e-11 0.00000000e+00 6.18740229e-11
- 9.99999999e-01 0.00000000e+00 0.00000000e+00 8.86222641e-11
- 1.98821395e-10 2.14288576e-10 4.59793317e-11 0.00000000e+00
- 5.36600904e-11 0.00000000e+00 1.22770611e-10 7.50647962e-10
- 9.99999997e-01 0.00000000e+00 7.59757167e-11 6.61366487e-11
- 4.71260744e-11 0.00000000e+00 3.02062165e-09 8.79203145e-11
- 0.00000000e+00 5.69066286e-11 4.95120317e-11 0.00000000e+00
- 5.35145682e-11 6.91563339e-11 0.00000000e+00 0.00000000e+00
- 1.11314380e-10 0.00000000e+00 0.00000000e+00 0.00000000e+00
- 7.28624277e-11 1.17282434e-02 4.63855369e-11 3.79915887e-10
- 5.46411306e-11 7.54263708e-11 0.00000000e+00 0.00000000e+00
- 5.24936827e-11 1.35330209e-10 5.87498026e-11 6.73882542e-11
- 0.00000000e+00 8.01410236e-11 6.94972126e-11 0.00000000e+00
- 4.65056641e-11 1.66241423e-10 9.99999998e-01 6.64886156e-11
- 0.00000000e+00 4.84046513e-11 0.00000000e+00 0.00000000e+00
- 2.07520363e-10 5.94239235e-11 0.00000000e+00 1.30005052e-10
- 1.30305181e-10 4.88271754e-01 6.17261902e-11 0.00000000e+00
- 1.04746579e-10 1.56723679e-10 7.07579351e-11 4.62554620e-11
- 4.96064844e-11 5.62320495e-11 8.16979380e-11 0.00000000e+00
- 0.00000000e+00 1.86815332e-10 1.74308903e-10 0.00000000e+00
- 0.00000000e+00 1.14445164e-10 0.00000000e+00 5.07378383e-11
- 6.44672894e-11 7.21126936e-11 1.44403819e-10 9.99999999e-01
- 0.00000000e+00 1.32532072e-10 8.79735681e-11 0.00000000e+00
- 0.00000000e+00 1.15090723e-10 0.00000000e+00 5.91730383e-11
- 8.69890311e-11 0.00000000e+00 5.98782889e-11 5.67996585e-11] 0.003436426116838488 0.0
+[3.18639091e-12 4.21703119e-12 0.00000000e+00 3.25475514e-12
+ 1.00000000e+00 0.00000000e+00 0.00000000e+00 4.60277753e-12
+ 1.02526476e-11 1.10563554e-11 2.45641409e-12 0.00000000e+00
+ 2.84238435e-12 0.00000000e+00 6.33801177e-12 3.93117405e-11
+ 1.00000000e+00 0.00000000e+00 3.96421269e-12 3.46894581e-12
+ 2.51412118e-12 0.00000000e+00 3.84107737e-10 4.56729223e-12
+ 0.00000000e+00 3.00535880e-12 2.63407617e-12 0.00000000e+00
+ 2.83507992e-12 3.62079608e-12 0.00000000e+00 0.00000000e+00
+ 5.75420387e-12 0.00000000e+00 0.00000000e+00 0.00000000e+00
+ 3.80735179e-12 1.12760333e-03 2.47686392e-12 1.97720814e-11
+ 2.89162878e-12 3.93652762e-12 0.00000000e+00 0.00000000e+00
+ 2.78382687e-12 6.97988361e-12 3.09788077e-12 3.53187641e-12
+ 0.00000000e+00 4.17427214e-12 3.63795054e-12 0.00000000e+00
+ 2.48290585e-12 8.56762972e-12 1.00000000e+00 3.48663558e-12
+ 0.00000000e+00 2.57841558e-12 0.00000000e+00 0.00000000e+00
+ 1.07041917e-11 3.13172453e-12 0.00000000e+00 6.70753770e-12
+ 6.72286378e-12 4.98872396e-01 3.24733348e-12 0.00000000e+00
+ 5.42021752e-12 8.07758296e-12 3.70138833e-12 2.47031955e-12
+ 2.63881927e-12 2.97148331e-12 4.25286031e-12 0.00000000e+00
+ 0.00000000e+00 9.63029906e-12 8.98373236e-12 0.00000000e+00
+ 0.00000000e+00 5.91353527e-12 0.00000000e+00 2.69566043e-12
+ 3.38503533e-12 3.76958630e-12 7.44475608e-12 1.00000000e+00
+ 0.00000000e+00 6.83673811e-12 4.56997076e-12 0.00000000e+00
+ 0.00000000e+00 5.94644898e-12 0.00000000e+00 3.11911971e-12
+ 4.52019371e-12 0.00000000e+00 3.15452764e-12 2.99996905e-12] 0.003436426116838488 0.0
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -452,209 +446,45 @@
 <img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_8_2.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_8_2.png" />
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-100
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">worst_case_log</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{&#39;sample_pts&#39;: [array([[ 1.69259393e+00, -7.70462261e-01],
-         [ 3.50596012e+00,  2.31109425e-01],
-         [ 1.45727292e+00,  6.23473917e-03],
-         [ 1.46332961e+00, -1.00205506e+00],
-         [ 2.16870957e+00, -2.44960555e+00],
-         [ 2.01829470e-01, -1.09861283e+00],
-         [ 9.13916182e-01, -2.22077972e-01],
-         [ 1.01872323e+00, -1.94862901e+00],
-         [ 3.39239607e+00, -7.62101605e-01],
-         [ 1.99427551e+00, -1.96107349e+00],
-         [ 1.38236458e+00, -4.25402715e-01],
-         [ 7.75753725e-01, -1.60627286e-01],
-         [ 1.32610861e+00, -8.28019054e-01],
-         [ 1.32504069e+00,  1.31595288e+00],
-         [ 1.91325008e+00, -1.59403623e+00],
-         [ 2.74929221e+00, -1.75716895e+00],
-         [ 2.13561090e+00, -2.49599543e+00],
-         [ 5.98561254e-01, -3.39464069e-01],
-         [ 2.66521388e+00, -3.64957023e-01],
-         [ 1.81109902e+00, -8.37429000e-01],
-         [ 4.48225312e-01, -1.25616951e+00],
-         [ 1.46610853e+00,  5.20796922e-01],
-         [ 2.27036559e+00, -2.29936546e+00],
-         [ 2.25083127e+00, -9.21407585e-01],
-         [ 1.24982530e+00,  7.53509844e-02],
-         [ 2.95774683e+00,  3.94954815e-01],
-         [ 1.08752978e+00, -8.45537680e-01],
-         [ 2.25801073e+00,  4.39219823e-01],
-         [ 1.44757306e+00, -7.21984281e-01],
-         [ 8.20412329e-01, -1.73253193e+00],
-         [ 2.73927312e+00,  8.19914724e-01],
-         [ 1.85473718e+00,  4.67207593e-01],
-         [ 2.28838333e+00, -1.18144506e+00],
-         [ 2.28814291e+00,  1.00171126e+00],
-         [ 1.89092126e+00,  1.02831835e+00],
-         [-6.92997802e-01,  2.85577200e-01],
-         [ 2.01379437e+00, -8.35332655e-01],
-         [ 2.01850808e+00, -2.52389422e+00],
-         [ 1.70707541e+00, -1.79212733e-01],
-         [ 3.40464135e+00, -1.05459552e+00],
-         [ 1.11825370e+00, -1.03808235e+00],
-         [ 2.84214942e+00, -2.07574195e-01],
-         [ 1.39698710e+00, -2.30578713e-02],
-         [ 2.02382485e+00,  4.32319686e-01],
-         [ 1.22469421e+00, -8.63987451e-01],
-         [ 1.53463915e+00, -1.99984025e+00],
-         [ 2.22286758e+00, -2.75270032e-01],
-         [ 1.93186076e+00, -7.70912438e-01],
-         [ 5.11376560e-01, -9.56970627e-01],
-         [ 1.58403279e+00, -1.33860257e+00],
-         [ 6.21405842e-01,  2.24453827e+00],
-         [ 2.66887745e+00,  2.01506523e+00],
-         [ 1.04024194e+00,  1.76604150e+00],
-         [-1.13607966e+00,  1.81397354e+00],
-         [ 8.42921764e-01,  4.30372953e+00],
-         [ 5.90330589e-01,  2.14203476e+00],
-         [ 7.47979784e-01,  6.71809379e-01],
-         [ 1.92551437e+00,  2.59242045e+00],
-         [ 1.57372350e+00,  9.31099962e-01],
-         [ 2.18548586e+00,  4.38636354e-01],
-         [ 1.36954865e+00,  4.03094304e+00],
-         [-2.07844772e-01,  1.27418969e+00],
-         [ 8.82342919e-01,  1.33701176e+00],
-         [-7.67971877e-01,  1.90905039e+00],
-         [-2.79612160e-01,  2.31407985e+00],
-         [-1.36732681e-01,  3.39042182e+00],
-         [-5.61738747e-04,  1.51842590e+00],
-         [ 1.59620877e+00,  6.09623101e-01],
-         [ 1.01015149e+00,  3.14763017e+00],
-         [-8.24791681e-01,  2.02512128e+00],
-         [ 1.04257435e+00,  2.62231029e+00],
-         [-4.54259157e-01,  5.20030804e-01],
-         [ 1.30463312e+00,  2.13747209e+00],
-         [ 1.03318440e+00,  2.18693563e+00],
-         [ 1.02666832e-01,  2.07274111e+00],
-         [ 1.07576403e+00,  1.12613600e+00],
-         [ 2.64846606e+00,  2.31432034e+00],
-         [-4.08611944e-01,  2.49704103e+00],
-         [-1.91990117e-01,  2.62757202e+00],
-         [ 1.94128713e+00,  1.01980510e+00],
-         [ 1.74606768e+00,  2.25326834e+00],
-         [ 1.60475171e+00,  3.73728040e+00],
-         [ 5.37303438e-01,  1.08675125e+00],
-         [-1.06822876e-01,  1.02467713e+00],
-         [ 7.05589844e-01,  2.18163939e+00],
-         [ 1.05938235e+00,  2.66767067e+00],
-         [ 7.95693445e-01,  3.29402149e+00],
-         [ 5.18034720e-01,  4.56065658e+00],
-         [ 1.40835890e+00,  9.83329861e-01],
-         [-2.88200944e-01,  2.32295983e+00],
-         [ 5.59228768e-01,  2.55448791e+00],
-         [ 1.25592918e+00,  1.76765850e+00],
-         [-6.41021645e-02,  3.25640192e-01],
-         [ 3.36176602e-01,  2.69688621e+00],
-         [ 9.96785298e-01,  5.94748638e-01],
-         [ 9.55872479e-01,  2.22580480e+00],
-         [-1.01165883e-01,  1.99421252e+00],
-         [ 8.40900272e-01,  6.97517119e-01],
-         [ 1.14047891e+00,  2.40127194e+00],
-         [ 1.86574280e+00,  2.89428947e+00],
-         [-9.99830741e+03,  9.99922954e+03]]),
-  array([-1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1.,
-         -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1.,
-         -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1.,
-         -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1.,  1.,  1.,
-          1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,
-          1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,
-          1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,
-          1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1., -1.])],
- &#39;weight&#39;: array([0.0099, 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  , 0.01  ,
-        0.01  , 0.01  , 0.01  , 0.01  , 0.0001])}
-</pre></div></div>
-</div>
 </section>
 <section id="Robust-Satisificng-version-of-Wasserstein-DRO">
 <h2>Robust Satisificng version of Wasserstein DRO<a class="headerlink" href="#Robust-Satisificng-version-of-Wasserstein-DRO" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/wty6162/Desktop/DRO_solver&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.Wasserstein_DRO</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">clf_model_rs</span> <span class="o">=</span> <span class="n">Wasserstein_DRO_satisficing</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+<span class="n">clf_model_rs</span> <span class="o">=</span> <span class="n">WassersteinDROsatisficing</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">)</span>
 <span class="n">clf_model_rs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [-0.3365834154114554, 6.700882661679504]}
+{&#39;theta&#39;: [-0.3365834154114553, 6.700882661679513], &#39;b&#39;: array(-7.23837706)}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/wty6162/Desktop/DRO_solver&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.Wasserstein_DRO</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="kn">from</span> <span class="nn">dro.src.data.dataloader_regression</span> <span class="kn">import</span> <span class="n">regression_basic</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">dro.src.data.dataloader_classification</span> <span class="kn">import</span> <span class="n">classification_basic</span>
 <span class="kn">from</span> <span class="nn">dro.src.data.draw_utils</span> <span class="kn">import</span> <span class="n">draw_classification</span>
 
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">visualize</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-<span class="c1"># draw_classification(X, y, title = &#39;Raw Data&#39;)</span>
 
 <span class="n">clf_model1</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
 <span class="n">clf_model1</span><span class="o">.</span><span class="n">fit_intercept</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">clf_model1</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="s1">&#39;inf&#39;</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
 <span class="n">clf_model1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="n">worst_case_log</span> <span class="o">=</span> <span class="n">clf_model1</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">worst_case_log</span> <span class="o">=</span> <span class="n">clf_model1</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;asymp&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="n">draw_classification</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;worst-case&#39;</span><span class="p">)</span>
@@ -665,14 +495,26 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_13_0.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_13_0.png" />
+<div class="highlight"><pre>
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0.] 0.09090909090909091 0.5
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_11_1.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_11_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_13_1.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_13_1.png" />
+<img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_11_2.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_11_2.png" />
 </div>
 </div>
 </section>
@@ -685,13 +527,7 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s2">&quot;/Users/wty6162/Desktop/DRO_solver/dro&quot;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.Wasserstein_DRO</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">dro.src.data.dataloader_regression</span> <span class="kn">import</span> <span class="n">regression_basic</span>
 
 <span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">5</span>

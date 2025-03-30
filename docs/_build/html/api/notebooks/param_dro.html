@@ -342,16 +342,11 @@
 <p>We provide additional model type called <code class="docutils literal notranslate"><span class="pre">newsvendor</span></code> loss. The default setup is as follows: <span class="math notranslate nohighlight">\(\ell(\theta;(X, Y)) = 3 (Y - \theta)_+ + (\theta - Y)_+\)</span>. In this case, X is the unit vector. That corresponds to exponential gamma conjugate.</p>
 <p>That is, when conducting fitting, resampling, we ignore the existence of <span class="math notranslate nohighlight">\(X\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Newsvendor Example</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s2">&quot;/Users/wty6162/Desktop/DRO_solver/dro&quot;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">dro.src.linear_model.bayesian_dro</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -359,35 +354,26 @@
 
 <span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">sample_num</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">sample_num</span><span class="p">,</span> <span class="n">feature_dim</span><span class="p">))]</span>
-<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_num</span><span class="p">)]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">sample_num</span><span class="p">,</span> <span class="n">feature_dim</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_num</span><span class="p">)</span>
 
 <span class="n">reg_model</span> <span class="o">=</span> <span class="n">BayesianDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;newsvendor&#39;</span><span class="p">)</span>
 <span class="n">reg_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;posterior_param_num&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;distribution_class&#39;</span><span class="p">:</span> <span class="s1">&#39;Exponential&#39;</span><span class="p">,</span> <span class="s1">&#39;distance_type&#39;</span><span class="p">:</span> <span class="s1">&#39;KL&#39;</span><span class="p">})</span>
-<span class="n">reg_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">resample</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">reg_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/Users/wty6162/Desktop/DRO_solver/dro/dro/src/linear_model/base.py:43: UserWarning: Unsupported model_type: newsvendor. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.
-  warnings.warn(f&#34;Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.&#34;, UserWarning)
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [1.3400299889891116], &#39;b&#39;: None}
+{&#39;theta&#39;: [1.247224712497421], &#39;b&#39;: None}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_model</span><span class="o">.</span><span class="n">distance_type</span>
@@ -395,7 +381,7 @@
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -404,7 +390,7 @@
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">theta</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -423,20 +409,14 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[1.33596979]
+None
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Regression Example</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s2">&quot;/Users/wty6162/Desktop/DRO_solver/dro&quot;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">dro.src.linear_model.bayesian_dro</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -465,17 +445,17 @@ sample lool 4
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [59.767700832743515,
-  97.90700650249167,
-  63.999537099064085,
-  56.32814220728933,
-  35.44050785928378],
- &#39;b&#39;: array(1.26951835)}
+{&#39;theta&#39;: [62.32133125379543,
+  98.46704995782926,
+  63.84212624706619,
+  55.049783063901124,
+  35.33344387475412],
+ &#39;b&#39;: array(0.66106353)}
 </pre></div></div>
 </div>
 </section>

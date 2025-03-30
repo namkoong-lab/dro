@@ -328,26 +328,17 @@
   <section id="f-Divergence-DRO">
 <h1>f-Divergence DRO<a class="headerlink" href="#f-Divergence-DRO" title="Permalink to this heading">¶</a></h1>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s1">&#39;/Users/wty6162/Desktop/DRO_solver/dro&#39;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
 
 <span class="c1"># Prepare Data</span>
 <span class="kn">from</span> <span class="nn">dro.src.data.dataloader_regression</span> <span class="kn">import</span> <span class="n">regression_basic</span>
 <span class="kn">from</span> <span class="nn">dro.src.data.dataloader_classification</span> <span class="kn">import</span> <span class="n">classification_basic</span>
 <span class="kn">from</span> <span class="nn">dro.src.data.draw_utils</span> <span class="kn">import</span> <span class="n">draw_classification</span>
 
-
-
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">visualize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># X, y = regression_basic(num_samples = 100, d = 2, noise = 1)</span>
 </pre></div>
 </div>
 </div>
@@ -364,7 +355,7 @@
 <p>We include chi2, cvar, kl, tv distance, which corresponds to the standard definition of (generalized) f-divergence.</p>
 <p>The following steps including model fitting, and worst-case illustrations.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
@@ -401,10 +392,10 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [-0.634717973292724, 1.9680341998100146], &#39;b&#39;: array(-0.51071442)}
-{&#39;theta&#39;: [-0.2180278621384498, 0.7358714381027359], &#39;dual&#39;: 0.16653030362514595, &#39;b&#39;: array(-0.23364987)}
-{&#39;theta&#39;: [-1.4132818466302876e-07, 2.8292473091650103e-07], &#39;threshold&#39;: array(0.69314691), &#39;b&#39;: array(-4.42341379e-08)}
-{&#39;theta&#39;: [-1.3466023865558, 3.8236983494071906], &#39;threshold&#39;: array(0.00019594), &#39;b&#39;: array(-0.7506087)}
+{&#39;theta&#39;: [-0.6347179732189498, 1.9680342006517346], &#39;b&#39;: array(-0.51071442)}
+{&#39;theta&#39;: [-0.21802718101618923, 0.7358683074228745], &#39;dual&#39;: 0.16652943997935335, &#39;b&#39;: array(-0.233648)}
+{&#39;theta&#39;: [-1.4147453349806304e-07, 2.8321768527388613e-07], &#39;threshold&#39;: array(0.69314691), &#39;b&#39;: array(-4.42798951e-08)}
+{&#39;theta&#39;: [-1.3466023842845223, 3.823698339513048], &#39;threshold&#39;: array(0.00019594), &#39;b&#39;: array(-0.7506087)}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -457,56 +448,38 @@
 <section id="data-driven-evaluation">
 <h2>data driven evaluation<a class="headerlink" href="#data-driven-evaluation" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span>
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span><span class="p">,</span> <span class="n">make_classification</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">Ridge</span>
 <span class="c1"># Data generation</span>
-
 <span class="n">sample_num</span> <span class="o">=</span> <span class="mi">200</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">=</span> <span class="n">sample_num</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">noise</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
-
-
-<span class="c1"># Set the new path</span>
-<span class="n">new_path</span> <span class="o">=</span> <span class="s2">&quot;/Users/wty6162/Desktop/DRO_solver/dro&quot;</span>
-<span class="c1"># Change the current working directory</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
 <span class="n">eps</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">sample_num</span>
-
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">dro_model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;ols&#39;</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">dro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
 <span class="n">dro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">dro_model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-0.7058659787811907
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-24.76397451879509
+26.40481855042916
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">errors</span> <span class="o">=</span> <span class="p">(</span><span class="n">dro_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
@@ -515,32 +488,12 @@
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-5.505360679980362e-22
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
-<span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-array([[1, 2],
-       [6, 8]])
+24.05810847832465
 </pre></div></div>
 </div>
 <p>These f-divergence DROs are suitable for handling general distribution shifts with likelihood misspecification, while can be too worst-case in practice.</p>
@@ -549,17 +502,27 @@ array([[1, 2],
 <section id="Partial-Distribution-Shift">
 <h1>Partial Distribution Shift<a class="headerlink" href="#Partial-Distribution-Shift" title="Permalink to this heading">¶</a></h1>
 <p>Some special kinds of DRO models can help handle problems of particular worst-case distribution shift, i.e., covariate shift (marginal_dro). Both of them are built from CVaR-DRO.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.conditional_dro</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">dro.src.linear_model.marginal_dro</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dro.src.data.dataloader_classification</span> <span class="kn">import</span> <span class="n">classification_basic</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">visualize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/api_notebooks_f_dro_tutorial_11_0.png" src="../../_images/api_notebooks_f_dro_tutorial_11_0.png" />
+</div>
+</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model_margin</span> <span class="o">=</span> <span class="n">MarginalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">)</span>
@@ -579,40 +542,18 @@ array([[1, 2],
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-marginal [-1.180139617545881, 2.363210356665714]
-conditional {&#39;theta&#39;: [-1.2843613411510384, 3.530303897479498], &#39;b&#39;: array(-0.6424686)}
-</pre></div></div>
-</div>
-<p>We have not implemented the worst case distribution of both cases yet.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model_margin</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
-<span class="ansi-green-fg">/var/folders/72/gsmssx6d0v585bc4x6z7cjqh0000gn/T/ipykernel_31607/3705992541.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>clf_model_margin<span class="ansi-blue-fg">.</span>worst_distribution<span class="ansi-blue-fg">(</span>X<span class="ansi-blue-fg">,</span> y<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-red-fg">AttributeError</span>: &#39;MarginalCVaRDRO&#39; object has no attribute &#39;worst_distribution&#39;
+marginal [-1.1801432134409149, 2.363217574296201]
+conditional {&#39;theta&#39;: [-1.2843606942632635, 3.5303014542999374], &#39;b&#39;: array(-0.64246721)}
 </pre></div></div>
 </div>
 <section id="Bayesian-perspective">
 <h2>Bayesian perspective<a class="headerlink" href="#Bayesian-perspective" title="Permalink to this heading">¶</a></h2>
 <p>In some special examples where we have some priors or parametric information for the distribution shift, we can apply the following Bayesian DRO or Parametric DRO. These are usually built or designed with a under the f-dro framework.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.Bayesian_dro</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.bayesian_dro</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 </div>
