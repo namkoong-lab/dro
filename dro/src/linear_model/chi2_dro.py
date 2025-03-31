@@ -172,50 +172,6 @@ class Chi2DRO(BaseLinearDRO):
 
         return {"theta": self.theta.reshape(-1).tolist(), "b": self.b}
 
-    def evaluate(self, X: np.ndarray, y: np.ndarray) -> float:
-        """Evaluate model performance with bias-corrected mean squared error (MSE).
-        
-        Specifically designed for OLS models to compute an unbiased performance estimate 
-        by adjusting for the covariance structure of the features. This implementation 
-        accelerates evaluation by avoiding full retraining.
-
-        :param X: Feature matrix of shape `(n_samples, n_features)`. 
-            Must match the model's `input_dim` (n_features).
-        :type X: numpy.ndarray
-        :param y: Target values of shape `(n_samples,)`.
-        :type y: numpy.ndarray
-
-        :return: Bias-corrected MSE for OLS models. Returns raw MSE for other model types.
-        :rtype: float
-        :raises ValueError: 
-            - If `X` and `y` have inconsistent sample sizes
-            - If `X` feature dimension ≠ `input_dim`
-        :raises LinAlgError: If feature covariance matrix is singular (non-invertible)
-
-        
-        Example:
-            >>> model = Chi2DRO(input_dim=5, model_type='ols')
-            >>> X_test = np.random.randn(50, 5)
-            >>> y_test = np.random.randn(50)
-            >>> score = model.evaluate(X_test, y_test)  
-            >>> print(f"Corrected MSE: {score:.4f}")
-
-        .. note::
-            - Currently, bias correction is only implemented for ``model_type='ols'``; other model types return the raw MSE.
-            - Covariance matrix computation uses pseudo-inverse to handle high-dimensional data (``n_features > n_samples``).
-        """
-
-        sample_num, __ = X.shape
-        predictions = self.predict(X)
-        errors = (predictions - y) ** 2
-        if self.model_type == 'ols':
-            predictions = self.predict(X)
-            cov_inv = np.linalg.pinv(np.cov(X.T))
-            grad_square = np.dot(X.T, errors.reshape(-1,1) * X)
-            bias = 2 * np.trace(cov_inv @ grad_square)/ (sample_num ** 2)
-        return np.mean(errors) + bias
-
-
 
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Compute the worst-case distribution within the chi-squared ambiguity set.
