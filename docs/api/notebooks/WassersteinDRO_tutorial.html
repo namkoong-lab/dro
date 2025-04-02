@@ -24,6 +24,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
+    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/WassersteinDRO_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Personalized Loss" href="personalize_loss_tutorial.html" />
@@ -523,7 +524,7 @@
 <h1>Regression Task<a class="headerlink" href="#Regression-Task" title="Permalink to this heading">¶</a></h1>
 <p>We can construct similar models for Wasserstein DRO regression models, including <code class="docutils literal notranslate"><span class="pre">lad</span></code> and <code class="docutils literal notranslate"><span class="pre">ols</span></code> loss.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -553,195 +554,13 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
-<span class="ansi-green-fg">/var/folders/72/gsmssx6d0v585bc4x6z7cjqh0000gn/T/ipykernel_2471/2533229371.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      6</span> os<span class="ansi-blue-fg">.</span>chdir<span class="ansi-blue-fg">(</span>new_path<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      7</span>
-<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> dro<span class="ansi-blue-fg">.</span>src<span class="ansi-blue-fg">.</span>linear_model<span class="ansi-blue-fg">.</span>Wasserstein_DRO <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span> <span class="ansi-green-fg">from</span> dro<span class="ansi-blue-fg">.</span>src<span class="ansi-blue-fg">.</span>data<span class="ansi-blue-fg">.</span>dataloader_regression <span class="ansi-green-fg">import</span> regression_basic
-<span class="ansi-green-intense-fg ansi-bold">     10</span>
-
-<span class="ansi-green-fg">~/Desktop/DRO_solver/dro/dro/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      4</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span>
-<span class="ansi-green-fg">----&gt; 6</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>src <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-
-<span class="ansi-green-fg">~/Desktop/DRO_solver/dro/dro/src/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>data <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>linear_model <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>neural_model <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-
-<span class="ansi-green-fg">~/Desktop/DRO_solver/dro/dro/src/data/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>dataloader_classification <span class="ansi-green-fg">import</span> classification_basic<span class="ansi-blue-fg">,</span> classification_DN21<span class="ansi-blue-fg">,</span> classification_SNVD20<span class="ansi-blue-fg">,</span> classification_LWLC
-<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>dataloader_regression <span class="ansi-green-fg">import</span> regression_basic<span class="ansi-blue-fg">,</span> regression_DN20_1<span class="ansi-blue-fg">,</span> regression_DN20_2<span class="ansi-blue-fg">,</span> regression_DN20_3<span class="ansi-blue-fg">,</span> regression_LWLC
-
-<span class="ansi-green-fg">~/Desktop/DRO_solver/dro/dro/src/data/dataloader_classification.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> numpy <span class="ansi-green-fg">as</span> np
-<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> dro<span class="ansi-blue-fg">.</span>src<span class="ansi-blue-fg">.</span>data<span class="ansi-blue-fg">.</span>draw_utils <span class="ansi-green-fg">import</span> draw_classification
-<span class="ansi-green-intense-fg ansi-bold">      3</span>
-<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-green-fg">def</span> classification_basic<span class="ansi-blue-fg">(</span>d<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span> k<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span> num_samples<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">500</span><span class="ansi-blue-fg">,</span> radius<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">5.0</span><span class="ansi-blue-fg">,</span> seed<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">42</span><span class="ansi-blue-fg">,</span> visualize<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> save_dir<span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span>     &#34;&#34;&#34;
-
-<span class="ansi-green-fg">~/Desktop/DRO_solver/dro/dro/src/data/draw_utils.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> matplotlib<span class="ansi-blue-fg">.</span>pyplot <span class="ansi-green-fg">as</span> plt
-<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> sklearn<span class="ansi-blue-fg">.</span>decomposition <span class="ansi-green-fg">import</span> PCA
-<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-green-fg">import</span> numpy <span class="ansi-green-fg">as</span> np
-<span class="ansi-green-intense-fg ansi-bold">      4</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> <span class="ansi-green-fg">class</span> VisualizationError<span class="ansi-blue-fg">(</span>Exception<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/sklearn/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     71</span>     _distributor_init<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">     72</span> )
-<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>base <span class="ansi-green-fg">import</span> clone  <span class="ansi-red-fg"># noqa: E402</span>
-<span class="ansi-green-intense-fg ansi-bold">     74</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>utils<span class="ansi-blue-fg">.</span>_show_versions <span class="ansi-green-fg">import</span> show_versions  <span class="ansi-red-fg"># noqa: E402</span>
-<span class="ansi-green-intense-fg ansi-bold">     75</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/sklearn/base.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     17</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_config <span class="ansi-green-fg">import</span> config_context<span class="ansi-blue-fg">,</span> get_config
-<span class="ansi-green-intense-fg ansi-bold">     18</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>exceptions <span class="ansi-green-fg">import</span> InconsistentVersionWarning
-<span class="ansi-green-fg">---&gt; 19</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>utils<span class="ansi-blue-fg">.</span>_estimator_html_repr <span class="ansi-green-fg">import</span> _HTMLDocumentationLinkMixin<span class="ansi-blue-fg">,</span> estimator_html_repr
-<span class="ansi-green-intense-fg ansi-bold">     20</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>utils<span class="ansi-blue-fg">.</span>_metadata_requests <span class="ansi-green-fg">import</span> _MetadataRequester<span class="ansi-blue-fg">,</span> _routing_enabled
-<span class="ansi-green-intense-fg ansi-bold">     21</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>utils<span class="ansi-blue-fg">.</span>_param_validation <span class="ansi-green-fg">import</span> validate_parameter_constraints
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/sklearn/utils/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     13</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span> <span class="ansi-green-fg">import</span> _joblib<span class="ansi-blue-fg">,</span> metadata_routing
-<span class="ansi-green-intense-fg ansi-bold">     14</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_bunch <span class="ansi-green-fg">import</span> Bunch
-<span class="ansi-green-fg">---&gt; 15</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_chunking <span class="ansi-green-fg">import</span> gen_batches<span class="ansi-blue-fg">,</span> gen_even_slices
-<span class="ansi-green-intense-fg ansi-bold">     16</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_estimator_html_repr <span class="ansi-green-fg">import</span> estimator_html_repr
-<span class="ansi-green-intense-fg ansi-bold">     17</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/sklearn/utils/_chunking.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span>
-<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>_config <span class="ansi-green-fg">import</span> get_config
-<span class="ansi-green-fg">---&gt; 11</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_param_validation <span class="ansi-green-fg">import</span> Interval<span class="ansi-blue-fg">,</span> validate_params
-<span class="ansi-green-intense-fg ansi-bold">     12</span>
-<span class="ansi-green-intense-fg ansi-bold">     13</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/sklearn/utils/_param_validation.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     15</span>
-<span class="ansi-green-intense-fg ansi-bold">     16</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>_config <span class="ansi-green-fg">import</span> config_context<span class="ansi-blue-fg">,</span> get_config
-<span class="ansi-green-fg">---&gt; 17</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>validation <span class="ansi-green-fg">import</span> _is_arraylike_not_scalar
-<span class="ansi-green-intense-fg ansi-bold">     18</span>
-<span class="ansi-green-intense-fg ansi-bold">     19</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/sklearn/utils/validation.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     19</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span> <span class="ansi-green-fg">import</span> get_config <span class="ansi-green-fg">as</span> _get_config
-<span class="ansi-green-intense-fg ansi-bold">     20</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>exceptions <span class="ansi-green-fg">import</span> DataConversionWarning<span class="ansi-blue-fg">,</span> NotFittedError<span class="ansi-blue-fg">,</span> PositiveSpectrumWarning
-<span class="ansi-green-fg">---&gt; 21</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>utils<span class="ansi-blue-fg">.</span>_array_api <span class="ansi-green-fg">import</span> _asarray_with_order<span class="ansi-blue-fg">,</span> _is_numpy_namespace<span class="ansi-blue-fg">,</span> get_namespace
-<span class="ansi-green-intense-fg ansi-bold">     22</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>utils<span class="ansi-blue-fg">.</span>deprecation <span class="ansi-green-fg">import</span> _deprecate_force_all_finite
-<span class="ansi-green-intense-fg ansi-bold">     23</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>utils<span class="ansi-blue-fg">.</span>fixes <span class="ansi-green-fg">import</span> ComplexWarning<span class="ansi-blue-fg">,</span> _preserve_dia_indices_dtype
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/sklearn/utils/_array_api.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     15</span>
-<span class="ansi-green-intense-fg ansi-bold">     16</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>_config <span class="ansi-green-fg">import</span> get_config
-<span class="ansi-green-fg">---&gt; 17</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>fixes <span class="ansi-green-fg">import</span> parse_version
-<span class="ansi-green-intense-fg ansi-bold">     18</span>
-<span class="ansi-green-intense-fg ansi-bold">     19</span> _NUMPY_NAMESPACE_NAMES <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span><span class="ansi-blue-fg">&#34;numpy&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;array_api_compat.numpy&#34;</span><span class="ansi-blue-fg">}</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/sklearn/utils/fixes.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     15</span> <span class="ansi-green-fg">import</span> scipy
-<span class="ansi-green-intense-fg ansi-bold">     16</span> <span class="ansi-green-fg">import</span> scipy<span class="ansi-blue-fg">.</span>sparse<span class="ansi-blue-fg">.</span>linalg
-<span class="ansi-green-fg">---&gt; 17</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">import</span> scipy<span class="ansi-blue-fg">.</span>stats
-<span class="ansi-green-intense-fg ansi-bold">     18</span>
-<span class="ansi-green-intense-fg ansi-bold">     19</span> <span class="ansi-green-fg">try</span><span class="ansi-blue-fg">:</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/stats/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">    439</span> &#34;&#34;&#34;
-<span class="ansi-green-intense-fg ansi-bold">    440</span>
-<span class="ansi-green-fg">--&gt; 441</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>stats <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>distributions <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-intense-fg ansi-bold">    443</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>morestats <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/stats/stats.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     41</span> <span class="ansi-green-fg">import</span> scipy<span class="ansi-blue-fg">.</span>special <span class="ansi-green-fg">as</span> special
-<span class="ansi-green-intense-fg ansi-bold">     42</span> <span class="ansi-green-fg">from</span> scipy <span class="ansi-green-fg">import</span> linalg
-<span class="ansi-green-fg">---&gt; 43</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span> <span class="ansi-green-fg">import</span> distributions
-<span class="ansi-green-intense-fg ansi-bold">     44</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span> <span class="ansi-green-fg">import</span> mstats_basic
-<span class="ansi-green-intense-fg ansi-bold">     45</span> from ._stats_mstats_common import (_find_repeats, linregress, theilslopes,
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/stats/distributions.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      6</span> <span class="ansi-red-fg">#       instead of `git blame -Lxxx,+x`.</span>
-<span class="ansi-green-intense-fg ansi-bold">      7</span> <span class="ansi-red-fg">#</span>
-<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_distn_infrastructure <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">(</span>rv_discrete<span class="ansi-blue-fg">,</span> rv_continuous<span class="ansi-blue-fg">,</span> rv_frozen<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span>
-<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span> <span class="ansi-green-fg">import</span> _continuous_distns
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/stats/_distn_infrastructure.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     22</span> <span class="ansi-red-fg"># for root finding for continuous distribution ppf, and max likelihood</span>
-<span class="ansi-green-intense-fg ansi-bold">     23</span> <span class="ansi-red-fg"># estimation</span>
-<span class="ansi-green-fg">---&gt; 24</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> scipy <span class="ansi-green-fg">import</span> optimize
-<span class="ansi-green-intense-fg ansi-bold">     25</span>
-<span class="ansi-green-intense-fg ansi-bold">     26</span> <span class="ansi-red-fg"># for functions of continuous distributions (e.g. moments, entropy, cdf)</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/optimize/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">    399</span>
-<span class="ansi-green-intense-fg ansi-bold">    400</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>optimize <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-fg">--&gt; 401</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_minimize <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-intense-fg ansi-bold">    402</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_root <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-intense-fg ansi-bold">    403</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_root_scalar <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/optimize/_minimize.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     25</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_trustregion_krylov <span class="ansi-green-fg">import</span> _minimize_trust_krylov
-<span class="ansi-green-intense-fg ansi-bold">     26</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_trustregion_exact <span class="ansi-green-fg">import</span> _minimize_trustregion_exact
-<span class="ansi-green-fg">---&gt; 27</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_trustregion_constr <span class="ansi-green-fg">import</span> _minimize_trustregion_constr
-<span class="ansi-green-intense-fg ansi-bold">     28</span>
-<span class="ansi-green-intense-fg ansi-bold">     29</span> <span class="ansi-red-fg"># constrained minimization</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/optimize/_trustregion_constr/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span>
-<span class="ansi-green-fg">----&gt; 4</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>minimize_trustregion_constr <span class="ansi-green-fg">import</span> _minimize_trustregion_constr
-<span class="ansi-green-intense-fg ansi-bold">      5</span>
-<span class="ansi-green-intense-fg ansi-bold">      6</span> __all__ <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;_minimize_trustregion_constr&#39;</span><span class="ansi-blue-fg">]</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/optimize/_trustregion_constr/minimize_trustregion_constr.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-green-fg">from</span> scipy<span class="ansi-blue-fg">.</span>sparse<span class="ansi-blue-fg">.</span>linalg <span class="ansi-green-fg">import</span> LinearOperator
-<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>_differentiable_functions <span class="ansi-green-fg">import</span> VectorFunction
-<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg"> from .._constraints import (
-</span><span class="ansi-green-intense-fg ansi-bold">      6</span>     NonlinearConstraint, LinearConstraint, PreparedConstraint, strict_bounds)
-<span class="ansi-green-intense-fg ansi-bold">      7</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span><span class="ansi-blue-fg">.</span>_hessian_update_strategy <span class="ansi-green-fg">import</span> BFGS
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/scipy/optimize/_constraints.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      6</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>optimize <span class="ansi-green-fg">import</span> OptimizeWarning
-<span class="ansi-green-intense-fg ansi-bold">      7</span> <span class="ansi-green-fg">from</span> warnings <span class="ansi-green-fg">import</span> warn
-<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> numpy<span class="ansi-blue-fg">.</span>testing <span class="ansi-green-fg">import</span> suppress_warnings
-<span class="ansi-green-intense-fg ansi-bold">      9</span> <span class="ansi-green-fg">from</span> scipy<span class="ansi-blue-fg">.</span>sparse <span class="ansi-green-fg">import</span> issparse
-<span class="ansi-green-intense-fg ansi-bold">     10</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/numpy/testing/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_private<span class="ansi-blue-fg">.</span>utils <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
-<span class="ansi-green-intense-fg ansi-bold">     11</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_private<span class="ansi-blue-fg">.</span>utils <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">(</span>_assert_valid_refcount<span class="ansi-blue-fg">,</span> _gen_alignment_data<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 12</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span>_private <span class="ansi-green-fg">import</span> extbuild<span class="ansi-blue-fg">,</span> decorators <span class="ansi-green-fg">as</span> dec
-<span class="ansi-green-intense-fg ansi-bold">     13</span> from ._private.nosetester import (
-<span class="ansi-green-intense-fg ansi-bold">     14</span>     run_module_suite<span class="ansi-blue-fg">,</span> NoseTester <span class="ansi-green-fg">as</span> Tester
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/numpy/testing/_private/extbuild.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span> <span class="ansi-green-fg">import</span> sys
-<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">import</span> sysconfig
-<span class="ansi-green-fg">---&gt; 11</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> numpy<span class="ansi-blue-fg">.</span>distutils<span class="ansi-blue-fg">.</span>ccompiler <span class="ansi-green-fg">import</span> new_compiler
-<span class="ansi-green-intense-fg ansi-bold">     12</span> <span class="ansi-green-fg">from</span> distutils<span class="ansi-blue-fg">.</span>errors <span class="ansi-green-fg">import</span> CompileError
-<span class="ansi-green-intense-fg ansi-bold">     13</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/numpy/distutils/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     22</span> <span class="ansi-red-fg"># Must import local ccompiler ASAP in order to get</span>
-<span class="ansi-green-intense-fg ansi-bold">     23</span> <span class="ansi-red-fg"># customized CCompiler.spawn effective.</span>
-<span class="ansi-green-fg">---&gt; 24</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span> <span class="ansi-green-fg">import</span> ccompiler
-<span class="ansi-green-intense-fg ansi-bold">     25</span> <span class="ansi-green-fg">from</span> <span class="ansi-blue-fg">.</span> <span class="ansi-green-fg">import</span> unixccompiler
-<span class="ansi-green-intense-fg ansi-bold">     26</span>
-
-<span class="ansi-green-fg">/opt/anaconda3/lib/python3.9/site-packages/numpy/distutils/ccompiler.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">    712</span>                             &#34;Arm C Compiler&#34;)
-<span class="ansi-green-intense-fg ansi-bold">    713</span>
-<span class="ansi-green-fg">--&gt; 714</span><span class="ansi-red-fg"> ccompiler._default_compilers += ((&#39;linux.*&#39;, &#39;intel&#39;),
-</span><span class="ansi-green-intense-fg ansi-bold">    715</span>                                  <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;linux.*&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;intele&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    716</span>                                  <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;linux.*&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;intelem&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
-
-<span class="ansi-red-fg">AttributeError</span>: module &#39;distutils.ccompiler&#39; has no attribute &#39;_default_compilers&#39;
+{&#39;theta&#39;: [60.7303464138377, 98.62687565803654, 64.38050744405149, 56.75157019658433, 35.64014248777235], &#39;b&#39;: array(-0.01686764)}
+{&#39;theta&#39;: [3.4813060836775584e-12, 4.996418793689881e-12, 2.3206491216924255e-12, 3.2116809664310047e-12, 1.6101042960928221e-12], &#39;b&#39;: array(5.90939031)}
+{&#39;theta&#39;: [57.46100670695884, 57.461006707312464, 57.46100670699399, 57.461006706573606, 34.680078746063145], &#39;b&#39;: array(5.37018113)}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;cost_matrix&#39;</span><span class="p">:</span> <span class="n">costM</span><span class="p">,</span> <span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="s1">&#39;inf&#39;</span><span class="p">})</span>
@@ -751,7 +570,7 @@
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">

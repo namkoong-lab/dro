@@ -13,6 +13,9 @@ copyright = '2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose B
 author = 'Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet'
 release = '0.1.1'
 
+html_static_path = ['../docs']
+html_baseurl = 'https://namkoong-lab.github.io/dro/' 
+
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -61,7 +64,9 @@ html_theme_options = {
     "source_icon": "github",
     "globaltoc_collapse": False,
     "banner_text": 'A GIFT to the whole DRO community!',
-    "banner_hiding": "temporal"
+    "banner_hiding": "temporal",
+    # "canonical_url": "", 
+    # "analytics_id": "",
 }
 
 
