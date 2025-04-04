@@ -340,8 +340,14 @@ under a CVaR constraint.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of input features. Must match training data dimension.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Base model type. Valid options: ‘svm’ (SVM), ‘logistic’ (Logistic Regression), 
-‘ols’ (Linear Regression). Defaults to ‘svm’.</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'ols'</span></code>: Least squares (regression)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
+</ul>
+</p></li>
 <li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn an intercept term. Disable if data is pre-centered.
 Defaults to True.</p></li>
 <li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Convex optimization solver. Recommended: ‘MOSEK’ (commercial).

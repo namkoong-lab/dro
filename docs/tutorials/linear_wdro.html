@@ -338,11 +338,12 @@ W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)],
 <p>where for <code class="docutils literal notranslate"><span class="pre">lad</span></code>, <code class="docutils literal notranslate"><span class="pre">svm</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic</span></code>, the inner distance is captured by the norm: <span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|.\)</span>
 For <code class="docutils literal notranslate"><span class="pre">ols</span></code>, the inner distance is captured by the norm square:
 <span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|\)</span>.</p>
-<p>No matter in each case, the norm is defined on the product space <span class="math notranslate nohighlight">\(\mathcal{X} \times \mathbb{R}\)</span> by:
-$<span class="math notranslate nohighlight">\(
+<p>No matter in each case, the norm is defined on the product space <span class="math notranslate nohighlight">\(\mathcal{X} \times \mathbb{R}\)</span> by:</p>
+<div class="math notranslate nohighlight">
+\[
 \|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.
-\)</span><span class="math notranslate nohighlight">\(
-Here \)</span>|x|_{\Sigma, p} = |\Sigma^{1/2}x|<em>p<span class="math notranslate nohighlight">\(. Furthermore, we can show that the dual norm \)</span>|(\cdot, \cdot)|</em>*$ is given by:</p>
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\|x\|_{\Sigma, p} = \|\Sigma^{1/2}x\|_p\)</span>. Furthermore, we can show that the dual norm <span class="math notranslate nohighlight">\(\|(\cdot, \cdot)\|_*\)</span> is given by:</p>
 <div class="math notranslate nohighlight">
 \[
 \|(u,v)\|_* = \max\{\|u\|_{\Sigma, q}, \frac{v}{\kappa}\}
@@ -370,14 +371,16 @@ Here \)</span>|x|_{\Sigma, p} = |\Sigma^{1/2}x|<em>p<span class="math notranslat
 </section>
 <section id="robust-satisficing-version">
 <h2>Robust Satisficing Version<a class="headerlink" href="#robust-satisficing-version" title="Permalink to this heading">¶</a></h2>
-<p>For the Satisficing Wasserstein-DRO model [3], we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:
-$<span class="math notranslate nohighlight">\(
+<p>For the Satisficing Wasserstein-DRO model [3], we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:</p>
+<div class="math notranslate nohighlight">
+\[
 \max {\epsilon,\quad \text{s.t.}~E_{(X,Y) \sim P}[\ell_{tr}(\theta;(X, Y))] \leq \tau + \epsilon W(P, \widehat P), \forall P}.
-\)</span>$</p>
-<p>For (approximated) regression / classification, we can show the optimization problem above is equivalent to:
-$<span class="math notranslate nohighlight">\(
+\]</div>
+<p>For (approximated) regression / classification, we can show the optimization problem above is equivalent to:</p>
+<div class="math notranslate nohighlight">
+\[
 \max \{\|\theta\|_{\Sigma^{-1/2},p},\quad \text{s.t.}~ E_{(X,Y) \sim \widehat P}[\ell_{tr}(\theta;(X, Y))] \leq \tau\}.
-\)</span>$</p>
+\]</div>
 <section id="id1">
 <h3>Hyperparameter<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>In the satisfying version,  we do not set <span class="math notranslate nohighlight">\(\epsilon\)</span> as the hyperparameter but as an optimization goal such that to minimize the worst-case performance.</p>

@@ -300,6 +300,36 @@ class BaseNNDRO:
         else:
             return nn.MSELoss()(outputs, labels)
 
+    def update(self, 
+            input_dim: int, 
+            num_classes: int, 
+            model: torch.nn.Module, 
+            task_type: str = "classification",
+            device: torch.device = torch.device("cpu")):
+        """Update user's own model
+
+        :param input_dim: Input feature dimension :math:`d \geq 1`
+        :type input_dim: int
+        :param num_classes: Output dimension:
+            - Classification: :math:`K \geq 2` (number of classes)
+            - Regression: Automatically set to 1
+        :type num_classes: int
+        :param model: User's own model
+        :type model: torch.nn.Module 
+        :param task_type: Learning task type. Supported:
+            - ``'classification'``: Cross-entropy loss
+            - ``'regression'``: MSE loss
+        :type task_type: str
+        :param device: Target computation device, defaults to CPU
+        :type device: torch.device
+        """
+        
+        self.input_dim = input_dim
+        self.num_classes = num_classes
+        self.model = model 
+        self.task_type = task_type
+        self.device = device
+        self.model.to(self.device)
 
     def fit(self, 
         X: Union[np.ndarray, torch.Tensor], 

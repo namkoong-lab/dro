@@ -329,7 +329,7 @@
 <span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.src.linear_model.wasserstein_dro" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Wasserstein Distributionally Robust Optimization (WDRO) model</p>
 <p>This model minimizes a Wasserstein-robust loss function for both regression and classification.</p>
@@ -368,12 +368,12 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 <li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (commercial, recommended)</p></li>
 </ul>
 </p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
-<li><p>If model_type not in allowed set</p></li>
 <li><p>If unsupported solver is selected</p></li>
 </ul>
 </p>
@@ -600,7 +600,6 @@ Disable for standardized data. Defaults to True.</p></li>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
-<li><p>If model_type not in allowed set</p></li>
 <li><p>If invalid solver selected</p></li>
 </ul>
 </p>

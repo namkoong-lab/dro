@@ -519,6 +519,27 @@ where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 </pre></div>
 </div>
 <dl class="py method">
+<dt class="sig sig-object py" id="dro.src.neural_model.base_nn.BaseNNDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update user’s own model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Output dimension:
+- Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)
+- Regression: Automatically set to 1</p></li>
+<li><p><strong>model</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><em>torch.nn.Module</em></a>) – User’s own model</p></li>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Learning task type. Supported:
+- <code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss
+- <code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.6)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.BaseNNDRO.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train neural DRO model with Wasserstein robust optimization.</p>
@@ -661,6 +682,7 @@ defaults to True</p></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#dro.src.neural_model.base_nn.BaseNNDRO"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.src.neural_model.base_nn.BaseNNDRO.update"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.update()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.neural_model.base_nn.BaseNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.fit()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.neural_model.base_nn.BaseNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.predict()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.neural_model.base_nn.BaseNNDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.score()</span></code></a></li>

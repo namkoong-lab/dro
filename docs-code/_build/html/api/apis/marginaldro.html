@@ -342,12 +342,12 @@ under a CVaR constraint only for the marginal distribution of X.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimension of input features. Must be ≥ 1.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model type. Defaults to ‘svm’. Valid options:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Support Vector Machine (hinge loss)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic Regression (log loss)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'ols'</span></code>: Ordinary Least Squares (L2 loss)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least Absolute Deviation (L1 loss)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'ols'</span></code>: Least squares (regression)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
 </ul>
 </p></li>
 <li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>. 
@@ -367,7 +367,6 @@ Defaults to 2.</p></li>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
-<li><p>If model_type not in allowed set</p></li>
 <li><p>If alpha ∉ (0, 1]</p></li>
 <li><p>If L &lt; 0</p></li>
 <li><p>If p &lt; 1</p></li>

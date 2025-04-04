@@ -327,11 +327,11 @@
 <span id="linear-dro-base-class"></span><h1>Linear DRO Base Class<a class="headerlink" href="#module-dro.src.linear_model.base" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.base.</span></span><span class="sig-name descname"><span class="pre">BaseLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.base.</span></span><span class="sig-name descname"><span class="pre">BaseLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for Linear Distributionally Robust Optimization (DRO) models.</p>
 <p>This class supports both regression and binary classification tasks. To ensure convex optimization,
-this class only supports linear models, e.g., SVM, Linear Regression, and Logistic Regression.</p>
+this class only supports linear models or kernelized models, e.g., SVM, Linear Regression, and Logistic Regression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -339,9 +339,31 @@ this class only supports linear models, e.g., SVM, Linear Regression, and Logist
 <li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Model type indicator (‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression for OLS, ‘lad’ for Linear Regression for LAD), default = ‘svm’.</p></li>
 <li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered), default = True.</p></li>
 <li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optimization solver to solve the problem, default = ‘MOSEK’.</p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.update_kernel">
+<span class="sig-name descname"><span class="pre">update_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.update_kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update model class (kernel parameters) based on configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'metric'</span></code>:</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<li></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.update" title="Permalink to this definition">¶</a></dt>
@@ -502,6 +524,7 @@ Must match the model’s <cite>input_dim</cite> (n_features).</p></li>
                 <ul>
 <li><a class="reference internal" href="#">Linear DRO Base Class</a><ul>
 <li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.update_kernel"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update_kernel()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.fit()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.load"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.load()</span></code></a></li>

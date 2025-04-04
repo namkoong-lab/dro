@@ -13,6 +13,7 @@ For ``ols``, the inner distance is captured by the norm square:
 $d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|$. 
 
 No matter in each case, the norm is defined on the product space $\mathcal{X} \times \mathbb{R}$ by:
+
 $$
 \|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.
 $$
@@ -46,11 +47,13 @@ When we set ``compute_type == asymp``, [2] provides asymptotic worst-case distri
 ## Robust Satisficing Version
 
 For the Satisficing Wasserstein-DRO model [3], we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:
+
 $$
 \max {\epsilon,\quad \text{s.t.}~E_{(X,Y) \sim P}[\ell_{tr}(\theta;(X, Y))] \leq \tau + \epsilon W(P, \widehat P), \forall P}.
 $$
 
 For (approximated) regression / classification, we can show the optimization problem above is equivalent to:
+
 $$
 \max \{\|\theta\|_{\Sigma^{-1/2},p},\quad \text{s.t.}~ E_{(X,Y) \sim \widehat P}[\ell_{tr}(\theta;(X, Y))] \leq \tau\}.
 $$
