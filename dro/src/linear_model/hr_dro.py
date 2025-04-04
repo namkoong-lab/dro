@@ -59,8 +59,6 @@ class HR_DRO_LR(BaseLinearDRO):
         # Parameter validation
         if input_dim < 1:
             raise ValueError("input_dim must be ≥ 1")
-        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
-            raise ValueError(f"Invalid model_type: {model_type}")
         if model_type in ['ols', 'logistic']:
             raise HRDROError("HR DRO does not support OLS, logistic")
         if r < 0 or alpha <= 0 or alpha > 1 or epsilon < 0 or epsilon_prime < 0:

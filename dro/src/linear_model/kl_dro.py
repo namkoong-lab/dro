@@ -30,15 +30,15 @@ class KLDRO(BaseLinearDRO):
 
         :param input_dim: Dimension of input features. Must match training data features.
         :type input_dim: int
-        :param model_type: Base model type specification:
+        :param model_type: Base model architecture. Supported:
 
-            - ``'svm'``: Support Vector Machine (hinge loss)
+            - ``'svm'``: Hinge loss (classification)
 
-            - ``'logistic'``: Logistic Regression (log loss)
+            - ``'logistic'``: Logistic loss (classification)
 
-            - ``'ols'``: Ordinary Least Squares (:math:`L_2` loss)
+            - ``'ols'``: Least squares (regression)
 
-            - ``'lad'``: Least Absolute Deviation (:math:`L_1` loss)
+            - ``'lad'``: Least absolute deviation (regression)
 
         :type model_type: str
         :param fit_intercept: If True, adds intercept term :math:`b` to linear model:
@@ -61,8 +61,6 @@ class KLDRO(BaseLinearDRO):
         :raises ValueError: 
 
             - If input_dim ≤ 0
-
-            - If model_type not in allowed set
 
             - If eps < 0
 

@@ -50,8 +50,6 @@ class ConditionalCVaRDRO(BaseLinearDRO):
 
         if input_dim < 1:
             raise ValueError("input_dim must be ≥ 1")
-        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
-            raise ValueError(f"Unsupported model_type: {model_type}")
 
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.alpha = 1.0      

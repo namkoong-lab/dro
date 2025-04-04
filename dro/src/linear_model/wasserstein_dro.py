@@ -5,6 +5,9 @@ import cvxpy as cp
 from scipy.linalg import sqrtm
 from typing import Dict, Any
 import warnings
+from sklearn.metrics.pairwise import pairwise_kernels
+
+
 
 class WassersteinDROError(Exception):
     """Base exception class for errors in Wasserstein DRO model."""
@@ -39,7 +42,7 @@ class WassersteinDRO(BaseLinearDRO):
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', 
-                 fit_intercept: bool = True, solver: str = 'MOSEK'):
+                 fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
         """Initialize Mahalanobis-Wasserstein DRO model.
 
         :param input_dim: Dimension of feature space. Must satisfy :math:`\text{input\_dim} \geq 1`
@@ -67,11 +70,12 @@ class WassersteinDRO(BaseLinearDRO):
         
         :type solver: str
 
+        :param kernel: the kernel type to be used in the optimization model, default = 'linear'
+        :type kernel: str
+
         :raises ValueError:
 
             - If input_dim < 1
-
-            - If model_type not in allowed set
 
             - If unsupported solver is selected
 
@@ -88,10 +92,8 @@ class WassersteinDRO(BaseLinearDRO):
         """
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
-        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
-            raise ValueError(f"Invalid model_type: {model_type}")
 
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         
         self.cost_matrix = np.eye(input_dim)
         self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
@@ -150,7 +152,7 @@ class WassersteinDRO(BaseLinearDRO):
             cost_matrix = config['cost_matrix']
             if not isinstance(cost_matrix, np.ndarray):
                 raise TypeError("cost_matrix must be numpy.ndarray")
-            if cost_matrix.shape != (self.input_dim, self.input_dim):
+            if self.kernel == 'linear' and cost_matrix.shape != (self.input_dim, self.input_dim):
                 raise ValueError(f"cost_matrix must have shape ({self.input_dim}, {self.input_dim})")
             if not np.all(np.linalg.eigvals(cost_matrix) > 0):
                 raise ValueError("cost_matrix must be positive definite")
@@ -191,22 +193,27 @@ class WassersteinDRO(BaseLinearDRO):
             Float: Regularization term part.
 
         """
+        if self.kernel != 'linear':
+            theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors, metric = self.kernel, gamma = self.kernel_gamma))
+        else:
+            theta_K = theta
+
         if self.p == 1:
             dual_norm = np.inf
         elif self.p != 'inf':
             dual_norm = 1 / (1 - 1 / self.p)
         else:
             dual_norm = 1
-
         if self.model_type == 'ols':
-            return cp.norm(self.cost_inv_transform @ theta, dual_norm)
+            return cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
         elif self.model_type in ['svm', 'logistic']:
-            return cp.norm(self.cost_inv_transform @ theta, dual_norm)
+            return cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
         elif self.model_type == 'lad':
             if self.kappa == 'inf':
-                return cp.norm(self.cost_inv_transform @ theta, dual_norm)
+                return cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
             else:
-                return cp.maximum(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
+                return cp.maximum(cp.norm(self.cost_inv_transform @ theta_K, dual_norm), 1 / self.kappa)
+
 
         
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
@@ -241,9 +248,15 @@ class WassersteinDRO(BaseLinearDRO):
         if sample_size != y.shape[0]:
             raise WassersteinDROError("Input X and target y must have the same number of samples.")
 
+        if self.kernel != 'linear':
+            self.cost_matrix = np.identity((sample_size, sample_size))
+            self.cost_inv_transform = np.identity((sample_size, sample_size))
+            self.support_vectors_ = X
 
-
-        theta = cp.Variable(self.input_dim)
+        if self.kernel == 'linear':
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
         if self.fit_intercept == True:
             b = cp.Variable()
         else:
@@ -588,8 +601,6 @@ class WassersteinDROsatisficing(BaseLinearDRO):
 
             - If input_dim < 1
 
-            - If model_type not in allowed set
-
             - If invalid solver selected
 
         Initialization Defaults:
@@ -609,8 +620,6 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         # Parameter validation
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
-        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
-            raise ValueError(f"Invalid model_type: {model_type}")
 
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         

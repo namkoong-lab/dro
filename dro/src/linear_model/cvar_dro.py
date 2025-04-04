@@ -22,8 +22,16 @@ class CVaRDRO(BaseLinearDRO):
 
         :param input_dim: Number of input features. Must match training data dimension.
         :type input_dim: int
-        :param model_type: Base model type. Valid options: 'svm' (SVM), 'logistic' (Logistic Regression), 
-            'ols' (Linear Regression). Defaults to 'svm'.
+        :param model_type: Base model architecture. Supported:
+
+            - ``'svm'``: Hinge loss (classification)
+
+            - ``'logistic'``: Logistic loss (classification)
+
+            - ``'ols'``: Least squares (regression)
+
+            - ``'lad'``: Least absolute deviation (regression)
+            
         :type model_type: str
         :param fit_intercept: Whether to learn an intercept term. Disable if data is pre-centered.
             Defaults to True.

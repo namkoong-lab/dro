@@ -23,16 +23,15 @@ class Chi2DRO(BaseLinearDRO):
         :param input_dim: Dimensionality of the input feature space. 
             Must match the number of columns in the training data.
         :type input_dim: int
-        :param model_type: Type of base model to robustify. Defaults to 'svm'.
-            Supported types: 
+        :param model_type: Base model architecture. Supported:
 
-            - ``'svm'``: Support Vector Machine (hinge loss)
+            - ``'svm'``: Hinge loss (classification)
 
-            - ``'logistic'``: Logistic Regression (log loss)
+            - ``'logistic'``: Logistic loss (classification)
 
-            - ``'ols'``: Ordinary Least Squares (L2 loss)
+            - ``'ols'``: Least squares (regression)
 
-            - ``'lad'``: Least Absolute Deviation (L1 loss)
+            - ``'lad'``: Least absolute deviation (regression)
 
             
         :type model_type: str

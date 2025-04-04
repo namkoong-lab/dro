@@ -24,15 +24,15 @@ class MarginalCVaRDRO(BaseLinearDRO):
         """
         :param input_dim: Dimension of input features. Must be ≥ 1.
         :type input_dim: int
-        :param model_type: Base model type. Defaults to 'svm'. Valid options:
+        :param model_type: Base model architecture. Supported:
 
-            - ``'svm'``: Support Vector Machine (hinge loss)
+            - ``'svm'``: Hinge loss (classification)
 
-            - ``'logistic'``: Logistic Regression (log loss)
+            - ``'logistic'``: Logistic loss (classification)
 
-            - ``'ols'``: Ordinary Least Squares (L2 loss)
+            - ``'ols'``: Least squares (regression)
 
-            - ``'lad'``: Least Absolute Deviation (L1 loss)
+            - ``'lad'``: Least absolute deviation (regression)
 
         :type model_type: str
         :param fit_intercept: Whether to learn intercept term :math:`b`. 
@@ -56,8 +56,6 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
             - If input_dim < 1
 
-            - If model_type not in allowed set
-
             - If alpha ∉ (0, 1]
 
             - If L < 0
@@ -79,8 +77,6 @@ class MarginalCVaRDRO(BaseLinearDRO):
         # Parameter validation
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
-        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
-            raise ValueError(f"Invalid model_type: {model_type}")
         if not (0 < alpha <= 1):
             raise ValueError(f"alpha must be in (0, 1], got {alpha}")
         if L < 0:

@@ -86,7 +86,7 @@ class ORWDRO(BaseLinearDRO):
         
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
-        if model_type not in {'svm', 'logistic', 'ols'}:
+        if model_type not in {'svm', 'lad'}:
             raise ValueError(f"Invalid model_type: {model_type}")
         if eps < 0 or eta < 0 or eta > 0.5:
             raise ValueError(f"Invalid robustness params: eps={eps}, eta={eta}")

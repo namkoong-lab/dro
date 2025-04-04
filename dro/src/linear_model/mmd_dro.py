@@ -61,8 +61,6 @@ class MMD_DRO(BaseLinearDRO):
         """
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
-        if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
-            raise ValueError(f"Invalid model_type: {model_type}")
         if not sampling_method in {'bound', 'hull'}:
             raise MMDDROError(f"Invalid sampling method: {sampling_method}")
 
