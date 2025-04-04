@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Neural Networks &#8212; dro 0.1.1 documentation</title>
+    <title>NN-DRO &#8212; dro 0.1.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -19,6 +19,8 @@
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/neural_model.html" />
@@ -262,7 +264,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Neural Networks</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
 </ul>
 </li>
@@ -323,8 +325,33 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="neural-networks">
-<h1>Neural Networks<a class="headerlink" href="#neural-networks" title="Permalink to this heading">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="nn-dro">
+<h1>NN-DRO<a class="headerlink" href="#nn-dro" title="Permalink to this heading">¶</a></h1>
+<p>For <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO, and Holistic Robust DRO, we implement their <code class="docutils literal notranslate"><span class="pre">neural-network</span></code> version, where the backbone model is (by default) MLP.</p>
+<p>We support the following NN architectures:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code>: Linear Model</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlp</span></code>: MLP</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code>: AlexNet</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resnet</span></code>: ResNet-18</p></li>
+</ul>
+<p>Furthermore, users can use their own model architectures via the <code class="docutils literal notranslate"><span class="pre">update()</span></code> function.
+Implementation details are as follows:</p>
+<section id="chi-2-dro-and-cvar-dro">
+<h2>1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO<a class="headerlink" href="#chi-2-dro-and-cvar-dro" title="Permalink to this heading">¶</a></h2>
+<p>We follow [1] to implement these two <span class="math notranslate nohighlight">\(f\)</span>-DROs. Our code is largely based on <a class="reference external" href="https://github.com/daniellevy/fast-dro">https://github.com/daniellevy/fast-dro</a>.</p>
+<p>[1] Large-Scale Methods for Distributionally Robust Optimization. Daniel Levy, Yair Carmon, John Duchi, and Aaron Sidford.</p>
+</section>
+<section id="wasserstein-dro">
+<h2>2. Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Permalink to this heading">¶</a></h2>
+<p>We follow [2], and use adversarial training to implement it.</p>
+<p>[2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi.</p>
+</section>
+<section id="holistic-robust-dro">
+<h2>3. Holistic Robust DRO<a class="headerlink" href="#holistic-robust-dro" title="Permalink to this heading">¶</a></h2>
+<p>We follow [3], and our code is largely based on <a class="reference external" href="https://github.com/RyanLucas3/HR_Neural_Networks">https://github.com/RyanLucas3/HR_Neural_Networks</a>.</p>
+<p>[3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys.</p>
+</section>
 </section>
 
 
@@ -332,6 +359,25 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">NN-DRO</a><ul>
+<li><a class="reference internal" href="#chi-2-dro-and-cvar-dro">1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO</a></li>
+<li><a class="reference internal" href="#wasserstein-dro">2. Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#holistic-robust-dro">3. Holistic Robust DRO</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

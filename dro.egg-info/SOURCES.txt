@@ -2,8 +2,8 @@ LICENSE
 MANIFEST.in
 README.md
 setup.py
-docs/__init__.py
-docs/conf.py
+docs-code/__init__.py
+docs-code/conf.py
 dro/README.md
 dro/__init__.py
 dro.egg-info/PKG-INFO

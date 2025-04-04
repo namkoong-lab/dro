@@ -61,6 +61,9 @@ class BaseLinearDRO:
             warnings.warn(f"Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.", UserWarning)
         self.input_dim = input_dim
         self.model_type = model_type
+        self.kernel = kernel
+        self.kernel_gamma = 'scale'
+
         if self.kernel == 'linear':
             self.theta = np.zeros(self.input_dim)
         self.fit_intercept = fit_intercept
@@ -69,8 +72,6 @@ class BaseLinearDRO:
         if solver not in cp.installed_solvers():
             raise InstallError(f"Unsupported solver {solver}. It does not exist in your package. Please change the solver or install {solver}.")
         self.solver = solver
-        self.kernel = kernel
-        self.kernel_gamma = 'scale'
 
     def update_kernel(self, config: dict):
         """Update model class (kernel parameters) based on configuration
