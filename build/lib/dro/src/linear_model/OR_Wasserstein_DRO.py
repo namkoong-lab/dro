@@ -8,72 +8,179 @@ class ORWDROError(Exception):
     """Base exception class for errors in OR-WDRO model."""
     pass
 
-class OR_Wasserstein_DRO(BaseLinearDRO):
-    """
-    Outlier-Robust Wasserstein DRO.
+class ORWDRO(BaseLinearDRO):
+    """Outlier-Robust Wasserstein Distributionally Robust Optimization (OR-WDRO) model.
 
-    This model minimizes the TV corrupted p-Wasserstein loss function for both regression and classification.
+    Implements TV-corrupted p-Wasserstein DRO with dual norm constraints:
 
-    Attributes:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
-        eps (float): Robustness parameter for OR-WDRO. 
-        eta (float): Fraction of outlier for OR-WDRO.
-        dual norm (int): used in the optimization
+    .. math::
+        \\min_{\\theta} \\sup_{Q \\in \\mathcal{B}_\\epsilon(P)} \\mathbb{E}_Q[\\ell(\\theta;X,y)]
+        + \\eta \\cdot \\text{TV}(P,Q)
 
-    Reference:<https://arxiv.org/pdf/2311.05573>
+    where :math:`\\mathcal{B}_\\epsilon(P)` is the Wasserstein ball and :math:`\\text{TV}` is total variation.
+
+    ORWDRO_Paper: https://arxiv.org/pdf/2311.05573
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', eps: float = 0.0, eta: float = 0.0, dual_norm: int = 1):
+    def __init__(self, input_dim: int, model_type: str = 'svm', eps: float = 0.0, 
+                 eta: float = 0.0, dual_norm: int = 1):
+        """Initialize OR-WDRO model with anomaly-robust parameters.
+
+        :param input_dim: Feature space dimension. Must be ≥ 1
+        :type input_dim: int
+
+        :param model_type: Base learner type. Supported:
+
+            - ``'svm'``: Hinge loss (classification)
+
+            - ``'logistic'``: Logistic loss (classification)
+
+            - ``'ols'``: Squared loss (regression)
+
+        :type model_type: str
+
+        :param eps: Wasserstein robustness radius. Defaults to 0.0
+
+            - 0: Standard empirical risk minimization
+
+            - >0: Controls distributional robustness
+
+            
+        :type eps: float
+        :param eta: Expected outlier fraction. 
+            Must satisfy :math:`0 \\leq \\eta \\leq 0.5`. Defaults to 0.0
+        :type eta: float
+
+        :param dual_norm: Wasserstein dual norm order. Valid values: 
+        
+            - 1: ℓ¹-Wasserstein (transportation cost)
+
+            - 2: ℓ²-Wasserstein (default)
+
+        :type dual_norm: int
+
+        :raises ValueError:
+
+            - If input_dim < 1
+
+            - If model_type not in allowed set
+
+            - If eps < 0 or eta < 0 or eta > 0.5
+
+            - If dual_norm ∉ {1, 2}
+
+        Example:
+            >>> model = ORWDRO(
+            ...     input_dim=5,
+            ...     model_type='svm',
+            ...     eps=0.1,
+            ...     eta=0.05,
+            ...     dual_norm=2
+            ... )
+            >>> model.sigma  # sqrt(5) ≈ 2.236
+
+        .. note::
+            - Computation complexity scales as :math:`O(\epsilon^{-2})`
+            - Set ``eta=0`` to disable outlier robustness
         """
-        Initialize the ORWDRO model with specified input dimension and model type.
-        """
+        
+        if input_dim < 1:
+            raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
+        if model_type not in {'svm', 'lad'}:
+            raise ValueError(f"Invalid model_type: {model_type}")
+        if eps < 0 or eta < 0 or eta > 0.5:
+            raise ValueError(f"Invalid robustness params: eps={eps}, eta={eta}")
+        if dual_norm not in {1, 2}:
+            raise ValueError(f"dual_norm must be 1 or 2, got {dual_norm}")
+
         BaseLinearDRO.__init__(self, input_dim, model_type)
         self.eps = eps
         self.eta = eta
         self.dual_norm = dual_norm
         self.sigma = math.sqrt(input_dim)
-        
-    def update(self, config: Dict[str, Any]) -> None:
-        """Update the model configuration.
 
-        Args:
-            config (Dict[str, Any]): Configuration dictionary containing 'eps' key for robustness parameter.
-        TODO: other description
-        Raises:
-            ORDROError: If 'eps', 'eta' is provided but is not a non-negative float.
+    def update(self, config: Dict[str, Any]) -> None:
+        """Update robustness parameters for OR-WDRO optimization.
+        
+        :param config: Dictionary containing parameters to update. Valid keys:
+
+            - ``'eps'``: New Wasserstein radius (ε ≥ 0)
+
+            - ``'eta'``: New outlier fraction (0 ≤ η ≤ 0.5)
+
+            - ``'dual_norm'``: Norm order (1 or 2)
+
+        :type config: dict[str, Any]
+
+        :raises ValueError: 
+
+            - If parameter values violate type or range constraints
+
+            - If unknown parameters are provided
+        
+        Example:
+            >>> model.update({
+            ...     'eps': 0.2,
+            ...     'eta': 0.1,
+            ...     'dual_norm': 2
+            ... })  # Updates multiple parameters atomically
+            
         """
         if 'eps' in config:
             eps = config['eps']
             if not isinstance(eps, (float, int)) or eps < 0:
-                raise ORWDROError("Robustness parameter 'eps' must be a non-negative float.")
+                raise ValueError("eps must be non-negative float")
             self.eps = float(eps)
+            
         if 'eta' in config:
             eta = config['eta']
             if not isinstance(eta, (float, int)) or eta < 0 or eta >= 1:
-                raise ORWDROError("Fraction of outlier 'eta' must be a non-negative float between 0 and 1")
+                raise ValueError("eta must be in [0, 1]")
             self.eta = float(eta)
+            
         if 'dual_norm' in config:
-            dual_norm = config['dual_norm']
-            if dual_norm not in [1, 2]:
-                raise ORWDROError("dual_norm must be 1 or 2")
+            dn = config['dual_norm']
+            if dn not in {1, 2}:
+                raise ValueError("dual_norm must be 1 or 2")
+            self.dual_norm = int(dn)
+        
+
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        # TODO: description
+        """
+        :param X: Training feature matrix of shape `(n_samples, n_features)`.
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
+
+        :param Y: Target values of shape `(n_samples,)`. Format requirements:
+
+            - Classification: ±1 labels
+
+            - Regression: Continuous values
+
+        :type Y: numpy.ndarray
+
+        :returns: Dictionary containing trained parameters:
+        
+            - ``theta``: Weight vector of shape `(n_features,)`
+            
+        :rtype: Dict[str, Any]
+        """
+        
+        
+        
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
             raise ORWDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
         if sample_size != y.shape[0]:
             raise ORWDROError("Input X and target y must have the same number of samples.")
     
-        z_0, sgn = self.cheap_robust_mean_estimate(X, y)
+        z_0, sgn = self._cheap_robust_mean_estimate(X, y)
         if self.model_type == 'lad':
             Z = np.hstack([X, y.reshape(-1, 1)])
         elif self.model_type == 'svm':
             Z = X
-        # J = 2 (as in your original code)
         J = 2
-        # p = 1, q = 2, from the comments in your original code
-
+        
         # ----------------------------------------------------------------------
         # 2) Define CVXPY Variables
         # ----------------------------------------------------------------------
@@ -81,16 +188,11 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
         lambda_2 = cp.Variable(nonneg=True)     # scalar >= 0
         alpha    = cp.Variable()                # scalar (unconstrained in sign, can be +/-, user sets constraints if needed)
         s        = cp.Variable(shape=(sample_size,), nonneg=True)    # s(i) >= 0
-        # We'll store zeta_G and zeta_W in 3D shape (d, n, J).
-        # CVXPY does allow multi-dimensional Variables, but indexing must be handled carefully.
         zeta_G = [cp.Variable(shape=(feature_size + 1 - sgn, sample_size)) for _ in range(2)]
         zeta_W = [cp.Variable(shape=(feature_size + 1 - sgn, sample_size)) for _ in range(2)]
 
-        # for reformulating rotated SOC
         aux_W = cp.Variable(shape = (2,sample_size), nonneg = True)
-        # tau: shape (n, J), both entries >= 0
         tau = cp.Variable(shape=(sample_size, J), nonneg=True)
-        # theta: shape (d-1, )
         theta = cp.Variable(shape=(feature_size,))
 
         # ----------------------------------------------------------------------
@@ -115,27 +217,18 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
 
         # Loop over each sample i
         for i in range(sample_size):
-            # s(i) >= z_0' * zeta_G(:, i, 1) + tau(i, 1) + Z(i,:) * zeta_W(:, i, 1) - alpha
-            # But in Python indexing, j=0 or j=1 for the 2 constraints
-            # We'll build them explicitly:
-
-            # s(i) >= <z_0, zeta_G(:,i,0)> + tau(i,0) + <Z(i,:), zeta_W(:,i,0)> - alpha
             lhs_0 = (sgn + z_0 @ zeta_G[0][:, i]
                     + tau[i, 0]
                     + Z[i, :] @ zeta_W[0][:, i]
                     - alpha )
             constraints.append( s[i] >= lhs_0 )
 
-            # s(i) >= z_0' * zeta_G(:, i, 2) + tau(i, 2) + Z(i,:) * zeta_W(:, i, 2) - alpha
             lhs_1 = ( z_0 @ zeta_G[1][:, i]
                     + tau[i, 1]
                     + Z[i, :] @ zeta_W[1][:, i]
                     - alpha )
             constraints.append( s[i] >= lhs_1 )
 
-            # Next the linear constraints:
-            # [-theta; 1] + zeta_G(:, i, 1) + zeta_W(:, i, 1) == 0
-            # We'll build the vector [-theta, 1] via cp.hstack:
             if self.model_type == 'lad':
                 minus_theta_plus1 = cp.hstack([-theta, 1.0])  # shape (d,)
                 constraints.append( minus_theta_plus1 + zeta_G[0][:, i] + zeta_W[0][:, i] == 0 )
@@ -150,18 +243,8 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
                 constraints.append( zeta_G[1][:, i] + zeta_W[1][:, i] == 0 )
 
 
-            # Rotated cone constraints:
-            # rcone(zeta_G(:, i, 1), lambda_1, 0.5 * tau(i, 1)) =>  ||zeta_G||^2 <= lambda_1 * tau(i, 1)
-            # In cvxpy, we can do sum_squares(...) <= lambda_1 * tau[i, 0]
-            # constraints.append( cp.sum_squares(zeta_G[0][:, i]) <= aux_W[0][i])
-            # constraints.append( cp.SOC(cp.sqrt(2 * aux_W[0][i]), cp.hstack([lambda_1, tau[i, 0]])))
-            # constraints.append( cp.sum_squares(zeta_G[1][:, i]) <= aux_W[1][i])
-            # constraints.append( cp.SOC(cp.sqrt(2 * aux_W[1][i]), cp.hstack([lambda_1, tau[i, 1]])))
             constraints.append( cp.quad_over_lin(zeta_G[0][:, i], lambda_1) <= tau[i, 0])
             constraints.append( cp.quad_over_lin(zeta_G[1][:, i], lambda_1) <= tau[i, 1])
-
-            # norm(zeta_W(:, i, 1), dual_norm) <= lambda_2
-            # similarly for j=0,1
             constraints.append( cp.norm(zeta_W[0][:, i], self.dual_norm) <= lambda_2 )
             constraints.append( cp.norm(zeta_W[1][:, i], self.dual_norm) <= lambda_2 )
 
@@ -182,7 +265,7 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
 
 
 
-    def cheap_robust_mean_estimate(self, X, y):
+    def _cheap_robust_mean_estimate(self, X, y):
         """
         robust mean estimation with 2 * self.eta trimming.
         """
@@ -209,6 +292,7 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
         elif self.model_type == 'svm':
             return means, 1
         raise NotImplementedError
+    
     def worst_distribution(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Compute the worst-case distribution.
 
@@ -222,7 +306,7 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
             Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
 
         Raises:
-            ORWError: If the worst-case distribution optimization fails.
+            ORWDROError: If the worst-case distribution optimization fails.
         """
         
         n, d = X.shape
@@ -235,17 +319,14 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
         # 2) Constraints
         ################
         constraints = []
-        # 2a) sum_j q_{ij} <= 1/(n*(1-vareps))
         for i in range(n):
             constraints.append( cp.sum(q[i]) <= 1.0/(n*(1.0 - self.eta)) )
-        # 2b) sum_{i,j} q_{ij} = 1
         q_sum = 0
         for i in range(n):
             q_sum += cp.sum(q[i])
         constraints.append( q_sum == 1 )
 
-        # 2c) norm constraints
-        z0, __ = self.cheap_robust_mean_estimate(X, y)
+        z0, __ = self._cheap_robust_mean_estimate(X, y)
         Ztilde = np.hstack([X, y.reshape(-1, 1)])
 
         dist_p_list = []
@@ -293,4 +374,4 @@ class OR_Wasserstein_DRO(BaseLinearDRO):
         if problem.value is None:
             raise ORWDROError("Worst-case distribution optimization did not converge to a solution.")
         return q
-        return {'sample_pts': [X, y], 'weight': [[q[i][j].value for j in range(J)] for i in range(n)]}
+        

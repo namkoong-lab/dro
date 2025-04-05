@@ -95,9 +95,9 @@ class BaseLinearDRO:
                 raise ValueError("not predefined kernel")
         if 'kernel_gamma' in config:
             kernel_gamma = config['kernel_gamma']
-            if not isinstance(kernel_gamma, (np.float, int)) and ('kernel_gamma' not in ['scale', 'auto']):
+            if not isinstance(kernel_gamma, (float, int)) and ('kernel_gamma' not in ['scale', 'auto']):
                 raise TypeError("gamma must be float or 'scale' or 'auto'")
-            elif isinstance(kernel_gamma, (np.float, int)) and kernel_gamma <= 0:
+            elif isinstance(kernel_gamma, (float, int)) and kernel_gamma <= 0:
                 raise ValueError("Float gamma must be non-negative")
 
             if kernel_gamma == 'auto':

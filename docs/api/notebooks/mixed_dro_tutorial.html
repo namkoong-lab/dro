@@ -27,8 +27,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/mixed_dro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="f-Divergence DRO" href="f_dro_tutorial.html" />
-    <link rel="prev" title="Example" href="../example.html" /> 
+    <link rel="next" title="NN DRO" href="neural_dro_tutorial.html" />
+    <link rel="prev" title="Kernel Distributionally Robust Optimization" href="kernel.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -255,8 +255,7 @@
 
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text"></span></p>
-<ul class="current">
+        <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear.html">Linear Models</a></li>
@@ -270,16 +269,17 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">f-Divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">WDRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel.html">Kernel Distributionally Robust Optimization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">DRO with Mixed Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalized Loss</a></li>
 </ul>
 </li>
@@ -378,9 +378,7 @@ Sklearn Coefficients: [33.63648075 32.05820144 29.38822328 75.17312611  7.162637
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span>
 
 <span class="c1"># Data generation</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
@@ -453,14 +451,14 @@ optimal
         <div class="button_nav">
             <div class="left">
                 
-                <a href="../example.html">
-                    <span class="icon">&lt;</span><span>Example</span></a>
+                <a href="kernel.html">
+                    <span class="icon">&lt;</span><span>Kernel Distributionally Robust Optimization</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="f_dro_tutorial.html"><span>f-Divergence DRO</span><span class="icon">&gt;</span></a>
+                    <a href="neural_dro_tutorial.html"><span>NN DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -468,7 +466,7 @@ optimal
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, DRO developers.
+        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
 

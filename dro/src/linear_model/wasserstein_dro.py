@@ -467,7 +467,7 @@ class WassersteinDRO(BaseLinearDRO):
                         else:
                             new_X[i] = var_x.value
                             new_y[i] = var_y.value if var_y.value is not None else y[i]
-                            print('test', var_x.value, X[i])
+                            # print('test', var_x.value, X[i])
                     return {'sample_pts': [new_X, new_y], 'weight': np.ones(sample_size) / sample_size}
 
                 elif self.model_type in ['lad', 'logistic']:
@@ -503,7 +503,7 @@ class WassersteinDRO(BaseLinearDRO):
                 weight = np.hstack((weight, eta_gamma / sample_size))
                 weight[0] = weight[0] * (1 - eta_gamma)
                 weight[sample_size] = weight[sample_size] * (1 - eta_gamma)
-                print(alpha.value, eta_gamma, eta.value)
+                # print(alpha.value, eta_gamma, eta.value)
                 # solve the following perturbation problem
                 X_star = cp.Variable(self.input_dim)
                 cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) <= 1]
@@ -649,6 +649,8 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             self.kappa = config['kappa']
     
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+        theta = cp.Variable(self.input_dim)
+        
         if self.kernel != 'linear':
             theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
 
@@ -665,7 +667,6 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         sample_size, __ = X.shape
         empirical_rmse = self.fit_oracle(X, y)
         TGT = self.target_ratio * empirical_rmse
-        theta = cp.Variable(self.input_dim)
         if self.fit_intercept == True:
             b = cp.Variable()
         else:

@@ -1,11 +1,13 @@
-## DRO: A Package for Distributionally Robust Optimization in Machine Learning
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?color=g&style=plastic)](https://opensource.org/licenses/MIT)
+[![Downloads](https://static.pepy.tech/personalized-badge/dro?period=total&units=abbreviation&left_color=grey&right_color=blue&left_text=Downloads)](https://pepy.tech/project/dro)
+[![pypy: v](https://img.shields.io/pypi/v/dro.svg)](https://pypi.python.org/pypi/dro/)
+
+## DRO: A Python Package for Distributionally Robust Optimization in Machine Learning
 
 `DRO` is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver `cvxpy`. Without specified, our DRO model is to solve the following optimization problem:
 $$\min_{\theta} \max_{P: P \in U} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))],$$
 where $U$ is the so-called ambiguity set and typically of the form $U = \{P: d(P, \hat P_n) \leq \epsilon\}$ and $\hat P_n := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}$ is the empirical distribution of training samples $\{(X_i, Y_i)\}_{i = 1}^n$. And $\epsilon$ is the hyperparameter. 
 
-## Base Models
-Currently we have (kernelized) linear models, including logistic regression, linear SVM, and linear regression ($\ell_1$, $\ell_2$ loss) and neural networks.
 
 ## Install
 
@@ -13,8 +15,8 @@ Currently we have (kernelized) linear models, including logistic regression, lin
 pip install dro
 ```
 
-#### Usage
+## Examples
+Please refer to our <a href="https://python-dro.org/api/example.html">examples</a>.
 
-
-### Reference
-
+#### Documentation
+Please refer to https://python-dro.org for more details!
