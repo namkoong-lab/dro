@@ -24,7 +24,8 @@ setup(
                       'torchvision', 
                       'ucimlrepo', 
                       'matplotlib',
-                      'torchattacks'
+                      'torchattacks',
+                      'mosek>=11.0.13'
                       ],
     classifiers=[
         "Programming Language :: Python :: 3",
