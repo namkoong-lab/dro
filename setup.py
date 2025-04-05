@@ -16,7 +16,7 @@ setup(
     author_email='liujiashuo77@gmail.com, tw2837@columbia.edu',
     packages=find_packages(),
     install_requires=['pandas',
-                      'numpy',                     
+                      'numpy>=1.20',                     
                       'scikit-learn',
                       'torch', 
                       'scipy',

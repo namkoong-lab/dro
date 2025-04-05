@@ -1,5 +1,5 @@
 pandas
-numpy
+numpy>=1.20
 scikit-learn
 torch
 scipy

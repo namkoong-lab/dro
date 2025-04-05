@@ -14,7 +14,7 @@ Requires-Python: >=3
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: pandas
-Requires-Dist: numpy
+Requires-Dist: numpy>=1.20
 Requires-Dist: scikit-learn
 Requires-Dist: torch
 Requires-Dist: scipy
