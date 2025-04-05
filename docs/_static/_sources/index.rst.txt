@@ -5,7 +5,7 @@ Welcome to DRO Package Documentation
 
 .. toctree::
    :maxdepth: 2
-   :caption: Jiashuo and Tianyu
+   :caption: 
 
    api/tutorials
    api/example

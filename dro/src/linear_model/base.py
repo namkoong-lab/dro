@@ -95,9 +95,9 @@ class BaseLinearDRO:
                 raise ValueError("not predefined kernel")
         if 'kernel_gamma' in config:
             kernel_gamma = config['kernel_gamma']
-            if not isinstance(kernel_gamma, np.float) and ('kernel_gamma' not in ['scale', 'auto']):
-                raise TypeError("gamma must be ")
-            elif isinstance(kernel_gamma, np.float) and kernel_gamma <= 0:
+            if not isinstance(kernel_gamma, (np.float, int)) and ('kernel_gamma' not in ['scale', 'auto']):
+                raise TypeError("gamma must be float or 'scale' or 'auto'")
+            elif isinstance(kernel_gamma, (np.float, int)) and kernel_gamma <= 0:
                 raise ValueError("Float gamma must be non-negative")
 
             if kernel_gamma == 'auto':
@@ -244,7 +244,7 @@ class BaseLinearDRO:
             inner_product = X @ self.theta
         else:
             K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
-            inner_product = K.dot(self.theta)
+            inner_product = K @ self.theta
         if self.model_type == 'svm':
             return np.maximum(1 - y * (inner_product + self.b), 0)
         elif self.model_type in 'logistic':
@@ -281,7 +281,7 @@ class BaseLinearDRO:
             inner_product = X @ theta
         else:
             K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel,  gamma = self.kernel_gamma)
-            inner_product = K.dot(theta)
+            inner_product = K @ theta
 
         if self.model_type == 'svm':
             return cp.pos(1 - cp.multiply(y, inner_product + b))

@@ -22,7 +22,7 @@ class ConditionalCVaRDRO(BaseLinearDRO):
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', 
-                 fit_intercept: bool = True, solver: str = 'MOSEK'):
+                 fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
         """Initialize the linear DRO model.
 
         :param input_dim: Number of input features. Must be ≥ 1.
@@ -36,6 +36,8 @@ class ConditionalCVaRDRO(BaseLinearDRO):
         :param solver: Optimization solver. 
             See class-level documentation for recommended options. Defaults to 'MOSEK'.
         :type solver: str
+        :param kernel: the kernel type to be used in the optimization model, default = 'linear'
+        :type kernel: str
         :raises ValueError: 
             - If ``input_dim`` < 1
             - If ``model_type`` is not in ['svm', 'logistic', 'ols', 'lad']
@@ -51,7 +53,7 @@ class ConditionalCVaRDRO(BaseLinearDRO):
         if input_dim < 1:
             raise ValueError("input_dim must be ≥ 1")
 
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         self.alpha = 1.0      
         self.control_name = None  
 
@@ -194,7 +196,15 @@ class ConditionalCVaRDRO(BaseLinearDRO):
         else:
             control_X = X
         
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.cost_matrix = np.eye(sample_size)
+            self.cost_inv_transform = np.eye(sample_size)
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
 
         if self.fit_intercept == True:
             b = cp.Variable()

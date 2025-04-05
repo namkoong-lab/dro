@@ -17,7 +17,7 @@ class Chi2DRO(BaseLinearDRO):
     Reference: <https://www.jmlr.org/papers/volume20/17-750/17-750.pdf>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK'):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
         """Initialize the Chi-squared Distributionally Robust Optimization (Chi2-DRO) model.
 
         :param input_dim: Dimensionality of the input feature space. 
@@ -43,6 +43,10 @@ class Chi2DRO(BaseLinearDRO):
             - ``'MOSEK'`` (requires license)
             Defaults to 'MOSEK'.
         :type solver: str
+
+        :param kernel: the kernel type to be used in the optimization model, default = 'linear'
+        :type kernel: str
+
         :raises ValueError: 
             - If `model_type` is not in ['svm', 'logistic', 'ols', 'lad']
             - If `input_dim` ≤ 0
@@ -50,7 +54,7 @@ class Chi2DRO(BaseLinearDRO):
         .. note::
             - 'lad' (L1 loss) produces sparse solutions but requires longer solve times
         """
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         self.eps = 0.0
 
     def update(self, config: Dict[str, Any] = {}):
@@ -146,7 +150,16 @@ class Chi2DRO(BaseLinearDRO):
         if sample_size != y.shape[0]:
             raise Chi2DROError("Input X and target y must have the same number of samples.")
 
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.cost_matrix = np.eye(sample_size)
+            self.cost_inv_transform = np.eye(sample_size)
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
+            
         if self.fit_intercept == True:
             b = cp.Variable()
         else:

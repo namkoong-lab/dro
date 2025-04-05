@@ -17,7 +17,7 @@ class KLDRO(BaseLinearDRO):
     Reference: <https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', eps: float = 0.0):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear', eps: float = 0.0):
         """Initialize KL-divergence Distributionally Robust Optimization model.
 
         Inherits from BaseLinearDRO and configures KL ambiguity set parameters. 
@@ -50,6 +50,10 @@ class KLDRO(BaseLinearDRO):
             - ``'MOSEK'`` (recommended): Requires academic/commercial license
             
         :type solver: str
+    
+        :param kernel: the kernel type to be used in the optimization model, default = 'linear'
+        :type kernel: str
+
         :param eps: KL divergence bound (ε ≥ 0). Special cases:
 
             - ε = 0: Reduces to standard empirical risk minimization (no distributional robustness)
@@ -82,7 +86,7 @@ class KLDRO(BaseLinearDRO):
 
         """
         
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)     
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)     
 
         if eps < 0:
             raise ValueError(f"eps must be non-negative, got {eps}")
@@ -197,8 +201,16 @@ class KLDRO(BaseLinearDRO):
         if sample_size != y.shape[0]:
             raise KLDROError("Input X and target y must have the same number of samples.")
 
-        # Define variables for optimization
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.cost_matrix = np.eye(sample_size)
+            self.cost_inv_transform = np.eye(sample_size)
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
+
         if self.fit_intercept == True:
             b = cp.Variable()
         else:

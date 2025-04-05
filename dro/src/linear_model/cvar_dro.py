@@ -17,7 +17,7 @@ class CVaRDRO(BaseLinearDRO):
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, 
-                 solver: str = 'MOSEK', alpha: float = 1.0):
+                 solver: str = 'MOSEK', kernel: str = 'linear', alpha: float = 1.0):
         """Initialize a CVaR-constrained DRO model.
 
         :param input_dim: Number of input features. Must match training data dimension.
@@ -50,7 +50,7 @@ class CVaRDRO(BaseLinearDRO):
             - If ``alpha`` is outside (0, 1]
 
         """
-        super().__init__(input_dim, model_type, fit_intercept, solver)
+        super().__init__(input_dim, model_type, fit_intercept, solver,kernel)
         if not (0 < alpha <= 1):
             raise ValueError(f"alpha must be in (0, 1], got {alpha}")
         self.alpha = alpha
@@ -173,7 +173,16 @@ class CVaRDRO(BaseLinearDRO):
             raise CVaRDROError("Input X and target y must have the same number of samples.")
 
         # Define optimization variables
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.cost_matrix = np.eye(sample_size)
+            self.cost_inv_transform = np.eye(sample_size)
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
+            
         eta = cp.Variable()
 
         if self.fit_intercept == True:

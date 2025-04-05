@@ -20,7 +20,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
     https://arxiv.org/pdf/2007.13982.pdf with parameters L and p.
     """
     
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', alpha: float = 1.0, L: float = 10.0, p: int = 2):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear', alpha: float = 1.0, L: float = 10.0, p: int = 2):
         """
         :param input_dim: Dimension of input features. Must be ≥ 1.
         :type input_dim: int
@@ -40,6 +40,8 @@ class MarginalCVaRDRO(BaseLinearDRO):
         :type fit_intercept: bool
         :param solver: Convex optimization solver. Defaults to 'MOSEK'.
         :type solver: str
+        :param kernel: the kernel type to be used in the optimization model, default = 'linear'
+        :type kernel: str
         :param alpha: CVaR risk level controlling tail expectation. 
             Must satisfy 0 < α ≤ 1. 
             Defaults to 1.0.
@@ -84,7 +86,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
         if p < 1:
             raise ValueError(f"p must be 1 or 2, got {p}")
 
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         self.alpha = alpha
         self.L = L
         self.p = p
@@ -236,7 +238,16 @@ class MarginalCVaRDRO(BaseLinearDRO):
         dist = np.power(squareform(pdist(control_X)), self.p - 1)
 
         # Define CVXPY variables
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.cost_matrix = np.eye(sample_size)
+            self.cost_inv_transform = np.eye(sample_size)
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
+            
         if self.fit_intercept == True:
             b = cp.Variable()
         else:

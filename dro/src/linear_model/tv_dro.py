@@ -20,7 +20,7 @@ class TVDRO(BaseLinearDRO):
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', 
-                 fit_intercept: bool = True, solver: str = 'MOSEK', 
+                 fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear', 
                  eps: float = 0.0):
         """Initialize TV-constrained DRO model.
 
@@ -44,6 +44,9 @@ class TVDRO(BaseLinearDRO):
         :param solver: Convex optimization solver. Recommended:
             - ``'MOSEK'`` (commercial)
         :type solver: str
+
+        :param kernel: the kernel type to be used in the optimization model, default = 'linear'
+        :type kernel: str
 
         :param eps: TV ambiguity radius. Special cases:
 
@@ -73,7 +76,7 @@ class TVDRO(BaseLinearDRO):
         if eps < 0:
             raise ValueError(f"eps must be ≥ 0, got {eps}")
 
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         self.eps = eps
         self.threshold_val = None  #: Decision boundary threshold (set during fitting)
         
@@ -130,7 +133,16 @@ class TVDRO(BaseLinearDRO):
             raise TVDROError("Input X and target y must have the same number of samples.")
 
         # Define optimization variables
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.cost_matrix = np.eye(sample_size)
+            self.cost_inv_transform = np.eye(sample_size)
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
+
         if self.fit_intercept == True:
             b = cp.Variable()
         else:
@@ -139,17 +151,11 @@ class TVDRO(BaseLinearDRO):
         u = cp.Variable()
 
         # Set up loss function and constraints based on model type
-        if self.model_type in {'ols', 'logistic'}:
-            # Loss for regression models
-            loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) / 
-                    (sample_size * (1 - self.eps)) + eta)
-            constraints = [u >= cp.sum_squares(X[i] @ theta - y[i]) for i in range(sample_size)]
-        else:
-            # Loss for SVM
-            loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) /
-                    (sample_size * (1 - self.eps)) + eta)
-            constraints = [u >= 1 - cp.multiply(y[i], X[i] @ theta) for i in range(sample_size)]
-            constraints += [u >= 0]
+        # Loss for regression models
+        loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) / 
+                (sample_size * (1 - self.eps)) + eta)
+        constraints = [u >= self._cvx_loss(X,y, theta, b) for i in range(sample_size)]
+
 
         # Define the objective with the total variation constraint
         objective = loss * (1 - self.eps) + self.eps * u

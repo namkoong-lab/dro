@@ -194,7 +194,8 @@ class WassersteinDRO(BaseLinearDRO):
 
         """
         if self.kernel != 'linear':
-            theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors, metric = self.kernel, gamma = self.kernel_gamma))
+            theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
+
         else:
             theta_K = theta
 
@@ -249,11 +250,11 @@ class WassersteinDRO(BaseLinearDRO):
             raise WassersteinDROError("Input X and target y must have the same number of samples.")
 
         if self.kernel != 'linear':
-            self.cost_matrix = np.identity((sample_size, sample_size))
-            self.cost_inv_transform = np.identity((sample_size, sample_size))
+            self.cost_matrix = np.eye(sample_size)
+            self.cost_inv_transform = np.eye(sample_size)
             self.support_vectors_ = X
-
-        if self.kernel == 'linear':
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
             theta = cp.Variable(sample_size)
         else:
             theta = cp.Variable(self.input_dim)
@@ -569,7 +570,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
 
     """
     def __init__(self, input_dim: int, model_type: str, 
-                fit_intercept: bool = True, solver: str = 'MOSEK'):
+                fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
         """Initialize Robust satisficing version of Wasserstein DRO.
 
         :param input_dim: Feature space dimension. Must satisfy :math:`d \geq 1`
@@ -597,6 +598,9 @@ class WassersteinDROsatisficing(BaseLinearDRO):
 
         :type solver: str
 
+        :param kernel: the kernel type to be used in the optimization model, default = 'linear'
+        :type kernel: str
+
         :raises ValueError:
 
             - If input_dim < 1
@@ -621,7 +625,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
 
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         
         # Initialize metric components
         self.cost_matrix = np.eye(input_dim)  
@@ -645,6 +649,12 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             self.kappa = config['kappa']
     
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+        if self.kernel != 'linear':
+            theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
+
+        else:
+            theta_K = theta
+
         if self.p == 1:
             dual_norm = np.inf
         elif self.p != 'inf':
@@ -660,11 +670,14 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             b = cp.Variable()
         else:
             b = 0
-        cons = [TGT >= cp.sum(self._cvx_loss(X, y, theta, b)) * sample_size]
+        cons = [TGT >= cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size]
         if self.model_type == 'lad':
-            obj = cp.norm(cp.hstack([theta, -1]), dual_norm)
+            if self.kappa == 'inf':
+                obj = cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
+            else:
+                obj = cp.maximum(cp.norm(self.cost_inv_transform @ theta_K, dual_norm), 1 / self.kappa)
         elif self.model_type in ['ols', 'svm', 'logistic']:
-            obj = cp.norm(theta, dual_norm)
+            obj = cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
 
         problem = cp.Problem(cp.Minimize(obj), cons)
         problem.solve(solver = self.solver)
@@ -727,16 +740,27 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             Float: Regularization term part.
 
         """
+        if self.kernel != 'linear':
+            theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
+
+        else:
+            theta_K = theta
+
         if self.p == 1:
             dual_norm = np.inf
-        else:
+        elif self.p != 'inf':
             dual_norm = 1 / (1 - 1 / self.p)
+        else:
+            dual_norm = 1
         if self.model_type == 'ols':
-            return cp.norm(self.cost_inv_transform @ theta)
+            return cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
         elif self.model_type in ['svm', 'logistic']:
-            return cp.norm(self.cost_inv_transform @ theta, dual_norm)
+            return cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
         elif self.model_type == 'lad':
-            return cp.max(cp.norm(self.cost_inv_transform @ theta, dual_norm), 1 / self.kappa)
+            if self.kappa == 'inf':
+                return cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
+            else:
+                return cp.maximum(cp.norm(self.cost_inv_transform @ theta_K, dual_norm), 1 / self.kappa)
             
 
     def fit_oracle(self, X, y):

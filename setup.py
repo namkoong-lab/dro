@@ -12,7 +12,7 @@ setup(
     long_description=open(md_path, encoding='utf-8').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/namkoong-lab/dro',
-    author='Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, and Jose Blanchet',
+    author='DRO developers.',
     author_email='liujiashuo77@gmail.com, tw2837@columbia.edu',
     packages=find_packages(),
     install_requires=['pandas',
