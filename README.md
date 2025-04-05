@@ -4,14 +4,15 @@
 $$\min_{\theta} \max_{P: P \in U} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))],$$
 where $U$ is the so-called ambiguity set and typically of the form $U = \{P: d(P, \hat P_n) \leq \epsilon\}$ and $\hat P_n := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}$ is the empirical distribution of training samples $\{(X_i, Y_i)\}_{i = 1}^n$. And $\epsilon$ is the hyperparameter. 
 
-## Base Models
-Currently we have (kernelized) linear models, including logistic regression, linear SVM, and linear regression ($\ell_1$, $\ell_2$ loss) and neural networks.
 
 ## Install
 
 ```
 pip install dro
 ```
+
+## Examples
+Please refer to our <a href="https://python-dro.org/api/example.html">examples</a>.
 
 #### Documentation
 Please refer to https://python-dro.org for more details!
