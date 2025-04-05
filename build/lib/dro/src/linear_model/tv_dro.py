@@ -8,41 +8,91 @@ class TVDROError(Exception):
     pass
 
 class TVDRO(BaseLinearDRO):
-    """Total Variation (TV) Distributionally Robust Optimization (DRO) model.
+    """Total Variation Distributionally Robust Optimization (TV-DRO) model.
 
-    This model minimizes a robust loss function subject to a total variation constraint.
+    Implements DRO with TV ambiguity set defined as:
 
-    Attributes:
-        input_dim (int): Dimensionality of the input features.
-        model_type (str): Model type indicator (e.g., 'svm' for SVM, 'logistic' for Logistic Regression, 'ols' for Linear Regression).
-        fit_intercept (bool, default = True): Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered).
-        solver (str, default = 'MOSEK'): Optimization solver to solve the problem, default = 'MOSEK'.
-        eps (float): Robustness parameter for TV-DRO.
-        threshold_val (float): Threshold value from the optimization.
+    .. math::
+        \\mathcal{P} = \{ Q \, | \, \\text{TV}(Q, P) \\leq \\epsilon \}
+
+    where :math:`\\text{TV}` is the total variation distance.
+
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', eps: float = 0.0):
-        """
-        Initialize the TV-DRO model with specified input dimension and model type.
+    def __init__(self, input_dim: int, model_type: str = 'svm', 
+                 fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear', 
+                 eps: float = 0.0):
+        """Initialize TV-constrained DRO model.
 
-        Args:
-            input_dim (int): Dimension of the input features.
-            model_type (str): Type of model ('svm', 'logistic', 'ols').
-            eps (float): Ambiguity size for the TV constraint (default is 0.0).
+        :param input_dim: Feature space dimension. Must be ≥ 1
+        :type input_dim: int
+
+        :param model_type: Base model architecture. Supported:
+
+            - ``'svm'``: Hinge loss (classification)
+
+            - ``'logistic'``: Logistic loss (classification)
+
+            - ``'ols'``: Least squares (regression)
+
+            - ``'lad'``: Least absolute deviation (regression)
+
+        :type model_type: str
+        :param fit_intercept: Whether to learn intercept term :math:`b`.
+            Disable for pre-centered data. Defaults to True.
+        :type fit_intercept: bool
+        :param solver: Convex optimization solver. Recommended:
+            - ``'MOSEK'`` (commercial)
+        :type solver: str
+
+        :param kernel: the kernel type to be used in the optimization model, default = 'linear'
+        :type kernel: str
+
+        :param eps: TV ambiguity radius. Special cases:
+
+            - 0: Standard empirical risk minimization
+
+            - >0: Controls distributional robustness
+
+        :type eps: float
+
+        :raises ValueError:
+
+            - If input_dim < 1
+
+            - If eps < 0
+
+        Example:
+            >>> model = TVDRO(
+            ...     input_dim=5,
+            ...     model_type='svm',
+            ...     eps=0.1
+            ... )
+            >>> model.eps  # 0.1
+
         """
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+        if input_dim < 1:
+            raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
+        if eps < 0:
+            raise ValueError(f"eps must be ≥ 0, got {eps}")
+
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         self.eps = eps
-        self.threshold_val = None  # Stores threshold value after fit
+        self.threshold_val = None  #: Decision boundary threshold (set during fitting)
+        
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update the model configuration.
 
-        Args:
-            config (Dict[str, Any]): Configuration dictionary containing 'eps' key for robustness parameter.
+        :param config: Dictionary containing configuration updates. Supported keys:
 
-        Raises:
-            TVDROError: If 'eps' is not in the valid range (0, 1).
+            - ``eps``: Robustness parameter controlling the size of the chi-squared ambiguity set (must be ≥ 0)
+            
+        :type config: Dict[str, Any]
+
+        :raises TVDROError: If 'eps' is not in the valid range (0, 1).
         """
+
         if 'eps' in config:
             eps = config['eps']
             if not (0 < eps < 1):
@@ -52,15 +102,29 @@ class TVDRO(BaseLinearDRO):
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Fit the model using CVXPY to solve the robust optimization problem with TV constraint.
 
-        Args:
-            X (np.ndarray): Feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
+        :param X: Training feature matrix of shape `(n_samples, n_features)`.
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
 
-        Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta' and 'threshold' keys.
+        :param Y: Target values of shape `(n_samples,)`. Format requirements:
 
-        Raises:
-            TVDROError: If the optimization problem fails to solve.
+            - Classification: ±1 labels
+
+            - Regression: Continuous values
+
+        :type Y: numpy.ndarray
+
+        :returns: Dictionary containing trained parameters:
+        
+            - ``theta``: Weight vector of shape `(n_features,)`
+            
+            - ``threshold``
+            
+            - ``b``
+            
+        :rtype: Dict[str, Any]
+        
+        .raises: TVDROError: If the optimization problem fails to solve.
         """
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
@@ -69,7 +133,16 @@ class TVDRO(BaseLinearDRO):
             raise TVDROError("Input X and target y must have the same number of samples.")
 
         # Define optimization variables
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.cost_matrix = np.eye(sample_size)
+            self.cost_inv_transform = np.eye(sample_size)
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
+
         if self.fit_intercept == True:
             b = cp.Variable()
         else:
@@ -78,17 +151,11 @@ class TVDRO(BaseLinearDRO):
         u = cp.Variable()
 
         # Set up loss function and constraints based on model type
-        if self.model_type in {'ols', 'logistic'}:
-            # Loss for regression models
-            loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) / 
-                    (sample_size * (1 - self.eps)) + eta)
-            constraints = [u >= cp.sum_squares(X[i] @ theta - y[i]) for i in range(sample_size)]
-        else:
-            # Loss for SVM
-            loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) /
-                    (sample_size * (1 - self.eps)) + eta)
-            constraints = [u >= 1 - cp.multiply(y[i], X[i] @ theta) for i in range(sample_size)]
-            constraints += [u >= 0]
+        # Loss for regression models
+        loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) / 
+                (sample_size * (1 - self.eps)) + eta)
+        constraints = [u >= self._cvx_loss(X,y, theta, b) for i in range(sample_size)]
+
 
         # Define the objective with the total variation constraint
         objective = loss * (1 - self.eps) + self.eps * u
@@ -111,16 +178,22 @@ class TVDRO(BaseLinearDRO):
     def worst_distribution(self, X: np.ndarray, y: np.ndarray, precision: float = 1e-5) -> Dict[str, Any]:
         """Compute the worst-case distribution based on TV constraint.
 
-        Args:
-            X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
-            y (np.ndarray): Target vector with shape (n_samples,).
-            precision (float): The perturbation amount in case when the loss is too insignificant to count.
+        :param X: Feature matrix of shape `(n_samples, n_features)`. 
+            Must match the model's `input_dim` (n_features).
+        :type X: numpy.ndarray
+        :param y: Target vector of shape `(n_samples,)`. For regression tasks, continuous values 
+            are expected; for classification, ±1 labels.
+        :type y: numpy.ndarray
 
-        Returns:
-            Dict[str, Any]: Dictionary containing 'sample_pts' and 'weight' keys for worst-case distribution.
+        :returns: Dictionary containing:
 
-        Raises:
-            TVDROError: If the worst-case distribution calculation fails.
+            - ``sample_pts``: Original data points as a tuple ``(X, y)``
+
+            - ``weight``: Worst-case probability weights of shape `(n_samples,)`
+
+        :rtype: Dict[str, Any]
+
+        .raises: TVDROError: If the worst-case distribution calculation fails.
         """
         self.fit(X,y)
         # Calculate the per-sample loss with current theta
