@@ -9,9 +9,9 @@ sys.path.insert(0, os.path.abspath('../dro/src'))
 print(sys.path)
 
 project = 'dro'
-copyright = '2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet'
-author = 'Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet'
-release = '0.1.1'
+copyright = '2025, DRO developers'
+author = 'DRO developers'
+release = '0.2.2'
 
 # html_static_path = ['../docs']
 html_baseurl = 'https://namkoong-lab.github.io/dro/' 
