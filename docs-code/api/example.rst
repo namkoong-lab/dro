@@ -6,7 +6,6 @@ Example
 
    notebooks/f_dro_tutorial.ipynb 
    notebooks/WassersteinDRO_tutorial.ipynb
-   notebooks/kernel.ipynb
    notebooks/mixed_dro_tutorial.ipynb
    notebooks/neural_dro_tutorial.ipynb 
    notebooks/param_dro.ipynb 

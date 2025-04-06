@@ -1,24 +1,20 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>f-Divergence DRO &#8212; dro 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
+    <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -27,7 +23,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/f_dro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="WDRO" href="WassersteinDRO_tutorial.html" />
+    <link rel="next" title="Wasserstein DRO" href="WassersteinDRO_tutorial.html" />
     <link rel="prev" title="Example" href="../example.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -239,7 +235,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -247,15 +243,17 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear.html">Linear Models</a></li>
@@ -270,16 +268,12 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">WDRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernel.html">Kernel Distributionally Robust Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalized Loss</a></li>
 </ul>
 </li>
@@ -327,7 +321,7 @@
           <div class="body" role="main">
             
   <section id="f-Divergence-DRO">
-<h1>f-Divergence DRO<a class="headerlink" href="#f-Divergence-DRO" title="Permalink to this heading">¶</a></h1>
+<h1>f-Divergence DRO<a class="headerlink" href="#f-Divergence-DRO" title="Link to this heading">¶</a></h1>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -350,9 +344,8 @@
 <img alt="../../_images/api_notebooks_f_dro_tutorial_1_0.png" src="../../_images/api_notebooks_f_dro_tutorial_1_0.png" />
 </div>
 </div>
-</section>
 <section id="Standard-f-divergence-DRO">
-<h1>Standard f-divergence DRO<a class="headerlink" href="#Standard-f-divergence-DRO" title="Permalink to this heading">¶</a></h1>
+<h2>Standard f-divergence DRO<a class="headerlink" href="#Standard-f-divergence-DRO" title="Link to this heading">¶</a></h2>
 <p>We include chi2, cvar, kl, tv distance, which corresponds to the standard definition of (generalized) f-divergence.</p>
 <p>The following steps including model fitting, and worst-case illustrations.</p>
 <div class="nbinput nblast docutils container">
@@ -446,8 +439,9 @@
 <img alt="../../_images/api_notebooks_f_dro_tutorial_5_3.png" src="../../_images/api_notebooks_f_dro_tutorial_5_3.png" />
 </div>
 </div>
+</section>
 <section id="data-driven-evaluation">
-<h2>data driven evaluation<a class="headerlink" href="#data-driven-evaluation" title="Permalink to this heading">¶</a></h2>
+<h2>data driven evaluation<a class="headerlink" href="#data-driven-evaluation" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
@@ -499,9 +493,8 @@
 </div>
 <p>These f-divergence DROs are suitable for handling general distribution shifts with likelihood misspecification, while can be too worst-case in practice.</p>
 </section>
-</section>
 <section id="Partial-Distribution-Shift">
-<h1>Partial Distribution Shift<a class="headerlink" href="#Partial-Distribution-Shift" title="Permalink to this heading">¶</a></h1>
+<h2>Partial Distribution Shift<a class="headerlink" href="#Partial-Distribution-Shift" title="Link to this heading">¶</a></h2>
 <p>Some special kinds of DRO models can help handle problems of particular worst-case distribution shift, i.e., covariate shift (marginal_dro). Both of them are built from CVaR-DRO.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
@@ -547,17 +540,6 @@ marginal [-1.1801432134409149, 2.363217574296201]
 conditional {&#39;theta&#39;: [-1.2843606942632635, 3.5303014542999374], &#39;b&#39;: array(-0.64246721)}
 </pre></div></div>
 </div>
-<section id="Bayesian-perspective">
-<h2>Bayesian perspective<a class="headerlink" href="#Bayesian-perspective" title="Permalink to this heading">¶</a></h2>
-<p>In some special examples where we have some priors or parametric information for the distribution shift, we can apply the following Bayesian DRO or Parametric DRO. These are usually built or designed with a under the f-dro framework.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.bayesian_dro</span> <span class="kn">import</span> <span class="o">*</span>
-</pre></div>
-</div>
-</div>
 </section>
 </section>
 
@@ -575,13 +557,10 @@ conditional {&#39;theta&#39;: [-1.2843606942632635, 3.5303014542999374], &#39;b&
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">f-Divergence DRO</a></li>
-<li><a class="reference internal" href="#Standard-f-divergence-DRO">Standard f-divergence DRO</a><ul>
+<li><a class="reference internal" href="#">f-Divergence DRO</a><ul>
+<li><a class="reference internal" href="#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
 <li><a class="reference internal" href="#data-driven-evaluation">data driven evaluation</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#Partial-Distribution-Shift">Partial Distribution Shift</a><ul>
-<li><a class="reference internal" href="#Bayesian-perspective">Bayesian perspective</a></li>
+<li><a class="reference internal" href="#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
 </ul>
 </li>
 </ul>
@@ -603,7 +582,7 @@ conditional {&#39;theta&#39;: [-1.2843606942632635, 3.5303014542999374], &#39;b&
 
             <div class="right">
                 
-                    <a href="WassersteinDRO_tutorial.html"><span>WDRO</span><span class="icon">&gt;</span></a>
+                    <a href="WassersteinDRO_tutorial.html"><span>Wasserstein DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -611,8 +590,8 @@ conditional {&#39;theta&#39;: [-1.2843606942632635, 3.5303014542999374], &#39;b&
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

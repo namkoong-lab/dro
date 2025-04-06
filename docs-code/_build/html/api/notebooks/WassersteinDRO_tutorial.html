@@ -1,24 +1,20 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>WDRO &#8212; dro 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+    <title>Wasserstein DRO &#8212; dro 0.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
+    <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -27,7 +23,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/WassersteinDRO_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Kernel Distributionally Robust Optimization" href="kernel.html" />
+    <link rel="next" title="DRO with Mixed Distances" href="mixed_dro_tutorial.html" />
     <link rel="prev" title="f-Divergence DRO" href="f_dro_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -239,7 +235,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -247,15 +243,17 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear.html">Linear Models</a></li>
@@ -270,16 +268,12 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">WDRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Classification-Task">Classification Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernel.html">Kernel Distributionally Robust Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalized Loss</a></li>
 </ul>
 </li>
@@ -326,10 +320,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="WDRO">
-<h1>WDRO<a class="headerlink" href="#WDRO" title="Permalink to this heading">¶</a></h1>
+  <section id="Wasserstein-DRO">
+<h1>Wasserstein DRO<a class="headerlink" href="#Wasserstein-DRO" title="Link to this heading">¶</a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
@@ -338,11 +332,11 @@
 </div>
 </section>
 <section id="Classification-Task">
-<h1>Classification Task<a class="headerlink" href="#Classification-Task" title="Permalink to this heading">¶</a></h1>
+<h1>Classification Task<a class="headerlink" href="#Classification-Task" title="Link to this heading">¶</a></h1>
 <section id="Load-Data">
-<h2>Load Data<a class="headerlink" href="#Load-Data" title="Permalink to this heading">¶</a></h2>
+<h2>Load Data<a class="headerlink" href="#Load-Data" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.data.dataloader_regression</span> <span class="kn">import</span> <span class="n">regression_basic</span>
@@ -363,10 +357,10 @@
 </div>
 </section>
 <section id="Model-Fit">
-<h2>Model Fit<a class="headerlink" href="#Model-Fit" title="Permalink to this heading">¶</a></h2>
+<h2>Model Fit<a class="headerlink" href="#Model-Fit" title="Link to this heading">¶</a></h2>
 <p>Recall <span class="math notranslate nohighlight">\(X\)</span> being the feature and <span class="math notranslate nohighlight">\(Y\)</span> being the outcome, we allow both <span class="math notranslate nohighlight">\(Y = \theta^{\top}X\)</span> and <span class="math notranslate nohighlight">\(Y = \theta^{\top}X + b\)</span> by setting <code class="docutils literal notranslate"><span class="pre">fit_intercept</span></code> (default = True).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model1</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
@@ -376,7 +370,7 @@
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -386,10 +380,10 @@
 </div>
 </section>
 <section id="Worst-case-Distribution-and-Visualization">
-<h2>Worst-case Distribution and Visualization<a class="headerlink" href="#Worst-case-Distribution-and-Visualization" title="Permalink to this heading">¶</a></h2>
+<h2>Worst-case Distribution and Visualization<a class="headerlink" href="#Worst-case-Distribution-and-Visualization" title="Link to this heading">¶</a></h2>
 <p>For SVM / Logistic / LAD, we provide two different worst-case distribution computations, 1 stands for asymptotic approximation, 2 stands for the exact calculation while requiring solving n optimization problems.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model1</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
@@ -404,53 +398,21 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-[3.18639091e-12 4.21703119e-12 0.00000000e+00 3.25475514e-12
- 1.00000000e+00 0.00000000e+00 0.00000000e+00 4.60277753e-12
- 1.02526476e-11 1.10563554e-11 2.45641409e-12 0.00000000e+00
- 2.84238435e-12 0.00000000e+00 6.33801177e-12 3.93117405e-11
- 1.00000000e+00 0.00000000e+00 3.96421269e-12 3.46894581e-12
- 2.51412118e-12 0.00000000e+00 3.84107737e-10 4.56729223e-12
- 0.00000000e+00 3.00535880e-12 2.63407617e-12 0.00000000e+00
- 2.83507992e-12 3.62079608e-12 0.00000000e+00 0.00000000e+00
- 5.75420387e-12 0.00000000e+00 0.00000000e+00 0.00000000e+00
- 3.80735179e-12 1.12760333e-03 2.47686392e-12 1.97720814e-11
- 2.89162878e-12 3.93652762e-12 0.00000000e+00 0.00000000e+00
- 2.78382687e-12 6.97988361e-12 3.09788077e-12 3.53187641e-12
- 0.00000000e+00 4.17427214e-12 3.63795054e-12 0.00000000e+00
- 2.48290585e-12 8.56762972e-12 1.00000000e+00 3.48663558e-12
- 0.00000000e+00 2.57841558e-12 0.00000000e+00 0.00000000e+00
- 1.07041917e-11 3.13172453e-12 0.00000000e+00 6.70753770e-12
- 6.72286378e-12 4.98872396e-01 3.24733348e-12 0.00000000e+00
- 5.42021752e-12 8.07758296e-12 3.70138833e-12 2.47031955e-12
- 2.63881927e-12 2.97148331e-12 4.25286031e-12 0.00000000e+00
- 0.00000000e+00 9.63029906e-12 8.98373236e-12 0.00000000e+00
- 0.00000000e+00 5.91353527e-12 0.00000000e+00 2.69566043e-12
- 3.38503533e-12 3.76958630e-12 7.44475608e-12 1.00000000e+00
- 0.00000000e+00 6.83673811e-12 4.56997076e-12 0.00000000e+00
- 0.00000000e+00 5.94644898e-12 0.00000000e+00 3.11911971e-12
- 4.52019371e-12 0.00000000e+00 3.15452764e-12 2.99996905e-12] 0.003436426116838488 0.0
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_8_1.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_8_1.png" />
+<img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_8_0.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_8_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_8_2.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_8_2.png" />
+<img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_8_1.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_8_1.png" />
 </div>
 </div>
 </section>
 <section id="Robust-Satisificng-version-of-Wasserstein-DRO">
-<h2>Robust Satisificng version of Wasserstein DRO<a class="headerlink" href="#Robust-Satisificng-version-of-Wasserstein-DRO" title="Permalink to this heading">¶</a></h2>
+<h2>Robust Satisificng version of Wasserstein DRO<a class="headerlink" href="#Robust-Satisificng-version-of-Wasserstein-DRO" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
@@ -461,16 +423,17 @@
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [-0.3365834154114553, 6.700882661679513], &#39;b&#39;: array(-7.23837706)}
+{&#39;theta&#39;: [-9.569193873337038e-17, 1.2730213999516989e-14],
+ &#39;b&#39;: array(0.03031427)}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
@@ -508,10 +471,10 @@
 </section>
 </section>
 <section id="Regression-Task">
-<h1>Regression Task<a class="headerlink" href="#Regression-Task" title="Permalink to this heading">¶</a></h1>
+<h1>Regression Task<a class="headerlink" href="#Regression-Task" title="Link to this heading">¶</a></h1>
 <p>We can construct similar models for Wasserstein DRO regression models, including <code class="docutils literal notranslate"><span class="pre">lad</span></code> and <code class="docutils literal notranslate"><span class="pre">ols</span></code> loss.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -547,7 +510,7 @@
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;cost_matrix&#39;</span><span class="p">:</span> <span class="n">costM</span><span class="p">,</span> <span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="s1">&#39;inf&#39;</span><span class="p">})</span>
@@ -557,7 +520,7 @@
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -581,7 +544,7 @@ array([ 0.97511973, -0.67716171, -0.01224677, -0.89725437,  0.07580456])
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">WDRO</a></li>
+<li><a class="reference internal" href="#">Wasserstein DRO</a></li>
 <li><a class="reference internal" href="#Classification-Task">Classification Task</a><ul>
 <li><a class="reference internal" href="#Load-Data">Load Data</a></li>
 <li><a class="reference internal" href="#Model-Fit">Model Fit</a></li>
@@ -609,7 +572,7 @@ array([ 0.97511973, -0.67716171, -0.01224677, -0.89725437,  0.07580456])
 
             <div class="right">
                 
-                    <a href="kernel.html"><span>Kernel Distributionally Robust Optimization</span><span class="icon">&gt;</span></a>
+                    <a href="mixed_dro_tutorial.html"><span>DRO with Mixed Distances</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -617,8 +580,8 @@ array([ 0.97511973, -0.67716171, -0.01224677, -0.89725437,  0.07580456])
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

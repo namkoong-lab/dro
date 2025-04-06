@@ -1,23 +1,19 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Classification Data &#8212; dro 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
@@ -236,7 +232,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -244,15 +240,17 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear.html">Linear Models</a></li>
@@ -267,16 +265,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html">WDRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/kernel.html">Kernel Distributionally Robust Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/neural_dro_tutorial.html">NN DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/personalize_loss_tutorial.html">Personalized Loss</a></li>
 </ul>
 </li>
@@ -324,10 +318,10 @@
           <div class="body" role="main">
             
   <section id="module-dro.src.data.dataloader_classification">
-<span id="classification-data"></span><h1>Classification Data<a class="headerlink" href="#module-dro.src.data.dataloader_classification" title="Permalink to this heading">¶</a></h1>
+<span id="classification-data"></span><h1>Classification Data<a class="headerlink" href="#module-dro.src.data.dataloader_classification" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="dro.src.data.dataloader_classification.classification_basic">
-<span class="sig-prename descclassname"><span class="pre">dro.src.data.dataloader_classification.</span></span><span class="sig-name descname"><span class="pre">classification_basic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.data.dataloader_classification.classification_basic" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">dro.src.data.dataloader_classification.</span></span><span class="sig-name descname"><span class="pre">classification_basic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.data.dataloader_classification.classification_basic" title="Link to this definition">¶</a></dt>
 <dd><p>Basic classification setting.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>d (int): The dimension of covariates
@@ -351,7 +345,7 @@ save_dir (str): The save path of the visualization figure, if set None, we just 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dro.src.data.dataloader_classification.classification_DN21">
-<span class="sig-prename descclassname"><span class="pre">dro.src.data.dataloader_classification.</span></span><span class="sig-name descname"><span class="pre">classification_DN21</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./visualization.png'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.data.dataloader_classification.classification_DN21" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">dro.src.data.dataloader_classification.</span></span><span class="sig-name descname"><span class="pre">classification_DN21</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./visualization.png'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.data.dataloader_classification.classification_DN21" title="Link to this definition">¶</a></dt>
 <dd><p>Following Section 3.1.1 of “Learning Models with Uniform Performance via Distributionally Robust Optimization”
 link: <a class="reference external" href="https://arxiv.org/pdf/1810.08750">https://arxiv.org/pdf/1810.08750</a></p>
 <dl class="simple">
@@ -375,7 +369,7 @@ save_dir (str): The save path of the visualization figure</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dro.src.data.dataloader_classification.classification_SNVD20">
-<span class="sig-prename descclassname"><span class="pre">dro.src.data.dataloader_classification.</span></span><span class="sig-name descname"><span class="pre">classification_SNVD20</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./visualization.png'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.data.dataloader_classification.classification_SNVD20" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">dro.src.data.dataloader_classification.</span></span><span class="sig-name descname"><span class="pre">classification_SNVD20</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./visualization.png'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.data.dataloader_classification.classification_SNVD20" title="Link to this definition">¶</a></dt>
 <dd><p>Following Section 5.1 of “Certifying Some Distributional Robustness with Principled Adversarial Training”
 link: <a class="reference external" href="https://arxiv.org/pdf/1710.10571">https://arxiv.org/pdf/1710.10571</a></p>
 <dl class="simple">
@@ -397,7 +391,7 @@ save_dir (str): The save path of the visualization figure</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dro.src.data.dataloader_classification.classification_LWLC">
-<span class="sig-prename descclassname"><span class="pre">dro.src.data.dataloader_classification.</span></span><span class="sig-name descname"><span class="pre">classification_LWLC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scramble</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_dimension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./visualization.png'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.data.dataloader_classification.classification_LWLC" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">dro.src.data.dataloader_classification.</span></span><span class="sig-name descname"><span class="pre">classification_LWLC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scramble</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_dimension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./visualization.png'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.data.dataloader_classification.classification_LWLC" title="Link to this definition">¶</a></dt>
 <dd><p>Following Section 4.1 (Classification) of “Distributionally Robust Optimization with Data Geometry”
 link: <a class="reference external" href="https://proceedings.neurips.cc/paper_files/paper/2022/file/da535999561b932f56efdd559498282e-Paper-Conference.pdf">https://proceedings.neurips.cc/paper_files/paper/2022/file/da535999561b932f56efdd559498282e-Paper-Conference.pdf</a></p>
 <p>Args:
@@ -473,8 +467,8 @@ link: <a class="reference external" href="https://proceedings.neurips.cc/paper_f
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

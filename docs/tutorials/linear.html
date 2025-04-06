@@ -1,23 +1,19 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Linear Models &#8212; dro 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
@@ -236,7 +232,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -244,15 +240,17 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Linear Models</a></li>
@@ -267,16 +265,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/notebooks/f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/f_dro_tutorial.html#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/f_dro_tutorial.html#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html">WDRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/kernel.html">Kernel Distributionally Robust Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html">NN DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/notebooks/param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/notebooks/personalize_loss_tutorial.html">Personalized Loss</a></li>
 </ul>
 </li>
@@ -324,7 +318,7 @@
           <div class="body" role="main">
             
   <section class="tex2jax_ignore mathjax_ignore" id="linear-models">
-<h1>Linear Models<a class="headerlink" href="#linear-models" title="Permalink to this heading">¶</a></h1>
+<h1>Linear Models<a class="headerlink" href="#linear-models" title="Link to this heading">¶</a></h1>
 <p>These optimization problems are solved exactly through solvers.</p>
 </section>
 
@@ -356,8 +350,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

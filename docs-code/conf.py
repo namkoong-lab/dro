@@ -27,6 +27,8 @@ extensions = [
     'sphinx_copybutton' 
 ]
 
+myst_enable_extensions = ["html_admonition"]
+
 autodoc_type_aliases = {
     'NDArray': 'numpy.ndarray',
     "Expression": "cvxpy.expressions.expression.Expression",

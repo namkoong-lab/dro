@@ -1,23 +1,19 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Sinkhorn DRO &#8212; dro 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -238,7 +234,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -246,15 +242,17 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear.html">Linear Models</a></li>
@@ -269,16 +267,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html">WDRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/kernel.html">Kernel Distributionally Robust Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/neural_dro_tutorial.html">NN DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/personalize_loss_tutorial.html">Personalized Loss</a></li>
 </ul>
 </li>
@@ -326,10 +320,10 @@
           <div class="body" role="main">
             
   <section id="module-dro.src.linear_model.sinkhorn_dro">
-<span id="sinkhorn-dro"></span><h1>Sinkhorn DRO<a class="headerlink" href="#module-dro.src.linear_model.sinkhorn_dro" title="Permalink to this heading">¶</a></h1>
+<span id="sinkhorn-dro"></span><h1>Sinkhorn DRO<a class="headerlink" href="#module-dro.src.linear_model.sinkhorn_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">SinkhornLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_sample_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">SinkhornLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_sample_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Sinkhorn Distributionally Robust Optimization with Linear Models.</p>
 <p>Reference: &lt;<a class="reference external" href="https://arxiv.org/abs/2109.11926">https://arxiv.org/abs/2109.11926</a>&gt;</p>
@@ -393,7 +387,7 @@ Supported: <code class="docutils literal notranslate"><span class="pre">'cpu'</s
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update hyperparameters for Sinkhorn optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -430,7 +424,7 @@ Supported: <code class="docutils literal notranslate"><span class="pre">'cpu'</s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Generate predictions using the optimized Sinkhorn DRO model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -475,7 +469,7 @@ Supported dtype: float32/float64</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score" title="Link to this definition">¶</a></dt>
 <dd><p>Evaluate model performance on given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -528,7 +522,7 @@ Must match model’s expected input dimension</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimization_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimization_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Train the Sinkhorn DRO model with specified optimization strategy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -635,8 +629,8 @@ Should match model’s input dimension (n_features == input_dim)</p></li>
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
