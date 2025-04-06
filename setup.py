@@ -6,7 +6,7 @@ md_path = os.path.join(here, 'dro/README.md')
 
 setup(
     name='dro',
-    version='0.2.2',    
+    version='0.1.1',    
     license='MIT License',
     description='A package of distributionally robust optimization (DRO) methods. Implemented via cvxpy and PyTorch',
     long_description=open(md_path, encoding='utf-8').read(),
@@ -16,7 +16,7 @@ setup(
     author_email='liujiashuo77@gmail.com, tw2837@columbia.edu',
     packages=find_packages(),
     install_requires=['pandas',
-                      'numpy>=1.20',                     
+                      'numpy',                     
                       'scikit-learn',
                       'torch', 
                       'scipy',
@@ -24,8 +24,7 @@ setup(
                       'torchvision', 
                       'ucimlrepo', 
                       'matplotlib',
-                      'torchattacks',
-                      'mosek>=11.0.13'
+                      'torchattacks'
                       ],
     classifiers=[
         "Programming Language :: Python :: 3",
