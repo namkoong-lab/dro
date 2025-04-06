@@ -3,8 +3,8 @@
 [![pypy: v](https://img.shields.io/pypi/v/dro.svg)](https://pypi.python.org/pypi/dro/)
 
 # `dro`: A Python Package for Distributionally Robust Optimization in Machine Learning
-> Jiashuo Liu$^\dagger$, Tianyu Wang$^\dagger$, Henry Lam, Hongseok Namkoong, Jose Blanchet
-> <small>$^\dagger$ equal contributions ($\alpha$-$\beta$ order)</small>
+> Jiashuo Liu<sup>†</sup>, Tianyu Wang<sup>†</sup>, Henry Lam, Hongseok Namkoong, Jose Blanchet  
+> <sub>† equal contributions (α-β order)</sub>
 
 <p align="center"><img src='./logo.png' width='500px'/></p>
 
