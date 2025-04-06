@@ -199,7 +199,7 @@ As for the latest `v0.2.2` version, `dro` supports:
 
 
 
-#### NN DRO models
+### (3) NN DRO models
 
 <table class="tg"><thead>
   <tr>
