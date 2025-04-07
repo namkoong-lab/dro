@@ -19,3 +19,9 @@ API
    :caption: Neural Network DRO Methods
 
    nn_dro 
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tree-Ensembles DRO Methods
+
+   tree_dro 

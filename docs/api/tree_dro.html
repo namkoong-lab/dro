@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial &#8212; dro 0.2.2 documentation</title>
+    <title>Tree-Ensembles DRO Methods &#8212; dro 0.2.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,15 +15,13 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/tutorials.html" />
+    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/tree_dro.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Formulation" href="../tutorials/index.html" />
-    <link rel="prev" title="Installation" href="install.html" /> 
+    <link rel="next" title="XGBoost" href="apis/kldro_tree.html" />
+    <link rel="prev" title="Wasserstein DRO" href="apis/wdro_nn.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,20 +251,19 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_pdro.html">Bayesian-based DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/personal_loss.html">Personal Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_api.html">Data Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_dro.html">Linear DRO Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nn_dro.html">Neural Network DRO Methods</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree-Ensembles DRO Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apis/kldro_tree.html">XGBoost</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apis/cvardro_tree.html">LGBM</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -278,56 +275,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading">¶</a></h1>
+  <section id="tree-ensembles-dro-methods">
+<h1>Tree-Ensembles DRO Methods<a class="headerlink" href="#tree-ensembles-dro-methods" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Overall Pipeline</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tree-Ensembles DRO Methods</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Formulation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#synthetic-data-generation">Synthetic Data Generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#linear">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#neural-network">Neural Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#reference">Reference:</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Linear DRO</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear.html">Linear Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_fdro.html">f-divergence DRO</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#standard-generalized">Standard (Generalized)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#partial-dro">Partial DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#reference">Reference:</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_wdro.html">Wasserstein DRO</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#standard-version">Standard Version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#robust-satisficing-version">Robust Satisficing Version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#reference">Reference</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_pdro.html">Bayesian-based DRO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_mixdro.html">DRO with a mixture of distance metrics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html#sinkhorn-dro">Sinkhorn-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html#holistic-dro">Holistic-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html#mot-dro">MOT-DRO</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">NN DRO</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/neural_model.html">NN-DRO</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#chi-2-dro-and-cvar-dro">1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#wasserstein-dro">2. Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#holistic-robust-dro">3. Holistic Robust DRO</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/personal_loss.html">Personal Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/kldro_tree.html">XGBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/cvardro_tree.html">LGBM</a></li>
 </ul>
 </div>
 </section>
@@ -345,14 +299,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="install.html">
-                    <span class="icon">&lt;</span><span>Installation</span></a>
+                <a href="apis/wdro_nn.html">
+                    <span class="icon">&lt;</span><span>Wasserstein DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="../tutorials/index.html"><span>Formulation</span><span class="icon">&gt;</span></a>
+                    <a href="apis/kldro_tree.html"><span>XGBoost</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
