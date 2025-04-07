@@ -10,4 +10,5 @@ Example
    notebooks/neural_dro_tutorial.ipynb 
    notebooks/param_dro.ipynb 
    notebooks/tree_dro_tutorial.ipynb 
+   notebooks/kernel_dro_tutorial.ipynb
    notebooks/personalize_loss_tutorial.ipynb  
