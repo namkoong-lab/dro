@@ -22,7 +22,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Installation" href="install.html" />
+    <link rel="next" title="Installation Guide" href="install.html" />
     <link rel="prev" title="Welcome to DRO Package Documentation" href="../index.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -252,7 +252,7 @@
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
@@ -271,7 +271,7 @@
 <span id="id1"></span><h1>About<a class="headerlink" href="#about" title="Link to this heading">¶</a></h1>
 <a class="reference internal image-reference" href="../_images/logo.png"><img alt="../_images/logo.png" class="align-center" src="../_images/logo.png" style="width: 800px;" />
 </a>
-<p><cite>dro</cite> is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code>. The <cite>dro</cite> package supports different kinds of distance metrics <span class="math notranslate nohighlight">\(d(\cdot,\cdot)\)</span> as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, neural networks…). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers.</p>
+<p><cite>dro</cite> is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code>. The <cite>dro</cite> package supports different kinds of distance metrics <span class="math notranslate nohighlight">\(d(\cdot,\cdot)\)</span> as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, tree-ensembles, neural networks…). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers.</p>
 <p>Without specified, our DRO model is to solve the following optimization problem:</p>
 <div class="math notranslate nohighlight">
 \[\min_{\theta} \max_{P: P \in U} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))],\]</div>
@@ -442,6 +442,41 @@
 </tbody>
 </table>
 </section>
+<section id="tree-ensembles-dro-models">
+<h2>(4) Tree-Ensembles DRO models<a class="headerlink" href="#tree-ensembles-dro-models" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Tree-Ensembles DRO Models</span><a class="headerlink" href="#id5" title="Link to this table">¶</a></caption>
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Python Module</p></th>
+<th class="head"><p>Class Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.xgb</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">KLDRO_XGB</span></code></p></td>
+<td><p>KL-DRO for XGBoost</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.xgb</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB</span></code></p></td>
+<td><p>CVaR-DRO for XGBoost</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM</span></code></p></td>
+<td><p>KL-DRO for Light GBM</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM</span></code></p></td>
+<td><p>CVaR-DRO for Light GBM</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 
 
@@ -462,6 +497,7 @@
 <li><a class="reference internal" href="#synthetic-data-generation">(1) Synthetic data generation</a></li>
 <li><a class="reference internal" href="#linear-dro-models">(2) Linear DRO models</a></li>
 <li><a class="reference internal" href="#nn-dro-models">(3) NN DRO models</a></li>
+<li><a class="reference internal" href="#tree-ensembles-dro-models">(4) Tree-Ensembles DRO models</a></li>
 </ul>
 </li>
 </ul>
@@ -483,7 +519,7 @@
 
             <div class="right">
                 
-                    <a href="install.html"><span>Installation</span><span class="icon">&gt;</span></a>
+                    <a href="install.html"><span>Installation Guide</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

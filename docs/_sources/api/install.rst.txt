@@ -1,5 +1,5 @@
-Installation
-===============
+Installation Guide
+====================
 
 (1) Prepare ``Mosek`` license
 -------------------------------

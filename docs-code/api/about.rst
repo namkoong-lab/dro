@@ -7,7 +7,7 @@ About
    :width: 800px
    :align: center
 
-`dro` is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver ``cvxpy``. The `dro` package supports different kinds of distance metrics :math:`d(\cdot,\cdot)` as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, neural networks...). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers.
+`dro` is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver ``cvxpy``. The `dro` package supports different kinds of distance metrics :math:`d(\cdot,\cdot)` as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, tree-ensembles, neural networks...). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers.
 
 Without specified, our DRO model is to solve the following optimization problem:
 
@@ -131,3 +131,28 @@ As for the latest ``v0.2.2`` version, `dro` supports:
    * - :file:`dro.src.neural_model.hrdro_nn`
      - ``HRNNDRO``
      - Holistic Robust NN DRO
+
+
+
+(4) Tree-Ensembles DRO models
+------------------------------
+
+.. list-table:: Tree-Ensembles DRO Models
+   :header-rows: 1
+   :widths: 25 25 50
+
+   * - Python Module
+     - Class Name
+     - Description
+   * - :file:`dro.src.tree_model.xgb`
+     - ``KLDRO_XGB``
+     - KL-DRO for XGBoost
+   * - :file:`dro.src.tree_model.xgb`
+     - ``CVaRDRO_XGB``
+     - CVaR-DRO for XGBoost
+   * - :file:`dro.src.tree_model.lgbm`
+     - ``KLDRO_LGBM``
+     - KL-DRO for Light GBM
+   * - :file:`dro.src.tree_model.lgbm`
+     - ``CVaRDRO_LGBM``
+     - CVaR-DRO for Light GBM
