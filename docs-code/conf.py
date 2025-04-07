@@ -55,8 +55,8 @@ autodoc_typehints = "description"
 
 # html_theme = 'sphinx_rtd_theme'
 # html_theme_options = {
-    # 'navigation_depth': 4,
-    # 'collapse_navigation': False
+#     'navigation_depth': 4,
+#     'collapse_navigation': True
 # }
 
 
@@ -64,9 +64,11 @@ html_theme = 'piccolo_theme'
 html_theme_options = {
     "source_url": 'https://github.com/namkoong-lab/dro',
     "source_icon": "github",
-    "globaltoc_collapse": False,
+    "globaltoc_collapse": True,
     "banner_text": 'A GIFT to the whole DRO community!',
     "banner_hiding": "temporal",
+    # 'navigation_depth': 4,
+    # 'collapse_navigation': True
     # "canonical_url": "", 
     # "analytics_id": "",
 }
@@ -119,5 +121,6 @@ nitpick_ignore = [
     ('py:exc', 'WassersteinDROError'),
     ('py:exc', 'DROError'),
     ('py:exc', 'CVaRDROError'),
-    ('py:exc', 'LinearModel')
+    ('py:exc', 'LinearModel'),
+    ('py:exc', 'NotFittedError')
 ]

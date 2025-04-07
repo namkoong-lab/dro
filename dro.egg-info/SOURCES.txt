@@ -42,3 +42,6 @@ dro/src/neural_model/fdro_nn.py
 dro/src/neural_model/fdro_utils.py
 dro/src/neural_model/hrdro_nn.py
 dro/src/neural_model/wdro_nn.py
+dro/src/tree_model/__init__.py
+dro/src/tree_model/lgbm.py
+dro/src/tree_model/xgb.py
