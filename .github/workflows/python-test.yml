@@ -37,4 +37,11 @@ jobs:
         
     - name: Run tests
       run: |
-        pytest --cov=dro tests/ --cov-report=term-missing
+        coverage run -m pytest tests/  
+        coverage xml 
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
