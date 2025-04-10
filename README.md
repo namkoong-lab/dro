@@ -1,6 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?color=g&style=plastic)](https://opensource.org/licenses/MIT)
 [![Downloads](https://static.pepy.tech/personalized-badge/dro?period=total&units=abbreviation&left_color=grey&right_color=blue&left_text=Downloads)](https://pepy.tech/project/dro)
 [![pypy: v](https://img.shields.io/pypi/v/dro.svg)](https://pypi.python.org/pypi/dro/)
+[![codecov](https://codecov.io/github/namkoong-lab/dro/graph/badge.svg?token=QFYLOVYZXF)](https://codecov.io/github/namkoong-lab/dro)
 
 # `dro`: A Python Package for Distributionally Robust Optimization in Machine Learning
 > Jiashuo Liu<sup>†</sup>, Tianyu Wang<sup>†</sup>, Henry Lam, Hongseok Namkoong, Jose Blanchet  
