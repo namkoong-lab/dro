@@ -102,7 +102,7 @@ We support DRO methods including:
 
 ## Neural Network
 Given the complexity of neural networks, many of the explicit optimization algorithms are not applicable. And we implement four DRO methods in an "approximate" way, including:
-* $chi^2$-DRO;
+* $\chi^2$-DRO;
 * CVaR-DRO;
 * Wasserstein DRO: we approximate it via adversarial training;
 * Holistic Robust DRO.

@@ -263,6 +263,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
@@ -297,7 +298,7 @@ Implementation details are as follows:</p>
 </section>
 <section id="wasserstein-dro">
 <h2>2. Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
-<p>We follow [2], and use adversarial training to implement it.</p>
+<p>For WDRO on neural networks, the main challenge is the perturbation. In our package, the perturbation step is implemented via recent advanced adversarial attack techniques which slightly perturb the data points to increase the prediction error. And the general procedure follows [2].</p>
 <p>[2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi.</p>
 </section>
 <section id="holistic-robust-dro">

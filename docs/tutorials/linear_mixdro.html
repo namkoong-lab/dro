@@ -15,6 +15,8 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_mixdro.html" />
@@ -261,6 +263,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
@@ -278,23 +281,62 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="dro-with-a-mixture-of-distance-metrics">
 <h1>DRO with a mixture of distance metrics<a class="headerlink" href="#dro-with-a-mixture-of-distance-metrics" title="Link to this heading">¶</a></h1>
+<p>We further implement several DRO methods based on a mixture of distance metrics, including Sinkhorn-DRO, Holistic Robust DRO, and DRO based on OT discrepancy with moment constraints (MOT-DRO).</p>
 <section id="sinkhorn-dro">
 <h2>Sinkhorn-DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
-<ul class="simple">
-<li><p>Reference: Wang, Jie, Rui Gao, and Yao Xie. “Sinkhorn distributionally robust optimization.” arXiv preprint arXiv:2109.11926 (2021).</p></li>
-</ul>
+<p>The objective function of Sinkhorn-DRO is:</p>
+<div class="math notranslate nohighlight">
+\[
+\min_\theta \sup_{P\in \mathcal{B}_{\rho,\epsilon}(P_{tr})} \mathbb{E}_P[\ell(f_\theta(X),Y)],
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{B}_{\rho,\epsilon}(P_{tr})= \{P: W_{\epsilon}(P,P_{tr})\leq \rho \}\)</span>. Here <span class="math notranslate nohighlight">\(W_{\epsilon}(\cdot,\cdot)\)</span> denotes the Sinkhorn Distance, defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+W_{\epsilon}(P,Q) = \inf_{\gamma \in \Pi(P,Q)}\mathbb{E}_{(x,y)\sim \gamma}[c(x,y)]+\epsilon\cdot H(\gamma\vert \mu\otimes\nu),
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu,\nu\)</span> are reference measures satisfying <span class="math notranslate nohighlight">\(P\ll \mu\)</span> and <span class="math notranslate nohighlight">\(Q\ll \nu\)</span>.</p>
+<p>Reference: Wang, Jie, Rui Gao, and Yao Xie. “Sinkhorn distributionally robust optimization.” arXiv preprint arXiv:2109.11926 (2021).</p>
 </section>
 <section id="holistic-dro">
 <h2>Holistic-DRO<a class="headerlink" href="#holistic-dro" title="Link to this heading">¶</a></h2>
-<ul class="simple">
-<li><p>Reference: Bennouna, Amine, and Bart Van Parys. “Holistic robust data-driven decisions.” arXiv preprint arXiv:2207.09560 (2022).</p></li>
-</ul>
+<p>Holist Robust DRO is based on two metrics, convex pseudo divergence metric <span class="math notranslate nohighlight">\(LP_{\mathcal N}(\cdot,\cdot)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+LP_{\mathcal N}(P, Q) =  \inf_{\gamma\in\Pi(P,Q)} \inf \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi'),
+\]</div>
+<p>and KL-divergence <span class="math notranslate nohighlight">\(D_{KL}(\cdot\|\cdot)\)</span>. The objective function is:</p>
+<div class="math notranslate nohighlight">
+\[
+\min_\theta\sup_{P\in \mathcal{B}_{\alpha,r}(P_{tr})}\mathbb{E}_{P}[\ell(f_\theta(X),Y)],
+\]</div>
+<p>where the uncertainty set is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{B}_{\alpha,r}(P_{tr}) = \{P: P,Q\in\mathcal{P}, LP_{\mathcal N}(P_{tr},Q)\leq \alpha, D_{KL}(Q\|P)\leq r \}.
+\]</div>
+<p>For linear models, we follow Appendix D.1 and D.2, and code for neural networks is based on the official codes.</p>
+<p>Reference: Bennouna, Amine, and Bart Van Parys. “Holistic robust data-driven decisions.” arXiv preprint arXiv:2207.09560 (2022).</p>
 </section>
 <section id="mot-dro">
 <h2>MOT-DRO<a class="headerlink" href="#mot-dro" title="Link to this heading">¶</a></h2>
-<ul class="simple">
-<li><p>Reference: Blanchet, Jose, et al. “Unifying Distributionally Robust Optimization via Optimal Transport Theory.” arXiv preprint arXiv:2308.05414 (2023).</p></li>
-</ul>
+<p>MOT-DRO uses the OT-discrepancy with moment constraints, defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+M_c(P,Q)= \inf_\pi \mathbb{E}_\pi[c((Z,W),(\hat Z, \hat W))],
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\pi_{(Z,W)}=P, \pi_{(\hat Z, \hat W)}=Q\)</span>, and <span class="math notranslate nohighlight">\(\mathbb{E}_\pi[W]=1\)</span>.
+Taking the cost function as</p>
+<div class="math notranslate nohighlight">
+\[
+c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot d(z,\hat z)+\theta_2\cdot (\phi(w)-\phi(\hat w))_+,
+\]</div>
+<p>the objective function of MOT-DRO is:</p>
+<div class="math notranslate nohighlight">
+\[
+\min_\theta\sup_{P: M_c(P,\hat{P}_{train})\leq \epsilon} \mathbb{E}_P[\ell(f_\theta(X),Y)],
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{P}_{train}=P_{train}\otimes \delta_1\)</span>.</p>
+<p>Reference: Jose Blanchet, Daniel Kuhn, Jiajin Li, Bahar Taskesen. “Unifying Distributionally Robust Optimization via Optimal Transport Theory.” arXiv preprint arXiv:2308.05414 (2023).</p>
 </section>
 </section>
 
