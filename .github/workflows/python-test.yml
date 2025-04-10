@@ -37,8 +37,4 @@ jobs:
         
     - name: Run tests
       run: |
-        coverage run -m pytest tests/
-        
-        coverage report -m
-        
-        coverage html
+        pytest --cov=dro tests/ --cov-report=term-missing
