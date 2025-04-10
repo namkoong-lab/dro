@@ -10,3 +10,5 @@ ucimlrepo
 matplotlib
 torchattacks
 mosek>=11.0.13
+xgboost
+lightgbm
