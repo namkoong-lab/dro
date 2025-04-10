@@ -29,9 +29,6 @@ jobs:
         echo "$MOSEK_LICENSE_BASE64" | base64 -d > ~/mosek/mosek.lic
         echo "MOSEKLM_LICENSE_FILE=~/mosek/mosek.lic" >> $GITHUB_ENV
     
-    - name: Verify License
-      run: |
-        python -c "import mosek; print('MOSEK version:', mosek.getversion())"
         
     - name: Run tests
       run: |
