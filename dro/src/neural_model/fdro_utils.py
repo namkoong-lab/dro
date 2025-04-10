@@ -29,7 +29,7 @@ def chi_square_value(p: torch.Tensor, v: torch.Tensor, reg: float) -> torch.Tens
     """Compute χ²-regularized value: ⟨p,v⟩ - reg * χ²(p, uniform)."""
     m = p.shape[0]
     chi2 = (0.5 / m) * reg * torch.norm(m * p - torch.ones_like(p), p=2)**2
-    return torch.dot(p, v) - chi2
+    return torch.dot(p.squeeze(), v.squeeze()) - chi2
 
 def cvar_value(p: torch.Tensor, v: torch.Tensor, reg: float) -> torch.Tensor:
     """Compute CVaR-regularized value: ⟨p,v⟩ - reg * KL(p, uniform)."""
@@ -107,6 +107,10 @@ class RobustLoss(nn.Module):
         super().__init__()
         self.size = size
         self.reg = reg
+
+        if geometry is None:
+            raise ParameterError(f"Unsupported geometry: {geometry}")
+
         self.geometry = geometry.lower()
         self.tol = tol
         self.max_iter = max_iter
@@ -122,7 +126,7 @@ class RobustLoss(nn.Module):
         if self.geometry == 'cvar' and self.size > 1:
             raise ParameterError(f"CVaR α must be ≤ 1, got {self.size}")
             
-        if self.reg < 0:
+        if self.reg < 0 or self.size <= 0:
             raise ParameterError(f"Regularization must be ≥ 0, got {self.reg}")
 
     def forward(self, outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
@@ -141,11 +145,12 @@ class RobustLoss(nn.Module):
     def _compute_individual_loss(self, outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
         """Compute per-sample losses."""
         if self.is_regression:
-            return (outputs.squeeze() - targets).pow(2)
+            return (outputs.squeeze() - targets.squeeze()).pow(2)
         return F.cross_entropy(outputs, targets.long(), reduction='none')
 
     def _compute_robust_loss(self, v: torch.Tensor) -> torch.Tensor:
         """Core robust loss computation."""
+        print(v.shape)
         if self.size == 0:  # ERM fallback
             return v.mean()
 

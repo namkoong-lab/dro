@@ -197,6 +197,8 @@ class SinkhornLinearDRO(BaseLinearDRO):
         """
         if X.shape[1] != self.model.linear.in_features:
             raise ValueError(f"Dimension mismatch: model expects {self.model.linear.in_features}, got {X.shape[1]}")
+        if np.isnan(X).any():
+            raise ValueError(f"Input contains NaNs")
 
         X_tensor = self._to_tensor(X)
         self.model.eval()
@@ -297,7 +299,16 @@ class SinkhornLinearDRO(BaseLinearDRO):
             >>> print(params['weights'])  # [-0.12, 1.45, ...]
 
         """
+        if self.model_type in {'logistic'}:
+            is_valid = np.all((y == 0) | (y == 1))
+            if not is_valid:
+                raise SinkhornDROError("classification labels not in {0, +1} for Sinkhorn-DRO on LR")
+        elif self.model_type in {'svm'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise SinkhornDROError("classification labels not in {-1, +1} for Sinkhorn-DRO on SVM")
         
+
         self._validate_inputs(X, y)
         dataloader = self._create_dataloader(X, y)
 
@@ -392,11 +403,14 @@ class SinkhornLinearDRO(BaseLinearDRO):
                 for k in range(self.k_sample_max):
                     m = 2 ** k
                     subset_size = n_levels[-k-1]
+                    # sub_data, sub_target = data[:subset_size], target[:subset_size]
+                    subset_size = min(n_levels[-k-1], data.size(0)) 
                     sub_data, sub_target = data[:subset_size], target[:subset_size]
-
                     # Multilevel sample generation
                     noise = torch.randn((m, subset_size, data.shape[1]), device=self.device)
-                    noisy_data = sub_data + noise.view(-1, data.shape[1]) * math.sqrt(self.reg_param)
+                    # noisy_data = sub_data + noise.view(-1, data.shape[1]) * math.sqrt(self.reg_param)
+                    expanded_data = sub_data.repeat(m, 1) 
+                    noisy_data = expanded_data + noise.view(-1, data.shape[1]) * math.sqrt(self.reg_param)
                     repeated_target = sub_target.repeat(m, 1)
 
                     # Loss computation
@@ -436,7 +450,9 @@ class SinkhornLinearDRO(BaseLinearDRO):
 
                 # Perturbed sample generation
                 noise = torch.randn((m, data.shape[0], data.shape[1]), device=self.device)
-                noisy_data = data + noise.view(-1, data.shape[1]) * math.sqrt(self.reg_param)
+                # noisy_data = data + noise.view(-1, data.shape[1]) * math.sqrt(self.reg_param)
+                expanded_data = data.repeat(m, 1)  
+                noisy_data = expanded_data + noise.view(-1, data.shape[1]) * math.sqrt(self.reg_param)
                 repeated_target = target.repeat(m, 1)
 
                 # Loss computation with probability weighting
@@ -444,24 +460,4 @@ class SinkhornLinearDRO(BaseLinearDRO):
                 loss = self._compute_loss(predictions, repeated_target, m, lambda_reg)
                 (loss / level_probs[k]).backward()
                 optimizer.step()
-    #endregion
 
-
-if __name__ == "__main__":
-    """Example usage with synthetic regression data."""
-    from sklearn.datasets import make_regression
-    from sklearn.linear_model import LinearRegression, Ridge
-
-    # Data generation
-    X, y = make_regression(n_samples=1000, n_features=10, noise=1, random_state=42)
-    # Model training
-    dro_model = SinkhornLinearDRO(input_dim=10, output_dim=1, k_sample_max=4, reg_param=.001, lambda_param=100, max_iter=1000, model_type='lad')
-    params = dro_model.fit(X, y, optimization_type="SG")
-    print("Sinkhorn DRO Parameters:", params)
-    print(dro_model.score(X, y))
-
-    # Baseline comparison
-    lr_model = Ridge()
-    lr_model.fit(X, y)
-    print("Sklearn Coefficients:", lr_model.coef_)
-    print(lr_model.score(X,y))

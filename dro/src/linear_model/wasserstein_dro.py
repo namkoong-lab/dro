@@ -242,7 +242,11 @@ class WassersteinDRO(BaseLinearDRO):
         
         .raises: WassersteinDROError: If the optimization problem fails to solve.
         """
-
+        if self.model_type in {'logistic', 'svm'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise WassersteinDROError("classification labels not in {-1, +1}")
+        
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
             raise WassersteinDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
@@ -649,6 +653,12 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             self.kappa = config['kappa']
     
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+        if self.model_type in {'logistic', 'svm'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise WassersteinDROSatisificingError("classification labels not in {-1, +1}")
+        
+
         theta = cp.Variable(self.input_dim)
         
         if self.kernel != 'linear':

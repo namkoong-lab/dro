@@ -1,0 +1,8 @@
+[run]
+omit =
+    */data/*
+    */__init__.py
+    */info.py
+    */base.py
+    */base_nn.py
+    tests/*  

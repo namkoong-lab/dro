@@ -226,6 +226,10 @@ class MarginalCVaRDRO(BaseLinearDRO):
             >>> print(sol["B"].shape)      # (2, 2)
 
         """
+        if self.model_type in {'svm', 'logistic'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise MarginalCVaRDROError("classification labels not in {-1, +1}")
 
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:

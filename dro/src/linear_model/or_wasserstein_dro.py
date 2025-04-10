@@ -33,9 +33,7 @@ class ORWDRO(BaseLinearDRO):
 
             - ``'svm'``: Hinge loss (classification)
 
-            - ``'logistic'``: Logistic loss (classification)
-
-            - ``'ols'``: Squared loss (regression)
+            - ``'lad'``
 
         :type model_type: str
 
@@ -165,7 +163,10 @@ class ORWDRO(BaseLinearDRO):
             
         :rtype: Dict[str, Any]
         """
-        
+        if self.model_type in {'svm', 'logistic'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise ORWDROError("classification labels not in {-1, +1}")
         
         
         sample_size, feature_size = X.shape

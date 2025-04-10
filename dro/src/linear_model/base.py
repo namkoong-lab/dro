@@ -58,7 +58,7 @@ class BaseLinearDRO:
         if input_dim <= 0:
             raise ParameterError("Input dimension must be a positive integer.")
         if model_type not in {'svm', 'logistic', 'ols', 'lad'}:
-            warnings.warn(f"Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.", UserWarning)
+            raise ParameterError(f"Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.")
         self.input_dim = input_dim
         self.model_type = model_type
         self.kernel = kernel
@@ -235,7 +235,7 @@ class BaseLinearDRO:
         Example:
             >>> model = BaseLinearDRO()
             >>> X = np.array([[1, 2], [3, 4]])
-            >>> y = np.array([0, 1])
+            >>> y = np.array([-1, 1])
             >>> losses = model._loss(X, y)
             >>> losses.shape
             (2,)
