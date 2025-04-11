@@ -34,7 +34,12 @@ class TestMMDDROModel(unittest.TestCase):
         """Test initialization with invalid feature dimension."""
         with self.assertRaises(ParameterError) as context:
             MMD_DRO(input_dim=-1, model_type='svm')
-        self.assertIn("Input dimension must be a positive integer.", str(context.exception))
+        self.assertIn("positive integer.", str(context.exception))
+
+    def test_invalid_sampling(self):
+        with self.assertRaises(MMDDROError) as context:
+            MMD_DRO(input_dim = 3, model_type = 'svm',  sampling_method = 'invalid')
+        self.assertIn("Invalid sampling method", str(context.exception))
     
     def test_valid_parameter_update(self):
         """Test successful parameter updates."""
@@ -70,6 +75,13 @@ class TestMMDDROModel(unittest.TestCase):
         """Test model fitting with hull sampling method."""
         model = MMD_DRO(input_dim=5, model_type='svm', sampling_method='hull')
         params = model.fit(self.valid_X, self.valid_y)
+        self._validate_output_structure(params)
+
+    def test_hull_sampling_regression_behavior(self):
+        """Test model fitting with hull sampling method with regression"""
+        model = MMD_DRO(input_dim=5, model_type='ols', sampling_method='hull')
+        valid_y = np.random.randn(100)
+        params = model.fit(self.valid_X, valid_y)
         self._validate_output_structure(params)
 
     def test_unsupported_sampling_method(self):

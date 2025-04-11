@@ -33,7 +33,7 @@ class ORWDRO(BaseLinearDRO):
 
             - ``'svm'``: Hinge loss (classification)
 
-            - ``'lad'``
+            - ``'lad'``: Least absolute deviation (regression)
 
         :type model_type: str
 
@@ -209,6 +209,7 @@ class ORWDRO(BaseLinearDRO):
         )
         objective = cp.Minimize(objective_expr)
 
+
         # ----------------------------------------------------------------------
         # 4) Build constraints
         # ----------------------------------------------------------------------
@@ -218,7 +219,7 @@ class ORWDRO(BaseLinearDRO):
 
         # Loop over each sample i
         for i in range(sample_size):
-            lhs_0 = (sgn + z_0 @ zeta_G[0][:, i]
+            lhs_0 = (z_0 @ zeta_G[0][:, i]
                     + tau[i, 0]
                     + Z[i, :] @ zeta_W[0][:, i]
                     - alpha )
@@ -259,6 +260,7 @@ class ORWDRO(BaseLinearDRO):
         except cp.SolverError as e:
             raise ORWDROError(f"Optimization failed to solve using {self.solver}.") from e
 
+        print(problem.status)
         if self.theta is None:
             raise ORWDROError("Optimization did not converge to a solution.")
 
@@ -347,6 +349,8 @@ class ORWDRO(BaseLinearDRO):
                 dist_2_list.append(dist_2)
         constraints.append( cp.sum(dist_p_list) <= self.eps)
         constraints.append( cp.sum(dist_2_list) <= self.sigma ** 2)
+
+  
 
 
         ################

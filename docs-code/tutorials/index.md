@@ -1,6 +1,6 @@
 # Formulation
 
-Given the empirical distribution $\hat P$ from the data $\{(x_i, y_i)\}$, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:
+Given the empirical distribution $\hat P$ from the training data $\{(x_i, y_i)\}$, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:
 
 $$
 \min_{f \in \mathcal{F}}\max_{Q \in \mathcal{P}}\mathbb{E}_Q[\ell(f(X), Y)],

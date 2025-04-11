@@ -17,7 +17,7 @@ class MMD_DRO(BaseLinearDRO):
     Reference: <https://arxiv.org/abs/2006.06981>
     """
 
-    def __init__(self, input_dim: int, model_type: str, sampling_method: str = 'bound'):
+    def __init__(self, input_dim: int, model_type: str, fit_intercept: bool = True, solver: str = 'MOSEK', sampling_method: str = 'bound'):
         """Initialize MMD-DRO with kernel-based ambiguity set.
 
         :param input_dim: Dimension of input features. Must match training data.
@@ -59,10 +59,8 @@ class MMD_DRO(BaseLinearDRO):
             >>> model.eta = 0.5  
 
         """
-        BaseLinearDRO.__init__(self, input_dim, model_type)
-        
-        if input_dim < 1:
-            raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
+        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
+
         if not sampling_method in {'bound', 'hull'}:
             raise MMDDROError(f"Invalid sampling method: {sampling_method}")
         
@@ -138,9 +136,9 @@ class MMD_DRO(BaseLinearDRO):
 
     def _medium_heuristic(self, X: np.ndarray, Y: np.ndarray) -> Tuple[float, float]:
         """Calculate kernel width and gamma using the median heuristic."""
-        if self.model_type in ["linear", "logistic"]:
+        if self.model_type in ["ols", "lad"]:
             distsqr = euclidean_distances(X, Y, squared=True)
-        elif self.model_type == "svm":
+        elif self.model_type in ["svm", "logistic"]:
             distsqr = euclidean_distances(X[:, :-1], Y[:, :-1], squared=True)
         else:
             raise NotImplementedError(f"Model type {self.model_type} is not supported.")
@@ -149,17 +147,6 @@ class MMD_DRO(BaseLinearDRO):
         kernel_gamma = 1.0 / (2 * kernel_width ** 2)
         return kernel_width, kernel_gamma
     
-    def _cvx_loss(self, theta: cp.Variable, zeta: np.ndarray) -> cp.Expression:
-        """Define convex loss based on model type."""
-        assert zeta.shape[-1] == self.input_dim + 1, "Mismatch between zeta and input dimension."
-
-        if self.model_type in ["linear", "logistic"]:
-            return (zeta[-1] - theta @ zeta[:-1]) ** 2
-        elif self.model_type == "svm":
-            return cp.pos(1 - cp.multiply(zeta[-1], theta @ zeta[:-1]))
-        else:
-            raise NotImplementedError(f"Model type {self.model_type} is not supported.")
-
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """Fit the MMD-DRO model to the data.
         
@@ -208,17 +195,15 @@ class MMD_DRO(BaseLinearDRO):
         if self.sampling_method == 'bound':
             zeta = np.random.uniform(-1, 1, size=(n_certify, self.input_dim + 1))
         elif self.sampling_method == 'hull':
-            if self.model_type in ["linear", "logistic"]:
+            if self.model_type in ["ols", "lad"]:
                 zeta1 = np.random.uniform(np.min(X), np.max(X), size=(n_certify, self.input_dim))
                 zeta2 = np.random.uniform(np.min(y), np.max(y), size=(n_certify, 1))
-            elif self.model_type == "svm":
+            elif self.model_type in ["svm", "logistic"]:
                 zeta1 = np.random.uniform(-1, 1, size=(n_certify, self.input_dim))
                 zeta2 = np.random.choice([-1, 1], size=(n_certify, 1))
             else:
                 raise NotImplementedError(f"Model type {self.model_type} is not supported.")
             zeta = np.concatenate([zeta1, zeta2], axis=1)
-        else:
-            raise ValueError("Invalid sampling method.")
 
         # Include empirical data in sampled support
         data = np.concatenate([X, y.reshape(-1, 1)], axis=1)
@@ -226,6 +211,11 @@ class MMD_DRO(BaseLinearDRO):
 
         # Validate zeta dimensions
         assert zeta.shape[1] == self.input_dim + 1, "Generated zeta does not match expected dimensions."
+
+        if self.fit_intercept == True:
+            b = cp.Variable()
+        else:
+            b = 0
 
         # --------------------------------------------------------------------------------
         # Step 2: Kernel matrix computation
@@ -237,7 +227,7 @@ class MMD_DRO(BaseLinearDRO):
         # Step 3: Define objective and constraints
         # --------------------------------------------------------------------------------
         f = a @ K
-        constraints = [self._cvx_loss(theta, zeta[i]) <= f0 + f[i] for i in range(len(zeta))]
+        constraints = [self._cvx_loss(zeta[i][:-1], zeta[i][-1], theta, b) <= f0 + f[i] for i in range(len(zeta))]
         objective = f0 + cp.sum(f[:sample_size]) / sample_size + self.eta * cp.norm(a.T @ self._matrix_decomp(K))
 
         # Solve optimization problem
@@ -255,5 +245,8 @@ class MMD_DRO(BaseLinearDRO):
         if self.theta is None or not np.all(np.isfinite(self.theta)):
             raise ValueError("Optimization resulted in invalid theta values.")
 
+        if self.fit_intercept == True:
+            self.b = b.value
+
         # Return model parameters in dictionary format
-        return {"theta": self.theta.tolist()}
+        return {"theta": self.theta.tolist(), "b": self.b}

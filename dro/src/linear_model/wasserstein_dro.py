@@ -835,7 +835,6 @@ class WassersteinDROsatisficing(BaseLinearDRO):
     
     def worst_distribution(self, X, y):
         raise Warning("We do not compute worst case distribution for robust satisficing model since the distribution constraint is set to be held for any distribution.")
-        pass 
 
         # REQUIRED TO BE CALLED after solving the DRO problem
         # return a dict {"sample_pts": [np.array([pts_num, input_dim]), np.array(pts_num)], 'weight': np.array(pts_num)}
