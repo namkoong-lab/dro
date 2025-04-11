@@ -99,6 +99,9 @@ def test_fit_success(model_type):
         assert "b" in params
     assert "threshold" in params
 
+    model.update_kernel({"metric": "rbf"})
+    model.fit(X, y)
+
 # --------------------------
 # Input Validation Tests
 # --------------------------

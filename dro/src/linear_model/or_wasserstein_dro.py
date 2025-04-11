@@ -163,7 +163,7 @@ class ORWDRO(BaseLinearDRO):
             
         :rtype: Dict[str, Any]
         """
-        if self.model_type in {'svm', 'logistic'}:
+        if self.model_type in {'svm'}:
             is_valid = np.all((y == -1) | (y == 1))
             if not is_valid:
                 raise ORWDROError("classification labels not in {-1, +1}")

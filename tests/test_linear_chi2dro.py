@@ -44,6 +44,9 @@ def test_config_update_validation():
         model.update({"eps": "invalid"})
     
 @pytest.mark.parametrize("model_type", ['svm', 'logistic', 'ols', 'lad'])
+
+
+
 def test_fit_success(model_type):
     if model_type in {"svm", "logistic"}:
         X, y = make_classification(
@@ -72,6 +75,9 @@ def test_fit_success(model_type):
     assert len(params["theta"]) == X.shape[1]
     if model.fit_intercept:
         assert "b" in params
+
+    model.update_kernel({"metric": "rbf"})
+    model.fit(X, y)
 
 def test_fit_failure(dataset):
     X, y = dataset

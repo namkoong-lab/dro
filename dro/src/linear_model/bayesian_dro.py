@@ -1,4 +1,5 @@
 from dro.src.linear_model.base import BaseLinearDRO
+from dro.src.linear_model.base import ParameterError, InstallError
 import pandas as pd
 import numpy as np
 import cvxpy as cp
@@ -37,7 +38,18 @@ class BayesianDRO(BaseLinearDRO):
         :type distance_type: str
         """
         
-        BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)        
+        if input_dim <= 0:
+            raise ParameterError("Input dimension must be a positive integer.")
+        if model_type not in {'svm', 'logistic', 'ols', 'lad', 'newsvendor'}:
+            raise ParameterError(f"Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad, newsvendor. Please define your personalized loss.")
+        self.input_dim = input_dim
+        self.model_type = model_type
+        self.fit_intercept = fit_intercept
+        self.b = 0
+
+        if solver not in cp.installed_solvers():
+            raise InstallError(f"Unsupported solver {solver}. It does not exist in your package. Please change the solver or install {solver}.")
+        self.solver = solver      
         self.eps = eps
         self.posterior_param_num = 1
         self.posterior_sample_ratio = 1
@@ -90,8 +102,10 @@ class BayesianDRO(BaseLinearDRO):
         if 'distribution_class' in config.keys():
             
             dist_class = config['distribution_class']
-            
+            if dist_class not in ['Gaussian', 'Exponential']:
+                raise BayesianDROError("Distributoin class can only be chosen from 'Gaussian' and 'Exponential'.")            
             self.distribution_class = dist_class
+
         if 'eps' in config.keys():
             self.eps = config['eps']
         if 'posterior_sample_ratio' in config.keys():
@@ -223,6 +237,10 @@ class BayesianDRO(BaseLinearDRO):
             >>> print(params["theta"])  # e.g., [0.5, -1.2, ..., 0.8]
             >>> print(params["b"])      # e.g., 0.3
         """
+
+        sample_size, feature_size = X.shape
+        if feature_size != self.input_dim:
+            raise BayesianDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
 
         if self.model_type in {'svm', 'logistic'}:
             is_valid = np.all((y == -1) | (y == 1))

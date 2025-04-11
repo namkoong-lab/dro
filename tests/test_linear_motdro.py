@@ -15,8 +15,6 @@ class TestMOTDROModel(unittest.TestCase):
             model_type='svm',
             fit_intercept=True
         )
-
-    # region Initialization Tests
     def test_valid_initialization(self):
         """Test successful model creation with valid parameters."""
         model = MOTDRO(input_dim=3, model_type='lad')
@@ -42,7 +40,23 @@ class TestMOTDROModel(unittest.TestCase):
         """Test parameter updates with invalid theta values."""
         with self.assertRaises(AssertionError) as context:
             self.default_model.update({'theta1': 0.5})
+
+    def test_invalid_eps_update(self):
+        with self.assertRaises(MOTDROError) as context:
+            self.default_model.update({'eps': -0.5})
+
+    def test_invalid_p_update(self):
+        with self.assertRaises(MOTDROError) as context:
+            self.default_model.update({'p': 0.5})
+
+    def test_invalid_square_update(self):
+        with self.assertRaises(MOTDROError) as context:
+            self.default_model.update({'square': 1.5})
+
+    def test_valid_update(self):
+        self.default_model.update({"eps": 0.5, "p": 1, "square": 2})
         
+    
     def test_successful_svm_fit(self):
         """Test basic SVM fitting with valid binary labels."""
         params = self.default_model.fit(self.valid_X, self.valid_y)

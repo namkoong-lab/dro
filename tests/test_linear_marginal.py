@@ -54,6 +54,45 @@ class TestMarginalCVaRDRO(unittest.TestCase):
             self.default_model.update({"L": -1.0})
         self.assertIn("must be positive", str(context.exception))
     
+    def test_success_update(self):
+        self.default_model.update({"p": 1, "alpha": 0.8})
+
+    def test_large_alpha_update(self):
+        """Test parameter update with invalid L value."""
+        with self.assertRaises(MarginalCVaRDROError) as context:
+            self.default_model.update({"alpha": 1.2})
+        self.assertIn("must be in the range (0, 1].", str(context.exception))
+
+    def test_small_p_update(self):
+        with self.assertRaises(MarginalCVaRDROError) as context:
+            self.default_model.update({"p": 0.75})
+        self.assertIn("must be >= 1.", str(context.exception))        
+
+    def test_kernel_update(self):
+        """Test dynamic kernel parameter updates."""
+        model = MarginalCVaRDRO(input_dim=5, kernel='linear', alpha = 0.8)
+        
+        # Valid update
+        model.update_kernel({'metric': 'rbf'})
+        self.assertEqual(model.kernel, 'rbf')
+        
+        # Invalid update
+        with self.assertRaises(ValueError):
+            model.update_kernel({'metric': 'invalid'})
+
+    def test_rbf_kernel_fit(self):
+        """Test model fitting with RBF kernel."""
+        model = MarginalCVaRDRO(
+            input_dim=5,
+            kernel='rbf',
+            alpha = 0.8
+        )
+        params = model.fit(self.valid_X, self.valid_y)
+        
+        # Verify solution structure
+        self.assertIn('theta', params)
+        self.assertEqual(len(params['theta']), 100)  # For RBF, theta matches sample size
+
     def test_successful_svm_fit(self):
         """Test basic SVM fitting with valid binary labels."""
         params = self.default_model.fit(self.valid_X, self.valid_y)

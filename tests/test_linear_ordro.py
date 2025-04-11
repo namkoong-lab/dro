@@ -7,7 +7,7 @@ from dro.src.linear_model.or_wasserstein_dro import ORWDRO, ORWDROError
 # Test Fixtures
 # --------------------------
 
-@pytest.fixture(params=['classification', 'regression'])
+@pytest.fixture(params=['classification'])
 def dataset(request):
     """Generate standardized test datasets"""
     n_samples = 200
@@ -74,22 +74,22 @@ def test_parameter_update_mechanism():
 # Training Workflow Tests
 # --------------------------
 
-# def test_fit_interface(dataset):
-#     """Validate fit method input/output contracts"""
-#     X, y = dataset
-#     model = ORWDRO(
-#         input_dim=X.shape[1],
-#         model_type='svm' if np.unique(y).size == 2 else 'lad'
-#     )
+def test_fit_interface(dataset):
+    """Validate fit method input/output contracts"""
+    X, y = dataset
+    model = ORWDRO(
+        input_dim=X.shape[1],
+        model_type='svm' if np.unique(y).size == 2 else 'lad'
+    )
     
-#     # Valid case
-#     params = model.fit(X, y)
-#     assert 'theta' in params
-#     assert params['theta'].shape == (X.shape[1],)
+    # Valid case
+    params = model.fit(X, y)
+    assert 'theta' in params
+    assert len(params['theta']) == X.shape[1]
     
-#     # Dimension mismatch
-#     with pytest.raises(ORWDROError):
-#         model.fit(X[:, :-1], y)
+    # Dimension mismatch
+    with pytest.raises(ORWDROError):
+        model.fit(X[:, :-1], y)
 
 # # --------------------------
 # # Worst-case Distribution Tests

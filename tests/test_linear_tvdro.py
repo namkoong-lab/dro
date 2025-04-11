@@ -23,6 +23,20 @@ class TestTVDROModel(unittest.TestCase):
         self.assertEqual(model.input_dim, 3)
         self.assertEqual(model.eps, 0.05)
 
+    def test_rbf_kernel_fit(self):
+        """Test model fitting with RBF kernel."""
+        model = TVDRO(
+            input_dim=5,
+            kernel='rbf',
+            eps=0.1
+        )
+        params = model.fit(self.valid_X, self.valid_y_cls)
+        
+        # Verify solution structure
+        self.assertIn('theta', params)
+        self.assertEqual(len(params['theta']), 100)  # For RBF, theta matches sample size
+
+
     def test_invalid_input_dim(self):
         """Test initialization with invalid feature dimension."""
         with self.assertRaises(ValueError) as context:

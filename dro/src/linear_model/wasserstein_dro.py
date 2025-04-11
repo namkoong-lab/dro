@@ -704,41 +704,41 @@ class WassersteinDROsatisficing(BaseLinearDRO):
 
 
 
-    def fit_depreciate(self, X, y):
-        """
-        Find the best epsilon that matches the desired robust objective via bisection (depreciated)
+    # def fit_depreciate(self, X, y):
+    #     """
+    #     Find the best epsilon that matches the desired robust objective via bisection (depreciated)
 
-        Args:
-            X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
+    #     Args:
+    #         X (np.ndarray): Input feature matrix with shape (n_samples, n_features).
 
-            y (np.ndarray): Target vector with shape (n_samples,).
+    #         y (np.ndarray): Target vector with shape (n_samples,).
 
-        Returns:
-            Dict[str, Any]: Model parameters dictionary with 'theta' key.
+    #     Returns:
+    #         Dict[str, Any]: Model parameters dictionary with 'theta' key.
 
-        """
+    #     """
 
-        warnings.warn("The bisection search is depreciated for Robust Satisficing Wasserstein DRO.")
-        iter_num = 1
-        # determine the empirical obj
-        self.eps = 0
-        empirical_rmse = self.fit_oracle(X, y)
-        TGT = self.target_ratio * empirical_rmse
-        # print('tgt', TGT)
-        self.eps = 100
-        assert (self.fit_oracle(X, y) > TGT)
-        eps_lower, eps_upper = 0, self.eps      
-        # binary search and find the maximum eps, such that RMSE + eps theta <= tau  
-        for i in range(iter_num):
-            self.eps = (eps_lower + eps_upper)/2
-            if self.fit_oracle(X, y) > TGT:
-                eps_upper = self.eps
-            else:
-                eps_lower = self.eps
+    #     warnings.warn("The bisection search is depreciated for Robust Satisficing Wasserstein DRO.")
+    #     iter_num = 1
+    #     # determine the empirical obj
+    #     self.eps = 0
+    #     empirical_rmse = self.fit_oracle(X, y)
+    #     TGT = self.target_ratio * empirical_rmse
+    #     # print('tgt', TGT)
+    #     self.eps = 100
+    #     assert (self.fit_oracle(X, y) > TGT)
+    #     eps_lower, eps_upper = 0, self.eps      
+    #     # binary search and find the maximum eps, such that RMSE + eps theta <= tau  
+    #     for i in range(iter_num):
+    #         self.eps = (eps_lower + eps_upper)/2
+    #         if self.fit_oracle(X, y) > TGT:
+    #             eps_upper = self.eps
+    #         else:
+    #             eps_lower = self.eps
         
-        model_params = {}
-        model_params["theta"] = self.theta.reshape(-1).tolist()
-        return model_params
+    #     model_params = {}
+    #     model_params["theta"] = self.theta.reshape(-1).tolist()
+    #     return model_params
     
     def _penalization(self, theta: np.ndarray) -> float:
         """

@@ -122,6 +122,9 @@ def test_fit_interface(dataset):
     assert 'theta' in params
     assert 'b' in params
     assert len(params['theta']) == X.shape[1]
+
+    model.update_kernel({"metric": "rbf"})
+    model.fit(X, y)
     
 def test_feature_dimension_mismatch():
     """Test input dimension mismatch handling"""

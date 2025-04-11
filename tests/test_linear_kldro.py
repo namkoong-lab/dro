@@ -17,6 +17,31 @@ class TestKLDROModel(unittest.TestCase):
         self.valid_X = np.random.randn(100, 5)
         self.valid_y = np.sign(np.random.randn(100))
 
+    def test_kernel_update(self):
+        """Test dynamic kernel parameter updates."""
+        model = KLDRO(input_dim=5, kernel='linear')
+        
+        # Valid update
+        model.update_kernel({'metric': 'rbf'})
+        self.assertEqual(model.kernel, 'rbf')
+        
+        # Invalid update
+        with self.assertRaises(ValueError):
+            model.update_kernel({'metric': 'invalid'})
+
+    def test_rbf_kernel_fit(self):
+        """Test model fitting with RBF kernel."""
+        model = KLDRO(
+            input_dim=5,
+            kernel='rbf',
+            eps=0.1
+        )
+        params = model.fit(self.valid_X, self.valid_y)
+        
+        # Verify solution structure
+        self.assertIn('theta', params)
+        self.assertEqual(len(params['theta']), 100)  # For RBF, theta matches sample size
+
     def test_valid_initialization(self):
         """Test successful model creation with valid parameters."""
         model = KLDRO(input_dim=3, model_type='logistic', eps=0.5)
