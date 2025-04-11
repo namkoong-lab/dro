@@ -440,17 +440,18 @@ class WassersteinDRO(BaseLinearDRO):
 
         if compute_type == 'exact':
             if self.model_type == 'ols':
-                dual_norm_parameter = np.linalg.norm(self.cost_inv_transform @ self.theta, dual_norm) ** 2
-                new_X = np.zeros((sample_size, self.input_dim))
-                for i in range(sample_size):
-                    var_x = cp.Variable(self.input_dim)
-                    var_y = cp.Variable()
-                    # TODO: modify or remove
-                    obj = (y[i] - self.theta @ var_x - self.b) ** 2 - dual_norm_parameter * self._distance_compute(var_x, X[i], var_y, y[i])
-                    problem = cp.Problem(cp.Maximize(obj))
-                    problem.solve(solver = self.solver)
-                    new_X[i] = var_x.value
-                return {'sample_pts': [new_X, y], 'weight': np.ones(sample_size) / sample_size}
+                # dual_norm_parameter = np.linalg.norm(self.cost_inv_transform @ self.theta, dual_norm) ** 2
+                # new_X = np.zeros((sample_size, self.input_dim))
+                # for i in range(sample_size):
+                #     var_x = cp.Variable(self.input_dim)
+                #     var_y = cp.Variable()
+                #     # TODO: modify or remove
+                #     obj = (y[i] - self.theta @ var_x - self.b) ** 2 - dual_norm_parameter * self._distance_compute(var_x, X[i], var_y, y[i])
+                #     problem = cp.Problem(cp.Maximize(obj))
+                #     problem.solve(solver = self.solver)
+                #     new_X[i] = var_x.value
+                # return {'sample_pts': [new_X, y], 'weight': np.ones(sample_size) / sample_size}
+                raise WassersteinDROError("exact does not work for ols")
 
             else: # linear classification or regression with Lipschitz norm
                 # we denote the following case when we do not change Y.
@@ -474,20 +475,21 @@ class WassersteinDRO(BaseLinearDRO):
                             # print('test', var_x.value, X[i])
                     return {'sample_pts': [new_X, new_y], 'weight': np.ones(sample_size) / sample_size}
 
-                elif self.model_type in ['lad', 'logistic']:
-                    for i in range(sample_size):
-                        var_x = cp.Variable(self.input_dim)
-                        var_y = cp.Variable()
-                        # TODO: modify or remove, does not work.
-                        obj = self._cvx_loss(var_x, y[i], self.theta, self.b) - norm_theta * self._distance_compute(var_x, X[i], var_y, y[i])
-                        problem = cp.Problem(cp.Maximize(obj))
-                        problem.solve(solver = self.solver)
-                        new_X[i] = var_x.value
-                        new_y[i] = var_y.value if var_y.value is not None else y[i]
-                    return {'sample_pts': [new_X, new_y], 'weight': np.ones(sample_size) / sample_size}
-
-                    
-            
+                # elif self.model_type in ['lad','logistic']:
+                #     for i in range(sample_size):
+                #         var_x = cp.Variable(self.input_dim)
+                #         var_y = cp.Variable()
+                #         # TODO: modify or remove, does not work.
+                #         obj = self._cvx_loss(var_x, y[i], self.theta, self.b) - norm_theta * self._distance_compute(var_x, X[i], var_y, y[i])
+                #         problem = cp.Problem(cp.Maximize(obj))
+                #         problem.solve(solver = self.solver)
+                #         new_X[i] = var_x.value
+                #         new_y[i] = var_y.value if var_y.value is not None else y[i]
+                #     return {'sample_pts': [new_X, new_y], 'weight': np.ones(sample_size) / sample_size}
+                
+                else:
+                    raise WassersteinDROError(f"{self.model_type} not supported!")
+      
         elif compute_type == 'asymp':
             # in the following cases, we take gamma = 1 / sample_size since we want the asymptotic with respect to n
             if self.model_type in ['svm', 'logistic']:
@@ -551,7 +553,9 @@ class WassersteinDRO(BaseLinearDRO):
                 worst_X = np.vstack((X, new_X))
                 worst_y = np.hstack((y, new_y))
                 return {'sample_pts': [worst_X, worst_y], 'weight': weight}
-    
+
+            else:
+                raise WassersteinDROError(f"We do not support {self.model_type} for asypm!")
         else:
             raise WassersteinDROError("We do not support the computation type. The computation type can only be 'asymp' or 'exact'.")
 
@@ -657,11 +661,11 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             is_valid = np.all((y == -1) | (y == 1))
             if not is_valid:
                 raise WassersteinDROSatisificingError("classification labels not in {-1, +1}")
-        
-
+    
         theta = cp.Variable(self.input_dim)
         
         if self.kernel != 'linear':
+            self.support_vectors_ = X 
             theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
 
         else:
@@ -763,6 +767,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             dual_norm = 1 / (1 - 1 / self.p)
         else:
             dual_norm = 1
+
         if self.model_type == 'ols':
             return cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
         elif self.model_type in ['svm', 'logistic']:
@@ -776,7 +781,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
 
     def fit_oracle(self, X, y):
         """
-        Depreciated, find the optimal thet given the ambiguity constraint.
+        Depreciated, find the optimal that given the ambiguity constraint.
 
         Args:
             X (np.ndarray): Input feature matrix with shape (n_samples, n_features).

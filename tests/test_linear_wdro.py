@@ -4,7 +4,8 @@ from sklearn.datasets import make_classification, make_regression
 from dro.src.linear_model.wasserstein_dro import (
     WassersteinDRO,
     WassersteinDROsatisficing,
-    WassersteinDROError
+    WassersteinDROError,
+    WassersteinDROSatisificingError
 )
 import cvxpy as cp 
 
@@ -107,7 +108,7 @@ class TestWassersteinDRO:
         if model.fit_intercept:
             assert 'b' in params
     
-    @pytest.mark.parametrize("compute_type", ['exact', 'asymp'])
+    @pytest.mark.parametrize("compute_type", ['asymp', 'exact'])
     def test_worst_distribution(self, dataset, compute_type):
         """Validate worst-case distribution properties"""
         X, y = dataset
@@ -290,12 +291,18 @@ def test_lipschitz_norm_for_ols():
 # Satisficing Model Edge Cases
 # --------------------------
 
-def test_satisficing_lad_constraints():
+@pytest.mark.parametrize("model_type", ['ols', 'svm', 'lad', 'logistic'])
+def test_satisficing_lad_constraints(model_type):
     """Test constraint formulation for LAD satisficing model"""
-    X, y = make_regression(n_samples=50, n_features=10)
+    if model_type in {"lad", "ols"}:
+        X, y = make_regression(n_samples=50, n_features=10)
+    else:
+        X, y = make_classification(n_samples=50, n_features=10)
+        y = np.sign(y-0.5)
+
     model = WassersteinDROsatisficing(
         input_dim=10,
-        model_type='lad',
+        model_type=model_type,
         solver='MOSEK'
     )
     model.update({
@@ -306,6 +313,70 @@ def test_satisficing_lad_constraints():
     params = model.fit(X, y)
     assert 'theta' in params  # Verify solution exists
 
+@pytest.mark.parametrize("model_type", ['ols', 'svm', 'lad', 'logistic'])
+def test_satisficing_lad_constraints(model_type):
+    """Test constraint formulation for LAD satisficing model"""
+    if model_type in {"lad", "ols"}:
+        X, y = make_regression(n_samples=50, n_features=10)
+    else:
+        X, y = make_classification(n_samples=50, n_features=10)
+        y = np.sign(y-0.5)
+
+    model = WassersteinDROsatisficing(
+        input_dim=10,
+        model_type=model_type,
+        solver='MOSEK',
+        kernel='others'
+    )
+    model.update({
+        'kappa': 0.5,
+        'target_ratio': 1.5
+    })
+    
+    params = model.fit(X, y)
+    assert 'theta' in params  # Verify solution exists
+
+@pytest.mark.parametrize("model_type", ['lad'])
+def test_satisficing_lad_constraints2(model_type):
+    """Test constraint formulation for LAD satisficing model"""
+    if model_type in {"lad", "ols"}:
+        X, y = make_regression(n_samples=50, n_features=10)
+    else:
+        X, y = make_classification(n_samples=50, n_features=10)
+        y = np.sign(y-0.5)
+
+    model = WassersteinDROsatisficing(
+        input_dim=10,
+        model_type=model_type,
+        solver='MOSEK',
+        kernel='linear'
+    )
+    model.update({
+        'kappa': 'inf',
+        'target_ratio': 1.5
+    })
+    
+    params = model.fit(X, y)
+    assert 'theta' in params  # Verify solution exists
+
+
+@pytest.mark.parametrize("model_type", ['svm'])
+def test_satisficing_lad_constraints(model_type):
+    X, y = make_regression(n_samples=50, n_features=10)
+        
+    model = WassersteinDROsatisficing(
+        input_dim=10,
+        model_type=model_type,
+        solver='MOSEK'
+    )
+    model.update({
+        'kappa': 0.5,
+        'target_ratio': 1.5
+    })
+
+    with pytest.raises(WassersteinDROSatisificingError):
+        params = model.fit(X, y)
+    
 # --------------------------
 # Configuration Validation
 # --------------------------
@@ -359,19 +430,44 @@ def test_distance_with_infinite_kappa():
 # Worst-case Distribution (Exact)
 # --------------------------
 
-# def test_exact_worst_distribution_ols():
+def test_exact_worst_distribution_ols():
+    """Validate OLS exact worst-case distribution"""
+    X, y = make_regression(n_samples=100, n_features=10)
+    model = WassersteinDRO(
+        input_dim=10,
+        model_type='ols',
+        solver='MOSEK'
+    )
+    model.update({'eps': 0.5, 'p': 2})
+    
+    with pytest.raises(WassersteinDROError):
+        dist = model.worst_distribution(X, y, compute_type='exact')
+
+# def test_exact_worst_distribution_lad():
 #     """Validate OLS exact worst-case distribution"""
-#     X, y = make_regression(n_samples=100, n_features=10)
+#     X, y = make_classification(n_samples=100, n_features=10)
+#     y = np.sign(y-0.5)
 #     model = WassersteinDRO(
 #         input_dim=10,
-#         model_type='ols',
+#         model_type='lad',
 #         solver='MOSEK'
 #     )
 #     model.update({'eps': 0.5, 'p': 2})
-#     model.fit(X, y)
     
 #     dist = model.worst_distribution(X, y, compute_type='exact')
-#     assert len(dist['weight']) == 50
+
+def test_asymp_worst_distribution_ols():
+    """Validate OLS asypm worst-case distribution"""
+    X, y = make_regression(n_samples=100, n_features=10)
+    model = WassersteinDRO(
+        input_dim=10,
+        model_type='ols',
+        solver='MOSEK'
+    )
+    model.update({'eps': 0.5, 'p': 2})
+    
+    with pytest.raises(WassersteinDROError):
+        dist = model.worst_distribution(X, y, compute_type='asymp')
 
 # --------------------------
 # Asymptotic Method Tests

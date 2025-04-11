@@ -138,6 +138,40 @@ def test_training_workflow(dataset, optim_type):
     if model.fit_intercept:
         assert 'bias' in params
 
+@pytest.mark.parametrize("optim_type", ['SG', 'MLMC', 'RTMLMC'])
+def test_training_workflow2(optim_type):
+    """Validate end-to-end training workflow"""
+    X, y = make_classification(n_samples=100, n_features=10)
+    
+    model = SinkhornLinearDRO(
+        input_dim=X.shape[1],
+        model_type='logistic',
+        max_iter=10,
+        learning_rate=0.1
+    )
+    
+    params = model.fit(X, y, optimization_type=optim_type)
+    assert 'theta' in params
+    assert params['theta'].shape == (X.shape[1],)
+    if model.fit_intercept:
+        assert 'bias' in params
+
+@pytest.mark.parametrize("optim_type", ['SG', 'MLMC', 'RTMLMC'])
+def test_training_workflow3(optim_type):
+    """Validate end-to-end training workflow"""
+    X, y = make_regression(n_samples=100, n_features=10)
+    model = SinkhornLinearDRO(
+        input_dim=X.shape[1],
+        model_type='lad',
+        max_iter=10,
+        learning_rate=0.1
+    )
+    
+    params = model.fit(X, y, optimization_type=optim_type)
+    assert 'theta' in params
+    assert params['theta'].shape == (X.shape[1],)
+    if model.fit_intercept:
+        assert 'bias' in params
 
 # --------------------------
 # Device Compatibility Tests

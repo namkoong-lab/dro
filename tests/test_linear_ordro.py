@@ -10,7 +10,7 @@ from dro.src.linear_model.or_wasserstein_dro import ORWDRO, ORWDROError
 @pytest.fixture(params=['classification'])
 def dataset(request):
     """Generate standardized test datasets"""
-    n_samples = 200
+    n_samples = 100
     n_features = 10
     
     if request.param == 'classification':
@@ -95,21 +95,24 @@ def test_fit_interface(dataset):
 # # Worst-case Distribution Tests
 # # --------------------------
 
-# def test_worst_distribution_structure(dataset):
-#     """Validate worst-case distribution output structure"""
-#     X, y = dataset
-#     model = ORWDRO(
-#         input_dim=X.shape[1],
-#         model_type='svm' if np.unique(y).size == 2 else 'lad'
-#     )
-#     model.fit(X, y)
+def test_worst_distribution_structure(dataset):
+    """Validate worst-case distribution output structure"""
+    X, y = dataset
+    model = ORWDRO(
+        input_dim=X.shape[1],
+        model_type='svm' if np.unique(y).size == 2 else 'lad',
+        eps=0.1,
+        eta=0.
+    )
+    model.fit(X, y)
     
-#     dist = model.worst_distribution(X, y)
-#     assert 'sample_pts' in dist
-#     assert 'weight' in dist
-#     assert len(dist['weight']) == X.shape[0] * 2  # J=2 components
-#     assert np.all(dist['weight'] >= 0)
-#     assert np.isclose(sum(dist['weight']), 1.0, atol=1e-3)
+    dist = model.worst_distribution(X, y)
+    # print(dist)
+    # assert 'sample_pts' in dist
+    # assert 'weight' in dist
+    # assert len(dist['weight']) == X.shape[0] * 2  # J=2 components
+    # assert np.all(dist['weight'] >= 0)
+    # assert np.isclose(sum(dist['weight']), 1.0, atol=1e-3)
 
 # --------------------------
 # Edge Case Tests

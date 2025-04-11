@@ -42,7 +42,7 @@ class TestNeuralDROModels(unittest.TestCase):
 
         # Invalid regularization
         with self.assertRaises(ValueError):
-            model_class(input_dim=5, num_classes=3, reg=0)
+            model_class(input_dim=5, num_classes=3, reg=-0.1)
 
         # Invalid max iterations
         with self.assertRaises(ValueError):
@@ -57,6 +57,20 @@ class TestNeuralDROModels(unittest.TestCase):
             model_type='mlp',
             size=0.1,
             reg=0.1
+        )
+        model.fit(self.X_cls, self.y_cls, epochs=2)
+        self._validate_model_interface(model)
+
+
+    def test_chi2nndro_classification(self):
+        """Test Chi2NNDRO for multi-class classification."""
+        model = Chi2NNDRO(
+            input_dim=5,
+            num_classes=3,
+            task_type="classification",
+            model_type='mlp',
+            size=0.1,
+            reg=0.0
         )
         model.fit(self.X_cls, self.y_cls, epochs=2)
         self._validate_model_interface(model)

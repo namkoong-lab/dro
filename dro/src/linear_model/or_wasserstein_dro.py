@@ -328,6 +328,10 @@ class ORWDRO(BaseLinearDRO):
         constraints.append( q_sum == 1 )
 
         z0, __ = self._cheap_robust_mean_estimate(X, y)
+        
+        # TODO for tianyu: please check whether this is ok
+        z0 = np.concatenate([z0, [1]])
+
         Ztilde = np.hstack([X, y.reshape(-1, 1)])
 
         dist_p_list = []
@@ -374,5 +378,24 @@ class ORWDRO(BaseLinearDRO):
 
         if problem.value is None:
             raise ORWDROError("Worst-case distribution optimization did not converge to a solution.")
-        return q
+        
+        # q_values = [[q[i][j].value for j in range(J)] for i in range(n)]
+        # print(xi.value, problem.status)
+        # xi_values = xi.value
+        # sample_pts = []
+        # for i in range(n):
+        #     for j in range(J):
+        #         idx = j * n + i
+        #         sample_pts.append(xi_values[:, idx]) 
+        # sample_pts = np.array(sample_pts) 
+        # weights = []
+        # for i in range(n):
+        #     for j in range(J):
+        #         weights.append(q_values[i][j])
+        # weights = np.array(weights)
+        # assert np.isclose(weights.sum(), 1.0)
+        # return {
+        #     "sample_pts": sample_pts,  
+        #     "weight": weights          
+        # }
         

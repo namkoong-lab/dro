@@ -211,20 +211,21 @@ class RobustLoss(nn.Module):
         if (v.max() - v.min()) / v.max() <= MIN_REL_DIFFERENCE:
             return torch.ones_like(v) / m
 
-        if self.size == float('inf'):
-            return self._unconstrained_chisquare(v, m)
+        # if self.size == float('inf'):
+        #     return self._unconstrained_chisquare(v, m)
         return self._constrained_chisquare(v, m)
 
-    def _unconstrained_chisquare(self, v: torch.Tensor, m: int) -> torch.Tensor:
-        """Unconstrained χ² weights."""
-        def f(eta):
-            p = torch.relu(v - eta) / (self.reg * m)
-            return 1.0 - p.sum()
+    # def _unconstrained_chisquare(self, v: torch.Tensor, m: int) -> torch.Tensor:
+    #     """Unconstrained χ² weights."""
+    #     def f(eta):
+    #         p = torch.relu(v - eta) / (self.reg * m)
+    #         return 1.0 - p.sum()
 
-        eta_min = (v.sum() - self.reg * m).item()
-        eta_max = v.max().item()
-        eta_star = bisection(eta_min, eta_max, f, self.tol, self.max_iter)
-        return torch.relu(v - eta_star) / (self.reg * m)
+    #     print(v, m)
+    #     eta_min = (v.sum() - self.reg * m).item()
+    #     eta_max = v.max().item()
+    #     eta_star = bisection(eta_min, eta_max, f, self.tol, self.max_iter)
+    #     return torch.relu(v - eta_star) / (self.reg * m)
 
     def _constrained_chisquare(self, v: torch.Tensor, m: int) -> torch.Tensor:
         """Constrained χ² weights."""

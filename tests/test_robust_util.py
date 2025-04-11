@@ -74,6 +74,16 @@ def test_robustloss_output_shape(sample_data):
     assert loss.shape == torch.Size([])
     assert loss.dtype == torch.float32
 
+def test_robustloss_output_shape2(sample_data):
+    """Verify output tensor properties"""
+    outputs, targets = sample_data
+    model = RobustLoss(size=0.5, reg=0.0, geometry='cvar', 
+                      is_regression=len(targets.shape)>1)
+    
+    loss = model(outputs, targets)
+    assert loss.shape == torch.Size([])
+    assert loss.dtype == torch.float32
+
 
 # --------------------------
 # Weight Computation Tests
@@ -135,6 +145,12 @@ def test_near_zero_regularization():
     assert not torch.isnan(loss)
 
     model = RobustLoss(size=0.5, reg=1e-9, geometry='chi-square', is_regression=True)
+    outputs = torch.randn(5, 1)  
+    targets = torch.randn(5, 1)  
+    loss = model(outputs, targets)
+    assert not torch.isnan(loss)
+
+    model = RobustLoss(size=100000, reg=1e-5, geometry='chi-square', is_regression=True)
     outputs = torch.randn(5, 1)  
     targets = torch.randn(5, 1)  
     loss = model(outputs, targets)

@@ -359,7 +359,7 @@ class SinkhornLinearDRO(BaseLinearDRO):
         elif self.model_type == 'lad':
             residuals = torch.abs(predictions - targets)/ lambda_reg
         elif self.model_type == 'logistic':
-            criterion = torch.nn.BCEWithLogitsLoss()
+            criterion = torch.nn.BCEWithLogitsLoss(reduction='none')
             residuals = criterion((predictions + 1)/2, (targets + 1) / 2) / lambda_reg
         elif self.model_type == 'svm':
             residuals = torch.clamp(1 - targets * predictions, min = 0)
