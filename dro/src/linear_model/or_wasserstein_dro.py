@@ -22,7 +22,7 @@ class ORWDRO(BaseLinearDRO):
     ORWDRO_Paper: https://arxiv.org/pdf/2311.05573
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', eps: float = 0.0, 
+    def __init__(self, input_dim: int, model_type: str = 'svm', solver: str = 'MOSEK', eps: float = 0.0, 
                  eta: float = 0.0, dual_norm: int = 1):
         """Initialize OR-WDRO model with anomaly-robust parameters.
 
@@ -254,10 +254,10 @@ class ORWDRO(BaseLinearDRO):
         # ----------------------------------------------------------------------
         problem = cp.Problem(objective, constraints)
         try: 
-            problem.solve(solver = cp.GUROBI)
+            problem.solve(solver = self.solver)
             self.theta = theta.value
         except cp.SolverError as e:
-            raise ORWDROError("Optimization failed to solve using MOSEK.") from e
+            raise ORWDROError(f"Optimization failed to solve using {self.solver}.") from e
 
         if self.theta is None:
             raise ORWDROError("Optimization did not converge to a solution.")
