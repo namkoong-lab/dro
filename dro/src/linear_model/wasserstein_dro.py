@@ -834,7 +834,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         
     
     def worst_distribution(self, X, y):
-        warnings.warn("We do not compute worst case distribution for robust satisficing model since the distribution constraint is set to be held for any distribution.")
+        raise Warning("We do not compute worst case distribution for robust satisficing model since the distribution constraint is set to be held for any distribution.")
         pass 
 
         # REQUIRED TO BE CALLED after solving the DRO problem

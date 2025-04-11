@@ -407,6 +407,16 @@ def test_unsupported_compute_type():
     with pytest.raises(WassersteinDROError):
         model.worst_distribution(X, y, compute_type='invalid')
 
+def test_p():
+    X, y = make_classification(n_samples=50, n_features=10)
+    y = np.sign(y-0.5)
+    model = WassersteinDROsatisficing(input_dim=10, model_type='svm')
+    model.update({"p":2})
+    model.fit(X, y)
+
+    with pytest.raises(Warning):
+        model.worst_distribution(X, y)
+
 
 
 # --------------------------

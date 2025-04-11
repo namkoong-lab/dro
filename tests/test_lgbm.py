@@ -84,6 +84,27 @@ class TestKLDRO_LGBM:
         # Classification output check
         if model.kind == 'classification':
             assert set(preds).issubset({0, 1})
+
+    def test_training_workflow2(self, dataset):
+        """End-to-end training pipeline validation"""
+        X_train, X_test, y_train, y_test = dataset
+        
+        # Model initialization
+        model = KLDRO_LGBM(eps=0.1, kind="regression")
+        model.update({
+            "num_boost_round": 10,
+            "max_depth": 2,
+            "learning_rate": 0.1
+        })
+        
+        # Training validation
+        model.fit(X_train, y_train)
+        assert model.model is not None
+        
+        # Prediction validation
+        preds = model.predict(X_test)
+        assert preds.shape == y_test.shape
+        
         
     def test_unfitted_error(self, dataset):
         """Verify proper error handling for untrained model usage"""
@@ -110,6 +131,10 @@ class TestCVaRDRO_LGBM:
         """Validate CVaR epsilon range constraints"""
         with pytest.raises(ValueError):
             CVaRDRO_LGBM(eps=eps)
+
+    def test_invalid_kind(self):
+        with pytest.raises(ValueError):
+            CVaRDRO_LGBM(kind="")
     
     def test_cvar_loss_mechanism(self):
         """Verify CVaR loss calculation logic"""
