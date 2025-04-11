@@ -1,1 +1,17 @@
 setuptools==75.6.0
+pandas
+numpy>=1.20
+scikit-learn
+torch
+scipy
+cvxpy
+torchvision
+ucimlrepo 
+matplotlib
+torchattacks
+mosek>=11.0.13
+xgboost
+lightgbm
+pytest-benchmark
+pytest-cov
+coverage

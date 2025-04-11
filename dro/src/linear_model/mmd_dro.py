@@ -59,12 +59,13 @@ class MMD_DRO(BaseLinearDRO):
             >>> model.eta = 0.5  
 
         """
+        BaseLinearDRO.__init__(self, input_dim, model_type)
+        
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
         if not sampling_method in {'bound', 'hull'}:
             raise MMDDROError(f"Invalid sampling method: {sampling_method}")
-
-        BaseLinearDRO.__init__(input_dim, model_type)
+        
         self.eta = 0.1
         self.sampling_method = sampling_method  
         self.n_certify_ratio = 1        
@@ -147,6 +148,17 @@ class MMD_DRO(BaseLinearDRO):
         kernel_width = np.sqrt(0.5 * np.median(distsqr))
         kernel_gamma = 1.0 / (2 * kernel_width ** 2)
         return kernel_width, kernel_gamma
+    
+    def _cvx_loss(self, theta: cp.Variable, zeta: np.ndarray) -> cp.Expression:
+        """Define convex loss based on model type."""
+        assert zeta.shape[-1] == self.input_dim + 1, "Mismatch between zeta and input dimension."
+
+        if self.model_type in ["linear", "logistic"]:
+            return (zeta[-1] - theta @ zeta[:-1]) ** 2
+        elif self.model_type == "svm":
+            return cp.pos(1 - cp.multiply(zeta[-1], theta @ zeta[:-1]))
+        else:
+            raise NotImplementedError(f"Model type {self.model_type} is not supported.")
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """Fit the MMD-DRO model to the data.
@@ -170,6 +182,12 @@ class MMD_DRO(BaseLinearDRO):
         :rtype: Dict[str, Any]
 
         """
+        if self.model_type in {'svm', 'logistic'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise MMDDROError("classification labels not in {-1, +1}")
+
+
         # Ensure input data is valid
         if len(X.shape) != 2 or len(y.shape) != 1:
             raise ValueError("X must be a 2D array and y must be a 1D array.")

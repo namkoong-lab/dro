@@ -126,6 +126,11 @@ class TVDRO(BaseLinearDRO):
         
         .raises: TVDROError: If the optimization problem fails to solve.
         """
+        if self.model_type in {'logistic', 'svm'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise TVDROError("classification labels not in {-1, +1}")
+
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
             raise TVDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")

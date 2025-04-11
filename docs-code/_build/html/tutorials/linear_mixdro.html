@@ -1,24 +1,22 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>DRO with a mixture of distance metrics &#8212; dro 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>DRO with a mixture of distance metrics &#8212; dro 0.2.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <script src="../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_mixdro.html" />
@@ -156,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">dro 0.1.1 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -236,7 +234,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -244,15 +242,17 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
@@ -263,55 +263,11 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/f_dro_tutorial.html#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/f_dro_tutorial.html#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html">WDRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/kernel.html">Kernel Distributionally Robust Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html">NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/notebooks/personalize_loss_tutorial.html">Personalized Loss</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/data_api.html">Data Modules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/dataloader_classification.html">Classification Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/dataloader_regression.html">Regression Data</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/linear_dro.html">Linear DRO Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/base_linear.html">Linear DRO Base Class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/chi2dro_linear.html">Chi-square DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/cvardro_linear.html">CVaR DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/kldro_linear.html">KL-DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/tvdro.html">TV DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/mmddro.html">MMD DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/wdro_linear.html">Wasserstein DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/conditionaldro.html">Conditional CVaR DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/hrdro.html">Holistic Robust DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/marginaldro.html">Marginal DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/motdro.html">MOT DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/or_wdro.html">Outlier-Robust WDRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/sinkhorn_dro.html">Sinkhorn DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/bayesian_dro.html">Bayesian DRO</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/nn_dro.html">Neural Network DRO Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/base_nn.html">NN DRO Base Class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/fdro_nn.html">f-Divergence DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/hrdro_nn.html">Holistic Robust DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/apis/wdro_nn.html">Wasserstein DRO</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
         </div>
@@ -324,24 +280,63 @@
           <div class="body" role="main">
             
   <section class="tex2jax_ignore mathjax_ignore" id="dro-with-a-mixture-of-distance-metrics">
-<h1>DRO with a mixture of distance metrics<a class="headerlink" href="#dro-with-a-mixture-of-distance-metrics" title="Permalink to this heading">¶</a></h1>
+<h1>DRO with a mixture of distance metrics<a class="headerlink" href="#dro-with-a-mixture-of-distance-metrics" title="Link to this heading">¶</a></h1>
+<p>We further implement several DRO methods based on a mixture of distance metrics, including Sinkhorn-DRO, Holistic Robust DRO, and DRO based on OT discrepancy with moment constraints (MOT-DRO).</p>
 <section id="sinkhorn-dro">
-<h2>Sinkhorn-DRO<a class="headerlink" href="#sinkhorn-dro" title="Permalink to this heading">¶</a></h2>
-<ul class="simple">
-<li><p>Reference: Wang, Jie, Rui Gao, and Yao Xie. “Sinkhorn distributionally robust optimization.” arXiv preprint arXiv:2109.11926 (2021).</p></li>
-</ul>
+<h2>Sinkhorn-DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
+<p>The objective function of Sinkhorn-DRO is:</p>
+<div class="math notranslate nohighlight">
+\[
+\min_\theta \sup_{P\in \mathcal{B}_{\rho,\epsilon}(P_{tr})} \mathbb{E}_P[\ell(f_\theta(X),Y)],
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{B}_{\rho,\epsilon}(P_{tr})= \{P: W_{\epsilon}(P,P_{tr})\leq \rho \}\)</span>. Here <span class="math notranslate nohighlight">\(W_{\epsilon}(\cdot,\cdot)\)</span> denotes the Sinkhorn Distance, defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+W_{\epsilon}(P,Q) = \inf_{\gamma \in \Pi(P,Q)}\mathbb{E}_{(x,y)\sim \gamma}[c(x,y)]+\epsilon\cdot H(\gamma\vert \mu\otimes\nu),
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu,\nu\)</span> are reference measures satisfying <span class="math notranslate nohighlight">\(P\ll \mu\)</span> and <span class="math notranslate nohighlight">\(Q\ll \nu\)</span>.</p>
+<p>Reference: Wang, Jie, Rui Gao, and Yao Xie. “Sinkhorn distributionally robust optimization.” arXiv preprint arXiv:2109.11926 (2021).</p>
 </section>
 <section id="holistic-dro">
-<h2>Holistic-DRO<a class="headerlink" href="#holistic-dro" title="Permalink to this heading">¶</a></h2>
-<ul class="simple">
-<li><p>Reference: Bennouna, Amine, and Bart Van Parys. “Holistic robust data-driven decisions.” arXiv preprint arXiv:2207.09560 (2022).</p></li>
-</ul>
+<h2>Holistic-DRO<a class="headerlink" href="#holistic-dro" title="Link to this heading">¶</a></h2>
+<p>Holist Robust DRO is based on two metrics, convex pseudo divergence metric <span class="math notranslate nohighlight">\(LP_{\mathcal N}(\cdot,\cdot)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+LP_{\mathcal N}(P, Q) =  \inf_{\gamma\in\Pi(P,Q)} \inf \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi'),
+\]</div>
+<p>and KL-divergence <span class="math notranslate nohighlight">\(D_{KL}(\cdot\|\cdot)\)</span>. The objective function is:</p>
+<div class="math notranslate nohighlight">
+\[
+\min_\theta\sup_{P\in \mathcal{B}_{\alpha,r}(P_{tr})}\mathbb{E}_{P}[\ell(f_\theta(X),Y)],
+\]</div>
+<p>where the uncertainty set is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{B}_{\alpha,r}(P_{tr}) = \{P: P,Q\in\mathcal{P}, LP_{\mathcal N}(P_{tr},Q)\leq \alpha, D_{KL}(Q\|P)\leq r \}.
+\]</div>
+<p>For linear models, we follow Appendix D.1 and D.2, and code for neural networks is based on the official codes.</p>
+<p>Reference: Bennouna, Amine, and Bart Van Parys. “Holistic robust data-driven decisions.” arXiv preprint arXiv:2207.09560 (2022).</p>
 </section>
 <section id="mot-dro">
-<h2>MOT-DRO<a class="headerlink" href="#mot-dro" title="Permalink to this heading">¶</a></h2>
-<ul class="simple">
-<li><p>Reference: Blanchet, Jose, et al. “Unifying Distributionally Robust Optimization via Optimal Transport Theory.” arXiv preprint arXiv:2308.05414 (2023).</p></li>
-</ul>
+<h2>MOT-DRO<a class="headerlink" href="#mot-dro" title="Link to this heading">¶</a></h2>
+<p>MOT-DRO uses the OT-discrepancy with moment constraints, defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+M_c(P,Q)= \inf_\pi \mathbb{E}_\pi[c((Z,W),(\hat Z, \hat W))],
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\pi_{(Z,W)}=P, \pi_{(\hat Z, \hat W)}=Q\)</span>, and <span class="math notranslate nohighlight">\(\mathbb{E}_\pi[W]=1\)</span>.
+Taking the cost function as</p>
+<div class="math notranslate nohighlight">
+\[
+c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot d(z,\hat z)+\theta_2\cdot (\phi(w)-\phi(\hat w))_+,
+\]</div>
+<p>the objective function of MOT-DRO is:</p>
+<div class="math notranslate nohighlight">
+\[
+\min_\theta\sup_{P: M_c(P,\hat{P}_{train})\leq \epsilon} \mathbb{E}_P[\ell(f_\theta(X),Y)],
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{P}_{train}=P_{train}\otimes \delta_1\)</span>.</p>
+<p>Reference: Jose Blanchet, Daniel Kuhn, Jiajin Li, Bahar Taskesen. “Unifying Distributionally Robust Optimization via Optimal Transport Theory.” arXiv preprint arXiv:2308.05414 (2023).</p>
 </section>
 </section>
 
@@ -392,8 +387,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2025, DRO developers.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

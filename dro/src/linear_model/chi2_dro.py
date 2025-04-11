@@ -144,6 +144,10 @@ class Chi2DRO(BaseLinearDRO):
             - Large values of `eps` increase robustness but may lead to conservative solutions
             - Warm-starting is not supported due to DRO problem structure
         """
+        if self.model_type in {'svm', 'logistic'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise Chi2DROError("classification labels not in {-1, +1}")
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
             raise Chi2DROError(f"Expected input with {self.input_dim} features, got {feature_size}.")

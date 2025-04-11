@@ -18,7 +18,9 @@ We follow [1] to implement these two $f$-DROs. Our code is largely based on http
 
 
 ## 2. Wasserstein DRO
-We follow [2], and use adversarial training to implement it.
+For WDRO on neural networks, the main challenge is the perturbation. In our package, the perturbation step is implemented via recent advanced adversarial attack techniques which slightly perturb the data points to increase the prediction error. And the general procedure follows [2].
+
+
 
 [2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi.
 

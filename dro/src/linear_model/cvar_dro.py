@@ -165,7 +165,11 @@ class CVaRDRO(BaseLinearDRO):
 
         .. _Rockafellar2000: https://www.risk.net/journal-risk/2161159/optimization-conditional-value-risk
         """
-
+        if self.model_type in {'svm', 'logistic'}:    
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise CVaRDROError("classification labels not in {-1, +1}")
+        
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
             raise CVaRDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")

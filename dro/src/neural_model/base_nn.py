@@ -236,6 +236,8 @@ class BaseNNDRO:
             raise ValueError(f"input_dim must be ≥1, got {input_dim}")
         if task_type == "classification" and num_classes < 2:
             raise ValueError(f"num_classes must be ≥2 for classification, got {num_classes}")
+        if not task_type in {"classification", "regression"}:
+            raise ValueError(f"task_type must be classification or regression, got {task_type}")
 
         self.input_dim = input_dim
         self.num_classes = num_classes if task_type == "classification" else 1
@@ -405,6 +407,11 @@ class BaseNNDRO:
 
         """
         # Convert and validate input data
+        if self.task_type == "classification":
+            num_labels = len(np.unique(y))
+            if num_labels > self.num_classes:
+                raise DataValidationError(f"input class number is larger than num_classes")
+
         X = self._convert_to_tensor(X)
         if self.task_type == 'classification':
             y = self._convert_to_tensor(y, dtype=torch.long)
@@ -494,29 +501,3 @@ class BaseNNDRO:
                 y: Union[np.ndarray, torch.Tensor]) -> float:
         """Calculate macro-averaged F1 score."""
         return f1_score(y, self.predict(X), average='macro')
-    
-
-
-if __name__ == "__main__":
-    # Example usage
-    X = np.random.randn(1000, 10)  # 100 samples, 10 features
-    y = np.random.randint(0, 2, 1000)  # Binary classification
-
-    model = BaseNNDRO(input_dim=10, num_classes=2, model_type='mlp', task_type="classification")
-    
-    try:
-        # Training
-        metrics = model.fit(X, y, epochs=100)
-        print(metrics)
-
-        # Inference
-        preds = model.predict(X[:5])
-        print(f"Sample predictions: {preds}")
-
-        # Evaluation
-        acc = model.score(X, y)
-        f1 = model.f1score(X, y)
-        print(f"Final Accuracy: {acc:.2f}, F1 Score: {f1:.2f}")
-        
-    except DROError as e:
-        print(f"Error occurred: {str(e)}")

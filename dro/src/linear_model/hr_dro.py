@@ -58,11 +58,11 @@ class HR_DRO_LR(BaseLinearDRO):
         """
         # Parameter validation
         if input_dim < 1:
-            raise ValueError("input_dim must be ≥ 1")
+            raise HRDROError("input_dim must be ≥ 1")
         if model_type in ['ols', 'logistic']:
             raise HRDROError("HR DRO does not support OLS, logistic")
         if r < 0 or alpha <= 0 or alpha > 1 or epsilon < 0 or epsilon_prime < 0:
-            raise ValueError("Parameters must satisfy: r ≥ 0, 0 < alpha ≤ 1, epsilon ≥ 0, epsilon_prime ≥ 0")
+            raise HRDROError("Parameters must satisfy: r ≥ 0, 0 < alpha ≤ 1, epsilon ≥ 0, epsilon_prime ≥ 0")
 
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.r = r
@@ -211,7 +211,11 @@ class HR_DRO_LR(BaseLinearDRO):
             - Set `epsilon=0` to disable Wasserstein constraints
 
         """
-        # Implementation code...
+        if self.model_type in {'svm', 'logistic'}:    
+            is_valid = np.all((Y == -1) | (Y == 1))
+            if not is_valid:
+                raise HRDROError("classification labels not in {-1, +1}")
+        
         T, feature_dim = X.shape
         if feature_dim != self.input_dim:
             raise DataValidationError(f"Expected input with {self.input_dim} features, got {feature_dim}.")
@@ -262,6 +266,7 @@ class HR_DRO_LR(BaseLinearDRO):
         except cp.error.SolverError as e:
             raise HRDROError(f"Optimization failed to solve using {self.solver}.") from e
 
+        print(theta.value)
         if theta.value is None:
             raise HRDROError("Optimization did not converge to a solution.")
 

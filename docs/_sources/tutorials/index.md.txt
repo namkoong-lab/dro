@@ -17,9 +17,55 @@ Here, $d(\cdot, \cdot)$ is a notion of distance between probability measures and
 
 Given each function class $\mathcal{F}$, we classify all the models into the following cases, where each case can be further classified given each distance type $d$.
 
-## Holistic Model Pipeline
+## Synthetic Data Generation
+Following the general pipeline of "Data -> Model -> Evaluation / Diagnostics", we first integrate different kinds of synthetic data generating mechanisms into `dro`, including:
 
-Data -> Model -> Evaluation / Diagnostics
+<table class="tg"><thead>
+  <tr>
+    <th class="tg-0pky">Python Module</th>
+    <th class="tg-0pky">Function Name</th>
+    <th class="tg-0pky">Description</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky" rowspan="4"><br><br><br><br>dro.src.data.dataloader_classification</td>
+    <td class="tg-0pky">classification_basic</td>
+    <td class="tg-0pky">Basic classification task</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">classification_DN21</td>
+    <td class="tg-0pky">Following Section 3.1.1 of <br>"Learning Models with Uniform Performance via Distributionally Robust Optimization"</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">classification_SNVD20</td>
+    <td class="tg-0pky">Following Section 5.1 of <br>"Certifying Some Distributional Robustness with Principled Adversarial Training"</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">classification_LWLC</td>
+    <td class="tg-0lax">Following Section 4.1 (Classification) of <br>"Distributionally Robust Optimization with Data Geometry"</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax" rowspan="5"><br><br><br><br><br>dro.src.data.dataloader_regression</td>
+    <td class="tg-0lax">regression_basic</td>
+    <td class="tg-0lax">Basic regression task</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">regression_DN20_1</td>
+    <td class="tg-0lax">Following Section 3.1.2 of <br>"Learning Models with Uniform Performance via Distributionally Robust Optimization"</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">regression_DN20_2</td>
+    <td class="tg-0lax">Following Section 3.1.3 of <br>"Learning Models with Uniform Performance via Distributionally Robust Optimization"</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">regression_DN20_3</td>
+    <td class="tg-0lax">Following Section 3.3 of <br>"Learning Models with Uniform Performance via Distributionally Robust Optimization"</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">regression_LWLC</td>
+    <td class="tg-0lax">Following Section 4.1 (Regression) <br>of "Distributionally Robust Optimization with Data Geometry"</td>
+  </tr>
+</tbody></table>
 
 ## Linear
 We discuss the implementations of different classification and regression losses,
@@ -55,7 +101,19 @@ We support DRO methods including:
 * Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
 
 ## Neural Network
+Given the complexity of neural networks, many of the explicit optimization algorithms are not applicable. And we implement four DRO methods in an "approximate" way, including:
+* $\chi^2$-DRO;
+* CVaR-DRO;
+* Wasserstein DRO: we approximate it via adversarial training;
+* Holistic Robust DRO.
 
+Furthermore, the model architectures supported in `dro` include:
+* Linear Models;
+* Vanilla MLP;
+* AlexNet;
+* ResNet18.
+  
+And the users could also use their own model architecture (please refer to the `update` function in `BaseNNDRO`).
 
 
 

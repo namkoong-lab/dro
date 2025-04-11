@@ -1,6 +1,7 @@
 from dro.src.linear_model.base import BaseLinearDRO
 import cvxpy as cp
 from typing import Dict, Any
+import numpy as np 
 
 class MOTDROError(Exception):
     """Base exception class for errors in Wasserstein DRO model."""
@@ -166,6 +167,11 @@ class MOTDRO(BaseLinearDRO):
         :rtype: Dict[str, Any]
 
         """
+        if self.model_type in {'svm', 'logistic'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise MOTDROError("classification labels not in {-1, +1}")
+            
         N_train = X.shape[0]
         dim = X.shape[1]
 

@@ -9,9 +9,9 @@ sys.path.insert(0, os.path.abspath('../dro/src'))
 print(sys.path)
 
 project = 'dro'
-copyright = '2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet'
-author = 'Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet'
-release = '0.1.1'
+copyright = '2025, DRO developers'
+author = 'DRO developers'
+release = '0.2.2'
 
 # html_static_path = ['../docs']
 html_baseurl = 'https://namkoong-lab.github.io/dro/' 
@@ -26,6 +26,8 @@ extensions = [
     'nbsphinx',
     'sphinx_copybutton' 
 ]
+
+myst_enable_extensions = ["html_admonition"]
 
 autodoc_type_aliases = {
     'NDArray': 'numpy.ndarray',
@@ -53,8 +55,8 @@ autodoc_typehints = "description"
 
 # html_theme = 'sphinx_rtd_theme'
 # html_theme_options = {
-    # 'navigation_depth': 4,
-    # 'collapse_navigation': False
+#     'navigation_depth': 4,
+#     'collapse_navigation': True
 # }
 
 
@@ -62,9 +64,11 @@ html_theme = 'piccolo_theme'
 html_theme_options = {
     "source_url": 'https://github.com/namkoong-lab/dro',
     "source_icon": "github",
-    "globaltoc_collapse": False,
+    "globaltoc_collapse": True,
     "banner_text": 'A GIFT to the whole DRO community!',
     "banner_hiding": "temporal",
+    # 'navigation_depth': 4,
+    # 'collapse_navigation': True
     # "canonical_url": "", 
     # "analytics_id": "",
 }
@@ -117,5 +121,6 @@ nitpick_ignore = [
     ('py:exc', 'WassersteinDROError'),
     ('py:exc', 'DROError'),
     ('py:exc', 'CVaRDROError'),
-    ('py:exc', 'LinearModel')
+    ('py:exc', 'LinearModel'),
+    ('py:exc', 'NotFittedError')
 ]

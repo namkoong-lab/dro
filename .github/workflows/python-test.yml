@@ -1,0 +1,46 @@
+name: Python Test
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pytest coverage  
+    
+    - name: Install MOSEK
+      run: |
+        pip install mosek
+    
+    - name: Setup MOSEK license
+      env:
+        MOSEK_LICENSE_BASE64: ${{ secrets.MOSEK_LICENSE_BASE64 }}
+      run: |
+        mkdir -p /home/runner/mosek
+        echo "$MOSEK_LICENSE_BASE64" | base64 -d > /home/runner/mosek/mosek.lic
+        
+        echo "MOSEK_LICENSE_PATH: /home/runner/mosek/mosek.lic"
+        ls -l /home/runner/mosek/mosek.lic
+        
+        echo "MOSEKLM_LICENSE_FILE=/home/runner/mosek/mosek.lic" >> $GITHUB_ENV
+        echo "PATH=$PATH:/home/runner/mosek" >> $GITHUB_ENV
+    
+        
+    - name: Run tests
+      run: |
+        pytest --cov=dro tests/ --cov-report=xml 
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        

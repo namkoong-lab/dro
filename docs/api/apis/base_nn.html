@@ -1,23 +1,19 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>NN DRO Base Class &#8212; dro 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+    <title>NN DRO Base Class &#8212; dro 0.2.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -158,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.1.1 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -238,7 +234,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -246,65 +242,22 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear_pdro.html">Bayesian-based DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/personal_loss.html">Personal Loss</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/f_dro_tutorial.html#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html">WDRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/kernel.html">Kernel Distributionally Robust Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/neural_dro_tutorial.html">NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/param_dro.html#Frequensit-versus-Bayesian">Frequensit versus Bayesian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/personalize_loss_tutorial.html">Personalized Loss</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="dataloader_classification.html">Classification Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dataloader_regression.html">Regression Data</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Linear DRO Base Class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="chi2dro_linear.html">Chi-square DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cvardro_linear.html">CVaR DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL-DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tvdro.html">TV DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="mmddro.html">MMD DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wdro_linear.html">Wasserstein DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="conditionaldro.html">Conditional CVaR DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hrdro.html">Holistic Robust DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="marginaldro.html">Marginal DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="motdro.html">MOT DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="or_wdro.html">Outlier-Robust WDRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sinkhorn_dro.html">Sinkhorn DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bayesian_dro.html">Bayesian DRO</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../nn_dro.html">Neural Network DRO Methods</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">NN DRO Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fdro_nn.html">f-Divergence DRO</a></li>
@@ -312,6 +265,7 @@
 <li class="toctree-l3"><a class="reference internal" href="wdro_nn.html">Wasserstein DRO</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../tree_dro.html">Tree-Ensembles DRO Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -326,10 +280,10 @@
           <div class="body" role="main">
             
   <section id="module-dro.src.neural_model.base_nn">
-<span id="nn-dro-base-class"></span><h1>NN DRO Base Class<a class="headerlink" href="#module-dro.src.neural_model.base_nn" title="Permalink to this heading">¶</a></h1>
+<span id="nn-dro-base-class"></span><h1>NN DRO Base Class<a class="headerlink" href="#module-dro.src.neural_model.base_nn" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.Linear">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">Linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.Linear" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">Linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.Linear" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Fully-connected neural layer for classification/regression.</p>
 <p>Implements the linear transformation:</p>
@@ -366,7 +320,7 @@ Use 1 for binary classification.</p></li>
 <p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.Linear.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.Linear.forward" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.Linear.forward" title="Link to this definition">¶</a></dt>
 <dd><p>Forward pass of the linear layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -386,7 +340,7 @@ where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.MLP">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ReLU()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.MLP" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ReLU()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.MLP" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Multi-Layer Perceptron with dropout regularization.</p>
 <p>Implements the forward computation:</p>
@@ -436,7 +390,7 @@ defaults to 0.1</p></li>
 <p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.MLP.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.MLP.forward" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.MLP.forward" title="Link to this definition">¶</a></dt>
 <dd><p>Forward propagation with dropout regularization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -456,7 +410,7 @@ where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.BaseNNDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">BaseNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">BaseNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Neural Network-based Distributionally Robust Optimization (DRO) framework.</p>
 <p>Implements the core DRO optimization objective:</p>
@@ -520,7 +474,7 @@ where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.BaseNNDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update user’s own model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -541,7 +495,7 @@ where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.BaseNNDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Train neural DRO model with Wasserstein robust optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -608,21 +562,21 @@ defaults to True</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.BaseNNDRO.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Make predictions on input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>X</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><em>Union</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>]</em>) – </p>
+<dd class="field-even"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a>)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.BaseNNDRO.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.score" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.score" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate classification accuracy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -630,8 +584,8 @@ defaults to True</p></li>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><em>Union</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>]</em>) – </p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><em>Union</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>]</em>) – </p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a>)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -639,7 +593,7 @@ defaults to True</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.neural_model.base_nn.BaseNNDRO.f1score">
-<span class="sig-name descname"><span class="pre">f1score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.f1score" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">f1score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.base_nn.BaseNNDRO.f1score" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate macro-averaged F1 score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -647,8 +601,8 @@ defaults to True</p></li>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><em>Union</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>]</em>) – </p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><em>Union</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>]</em>) – </p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a>)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -718,8 +672,8 @@ defaults to True</p></li>
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2025, Jiashuo Liu, Tianyu Wang, Peng Cui, Hongseok Namkoong, Jose Blanchet.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2025, DRO developers.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

@@ -42,6 +42,8 @@ class BayesianDRO(BaseLinearDRO):
         self.posterior_param_num = 1
         self.posterior_sample_ratio = 1
         self.distribution_class = 'Gaussian'
+        if distance_type not in ['chi2', 'KL']:
+            raise BayesianDROError("Distance type can only be chosen from 'KL' and 'chi2'.")
         self.distance_type = distance_type
 
     def update(self, config: Dict[str, Any]) -> None:
@@ -221,6 +223,12 @@ class BayesianDRO(BaseLinearDRO):
             >>> print(params["theta"])  # e.g., [0.5, -1.2, ..., 0.8]
             >>> print(params["b"])      # e.g., 0.3
         """
+
+        if self.model_type in {'svm', 'logistic'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise BayesianDROError("classification labels not in {-1, +1}")
+
         sample_size = X.shape[0]
         X, y = self.resample(X, y)        
         sample_size = self.posterior_sample_ratio * sample_size

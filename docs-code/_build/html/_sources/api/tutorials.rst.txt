@@ -27,3 +27,9 @@ Tutorial
    ../tutorials/neural_model
    ../tutorials/personal_loss
    
+.. toctree::
+   :maxdepth: 2
+   :caption: Tree DRO
+
+   ../tutorials/tree_model
+   

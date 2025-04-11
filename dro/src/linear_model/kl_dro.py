@@ -90,7 +90,7 @@ class KLDRO(BaseLinearDRO):
 
         if eps < 0:
             raise ValueError(f"eps must be non-negative, got {eps}")
-        elif eps > 5.0:
+        elif eps > 5.0 and eps <= 100:
             warnings.warn(f"eps={eps} >5.0 may cause numerical instability", RuntimeWarning)
         elif eps > 100.0:
             raise KLDROError(f"eps >100.0 may cause system instability (got {eps})")
@@ -195,6 +195,11 @@ class KLDRO(BaseLinearDRO):
             >>> print(solution["theta"].shape)  # (3,)
             >>> print(f"Dual variable: {solution['dual']:.4f}")
         """
+        if self.model_type in {'svm', 'logistic'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise KLDROError("classification labels not in {-1, +1}")
+
         sample_size, feature_size = X.shape
         if feature_size != self.input_dim:
             raise KLDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
@@ -296,7 +301,6 @@ class KLDRO(BaseLinearDRO):
             >>> dist["weight]
         """
         self.fit(X, y)  # Fit model to obtain theta and dual variable
-
         # Calculate the loss with current theta
         per_loss = self._loss(X, y)
         
@@ -304,7 +308,8 @@ class KLDRO(BaseLinearDRO):
             raise KLDROError("Dual variable is not set. Ensure 'fit' method has succeeded.")
 
         # Calculate weights for the worst-case distribution
-        weight = np.exp(per_loss / self.dual_variable)
+        max_value = max(per_loss)
+        weight = np.exp((per_loss-max_value) / self.dual_variable)
         weight /= np.sum(weight)  # Normalize weights
 
         return {'sample_pts': [X, y], 'weight': weight}
