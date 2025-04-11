@@ -60,8 +60,7 @@ class KLDRO_XGB:
             return -labels * np.log(preds + 1e-8) - (1 - labels) * np.log(1 - preds + 1e-8)
         elif self.kind == "regression":
             return (preds.reshape(-1) - labels.reshape(-1))**2
-        raise NotImplementedError(f"Unsupported task type: {self.kind}")
-
+        
     def _kl_dro_loss(self, preds: np.ndarray, dtrain: DMatrix, epsilon: float = 0.1) -> tuple[np.ndarray, np.ndarray]:
         """Compute KL-DRO gradients and Hessians
         

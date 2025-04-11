@@ -99,6 +99,16 @@ class TestKLDRO_XGB:
         with pytest.raises(ValueError):
             model.fit(np.random.randn(10), np.random.randn(10))
 
+    def test_error_handling2(self):
+        """Test error conditions and exceptions"""
+        X, y = make_classification(n_samples=100, n_features=10)
+        y = np.sign(y-0.5)
+        model = KLDRO_XGB()
+        model.config = None 
+        # Untrained prediction
+        with pytest.raises(RuntimeError):
+            model.fit(X, y)
+
 # --------------------------
 # CVaRDRO_XGB Test Class
 # --------------------------
