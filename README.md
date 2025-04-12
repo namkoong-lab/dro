@@ -14,7 +14,7 @@
 
 Without specified, our DRO model is to solve the following optimization problem:
 $$\min_{\theta} \max_{P: P \in U} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))],$$
-where $U$ is the so-called ambiguity set and typically of the form $U = \\{P: d(P, \hat P_n) \leq \epsilon\\}$ and $\hat P_n := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}$ is the empirical distribution of training samples $\{(X_i, Y_i)\}_{i = 1}^n$. And $\epsilon$ is the hyperparameter. 
+where $U$ is the so-called ambiguity set and typically of the form $U = \\{P: d(P, \hat P) \leq \epsilon\\}$ and $\hat P := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}$ is the empirical distribution of training samples $\{(X_i, Y_i)\}_{i = 1}^n$. And $\epsilon$ is the hyperparameter. 
 
 
 
@@ -23,7 +23,7 @@ where $U$ is the so-called ambiguity set and typically of the form $U = \\{P: d(
 ## Installation
 
 ### (1) Prepare `Mosek` license
-Our package is built upon `cvxpy` and `mosek`, which needs the license file. The steps are as follows:
+Our package is built upon `cvxpy` and `mosek` (by default), where the latter needs the license file. The steps are as follows:
 
 * Request license at <a href="https://www.mosek.com/products/academic-licenses/">Official Website</a>, and then the license `mosek.lic` will be emailed to you.
 * Put your license in your home directory as follows:
@@ -117,7 +117,7 @@ As for the latest `v0.2.2` version, `dro` supports:
 </tbody></table>
 
 ### (2) Linear DRO models
-
+The models listed below are solved by exact solvers from ``cvxpy``.
 
 <table class="tg"><thead>
   <tr>
@@ -201,6 +201,8 @@ As for the latest `v0.2.2` version, `dro` supports:
 
 
 ### (3) NN DRO models
+The models listed below are solved by gradient descent (``Pytorch``).
+
 
 <table class="tg"><thead>
   <tr>
@@ -233,6 +235,56 @@ As for the latest `v0.2.2` version, `dro` supports:
 </table>
 
 
+### (4) Tree-based Ensemble DRO models
+The models listed below are solved by function approximation (``xgboost``, ``lightgbm``).
+<table class="tg"><thead>
+  <tr>
+    <th class="tg-0lax">Python Module</th>
+    <th class="tg-0lax">Class Name</th>
+    <th class="tg-0lax">Description</th>
+  </tr></thead>
+<tbody>
+    <td class="tg-0lax" rowspan="2"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.tree_model.lgbm</span></td>
+    <td class="tg-0lax">KLDRO_LGBM</td>
+    <td class="tg-0lax">KL Divergence-based Robust LightGBM</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">CVaRDRO_LGBM</td>
+    <td class="tg-0lax">CVaR Robust LightGBM</td>
+  </tr>
+    <td class="tg-0lax" rowspan="2"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.tree_model.xgb</span></td>
+    <td class="tg-0lax">KLDRO_XGB</td>
+    <td class="tg-0lax">KL Divergence-based Robust XGBoost</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">CVaRDRO_XGB</td>
+    <td class="tg-0lax">CVaR Robust XGBoost</td>
+  </tr>
+
+</tbody>
+</table>
+
+### (5) Model-based Diagnostics
+In linear DRO models, we provide additional interfaces for understanding the worst-case model performance and evaluating the true model performance. 
+<table class="tg"><thead>
+  <tr>
+    <th class="tg-0lax">Python Module</th>
+    <th class="tg-0lax">Function Name</th>
+    <th class="tg-0lax">Description</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax">.worst_distribution</td>
+    <td class="tg-0lax">the worst case distribution of the DRO model</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax">.evaluate</td>
+    <td class="tg-0lax">the worst case distribution of the DRO model</td>
+  </tr>
+</tbody>
+</table>
 
 For more details, please refer to https://python-dro.org for more details!
 

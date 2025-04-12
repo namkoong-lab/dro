@@ -12,16 +12,19 @@ $$
 where $\mu,\nu$ are reference measures satisfying $P\ll \mu$ and $Q\ll \nu$.
 
 ### Hyperparameters
-* 
+
 
 ## Holistic-DRO
 In Holistic-DRO [2], $\mathcal{P}(LP_{\mathcal N}, D_{KL}; \alpha, r) = \{P: P,Q\in\mathcal{P}, LP_{\mathcal N}(\hat{P},Q)\leq \alpha, D_{KL}(Q\|P)\leq r \}$, which depends on two metrics divergence: 
-* Levy-Prokhorov metric $LP_{\mathcal N}(P,Q) = \inf_{\gamma\in\Pi(P,Q)} \inf \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi')$, 
+* Levy-Prokhorov metric $LP_{\mathcal N}(P,Q) = \inf_{\gamma\in\Pi(P,Q)} \inf \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi')$, where $\mathcal N$ denotes the 
 * KL-divergence $D_{KL}(Q\|P) = \int_Q \log \frac{dQ}{dP}dQ$.
 
-We support linear losses (SVM for classification and LAD for regression), where we follow Appendix D.1 and D.2 in [2].
+We support linear losses (SVM for classification and LAD for regression), where we follow Appendix D.1 and D.2 in [2], and we set the worst-case domain $\Sigma = \{(X_i, Y_i): i \in [n]\} + B_2(0,\epsilon') \times \{0\}$ and $\mathcal N = B_2(0，\epsilon) \times \{0\}$. 
 ### Hyperparameters
-* 
+* $r$: Robustness parameter for the KL-DRO, denoted as ``r`` in the model config.
+* $\alpha$: Robustness parameter for the Levy-Prokhorov metric DRO, denoted as ``alpha`` in the model config.
+* $\epsilon$: Robustness parameter for the model noise (perturbed ball size), denoted as ``epsilon`` in the model config.
+* $\epsilon'$: Domain parameter, denoted as ``epsilon_prime`` in the model config.
 
 ## MOT-DRO
 In MOT-DRO [3], $\mathcal{P}(M_c;\epsilon) = \{(Q, \delta): M_c((Q, \delta), \tilde P) \leq \epsilon\}$
@@ -35,13 +38,18 @@ where $\pi_{(Z,W)}=P, \pi_{(\hat Z, \hat W)}=Q$, and $\mathbb{E}_\pi[W]=1$.
 Taking the cost function as
 
 $$
-c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot d(z,\hat z)+\theta_2\cdot (\phi(w)-\phi(\hat w))_+,
+c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot \|\hat z - z\|^p +\theta_2\cdot (\phi(w)-\phi(\hat w))_+,
 $$
 
 where $\tilde{P} =\hat{P} \otimes \delta_1$.
 
+We support linear losses (SVM for classification and LAD for regression), where we follow Theorem 5.2 and Corollary 5.1 in [3].
+
 ### Hyperparameters
-* 
+* $\theta_1$ (or $\theta_2$): relative penalty of Wasserstein (outcome) perturbation or likelihood perturbation, satisfying $\frac{1}{\theta_1} + \frac{1}{\theta_2} = 1$. 
+* $\epsilon$: robustness radius for OT ambigiuty set, denoted as ``epsilon``.
+* $p$: cost penalty of outcome perturbation, where we only implement the case of $p \in \{1, 2\}$. 
+
 ## Outlier-Robust Wasserstein DRO
 In Outlier-Robust Wassersteuin DRO (OR-WDRO) [4], $\mathcal{P}(W_p^{\eta};\epsilon) = \{Q: W_p^{\eta}(Q, \hat P)\leq \epsilon\}$, where:
 
