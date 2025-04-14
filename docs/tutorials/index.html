@@ -262,8 +262,8 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
@@ -281,7 +281,7 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="formulation">
 <h1>Formulation<a class="headerlink" href="#formulation" title="Link to this heading">¶</a></h1>
-<p>Given the empirical distribution <span class="math notranslate nohighlight">\(\hat P\)</span> from the data <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}\)</span>, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:</p>
+<p>Given the empirical distribution <span class="math notranslate nohighlight">\(\hat P\)</span> from the training data <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}\)</span>, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:</p>
 <div class="math notranslate nohighlight">
 \[
 \min_{f \in \mathcal{F}}\max_{Q \in \mathcal{P}}\mathbb{E}_Q[\ell(f(X), Y)],

@@ -205,7 +205,6 @@ class SinkhornLinearDRO(BaseLinearDRO):
         with torch.no_grad():
             return self.model(X_tensor).cpu().numpy()
 
-
     def score(self, X: np.ndarray, y: np.ndarray) -> Union[float, Tuple[float, float]]:
         """Evaluate model performance on given data.
         

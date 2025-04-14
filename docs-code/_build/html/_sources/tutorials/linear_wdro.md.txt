@@ -1,6 +1,6 @@
 # Wasserstein DRO
 In Wasserstein DRO, 
-$Q(d, \epsilon) = \{Q: W(Q, \hat P)\leq \epsilon\}$.
+$\mathcal{P}(d, \epsilon) = \{Q: W(Q, \hat P)\leq \epsilon\}$.
 
 Specifically, Wasserstein distance is defined as follows:
 For $Z_1 = (X_1, Y_1), Z_2 = (X_2, Y_2)$, 

@@ -33,13 +33,13 @@ ADD DATA-DRIVEN EVALUATION from [6].
 The ambiguity set here are based on (joint) cannot be written as the standard (generalized) f-divergence DRO format. Instead, we directly use $Q(\alpha)$.
 
 If we only consider the shifts in the marginal distribution $X$, 
-$Q(\alpha) = \{Q_0: P_X = \alpha Q_0 + (1-\alpha) Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{X}\}$, we obtain the marginal-CVaR model. Specifically, we follow the formulation of (27) in [7] to fit the model.
+$\mathcal{P}(\alpha) = \{Q_0: P_X = \alpha Q_0 + (1-\alpha) Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{X}\}$, we obtain the marginal-CVaR model. Specifically, we follow the formulation of (27) in [7] to fit the model.
 
 If we consider the shift in the conditional distribution $Y|X$, 
-$Q(\alpha) = \{Q_0: P_{Y|X} = \alpha Q_0 + (1-\alpha)Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{Y}\}$, we obtain the conditional-CVaR model. Specifically, we follow the formulation of Theorem 2 in [8] to fit the model where approximating $\alpha(x) = \theta^{\top}x$. 
+$\mathcal{P}(\alpha) = \{Q_0: P_{Y|X} = \alpha Q_0 + (1-\alpha)Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{Y}\}$, we obtain the conditional-CVaR model. Specifically, we follow the formulation of Theorem 2 in [8] to fit the model where approximating $\alpha(x) = \theta^{\top}x$. 
 
 
-## Reference:
+## Reference
 * [1] A. Ben-Tal, D. den Hertog, A. D. Waegenaere, B. Melenberg, and G. Rennen. Robust solutions of optimization problems affected by uncertain probabilities. Management Science,
 59(2):341–357, 2013.
 * [2] Hu, Zhaolin, and L. Jeff Hong. "Kullback-Leibler divergence constrained distributionally robust optimization." Available at Optimization Online 1.2, 2013.

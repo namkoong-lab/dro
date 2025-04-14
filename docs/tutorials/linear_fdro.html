@@ -262,8 +262,8 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
@@ -309,12 +309,12 @@
 <h2>Partial DRO<a class="headerlink" href="#partial-dro" title="Link to this heading">¶</a></h2>
 <p>The ambiguity set here are based on (joint) cannot be written as the standard (generalized) f-divergence DRO format. Instead, we directly use <span class="math notranslate nohighlight">\(Q(\alpha)\)</span>.</p>
 <p>If we only consider the shifts in the marginal distribution <span class="math notranslate nohighlight">\(X\)</span>,
-<span class="math notranslate nohighlight">\(Q(\alpha) = \{Q_0: P_X = \alpha Q_0 + (1-\alpha) Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{X}\}\)</span>, we obtain the marginal-CVaR model. Specifically, we follow the formulation of (27) in [7] to fit the model.</p>
+<span class="math notranslate nohighlight">\(\mathcal{P}(\alpha) = \{Q_0: P_X = \alpha Q_0 + (1-\alpha) Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{X}\}\)</span>, we obtain the marginal-CVaR model. Specifically, we follow the formulation of (27) in [7] to fit the model.</p>
 <p>If we consider the shift in the conditional distribution <span class="math notranslate nohighlight">\(Y|X\)</span>,
-<span class="math notranslate nohighlight">\(Q(\alpha) = \{Q_0: P_{Y|X} = \alpha Q_0 + (1-\alpha)Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{Y}\}\)</span>, we obtain the conditional-CVaR model. Specifically, we follow the formulation of Theorem 2 in [8] to fit the model where approximating <span class="math notranslate nohighlight">\(\alpha(x) = \theta^{\top}x\)</span>.</p>
+<span class="math notranslate nohighlight">\(\mathcal{P}(\alpha) = \{Q_0: P_{Y|X} = \alpha Q_0 + (1-\alpha)Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{Y}\}\)</span>, we obtain the conditional-CVaR model. Specifically, we follow the formulation of Theorem 2 in [8] to fit the model where approximating <span class="math notranslate nohighlight">\(\alpha(x) = \theta^{\top}x\)</span>.</p>
 </section>
 <section id="reference">
-<h2>Reference:<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>[1] A. Ben-Tal, D. den Hertog, A. D. Waegenaere, B. Melenberg, and G. Rennen. Robust solutions of optimization problems affected by uncertain probabilities. Management Science,
 59(2):341–357, 2013.</p></li>
@@ -352,7 +352,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#partial-dro">Partial DRO</a></li>
-<li><a class="reference internal" href="#reference">Reference:</a></li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>
 </ul>

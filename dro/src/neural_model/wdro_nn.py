@@ -46,7 +46,7 @@ class WNNDRO(BaseNNDRO):
         :param device: Target computation device, defaults to CPU
         :type device: torch.device
 
-        :param epsilon: Wasserstein radius :math:`\epsilon \geq 0` controlling distributional robustness.
+        :param epsilon: Dual parameter (parameter of the L2-penalty during adversarial training) :math:`\epsilon \geq 0` controlling distributional robustness.
             Larger values increase model conservativeness. Defaults to 0.1.
         :type epsilon: float
         :param adversarial_steps: Number of PGD attack iterations :math:`T_{adv} \geq 1`.
@@ -121,6 +121,13 @@ class WNNDRO(BaseNNDRO):
             alpha=self.adversarial_step_size,
             steps=self.adversarial_steps
         )
+    
+    def _loss(self, outputs, labels):
+        if self.task_type == "classification":
+            losses = torch.nn.CrossEntropyLoss(reduction="none")(outputs, labels)
+        else:
+            losses = torch.nn.MSELoss(reduction="none")(outputs, labels)
+        return losses
 
     def _criterion(self, outputs: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
         """Compute robust loss with dynamic batch handling"""
@@ -130,9 +137,6 @@ class WNNDRO(BaseNNDRO):
             adv_inputs = self.attack(inputs, labels)
             outputs = self.model(adv_inputs)
 
-        if self.task_type == "classification":
-            losses = torch.nn.CrossEntropyLoss(reduction="none")(outputs, labels)
-        else:
-            losses = torch.nn.MSELoss(reduction="none")(outputs, labels)
+        losses = self._loss(outputs, labels)
         
         return torch.mean(losses)

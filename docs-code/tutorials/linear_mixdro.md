@@ -12,6 +12,10 @@ $$
 where $\mu,\nu$ are reference measures satisfying $P\ll \mu$ and $Q\ll \nu$.
 
 ### Hyperparameters
+* reg_param: Dual parameter $\lambda$. Please refer to Equation (14).
+* lambda_param: Variance ($\epsilon$) of the Gaussian noise distribution added to each sample. Please refer to Remark 8.
+* k_sample_max: $l$ in Equation (14), where $2^l$ points are sampled to approximate the sub-gradient.
+
 
 
 ## Holistic-DRO

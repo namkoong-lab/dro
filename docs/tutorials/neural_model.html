@@ -22,7 +22,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/neural_model.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Personal Loss" href="personal_loss.html" />
+    <link rel="next" title="Tree-DRO" href="tree_model.html" />
     <link rel="prev" title="DRO with a mixture of distance metrics" href="linear_mixdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -262,8 +262,8 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
@@ -294,17 +294,40 @@ Implementation details are as follows:</p>
 <section id="chi-2-dro-and-cvar-dro">
 <h2>1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO<a class="headerlink" href="#chi-2-dro-and-cvar-dro" title="Link to this heading">¶</a></h2>
 <p>We follow [1] to implement these two <span class="math notranslate nohighlight">\(f\)</span>-DROs. Our code is largely based on <a class="reference external" href="https://github.com/daniellevy/fast-dro">https://github.com/daniellevy/fast-dro</a>.</p>
+<section id="hyperparameters">
+<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>size: the size of the uncertainty set</p></li>
+<li><p>reg: the strength of the <span class="math notranslate nohighlight">\(l_2\)</span>-regularization</p></li>
+</ul>
 <p>[1] Large-Scale Methods for Distributionally Robust Optimization. Daniel Levy, Yair Carmon, John Duchi, and Aaron Sidford.</p>
+</section>
 </section>
 <section id="wasserstein-dro">
 <h2>2. Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
 <p>For WDRO on neural networks, the main challenge is the perturbation. In our package, the perturbation step is implemented via recent advanced adversarial attack techniques which slightly perturb the data points to increase the prediction error. And the general procedure follows [2].</p>
+<section id="id1">
+<h3>Hyperparameters<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>epsilon: Dual parameter. Coefficient of the penalty during adversarial training.</p></li>
+<li><p>adversarial_steps: Num of steps of the inner adversarial attacking.</p></li>
+<li><p>adversarial_step_size: Learning rate of the inner adversarial attacking.</p></li>
+</ul>
 <p>[2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi.</p>
+</section>
 </section>
 <section id="holistic-robust-dro">
 <h2>3. Holistic Robust DRO<a class="headerlink" href="#holistic-robust-dro" title="Link to this heading">¶</a></h2>
 <p>We follow [3], and our code is largely based on <a class="reference external" href="https://github.com/RyanLucas3/HR_Neural_Networks">https://github.com/RyanLucas3/HR_Neural_Networks</a>.</p>
+<section id="id2">
+<h3>Hyperparameters<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(r\)</span>: Robustness parameter for the KL-DRO, denoted as <code class="docutils literal notranslate"><span class="pre">r</span></code> in the model config.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span>: Robustness parameter for the Levy-Prokhorov metric DRO, denoted as <code class="docutils literal notranslate"><span class="pre">alpha</span></code> in the model config.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: Robustness parameter for the model noise (perturbed ball size), denoted as <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> in the model config.</p></li>
+</ul>
 <p>[3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys.</p>
+</section>
 </section>
 </section>
 
@@ -323,9 +346,18 @@ Implementation details are as follows:</p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">NN-DRO</a><ul>
-<li><a class="reference internal" href="#chi-2-dro-and-cvar-dro">1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO</a></li>
-<li><a class="reference internal" href="#wasserstein-dro">2. Wasserstein DRO</a></li>
-<li><a class="reference internal" href="#holistic-robust-dro">3. Holistic Robust DRO</a></li>
+<li><a class="reference internal" href="#chi-2-dro-and-cvar-dro">1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO</a><ul>
+<li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#wasserstein-dro">2. Wasserstein DRO</a><ul>
+<li><a class="reference internal" href="#id1">Hyperparameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#holistic-robust-dro">3. Holistic Robust DRO</a><ul>
+<li><a class="reference internal" href="#id2">Hyperparameters</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -347,7 +379,7 @@ Implementation details are as follows:</p>
 
             <div class="right">
                 
-                    <a href="personal_loss.html"><span>Personal Loss</span><span class="icon">&gt;</span></a>
+                    <a href="tree_model.html"><span>Tree-DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

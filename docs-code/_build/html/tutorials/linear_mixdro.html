@@ -262,8 +262,8 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personal Loss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
@@ -281,45 +281,46 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="dro-with-a-mixture-of-distance-metrics">
 <h1>DRO with a mixture of distance metrics<a class="headerlink" href="#dro-with-a-mixture-of-distance-metrics" title="Link to this heading">¶</a></h1>
-<p>We further implement several DRO methods based on a mixture of distance metrics, including Sinkhorn-DRO, Holistic Robust DRO, and DRO based on OT discrepancy with moment constraints (MOT-DRO).</p>
+<p>Recall the training distribution as <span class="math notranslate nohighlight">\(\hat P\)</span>, we further implement several DRO methods based on a mixture of distance metrics, including Sinkhorn-DRO, Holistic Robust DRO, and DRO based on OT discrepancy with moment constraints (MOT-DRO).</p>
 <section id="sinkhorn-dro">
 <h2>Sinkhorn-DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
-<p>The objective function of Sinkhorn-DRO is:</p>
-<div class="math notranslate nohighlight">
-\[
-\min_\theta \sup_{P\in \mathcal{B}_{\rho,\epsilon}(P_{tr})} \mathbb{E}_P[\ell(f_\theta(X),Y)],
-\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathcal{B}_{\rho,\epsilon}(P_{tr})= \{P: W_{\epsilon}(P,P_{tr})\leq \rho \}\)</span>. Here <span class="math notranslate nohighlight">\(W_{\epsilon}(\cdot,\cdot)\)</span> denotes the Sinkhorn Distance, defined as:</p>
+<p>In Sinkhorn-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{P}(W_{\epsilon};{\rho,\epsilon})= \{P: W_{\epsilon}(P,\hat{P})\leq \rho \}\)</span>. Here <span class="math notranslate nohighlight">\(W_{\epsilon}(\cdot,\cdot)\)</span> denotes the Sinkhorn Distance, defined as:</p>
 <div class="math notranslate nohighlight">
 \[
 W_{\epsilon}(P,Q) = \inf_{\gamma \in \Pi(P,Q)}\mathbb{E}_{(x,y)\sim \gamma}[c(x,y)]+\epsilon\cdot H(\gamma\vert \mu\otimes\nu),
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\mu,\nu\)</span> are reference measures satisfying <span class="math notranslate nohighlight">\(P\ll \mu\)</span> and <span class="math notranslate nohighlight">\(Q\ll \nu\)</span>.</p>
-<p>Reference: Wang, Jie, Rui Gao, and Yao Xie. “Sinkhorn distributionally robust optimization.” arXiv preprint arXiv:2109.11926 (2021).</p>
+<section id="hyperparameters">
+<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>reg_param: Dual parameter <span class="math notranslate nohighlight">\(\lambda\)</span>. Please refer to Equation (14).</p></li>
+<li><p>lambda_param: Variance (<span class="math notranslate nohighlight">\(\epsilon\)</span>) of the Gaussian noise distribution added to each sample. Please refer to Remark 8.</p></li>
+<li><p>k_sample_max: <span class="math notranslate nohighlight">\(l\)</span> in Equation (14), where <span class="math notranslate nohighlight">\(2^l\)</span> points are sampled to approximate the sub-gradient.</p></li>
+</ul>
+</section>
 </section>
 <section id="holistic-dro">
 <h2>Holistic-DRO<a class="headerlink" href="#holistic-dro" title="Link to this heading">¶</a></h2>
-<p>Holist Robust DRO is based on two metrics, convex pseudo divergence metric <span class="math notranslate nohighlight">\(LP_{\mathcal N}(\cdot,\cdot)\)</span></p>
-<div class="math notranslate nohighlight">
-\[
-LP_{\mathcal N}(P, Q) =  \inf_{\gamma\in\Pi(P,Q)} \inf \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi'),
-\]</div>
-<p>and KL-divergence <span class="math notranslate nohighlight">\(D_{KL}(\cdot\|\cdot)\)</span>. The objective function is:</p>
-<div class="math notranslate nohighlight">
-\[
-\min_\theta\sup_{P\in \mathcal{B}_{\alpha,r}(P_{tr})}\mathbb{E}_{P}[\ell(f_\theta(X),Y)],
-\]</div>
-<p>where the uncertainty set is defined as:</p>
-<div class="math notranslate nohighlight">
-\[
-\mathcal{B}_{\alpha,r}(P_{tr}) = \{P: P,Q\in\mathcal{P}, LP_{\mathcal N}(P_{tr},Q)\leq \alpha, D_{KL}(Q\|P)\leq r \}.
-\]</div>
-<p>For linear models, we follow Appendix D.1 and D.2, and code for neural networks is based on the official codes.</p>
-<p>Reference: Bennouna, Amine, and Bart Van Parys. “Holistic robust data-driven decisions.” arXiv preprint arXiv:2207.09560 (2022).</p>
+<p>In Holistic-DRO [2], <span class="math notranslate nohighlight">\(\mathcal{P}(LP_{\mathcal N}, D_{KL}; \alpha, r) = \{P: P,Q\in\mathcal{P}, LP_{\mathcal N}(\hat{P},Q)\leq \alpha, D_{KL}(Q\|P)\leq r \}\)</span>, which depends on two metrics divergence:</p>
+<ul class="simple">
+<li><p>Levy-Prokhorov metric <span class="math notranslate nohighlight">\(LP_{\mathcal N}(P,Q) = \inf_{\gamma\in\Pi(P,Q)} \inf \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi')\)</span>, where <span class="math notranslate nohighlight">\(\mathcal N\)</span> denotes the</p></li>
+<li><p>KL-divergence <span class="math notranslate nohighlight">\(D_{KL}(Q\|P) = \int_Q \log \frac{dQ}{dP}dQ\)</span>.</p></li>
+</ul>
+<p>We support linear losses (SVM for classification and LAD for regression), where we follow Appendix D.1 and D.2 in [2], and we set the worst-case domain <span class="math notranslate nohighlight">\(\Sigma = \{(X_i, Y_i): i \in [n]\} + B_2(0,\epsilon') \times \{0\}\)</span> and <span class="math notranslate nohighlight">\(\mathcal N = B_2(0，\epsilon) \times \{0\}\)</span>.</p>
+<section id="id1">
+<h3>Hyperparameters<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(r\)</span>: Robustness parameter for the KL-DRO, denoted as <code class="docutils literal notranslate"><span class="pre">r</span></code> in the model config.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span>: Robustness parameter for the Levy-Prokhorov metric DRO, denoted as <code class="docutils literal notranslate"><span class="pre">alpha</span></code> in the model config.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: Robustness parameter for the model noise (perturbed ball size), denoted as <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> in the model config.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon'\)</span>: Domain parameter, denoted as <code class="docutils literal notranslate"><span class="pre">epsilon_prime</span></code> in the model config.</p></li>
+</ul>
+</section>
 </section>
 <section id="mot-dro">
 <h2>MOT-DRO<a class="headerlink" href="#mot-dro" title="Link to this heading">¶</a></h2>
-<p>MOT-DRO uses the OT-discrepancy with moment constraints, defined as:</p>
+<p>In MOT-DRO [3], <span class="math notranslate nohighlight">\(\mathcal{P}(M_c;\epsilon) = \{(Q, \delta): M_c((Q, \delta), \tilde P) \leq \epsilon\}\)</span>
+uses the OT-discrepancy with moment constraints, defined as:</p>
 <div class="math notranslate nohighlight">
 \[
 M_c(P,Q)= \inf_\pi \mathbb{E}_\pi[c((Z,W),(\hat Z, \hat W))],
@@ -328,15 +329,44 @@ M_c(P,Q)= \inf_\pi \mathbb{E}_\pi[c((Z,W),(\hat Z, \hat W))],
 Taking the cost function as</p>
 <div class="math notranslate nohighlight">
 \[
-c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot d(z,\hat z)+\theta_2\cdot (\phi(w)-\phi(\hat w))_+,
+c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot \|\hat z - z\|^p +\theta_2\cdot (\phi(w)-\phi(\hat w))_+,
 \]</div>
-<p>the objective function of MOT-DRO is:</p>
+<p>where <span class="math notranslate nohighlight">\(\tilde{P} =\hat{P} \otimes \delta_1\)</span>.</p>
+<p>We support linear losses (SVM for classification and LAD for regression), where we follow Theorem 5.2 and Corollary 5.1 in [3].</p>
+<section id="id2">
+<h3>Hyperparameters<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\theta_1\)</span> (or <span class="math notranslate nohighlight">\(\theta_2\)</span>): relative penalty of Wasserstein (outcome) perturbation or likelihood perturbation, satisfying <span class="math notranslate nohighlight">\(\frac{1}{\theta_1} + \frac{1}{\theta_2} = 1\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: robustness radius for OT ambigiuty set, denoted as <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span>: cost penalty of outcome perturbation, where we only implement the case of <span class="math notranslate nohighlight">\(p \in \{1, 2\}\)</span>.</p></li>
+</ul>
+</section>
+</section>
+<section id="outlier-robust-wasserstein-dro">
+<h2>Outlier-Robust Wasserstein DRO<a class="headerlink" href="#outlier-robust-wasserstein-dro" title="Link to this heading">¶</a></h2>
+<p>In Outlier-Robust Wassersteuin DRO (OR-WDRO) [4], <span class="math notranslate nohighlight">\(\mathcal{P}(W_p^{\eta};\epsilon) = \{Q: W_p^{\eta}(Q, \hat P)\leq \epsilon\}\)</span>, where:</p>
 <div class="math notranslate nohighlight">
 \[
-\min_\theta\sup_{P: M_c(P,\hat{P}_{train})\leq \epsilon} \mathbb{E}_P[\ell(f_\theta(X),Y)],
+W_p^{\eta}(P, Q) = \inf_{Q' \in \mathcal{P}(R^d), \|Q - Q'\|_{TV}\leq \eta} W_p(P, Q'), 
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat{P}_{train}=P_{train}\otimes \delta_1\)</span>.</p>
-<p>Reference: Jose Blanchet, Daniel Kuhn, Jiajin Li, Bahar Taskesen. “Unifying Distributionally Robust Optimization via Optimal Transport Theory.” arXiv preprint arXiv:2308.05414 (2023).</p>
+<p>where <span class="math notranslate nohighlight">\(p\)</span> is the <span class="math notranslate nohighlight">\(p\)</span>-Wasserstein distance and <span class="math notranslate nohighlight">\(\eta \in [0, 0.5)\)</span> denotes the corruption ratio.</p>
+<section id="id3">
+<h3>Hyperparameters<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(p\)</span>: Norm parameter for controlling the perturbation moment of X. We only allow the dual norm <span class="math notranslate nohighlight">\(\frac{p}{p - 1}\)</span> in <span class="math notranslate nohighlight">\(\{1, 2\}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta\)</span>: Contamination level <span class="math notranslate nohighlight">\([0, 0.5)\)</span>.</p></li>
+</ul>
+<p>We only consider SVM (for classification) and LAD (for regression) based on the convex reformulation of Theorem 2 in [4]. Note that the model also requires the input of <span class="math notranslate nohighlight">\(\sigma\)</span>, which we take <span class="math notranslate nohighlight">\(\sigma = \sqrt{d_x}\)</span> as default.</p>
+</section>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>[1] Wang, Jie, Rui Gao, and Yao Xie. “Sinkhorn distributionally robust optimization.” arXiv preprint arXiv:2109.11926 (2021).</p></li>
+<li><p>[2] Bennouna, Amine, and Bart Van Parys. “Holistic robust data-driven decisions.” arXiv preprint arXiv:2207.09560 (2022).</p></li>
+<li><p>[3] Jose Blanchet, Daniel Kuhn, Jiajin Li, Bahar Taskesen. “Unifying Distributionally Robust Optimization via Optimal Transport Theory.” arXiv preprint arXiv:2308.05414 (2023).</p></li>
+<li><p>[4] Nietert, Sloan, Ziv Goldfeld, Soroosh Shafiee, “Outlier-Robust Wasserstein DRO.” NeurIPS 2023.</p></li>
+</ul>
 </section>
 </section>
 
@@ -355,9 +385,23 @@ c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot d(z,\hat z)+\theta_2\cdot (\phi
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">DRO with a mixture of distance metrics</a><ul>
-<li><a class="reference internal" href="#sinkhorn-dro">Sinkhorn-DRO</a></li>
-<li><a class="reference internal" href="#holistic-dro">Holistic-DRO</a></li>
-<li><a class="reference internal" href="#mot-dro">MOT-DRO</a></li>
+<li><a class="reference internal" href="#sinkhorn-dro">Sinkhorn-DRO</a><ul>
+<li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#holistic-dro">Holistic-DRO</a><ul>
+<li><a class="reference internal" href="#id1">Hyperparameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mot-dro">MOT-DRO</a><ul>
+<li><a class="reference internal" href="#id2">Hyperparameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#outlier-robust-wasserstein-dro">Outlier-Robust Wasserstein DRO</a><ul>
+<li><a class="reference internal" href="#id3">Hyperparameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>
 </ul>
