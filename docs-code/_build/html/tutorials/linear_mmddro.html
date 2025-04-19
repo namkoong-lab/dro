@@ -281,10 +281,29 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="mmd-dro">
 <h1>MMD-DRO<a class="headerlink" href="#mmd-dro" title="Link to this heading">¶</a></h1>
+<p>In MMD-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{Q}(d, \eta) = \{Q: d(Q, \hat P)\leq \eta\}\)</span>.<br />
+Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> as the kernel distance with the Gaussian kernel, i.e., <span class="math notranslate nohighlight">\(\|\mu_P - \mu_Q\|_{\mathcal H}\)</span>, which is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\|\mu_P - \mu_Q\|_{\mathcal H}^2 = \mathbb E_{x, x' \sim P}[k(x, x')] + \mathbb E_{y, y' \sim Q}[k(y, y')] - 2\mathbb{E}_{x \sim P, y \sim Q}[k(x, y)], \]</div>
+<p>with <span class="math notranslate nohighlight">\(k(x, y) = \exp(-\|x - y\|_2^2 / (2\sigma^2))\)</span>.</p>
+<p>In the computation, we apply Equation (7) 3.1.1 in [1], which requires the following hyperparameters:</p>
+<section id="hyperparameters">
+<h2>hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>We set <span class="math notranslate nohighlight">\(d(P, Q)\)</span> as the kernel distance with the Gaussian kernel.</p></li>
-<li><p>Reference: Zhu, Jia-Jie, et al. “Kernel distributionally robust optimization: Generalized duality theorem and stochastic approximation.” International Conference on Artificial Intelligence and Statistics. PMLR, 2021.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta\)</span>, the size of the MMD ambigiuty set, denoted as <code class="docutils literal notranslate"><span class="pre">eta</span></code>.</p></li>
 </ul>
+<p>Besides, MMD-DRO requires constructing ambiguity sets supported on some <span class="math notranslate nohighlight">\(\{(\tilde X_j, \tilde Y_j)\}_{j \in [M]}\subseteq \mathcal{X} \times \mathcal{Y}\)</span>, where setting <span class="math notranslate nohighlight">\((\tilde X_j, \tilde Y_j) = (X_j, Y_j)\)</span> for <span class="math notranslate nohighlight">\(j \in [n]\)</span> and creates new data which leads to additional input parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sampling_method</span></code>, chosen from <code class="docutils literal notranslate"><span class="pre">bound</span></code> or <code class="docutils literal notranslate"><span class="pre">hull</span></code>. When <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">bound</span></code>, we set each new <span class="math notranslate nohighlight">\((\tilde X, \tilde Y)\)</span> uniformly sampled from <span class="math notranslate nohighlight">\([-1, 1]^{d + 1}\)</span>; When <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">hull</span></code>, we set each new <span class="math notranslate nohighlight">\((\tilde X, \tilde Y)\)</span> uniformly sampled from the range of each individual component for regression problems while setting <span class="math notranslate nohighlight">\(X\)</span> sampled from <span class="math notranslate nohighlight">\([-1,1]^d\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> samplefor classification problems.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_certify_ratio</span></code>, the additional number of samples created, i.e., the size <span class="math notranslate nohighlight">\(\frac{M - n}{n}\)</span>.</p></li>
+</ul>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>[1] Zhu, Jia-Jie, et al. “Kernel distributionally robust optimization: Generalized duality theorem and stochastic approximation.” International Conference on Artificial Intelligence and Statistics. PMLR, 2021.</p></li>
+</ul>
+</section>
 </section>
 
 
@@ -292,6 +311,24 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">MMD-DRO</a><ul>
+<li><a class="reference internal" href="#hyperparameters">hyperparameters</a></li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>
