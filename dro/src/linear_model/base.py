@@ -124,15 +124,6 @@ class BaseLinearDRO:
         """
         pass  # Method to be implemented in subclasses
 
-    def evaluate(self, X: np.ndarray, y: np.ndarray):
-        """Evaluate the true model performance for the obtained model
-        
-        :param X: input covariates for evaluation
-        :type y: :py:class:`numpy.ndarray` 
-        :param y: input labels for evaluation
-        :type y: :py:class:`numpy.ndarray` 
-        """
-        pass
 
     def load(self, config: dict):
         """Load model parameters from a configuration dictionary.
@@ -295,9 +286,9 @@ class BaseLinearDRO:
             raise NotImplementedError("CVXPY loss not implemented for the specified model_type value.")
 
     def evaluate(self, X: np.ndarray, y: np.ndarray, fast: bool = True) -> float:
-        """Evaluate model performance with bias-corrected mean squared error (MSE).
+        """Evaluate model performance with bias-corrected mean squared error (MSE) or binary cross entropy error (BCE).
         
-        Specifically designed for OLS models to compute an unbiased performance estimate 
+        Specifically designed for OLS / Logistic models to compute an unbiased performance estimate 
         by adjusting for the covariance structure of the features. This implementation 
         accelerates evaluation by avoiding full retraining.
 
@@ -327,8 +318,9 @@ class BaseLinearDRO:
             - Covariance matrix computation uses pseudo-inverse to handle high-dimensional data (``n_features > n_samples``).
         """
         sample_num, __ = X.shape
-        predictions = self.predict(X)
         if self.model_type == 'ols' and self.kernel == 'linear':
+            predictions = self.predict(X)
+
             errors = (predictions - y) ** 2
             if self.fit_intercept == True:
                 X_intercept = np.ones(sample_num).reshape(-1, 1)
@@ -338,6 +330,28 @@ class BaseLinearDRO:
             
             bias = 2 * np.trace(cov_inv @ grad_square)/(sample_num ** 3)
             print(bias)
+    
+        elif self.model_type == 'logistic' and self.kernel == 'linear':
+            errors = self._loss(X, y)
+
+            Z = np.hstack([X, np.ones((sample_num, 1))])  # Z_i = (X_i, 1)
+            theta_full = np.append(self.theta, self.b)  # full theta ∈ R^{d+1}
+            
+            u = Z @ theta_full                         # shape (n,)
+            s = 1 / (1 + np.exp(y * u))                # sigmoid(-Y u), shape (n,)
+            
+            # Compute I(θ) = sum_i s_i(1 - s_i) * Z_i Z_i^T
+            I = sum(s_i * (1 - s_i) * np.outer(z_i, z_i) for s_i, z_i in zip(s, Z))
+
+            # Compute J(θ) = sum_i s_i^2 * Z_i Z_i^T
+            J = sum(s_i**2 * np.outer(z_i, z_i) for s_i, z_i in zip(s, Z))
+
+            # Solve I^{-1} J efficiently via linear solve
+            I_inv = np.linalg.inv(I)
+            IJ = I_inv @ J
+            bias = np.trace(IJ) / sample_num
+
+
         return np.mean(errors) + bias
 
 

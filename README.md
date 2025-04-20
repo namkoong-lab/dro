@@ -281,7 +281,7 @@ In linear DRO models, we provide additional interfaces for understanding the wor
   <tr>
     <td class="tg-0lax"></td>
     <td class="tg-0lax">.evaluate</td>
-    <td class="tg-0lax">the worst case distribution of the DRO model</td>
+    <td class="tg-0lax">true out-of-sample model performance of the DRO model</td>
   </tr>
 </tbody>
 </table>

@@ -22,11 +22,14 @@ For the CVaR-DRO problem, we apply $f(x) = 0$ if $x \in [\frac{1}{\alpha}, \alph
 Across all the above models except CVaR-DRO problem, the only model-specific hyperparameter is the ambiguity size ``eps``. $\epsilon \geq 0$ (and reduce to ERM when $\epsilon = 0$). Specifically for TV-DRO problem, since TV-Distance is bounded between [0, 1], the corresponding $\epsilon \in [0, 1]$. In CVaR-DRO problem, the model-specific hyperparameter is the worst-case ratio ``alpha``, that takes values in (0, 1] (and reduce to ERM when $\alpha = 0$). 
 
 ### Worst-case illustration
-The above formulations are all based on joint perturbed probability. 
+The above formulations are all based on joint perturbed probability. For example, in $\chi^2$-DRO, we find the perturbed probability $\{p_i\}_{i \in [n]}$ by solving the following optimization problem:
+
+$$\max_{p \in \Delta}\sum_{i \in [n]}p_i \cdot \ell_i,~\text{s.t.}~n \sum_{i \in [n]}n(p_i - 1/n)^2 \leq \epsilon,$$
+
+where $\ell_i$ is the loss for the $i$-th sample and $\Delta$ is the probability simplex.
 
 ### Evaluation
-
-ADD DATA-DRIVEN EVALUATION from [6].
+For two smooth losses (OLS, Logistic), we provide a bias-corrected model assessment of model performance (please refer to the performance evaluation of DR-E2E from [6]) for most $f$-divergence model when the ambiguity size is small (i.e., $\epsilon = o(1)$ or $1-\alpha = o(1)$).
 
 
 ## Partial DRO
