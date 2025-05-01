@@ -577,7 +577,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
     Reference: <https://pubsonline.informs.org/doi/10.1287/opre.2021.2238>
 
     """
-    def __init__(self, input_dim: int, model_type: str, 
+    def __init__(self, input_dim: int, model_type: str = 'svm', 
                 fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
         """Initialize Robust satisficing version of Wasserstein DRO.
 
@@ -639,7 +639,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         self.cost_matrix = np.eye(input_dim)  
         self.cost_inv_transform = np.linalg.inv(sqrtm(self.cost_matrix))
         self.target_ratio = 1 / 0.8  
-        self.eps = 100  
+        self.eps = 0  
         self.p = 1 
         self.kappa = 1  
 

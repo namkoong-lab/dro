@@ -43,7 +43,7 @@ class SinkhornLinearDRO(BaseLinearDRO):
                 reg_param: float = 1e-3,
                 lambda_param: float = 1e2,
                 output_dim: int = 1, 
-                max_iter: int = 1e3,
+                max_iter: int = 1000,
                 learning_rate: float = 1e-2,
                 k_sample_max: int = 5,
                 device: str = "cpu"):
@@ -247,6 +247,8 @@ class SinkhornLinearDRO(BaseLinearDRO):
         if self.model_type in ["ols", "lad"]:
             return np.mean((predictions - y.flatten()) ** 2)
         else:
+            predictions[predictions<0] = -1
+            predictions[predictions>=0] = 1
             acc = np.mean(predictions.round() == y.flatten())
             f1 = f1_score(y, predictions.round(), average='macro')
             return acc, f1
@@ -361,7 +363,7 @@ class SinkhornLinearDRO(BaseLinearDRO):
             criterion = torch.nn.BCEWithLogitsLoss(reduction='none')
             residuals = criterion((predictions + 1)/2, (targets + 1) / 2) / lambda_reg
         elif self.model_type == 'svm':
-            residuals = torch.clamp(1 - targets * predictions, min = 0)
+            residuals = torch.clamp(1 - targets * predictions, min = 0) / lambda_reg
         residual_matrix = residuals.view(m, -1)
         return torch.mean(torch.logsumexp(residual_matrix, dim=0)-math.log(m)) * lambda_reg
 
