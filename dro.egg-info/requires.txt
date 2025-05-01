@@ -8,4 +8,4 @@ torchvision
 ucimlrepo
 matplotlib
 torchattacks
-mosek>=11.0.13
+mosek>=10.2.17

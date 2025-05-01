@@ -25,7 +25,7 @@ setup(
                       'ucimlrepo', 
                       'matplotlib',
                       'torchattacks',
-                      'mosek>=11.0.13'
+                      'mosek>=10.2.17'
                       ],
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -33,5 +33,5 @@ setup(
         "Operating System :: MacOS",
         'Operating System :: POSIX :: Linux',
     ],
-    python_requires=">=3",
+    python_requires=">=3.7",
 )

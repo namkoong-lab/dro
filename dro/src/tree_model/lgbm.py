@@ -1,4 +1,4 @@
-from typing import Dict, Any, Literal, Optional
+from typing import Dict, Any, Union, Optional, Tuple
 import numpy as np
 import lightgbm
 from sklearn.utils.validation import check_X_y, check_array
@@ -15,7 +15,7 @@ class KLDRO_LGBM:
         Requires LGBM configuration via :meth:`update` before training
     """
 
-    def __init__(self, eps: float = 1e-1, kind: Literal['classification', 'regression'] = 'classification') -> None:
+    def __init__(self, eps: float = 1e-1, kind: Union['classification', 'regression'] = 'classification') -> None:
         """Initialize KL-DRO LGBM model
         
         :param float eps: Robustness parameter (must be > 0)
@@ -61,7 +61,7 @@ class KLDRO_LGBM:
             return (preds.reshape(-1) - labels.reshape(-1))**2
         raise NotImplementedError(f"Unsupported task type: {self.kind}")
 
-    def _kl_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> tuple[np.ndarray, np.ndarray]:
+    def _kl_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> Tuple[np.ndarray, np.ndarray]:
         """Compute KL-DRO gradients and Hessians
         
         :param numpy.ndarray preds: Raw model predictions
@@ -152,7 +152,7 @@ class CVaRDRO_LGBM:
         Requires LGBM configuration via :meth:`update` before training
     """
 
-    def __init__(self, eps: float = 2e-1, kind: Literal['classification', 'regression'] = 'classification') -> None:
+    def __init__(self, eps: float = 2e-1, kind: Union['classification', 'regression'] = 'classification') -> None:
         """Initialize CVaR-DRO LGBM model
         
         :param float eps: Robustness parameter (must be > 0)
@@ -198,7 +198,7 @@ class CVaRDRO_LGBM:
             return (preds.reshape(-1) - labels.reshape(-1))**2
         raise NotImplementedError(f"Unsupported task type: {self.kind}")
 
-    def _cvar_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> tuple[np.ndarray, np.ndarray]:
+    def _cvar_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> Tuple[np.ndarray, np.ndarray]:
         """Compute CVaR-DRO gradients and Hessians
         
         :param numpy.ndarray preds: Raw model predictions
