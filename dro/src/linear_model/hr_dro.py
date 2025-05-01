@@ -266,7 +266,6 @@ class HR_DRO_LR(BaseLinearDRO):
         except cp.error.SolverError as e:
             raise HRDROError(f"Optimization failed to solve using {self.solver}.") from e
 
-        print(theta.value)
         if theta.value is None:
             raise HRDROError("Optimization did not converge to a solution.")
 

@@ -1,4 +1,4 @@
-from dro.src.neural_model.base_nn import device, DROError, BaseNNDRO
+from dro.src.neural_model.base_nn import device, MLP, BaseNNDRO
 from dro.src.neural_model.fdro_utils import RobustLoss
 import torch 
 import numpy as np 
@@ -86,8 +86,17 @@ class Chi2NNDRO(BaseNNDRO):
         self.size = size    
         self.reg = reg      
         self.max_iter = max_iter  
-        
 
+    def update(self, config):
+        self.lr = config["lr"]
+        self.batch_size = config["batch_size"]
+        self.train_epochs = config["train_epochs"]
+        self.model = MLP(self.input_dim, self.num_classes, hidden_units=config["hidden_size"], dropout_rate=config["dropout_ratio"]).to(self.device)
+
+        self.size = config["size"]
+        self.reg = config["reg"]
+
+        
     def _criterion(self, outputs, labels):
         is_regression = False
         if self.task_type == "regression":
@@ -174,6 +183,14 @@ class CVaRNNDRO(BaseNNDRO):
         self.reg = reg 
         self.size = size 
         self.max_iter = max_iter
+    
+    def update(self, config):
+        self.lr = config["lr"]
+        self.batch_size = config["batch_size"]
+        self.train_epochs = config["train_epochs"]
+        self.model = MLP(self.input_dim, self.num_classes, hidden_units=config["hidden_size"], dropout_rate=config["dropout_ratio"]).to(self.device)
+        self.size = config["size"]
+        self.reg = config["reg"]
         
 
     def _criterion(self, outputs, labels):

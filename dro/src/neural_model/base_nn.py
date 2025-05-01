@@ -302,7 +302,7 @@ class BaseNNDRO:
         else:
             return nn.MSELoss()(outputs, labels)
 
-    def update(self, 
+    def update_user_mode(self, 
             input_dim: int, 
             num_classes: int, 
             model: torch.nn.Module, 
@@ -430,15 +430,13 @@ class BaseNNDRO:
         # Training setup
         optimizer = torch.optim.Adam(self.model.parameters(), lr=lr)
         
-        # Training loop
-        for epoch in range(epochs):
-            self.model.train()
-            epoch_loss = 0.0
-            
-            with tqdm(train_loader, unit="batch", disable=not verbose) as tepoch:
-                for inputs, labels in tepoch:
-                    tepoch.set_description(f"Epoch {epoch+1}")
-                    
+        total_batches = epochs * len(train_loader)
+        
+        with tqdm(total=total_batches, unit="batch", disable=not verbose) as pbar:
+            for epoch in range(epochs):
+                self.model.train()
+                epoch_loss = 0.0
+                for inputs, labels in train_loader:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     
                     optimizer.zero_grad()
@@ -449,7 +447,10 @@ class BaseNNDRO:
                     optimizer.step()
                     
                     epoch_loss += loss.item()
-                    tepoch.set_postfix(loss=loss.item())
+                    pbar.update(1)
+                
+                avg_epoch_loss = epoch_loss / len(train_loader)
+                pbar.set_postfix(loss=avg_epoch_loss)
 
         # Validation phase
         return self._evaluate(val_loader)    
@@ -493,6 +494,11 @@ class BaseNNDRO:
             return preds.cpu().numpy()
 
     def score(self, X: Union[np.ndarray, torch.Tensor], 
+             y: Union[np.ndarray, torch.Tensor]) -> float:
+        """Calculate classification accuracy and macro-F1 score."""
+        return self.acc(X, y), self.f1score(X, y)
+
+    def acc(self, X: Union[np.ndarray, torch.Tensor], 
              y: Union[np.ndarray, torch.Tensor]) -> float:
         """Calculate classification accuracy."""
         return np.mean(self.predict(X) == y)

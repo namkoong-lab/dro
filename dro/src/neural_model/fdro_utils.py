@@ -150,7 +150,6 @@ class RobustLoss(nn.Module):
 
     def _compute_robust_loss(self, v: torch.Tensor) -> torch.Tensor:
         """Core robust loss computation."""
-        print(v.shape)
         if self.size == 0:  # ERM fallback
             return v.mean()
 
