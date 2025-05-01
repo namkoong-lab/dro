@@ -3,6 +3,7 @@ import numpy as np
 import xgboost as xgb
 from xgboost import DMatrix
 from sklearn.utils.validation import check_X_y, check_array
+from sklearn.metrics import f1_score
 
 class KLDRO_XGB:
     """XGBoost model with KL-Divergence Distributionally Robust Optimization (DRO)
@@ -44,7 +45,8 @@ class KLDRO_XGB:
             raise TypeError(f"Expected dictionary, got {type(config)}")
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
-            
+        
+        self.eps = config.pop("eps")
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:
@@ -143,6 +145,13 @@ class KLDRO_XGB:
             return (y_pred > 0.5).astype(int)
         return y_pred
 
+    def score(self, X, y):
+        """Testing function
+        """
+        y_pred = self.predict(X)
+        acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
+        f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
+        return acc, f1
 
 
 
@@ -186,7 +195,8 @@ class CVaRDRO_XGB:
             raise TypeError(f"Expected dictionary, got {type(config)}")
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
-            
+        
+        self.eps = config.pop("eps")
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:
@@ -275,6 +285,16 @@ class CVaRDRO_XGB:
         if self.kind == "classification":
             return (y_pred > 0.5).astype(int)
         return y_pred
+    
+    def score(self, X, y):
+        """Testing function
+        """
+        y_pred = self.predict(X)
+        acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
+        f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
+        return acc, f1
+        
+
 
 
 

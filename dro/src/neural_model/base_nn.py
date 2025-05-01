@@ -424,8 +424,8 @@ class BaseNNDRO:
         train_size = int(len(dataset) * train_ratio)
         train_set, val_set = random_split(dataset, [train_size, len(dataset)-train_size])
         
-        train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
-        val_loader = DataLoader(val_set, batch_size=batch_size)
+        train_loader = DataLoader(train_set, batch_size=self.batch_size, shuffle=True)
+        val_loader = DataLoader(val_set, batch_size=self.batch_size)
 
         # Training setup
         optimizer = torch.optim.Adam(self.model.parameters(), lr=lr)
