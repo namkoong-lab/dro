@@ -10,7 +10,7 @@ Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: MacOS
 Classifier: Operating System :: POSIX :: Linux
-Requires-Python: >=3
+Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 License-File: LICENSE
 

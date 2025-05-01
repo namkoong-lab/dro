@@ -79,7 +79,7 @@ class TVDRO(BaseLinearDRO):
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         self.eps = eps
         self.threshold_val = None  #: Decision boundary threshold (set during fitting)
-        
+        self.kernel = kernel
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update the model configuration.
@@ -157,10 +157,9 @@ class TVDRO(BaseLinearDRO):
 
         # Set up loss function and constraints based on model type
         # Loss for regression models
-        loss = (cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) / 
-                (sample_size * (1 - self.eps)) + eta)
-        constraints = [u >= self._cvx_loss(X,y, theta, b) for i in range(sample_size)]
-
+        loss = cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) / (sample_size * (1 - self.eps)) + eta
+        
+        constraints = [u >= self._cvx_loss(X[i],y[i], theta, b) for i in range(sample_size)]
 
         # Define the objective with the total variation constraint
         objective = loss * (1 - self.eps) + self.eps * u
