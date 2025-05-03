@@ -219,7 +219,7 @@ class ORWDRO(BaseLinearDRO):
 
         # Loop over each sample i
         for i in range(sample_size):
-            lhs_0 = (z_0 @ zeta_G[0][:, i]
+            lhs_0 = (sgn + z_0 @ zeta_G[0][:, i]
                     + tau[i, 0]
                     + Z[i, :] @ zeta_W[0][:, i]
                     - alpha )
@@ -268,9 +268,7 @@ class ORWDRO(BaseLinearDRO):
 
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """完整优化实现（维度严格对齐版本）"""
-        # ======================= 输入校验 =======================
-        if self.model_type in {'svm', 'logistic'}:
+        if self.model_type in {'svm'}:
             if not np.all(np.isin(y, [-1, 1])):
                 raise ORWDROError("Classification labels must be in {-1, +1}")
 
@@ -280,13 +278,12 @@ class ORWDRO(BaseLinearDRO):
         if sample_size != y.shape[0]:
             raise ORWDROError("X and y must have the same number of samples")
 
-        # ======================= 数据预处理 =======================
-        # 鲁棒均值估计（带数值检查）
         z_0, sgn = self._cheap_robust_mean_estimate(X, y)
+        print('check z0', z_0)
         assert not np.any(np.isnan(z_0)), "NaN detected in z_0"
         assert not np.any(np.isinf(z_0)), "Inf detected in z_0"
 
-        # 数据矩阵构造
+        
         if self.model_type == 'lad':
             Z = np.hstack([X, y.reshape(-1, 1)])  # (n, d+1)
         elif self.model_type == 'svm':
@@ -294,20 +291,10 @@ class ORWDRO(BaseLinearDRO):
         else:
             raise ORWDROError(f"Unsupported model type: {self.model_type}")
 
-        # ======================= 变量定义 =======================
-        split_idx = feature_size + 1 - sgn
-        zeta_combined = cp.Variable(
-            (2 * (feature_size + 1 - sgn), sample_size),
-            name='zeta_combined'
-        )
-        zeta_G = [
-            zeta_combined[:split_idx, :].T,  # (n, split_idx)
-            zeta_combined[:split_idx, :].T
-        ]
-        zeta_W = [
-            zeta_combined[split_idx:, :].T,  # (n, remaining_dim)
-            zeta_combined[split_idx:, :].T
-        ]
+
+        zeta_G = [cp.Variable(shape=(sample_size, feature_size + 1 - sgn)) for _ in range(2)]
+        zeta_W = [cp.Variable(shape=(sample_size, feature_size + 1 - sgn)) for _ in range(2)]
+
 
         lambda_1 = cp.Variable(nonneg=True, name='lambda_1')
         lambda_2 = cp.Variable(nonneg=True, name='lambda_2')
@@ -316,7 +303,6 @@ class ORWDRO(BaseLinearDRO):
         tau = cp.Variable((sample_size, 2), nonneg=True, name='tau')
         theta = cp.Variable(feature_size, name='theta')
 
-        # ======================= 目标函数 =======================
         objective = cp.Minimize(
             lambda_1 * (self.sigma ** 2) 
             + lambda_2 * (self.eps ** 1) 
@@ -324,18 +310,19 @@ class ORWDRO(BaseLinearDRO):
             + alpha
         )
 
-        # ======================= 约束构建 =======================
         constraints = []
-        z_0 = z_0.reshape(1, -1)  # 强制行向量 (1, d+1) 或 (1, d)
+        z_0 = z_0.reshape(1, -1)  
 
-        # 约束组1: s >= z_0^T zeta_G + tau + Z^T zeta_W - alpha
         for j in range(2):
             term_zG = z_0 @ zeta_G[j].T  # (1, n)
             term_ZW = cp.sum(cp.multiply(Z, zeta_W[j]), axis=1)  # (n,)
             lhs = cp.reshape(term_zG, (sample_size,)) + tau[:, j] + term_ZW - alpha
-            constraints.append(s >= lhs)
+            if j == 0 and self.model_type == 'svm':
+                constraints.append(s >= 1 + lhs)
+            else:
+                constraints.append(s >= lhs)
 
-        # 约束组2: 模型相关等式约束
+        ## constraint: model fit
         if self.model_type == 'lad':
             theta_ext = cp.hstack([-theta, 1.0])
             constraints += [
@@ -348,7 +335,7 @@ class ORWDRO(BaseLinearDRO):
                 zeta_G[1] + zeta_W[1] == 0
             ]
 
-        # 约束组3: 二阶锥约束
+        # constraint: second-order cone
         for j in range(2):
             constraints.append(
                 cp.quad_over_lin(zeta_G[j], lambda_1) <= tau[:, j]
@@ -357,16 +344,11 @@ class ORWDRO(BaseLinearDRO):
                 cp.norm(zeta_W[j], self.dual_norm, axis=1) <= lambda_2
             )
 
-        # ======================= 求解问题 =======================
+        # solve the problem
         problem = cp.Problem(objective, constraints)
         try:
             problem.solve(
-                solver=cp.MOSEK if self.solver == 'MOSEK' else cp.ECOS,
-                verbose=True,
-                mosek_params={
-                    'MSK_IPAR_NUM_THREADS': 4,
-                    'MSK_DPAR_INTPNT_CO_TOL_REL_GAP': 1e-4
-                }
+                solver = self.solver, verbose = True
             )
             self.theta = theta.value
         except cp.SolverError as e:

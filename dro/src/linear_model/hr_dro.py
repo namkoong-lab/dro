@@ -16,7 +16,7 @@ class HR_DRO_LR(BaseLinearDRO):
     """
     
     def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, 
-                 solver: str = 'MOSEK', r: float = 1.0, alpha: float = 1.0, 
+                 solver: str = 'MOSEK', r: float = 1.0, alpha: float = 0.0, 
                  epsilon: float = 0.5, epsilon_prime: float = 1.0):
         """Initialize advanced DRO model with dual robustness parameters.
 
@@ -30,7 +30,7 @@ class HR_DRO_LR(BaseLinearDRO):
         :type solver: str
         :param r: Ambiguity set curvature parameter. Must satisfy r ≥ 0. Defaults to 1.0.
         :type r: float
-        :param alpha: Risk level parameter. Must satisfy 0 < alpha ≤ 1. Defaults to 1.0.
+        :param alpha: Risk level parameter. Must satisfy 0 ≤ alpha < 1. Defaults to 0.0.
         :type alpha: float
         :param epsilon: Wasserstein radius for distribution shifts. Must be ≥ 0. Defaults to 0.5.
         :type epsilon: float
@@ -61,8 +61,8 @@ class HR_DRO_LR(BaseLinearDRO):
             raise HRDROError("input_dim must be ≥ 1")
         if model_type in ['ols', 'logistic']:
             raise HRDROError("HR DRO does not support OLS, logistic")
-        if r < 0 or alpha <= 0 or alpha > 1 or epsilon < 0 or epsilon_prime < 0:
-            raise HRDROError("Parameters must satisfy: r ≥ 0, 0 < alpha ≤ 1, epsilon ≥ 0, epsilon_prime ≥ 0")
+        if r < 0 or alpha < 0 or alpha >= 1 or epsilon < 0 or epsilon_prime < 0:
+            raise HRDROError("Parameters must satisfy: r ≥ 0, 0 ≤ alpha < 1, epsilon ≥ 0, epsilon_prime ≥ 0")
 
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver)
         self.r = r
@@ -252,7 +252,7 @@ class HR_DRO_LR(BaseLinearDRO):
             constraints.append(eta >= 1e-6)  # Stability constraint for eta
             for t in range(T):
                 constraints.extend([
-                    temp <= Y[t] * (theta.T @ X[t]),
+                    temp <= Y[t] * (theta.T @ X[t] + b),
                     w[t] >= cp.rel_entr(lambda_, eta),
                     w[t] >= cp.rel_entr(lambda_, (eta - 1 + Y[t] * (theta.T @ X[t] + b) - self.epsilon * cp.norm(theta, 2))),
                     w[t] >= cp.rel_entr(lambda_, (eta - 1 + temp - self.epsilon_prime * cp.norm(theta, 2))) - beta,

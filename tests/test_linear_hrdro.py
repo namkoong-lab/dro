@@ -14,8 +14,8 @@ class TestHRDROLinearRegression(unittest.TestCase):
             model_type='svm',
             fit_intercept=True,
             solver='MOSEK',
-            r=1.0,
-            alpha=0.95,
+            r=0.0,
+            alpha=0.05,
             epsilon=0.5,
             epsilon_prime=1.0
         )
