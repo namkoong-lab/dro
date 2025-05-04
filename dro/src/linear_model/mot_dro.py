@@ -192,37 +192,55 @@ class MOTDRO(BaseLinearDRO):
 
         # Decision variables
         t = cp.Variable(1)
-        epig_ = cp.Variable([N_train, 1])
+        epig_ = cp.Variable([N_train])
         self.lambda_ = cp.Variable(1, pos = True)
         theta = cp.Variable(dim)
         if self.fit_intercept == True:
             b = cp.Variable()
         else:
             b = 0
-        eta = cp.Variable([N_train, 1], pos = True)
+        eta = cp.Variable([N_train], pos = True)
 
         # Constraints
         cons = []
-        
-        ## our version
-        for i in range(N_train):
-            cons.append(
-                cp.constraints.exponential.ExpCone(
-                    epig_[i] - t, self.theta2 * self.lambda_, eta[i]
-                )
+        ones_vector = np.ones(N_train)
+        exp_cones = [
+            cp.constraints.exponential.ExpCone(
+                epig_ - t, 
+                self.theta2 * self.lambda_* ones_vector, 
+                eta
             )
-            if self.square == 1:
-                cons.append(self.lambda_ * self.theta1 >= cp.norm(self.theta, q))
-                cons.append(self._cvx_loss(X[i], y[i], theta, b) <= epig_)  
-            elif self.square == 2:
-                cons.append(self._cvx_loss(X[i], y[i], theta, b) + cp.quad_over_lin(cp.norm(theta, q), self.lambda_*4*self.theta1) <= epig_[i]) 
+        ]
+        cons.extend(exp_cones)
+
+        if self.square == 1:
+            cons.append(self.lambda_ * self.theta1 >= cp.norm(theta, q))
+            loss_constraints = self._cvx_loss(X, y, theta, b) <= epig_
+            cons.append(loss_constraints)  
+        elif self.square == 2:
+            reg_denominator = 4 * self.lambda_ * self.theta1
+            quad_terms = cp.quad_over_lin(cp.norm(theta, q), reg_denominator)
+            combined_loss = self._cvx_loss(X, y, theta, b) + quad_terms
+            cons.append(combined_loss <= epig_)   
+
+        # ## our version
+        # for i in range(N_train):
+        #     cons.append(
+        #         cp.constraints.exponential.ExpCone(
+        #             epig_[i] - t, self.theta2 * self.lambda_, eta[i]
+        #         )
+        #     )
+        #     if self.square == 1:
+        #         cons.append(self.lambda_ * self.theta1 >= cp.norm(self.theta, q))
+        #         cons.append(self._cvx_loss(X[i], y[i], theta, b) <= epig_)  
+        #     elif self.square == 2:
+        #         cons.append(self._cvx_loss(X[i], y[i], theta, b) + cp.quad_over_lin(cp.norm(theta, q), self.lambda_*4*self.theta1) <= epig_[i]) 
 
         cons.append(N_train * self.lambda_ * self.theta2 >= cp.sum(eta))
         obj = self.eps * self.lambda_ + t
         problem = cp.Problem(cp.Minimize(obj), cons)
 
         problem.solve(solver=self.solver)
-        print(problem.status)
         self.theta = theta.value
         if self.fit_intercept == True:
             self.b = b.value

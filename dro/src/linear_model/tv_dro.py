@@ -159,7 +159,11 @@ class TVDRO(BaseLinearDRO):
         # Loss for regression models
         loss = cp.sum(cp.pos(self._cvx_loss(X,y, theta, b) - eta)) / (sample_size * (1 - self.eps)) + eta
         
-        constraints = [u >= self._cvx_loss(X[i],y[i], theta, b) for i in range(sample_size)]
+        # constraints = [u >= self._cvx_loss(X[i],y[i], theta, b) for i in range(sample_size)]
+
+        loss_vector = self._cvx_loss(X, y, theta, b)
+        constraints = [u >= cp.max(loss_vector)]
+
 
         # Define the objective with the total variation constraint
         objective = loss * (1 - self.eps) + self.eps * u

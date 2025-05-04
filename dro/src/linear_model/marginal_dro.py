@@ -3,6 +3,10 @@ import numpy as np
 import cvxpy as cp
 from typing import Dict, Any
 from scipy.spatial.distance import pdist, squareform
+from sklearn.metrics import pairwise_distances
+from sklearn.kernel_approximation import Nystroem
+from sklearn.neighbors import NearestNeighbors  
+from scipy.sparse import coo_matrix
 
 class MarginalCVaRDROError(Exception):
     """Exception class for errors in Marginal CVaR DRO model."""
@@ -93,6 +97,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
         self.control_name = None  
         self.threshold_val = None  
         self.B_val = None  
+        self.n_components = 100
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update Marginal CVaR-DRO model configuration parameters.
@@ -169,8 +174,8 @@ class MarginalCVaRDRO(BaseLinearDRO):
                 raise MarginalCVaRDROError("Parameter 'alpha' must be in the range (0, 1].")
             self.alpha = float(alpha)
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """Solve the Marginal CVaR-DRO problem via convex optimization.
+    def fit_old(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+        """Solve the Marginal CVaR-DRO problem via convex optimization without any approximation.
 
         Constructs and solves the following distributionally robust optimization problem:
 
@@ -242,15 +247,8 @@ class MarginalCVaRDRO(BaseLinearDRO):
         dist = np.power(squareform(pdist(control_X)), self.p - 1)
 
         # Define CVXPY variables
-        if self.kernel != 'linear':
-            self.cost_matrix = np.eye(sample_size)
-            self.cost_inv_transform = np.eye(sample_size)
-            self.support_vectors_ = X
-            if not isinstance(self.kernel_gamma, float):
-                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
-            theta = cp.Variable(sample_size)
-        else:
-            theta = cp.Variable(self.input_dim)
+        theta = cp.Variable(self.input_dim)
+
             
         if self.fit_intercept == True:
             b = cp.Variable()
@@ -297,4 +295,168 @@ class MarginalCVaRDRO(BaseLinearDRO):
             "B": self.B_val.tolist(),
             "b": self.b,
             "threshold": self.threshold_val
+        }
+    
+    def _compute_kernel(self, X, approx=True):
+        """Calculate Kernel Matrix"""
+
+        if self.kernel == 'linear':
+            return X @ X.T
+        elif self.kernel == 'rbf':
+            if self.kernel_gamma == 'auto':
+                self.kernel_gamma = 1.0 / (self.input_dim * X.var())
+            if approx and X.shape[0] > 1000:  
+                n_components = min(self.n_components, X.shape[0])
+                nystroem = Nystroem(
+                    kernel='rbf', gamma=self.kernel_gamma,
+                    n_components=n_components
+                )
+                K = nystroem.fit_transform(X)
+                return K @ K.T  # 近似核矩阵
+            else:
+                pairwise_dists = pairwise_distances(X, metric='euclidean')
+                return np.exp(-self.kernel_gamma * pairwise_dists ** 2)
+        else:
+            raise ValueError(f"Unsupported kernel: {self.kernel}")
+
+    def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+        """Solve the Marginal CVaR-DRO problem via convex optimization with approximation.
+
+        Constructs and solves the following distributionally robust optimization problem:
+
+        :param X: Training feature matrix of shape `(n_samples, n_features)`.
+            Must satisfy `n_features == self.input_dim`.
+        :type X: numpy.ndarray
+        
+        :param y: Target vector of shape `(n_samples,)`. Format requirements depend on model_type:
+
+            - Classification (`svm`/`logistic`):
+                
+                - Binary labels in {-1, +1}
+                
+                - No missing values allowed
+
+            - Regression** (`ols`/`lad`):
+                
+                - Continuous real values
+
+                - May contain NaN
+
+        :type y: numpy.ndarray
+
+        :returns: Solution dictionary containing:
+            
+            - ``theta``: Weight vector of shape `(n_features,)`
+
+            - ``b``: Intercept term (exists if `fit_intercept=True`)
+
+            - ``B``: Marginal robustness dual matrix of shape `(n_samples, n_samples)`
+
+            - ``threshold``: CVaR threshold value
+
+            
+        :rtype: Dict[str, Any]
+
+        :raises MarginalCVaRDROError: 
+
+            - If `X.shape[1] != self.input_dim`
+
+            - If `X.shape[0] != y.shape[0]`
+
+            - If optimization fails (problem infeasible/solver error)
+
+            - If `control_name` indices exceed feature dimensions
+
+        Example:
+            >>> model = MarginalCVaRDRO(input_dim=3, control_name=[0,2], L=5.0)
+            >>> X = np.random.randn(100, 3)
+            >>> y = np.sign(np.random.randn(100)) 
+            >>> sol = model.fit(X, y)
+            >>> print(sol["theta"].shape)  # (3,)
+            >>> print(sol["B"].shape)      # (2, 2)
+
+        """
+        if self.model_type in {'svm', 'logistic'}:
+            is_valid = np.all((y == -1) | (y == 1))
+            if not is_valid:
+                raise MarginalCVaRDROError("classification labels not in {-1, +1}")
+
+        sample_size, feature_size = X.shape
+        if feature_size != self.input_dim:
+            raise MarginalCVaRDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
+        if sample_size != y.shape[0]:
+            raise MarginalCVaRDROError("Input X and target y must have the same number of samples.")
+
+        control_X = X[:, self.control_name] if self.control_name else X
+
+        if sample_size > 1000:
+            k = max(1, int(0.02 * sample_size))
+            nbrs = NearestNeighbors(n_neighbors=k, algorithm='ball_tree').fit(control_X)
+            dist_sparse = nbrs.kneighbors_graph(mode='distance')
+            dist = dist_sparse.power(self.p-1).astype(np.float32)
+        else:
+            dist = squareform(pdist(control_X, metric='euclidean')) ** (self.p-1)
+            dist = coo_matrix(dist)
+
+        dist = cp.Constant(dist)
+        B_full = cp.Variable((sample_size, sample_size))
+        constraints = [
+            B_full == B_full.T,                           
+            B_full >> 0,                             
+            B_full >= 0                             
+        ]
+
+        theta = cp.Variable(self.input_dim, name='theta')
+        b_var = cp.Variable(name='b') if self.fit_intercept else 0.0
+        eta = cp.Variable(nonneg=True, name='eta')
+        s = cp.Variable(sample_size, nonneg=True, name='s')
+        
+        loss_vector = self._cvx_loss(X, y, theta, b_var)
+        B_rowsum = cp.sum(B_full, axis=1)
+        B_colsum = cp.sum(B_full, axis=0)
+        constraints += [
+            s >= loss_vector - (B_rowsum - B_colsum)/sample_size - eta,
+        ]
+
+        trace_term = cp.sum(cp.multiply(dist, B_full))
+        cost = (
+            cp.sum(s)/(self.alpha * sample_size) +
+            self.L ** (self.p-1) * trace_term/(sample_size ** 2) +
+            eta +
+            0.1 * cp.norm(B_full, 'nuc') 
+        )
+
+        problem = cp.Problem(cp.Minimize(cost), constraints)
+        try:
+            problem.solve(
+                solver=cp.MOSEK if self.solver == 'MOSEK' else cp.ECOS,
+                verbose=True,
+                mosek_params={
+                    'MSK_IPAR_SDP_REMOVE_DUPLICATES': 'MSK_ON',
+                    'MSK_IPAR_SEMIDEFINITE_OPTIMIZER': 'MSK_SEMIDEF_OPTIMIZER_DUAL',
+                    'MSK_SPAR_REHASH_FREQ': 1000000,  
+                    'MSK_IPAR_OPF_WRITE_HEADER': 'MSK_OFF',
+                    'MSK_IPAR_OPF_WRITE_PROBLEM': 'MSK_OFF',
+                    'MSK_IPAR_OPF_WRITE_SOLUTIONS': 'MSK_OFF',
+                    'MSK_IPAR_LOG_INTPNT': 0,
+                    'MSK_DPAR_INTPNT_CO_TOL_REL_GAP': 1e-3,
+                    'MSK_IPAR_NUM_THREADS': 8
+                } if self.solver == 'MOSEK' else {}
+            )
+        except cp.SolverError as e:
+            raise RuntimeError(f"Solver Failed: {str(e)}")
+
+        if theta.value is None or not np.isfinite(eta.value):
+            raise RuntimeError("Not Converged!")
+
+        self.theta = theta.value
+        self.b = b_var.value if self.fit_intercept else 0.0
+        self.B = B_full.value
+        self.threshold = eta.value
+
+        return {
+            "theta": self.theta.tolist(),
+            "b": self.b,
+            "B": self.B.tolist(),
+            "threshold": self.threshold
         }

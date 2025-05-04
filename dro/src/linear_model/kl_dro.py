@@ -227,11 +227,18 @@ class KLDRO(BaseLinearDRO):
 
         # Constraints for KL-DRO
         constraints = [cp.sum(epi_g) <= sample_size * eta]
-        for i in range(sample_size):
-            constraints.append(cp.constraints.exponential.ExpCone(per_loss[i] - t, eta, epi_g[i]))
+        # for i in range(sample_size):
+        #     constraints.append(cp.constraints.exponential.ExpCone(per_loss[i] - t, eta, epi_g[i]))
+        constraints.append(
+            cp.constraints.exponential.ExpCone(
+                per_loss - t, 
+                eta * np.ones(sample_size),  
+                epi_g 
+            )
+        )
+        
         constraints.append(per_loss >= self._cvx_loss(X, y, theta, b))
 
-        # Define loss objective for minimization
         loss = t + eta * self.eps
         problem = cp.Problem(cp.Minimize(loss), constraints)
 
