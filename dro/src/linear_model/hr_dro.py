@@ -250,19 +250,23 @@ class HR_DRO_LR(BaseLinearDRO):
         ## Appendix D.2 in https://arxiv.org/pdf/2207.09560v4
         elif self.model_type == 'svm':
             constraints.append(eta >= 1e-6)  # Stability constraint for eta
-            for t in range(T):
-                constraints.extend([
-                    temp <= Y[t] * (theta.T @ X[t] + b),
-                    w[t] >= cp.rel_entr(lambda_, eta),
-                    w[t] >= cp.rel_entr(lambda_, (eta - 1 + Y[t] * (theta.T @ X[t] + b) - self.epsilon * cp.norm(theta, 2))),
-                    w[t] >= cp.rel_entr(lambda_, (eta - 1 + temp - self.epsilon_prime * cp.norm(theta, 2))) - beta,
-                    eta >= 1 - Y[t] * (theta.T @ X[t] + b) + self.epsilon * cp.norm(theta, 2)
-                ])
+            margin = cp.multiply(Y, X @ theta + b)
+            theta_norm = cp.norm(theta, 2)
+            
+            constraints += [
+                temp <= cp.min(margin),
+                w >= cp.rel_entr(lambda_, eta),
+                w >= cp.rel_entr(lambda_, (eta - 1) + margin - self.epsilon * theta_norm),
+                w >= cp.rel_entr(lambda_, (eta - 1) + temp - self.epsilon_prime * theta_norm) - beta,
+                eta >= cp.max(1 - margin + self.epsilon * theta_norm)
+            ]
 
         # Solve the optimization problem
         problem = cp.Problem(objective, constraints)
         try:
-            problem.solve(solver=self.solver)
+            problem.solve(solver=cp.MOSEK,
+                mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8},
+                verbose=True)
         except cp.error.SolverError as e:
             raise HRDROError(f"Optimization failed to solve using {self.solver}.") from e
 
