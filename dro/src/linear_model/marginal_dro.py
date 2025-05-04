@@ -7,6 +7,7 @@ from sklearn.metrics import pairwise_distances
 from sklearn.kernel_approximation import Nystroem
 from sklearn.neighbors import NearestNeighbors  
 from scipy.sparse import coo_matrix
+from scipy.sparse import triu
 
 class MarginalCVaRDROError(Exception):
     """Exception class for errors in Marginal CVaR DRO model."""
@@ -297,28 +298,6 @@ class MarginalCVaRDRO(BaseLinearDRO):
             "threshold": self.threshold_val
         }
     
-    def _compute_kernel(self, X, approx=True):
-        """Calculate Kernel Matrix"""
-
-        if self.kernel == 'linear':
-            return X @ X.T
-        elif self.kernel == 'rbf':
-            if self.kernel_gamma == 'auto':
-                self.kernel_gamma = 1.0 / (self.input_dim * X.var())
-            if approx and X.shape[0] > 1000:  
-                n_components = min(self.n_components, X.shape[0])
-                nystroem = Nystroem(
-                    kernel='rbf', gamma=self.kernel_gamma,
-                    n_components=n_components
-                )
-                K = nystroem.fit_transform(X)
-                return K @ K.T  # 近似核矩阵
-            else:
-                pairwise_dists = pairwise_distances(X, metric='euclidean')
-                return np.exp(-self.kernel_gamma * pairwise_dists ** 2)
-        else:
-            raise ValueError(f"Unsupported kernel: {self.kernel}")
-
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Solve the Marginal CVaR-DRO problem via convex optimization with approximation.
 
@@ -374,8 +353,8 @@ class MarginalCVaRDRO(BaseLinearDRO):
             >>> sol = model.fit(X, y)
             >>> print(sol["theta"].shape)  # (3,)
             >>> print(sol["B"].shape)      # (2, 2)
-
         """
+        
         if self.model_type in {'svm', 'logistic'}:
             is_valid = np.all((y == -1) | (y == 1))
             if not is_valid:
@@ -387,24 +366,17 @@ class MarginalCVaRDRO(BaseLinearDRO):
         if sample_size != y.shape[0]:
             raise MarginalCVaRDROError("Input X and target y must have the same number of samples.")
 
+        
         control_X = X[:, self.control_name] if self.control_name else X
+        nbrs = NearestNeighbors(n_neighbors=50).fit(control_X)
+        dist_sparse = nbrs.kneighbors_graph(mode='distance')
+        dist = triu(dist_sparse, format='coo')
+        dist.data = (dist.data ** (self.p-1)).astype(np.float32)
 
-        if sample_size > 1000:
-            k = max(1, int(0.02 * sample_size))
-            nbrs = NearestNeighbors(n_neighbors=k, algorithm='ball_tree').fit(control_X)
-            dist_sparse = nbrs.kneighbors_graph(mode='distance')
-            dist = dist_sparse.power(self.p-1).astype(np.float32)
-        else:
-            dist = squareform(pdist(control_X, metric='euclidean')) ** (self.p-1)
-            dist = coo_matrix(dist)
+        B_rowsum = cp.Variable(sample_size)  
+        B_colsum = cp.Variable(sample_size) 
 
-        dist = cp.Constant(dist)
-        B_full = cp.Variable((sample_size, sample_size))
-        constraints = [
-            B_full == B_full.T,                           
-            B_full >> 0,                             
-            B_full >= 0                             
-        ]
+        constraints = []
 
         theta = cp.Variable(self.input_dim, name='theta')
         b_var = cp.Variable(name='b') if self.fit_intercept else 0.0
@@ -412,18 +384,17 @@ class MarginalCVaRDRO(BaseLinearDRO):
         s = cp.Variable(sample_size, nonneg=True, name='s')
         
         loss_vector = self._cvx_loss(X, y, theta, b_var)
-        B_rowsum = cp.sum(B_full, axis=1)
-        B_colsum = cp.sum(B_full, axis=0)
         constraints += [
             s >= loss_vector - (B_rowsum - B_colsum)/sample_size - eta,
+            B_rowsum >= 0,
+            B_colsum >= 0
         ]
 
-        trace_term = cp.sum(cp.multiply(dist, B_full))
+        trace_term = cp.sum(dist.data * (B_rowsum[dist.row] + B_colsum[dist.col])/2)
         cost = (
             cp.sum(s)/(self.alpha * sample_size) +
             self.L ** (self.p-1) * trace_term/(sample_size ** 2) +
-            eta +
-            0.1 * cp.norm(B_full, 'nuc') 
+            eta
         )
 
         problem = cp.Problem(cp.Minimize(cost), constraints)
@@ -432,13 +403,6 @@ class MarginalCVaRDRO(BaseLinearDRO):
                 solver=cp.MOSEK if self.solver == 'MOSEK' else cp.ECOS,
                 verbose=True,
                 mosek_params={
-                    'MSK_IPAR_SDP_REMOVE_DUPLICATES': 'MSK_ON',
-                    'MSK_IPAR_SEMIDEFINITE_OPTIMIZER': 'MSK_SEMIDEF_OPTIMIZER_DUAL',
-                    'MSK_SPAR_REHASH_FREQ': 1000000,  
-                    'MSK_IPAR_OPF_WRITE_HEADER': 'MSK_OFF',
-                    'MSK_IPAR_OPF_WRITE_PROBLEM': 'MSK_OFF',
-                    'MSK_IPAR_OPF_WRITE_SOLUTIONS': 'MSK_OFF',
-                    'MSK_IPAR_LOG_INTPNT': 0,
                     'MSK_DPAR_INTPNT_CO_TOL_REL_GAP': 1e-3,
                     'MSK_IPAR_NUM_THREADS': 8
                 } if self.solver == 'MOSEK' else {}
@@ -451,12 +415,10 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
         self.theta = theta.value
         self.b = b_var.value if self.fit_intercept else 0.0
-        self.B = B_full.value
         self.threshold = eta.value
 
         return {
             "theta": self.theta.tolist(),
             "b": self.b,
-            "B": self.B.tolist(),
             "threshold": self.threshold
         }
