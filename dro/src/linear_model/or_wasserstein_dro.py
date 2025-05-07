@@ -142,129 +142,128 @@ class ORWDRO(BaseLinearDRO):
                 raise ValueError("dual_norm must be 1 or 2")
             self.dual_norm = int(dn)
         
+    # def fit_old(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+    #     """
+    #     :param X: Training feature matrix of shape `(n_samples, n_features)`.
+    #         Must satisfy `n_features == self.input_dim`.
+    #     :type X: numpy.ndarray
 
-    def fit_old(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """
-        :param X: Training feature matrix of shape `(n_samples, n_features)`.
-            Must satisfy `n_features == self.input_dim`.
-        :type X: numpy.ndarray
+    #     :param Y: Target values of shape `(n_samples,)`. Format requirements:
 
-        :param Y: Target values of shape `(n_samples,)`. Format requirements:
+    #         - Classification: ±1 labels
 
-            - Classification: ±1 labels
+    #         - Regression: Continuous values
 
-            - Regression: Continuous values
+    #     :type Y: numpy.ndarray
 
-        :type Y: numpy.ndarray
-
-        :returns: Dictionary containing trained parameters:
+    #     :returns: Dictionary containing trained parameters:
         
-            - ``theta``: Weight vector of shape `(n_features,)`
+    #         - ``theta``: Weight vector of shape `(n_features,)`
             
-        :rtype: Dict[str, Any]
-        """
-        if self.model_type in {'svm'}:
-            is_valid = np.all((y == -1) | (y == 1))
-            if not is_valid:
-                raise ORWDROError("classification labels not in {-1, +1}")
+    #     :rtype: Dict[str, Any]
+    #     """
+    #     if self.model_type in {'svm'}:
+    #         is_valid = np.all((y == -1) | (y == 1))
+    #         if not is_valid:
+    #             raise ORWDROError("classification labels not in {-1, +1}")
         
         
-        sample_size, feature_size = X.shape
-        if feature_size != self.input_dim:
-            raise ORWDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
-        if sample_size != y.shape[0]:
-            raise ORWDROError("Input X and target y must have the same number of samples.")
+    #     sample_size, feature_size = X.shape
+    #     if feature_size != self.input_dim:
+    #         raise ORWDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
+    #     if sample_size != y.shape[0]:
+    #         raise ORWDROError("Input X and target y must have the same number of samples.")
     
-        z_0, sgn = self._cheap_robust_mean_estimate(X, y)
-        if self.model_type == 'lad':
-            Z = np.hstack([X, y.reshape(-1, 1)])
-        elif self.model_type == 'svm':
-            Z = X
-        J = 2
+    #     z_0, sgn = self._cheap_robust_mean_estimate(X, y)
+    #     if self.model_type == 'lad':
+    #         Z = np.hstack([X, y.reshape(-1, 1)])
+    #     elif self.model_type == 'svm':
+    #         Z = X
+    #     J = 2
         
-        # ----------------------------------------------------------------------
-        # 2) Define CVXPY Variables
-        # ----------------------------------------------------------------------
-        lambda_1 = cp.Variable(nonneg=True)     # scalar >= 0
-        lambda_2 = cp.Variable(nonneg=True)     # scalar >= 0
-        alpha    = cp.Variable()                # scalar (unconstrained in sign, can be +/-, user sets constraints if needed)
-        s        = cp.Variable(shape=(sample_size,), nonneg=True)    # s(i) >= 0
-        zeta_G = [cp.Variable(shape=(feature_size + 1 - sgn, sample_size)) for _ in range(2)]
-        zeta_W = [cp.Variable(shape=(feature_size + 1 - sgn, sample_size)) for _ in range(2)]
+    #     # ----------------------------------------------------------------------
+    #     # 2) Define CVXPY Variables
+    #     # ----------------------------------------------------------------------
+    #     lambda_1 = cp.Variable(nonneg=True)     # scalar >= 0
+    #     lambda_2 = cp.Variable(nonneg=True)     # scalar >= 0
+    #     alpha    = cp.Variable()                # scalar (unconstrained in sign, can be +/-, user sets constraints if needed)
+    #     s        = cp.Variable(shape=(sample_size,), nonneg=True)    # s(i) >= 0
+    #     zeta_G = [cp.Variable(shape=(feature_size + 1 - sgn, sample_size)) for _ in range(2)]
+    #     zeta_W = [cp.Variable(shape=(feature_size + 1 - sgn, sample_size)) for _ in range(2)]
 
-        aux_W = cp.Variable(shape = (2,sample_size), nonneg = True)
-        tau = cp.Variable(shape=(sample_size, J), nonneg=True)
-        theta = cp.Variable(shape=(feature_size,))
+    #     aux_W = cp.Variable(shape = (2,sample_size), nonneg = True)
+    #     tau = cp.Variable(shape=(sample_size, J), nonneg=True)
+    #     theta = cp.Variable(shape=(feature_size,))
 
-        # ----------------------------------------------------------------------
-        # 3) Objective function
-        #    objective = lambda_1 * sigma^q + lambda_2 * rho^p
-        #                + (1/(n*(1 - vareps))) * sum(s) + alpha
-        # ----------------------------------------------------------------------
-        objective_expr = (
-            lambda_1 * (self.sigma ** 2)
-            + lambda_2 * (self.eps ** 1)
-            + (1.0 / (sample_size * (1.0 - self.eta))) * cp.sum(s)
-            + alpha
-        )
-        objective = cp.Minimize(objective_expr)
-
-
-        # ----------------------------------------------------------------------
-        # 4) Build constraints
-        # ----------------------------------------------------------------------
-        constraints = []
-
-        # Already declared lambda_1 >= 0, lambda_2 >= 0, s >= 0, tau >= 0 in the variable definitions.
-
-        # Loop over each sample i
-        for i in range(sample_size):
-            lhs_0 = (sgn + z_0 @ zeta_G[0][:, i]
-                    + tau[i, 0]
-                    + Z[i, :] @ zeta_W[0][:, i]
-                    - alpha )
-            constraints.append( s[i] >= lhs_0 )
-
-            lhs_1 = ( z_0 @ zeta_G[1][:, i]
-                    + tau[i, 1]
-                    + Z[i, :] @ zeta_W[1][:, i]
-                    - alpha )
-            constraints.append( s[i] >= lhs_1 )
-
-            if self.model_type == 'lad':
-                minus_theta_plus1 = cp.hstack([-theta, 1.0])  # shape (d,)
-                constraints.append( minus_theta_plus1 + zeta_G[0][:, i] + zeta_W[0][:, i] == 0 )
-
-                # [theta; -1] + zeta_G(:, i, 2) + zeta_W(:, i, 2) == 0
-                plus_theta_minus1 = cp.hstack([theta, -1.0])  # shape (d,)
-                constraints.append( plus_theta_minus1 + zeta_G[1][:, i] + zeta_W[1][:, i] == 0 )
-            elif self.model_type == 'svm':
-                constraints.append( y[i] * theta + zeta_G[0][:, i] + zeta_W[0][:, i] == 0 )
-
-                # zeta_G(:, i, 2) + zeta_W(:, i, 2) == 0
-                constraints.append( zeta_G[1][:, i] + zeta_W[1][:, i] == 0 )
+    #     # ----------------------------------------------------------------------
+    #     # 3) Objective function
+    #     #    objective = lambda_1 * sigma^q + lambda_2 * rho^p
+    #     #                + (1/(n*(1 - vareps))) * sum(s) + alpha
+    #     # ----------------------------------------------------------------------
+    #     objective_expr = (
+    #         lambda_1 * (self.sigma ** 2)
+    #         + lambda_2 * (self.eps ** 1)
+    #         + (1.0 / (sample_size * (1.0 - self.eta))) * cp.sum(s)
+    #         + alpha
+    #     )
+    #     objective = cp.Minimize(objective_expr)
 
 
-            constraints.append( cp.quad_over_lin(zeta_G[0][:, i], lambda_1) <= tau[i, 0])
-            constraints.append( cp.quad_over_lin(zeta_G[1][:, i], lambda_1) <= tau[i, 1])
-            constraints.append( cp.norm(zeta_W[0][:, i], self.dual_norm) <= lambda_2 )
-            constraints.append( cp.norm(zeta_W[1][:, i], self.dual_norm) <= lambda_2 )
+    #     # ----------------------------------------------------------------------
+    #     # 4) Build constraints
+    #     # ----------------------------------------------------------------------
+    #     constraints = []
 
-        # ----------------------------------------------------------------------
-        # 5) Solve the problem
-        # ----------------------------------------------------------------------
-        problem = cp.Problem(objective, constraints)
-        try: 
-            problem.solve(solver = self.solver)
-            self.theta = theta.value
-        except cp.SolverError as e:
-            raise ORWDROError(f"Optimization failed to solve using {self.solver}.") from e
+    #     # Already declared lambda_1 >= 0, lambda_2 >= 0, s >= 0, tau >= 0 in the variable definitions.
 
-        print(problem.status)
-        if self.theta is None:
-            raise ORWDROError("Optimization did not converge to a solution.")
+    #     # Loop over each sample i
+    #     for i in range(sample_size):
+    #         lhs_0 = (sgn + z_0 @ zeta_G[0][:, i]
+    #                 + tau[i, 0]
+    #                 + Z[i, :] @ zeta_W[0][:, i]
+    #                 - alpha )
+    #         constraints.append( s[i] >= lhs_0 )
 
-        return {"theta": self.theta.tolist()}
+    #         lhs_1 = ( z_0 @ zeta_G[1][:, i]
+    #                 + tau[i, 1]
+    #                 + Z[i, :] @ zeta_W[1][:, i]
+    #                 - alpha )
+    #         constraints.append( s[i] >= lhs_1 )
+
+    #         if self.model_type == 'lad':
+    #             minus_theta_plus1 = cp.hstack([-theta, 1.0])  # shape (d,)
+    #             constraints.append( minus_theta_plus1 + zeta_G[0][:, i] + zeta_W[0][:, i] == 0 )
+
+    #             # [theta; -1] + zeta_G(:, i, 2) + zeta_W(:, i, 2) == 0
+    #             plus_theta_minus1 = cp.hstack([theta, -1.0])  # shape (d,)
+    #             constraints.append( plus_theta_minus1 + zeta_G[1][:, i] + zeta_W[1][:, i] == 0 )
+    #         elif self.model_type == 'svm':
+    #             constraints.append( y[i] * theta + zeta_G[0][:, i] + zeta_W[0][:, i] == 0 )
+
+    #             # zeta_G(:, i, 2) + zeta_W(:, i, 2) == 0
+    #             constraints.append( zeta_G[1][:, i] + zeta_W[1][:, i] == 0 )
+
+
+    #         constraints.append( cp.quad_over_lin(zeta_G[0][:, i], lambda_1) <= tau[i, 0])
+    #         constraints.append( cp.quad_over_lin(zeta_G[1][:, i], lambda_1) <= tau[i, 1])
+    #         constraints.append( cp.norm(zeta_W[0][:, i], self.dual_norm) <= lambda_2 )
+    #         constraints.append( cp.norm(zeta_W[1][:, i], self.dual_norm) <= lambda_2 )
+
+    #     # ----------------------------------------------------------------------
+    #     # 5) Solve the problem
+    #     # ----------------------------------------------------------------------
+    #     problem = cp.Problem(objective, constraints)
+    #     try: 
+    #         problem.solve(solver = self.solver)
+    #         self.theta = theta.value
+    #     except cp.SolverError as e:
+    #         raise ORWDROError(f"Optimization failed to solve using {self.solver}.") from e
+
+    #     print(problem.status)
+    #     if self.theta is None:
+    #         raise ORWDROError("Optimization did not converge to a solution.")
+
+    #     return {"theta": self.theta.tolist()}
 
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
@@ -348,7 +347,7 @@ class ORWDRO(BaseLinearDRO):
         problem = cp.Problem(objective, constraints)
         try:
             problem.solve(
-                solver = self.solver, verbose = True
+                solver = self.solver
             )
             self.theta = theta.value
         except cp.SolverError as e:

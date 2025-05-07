@@ -248,7 +248,13 @@ class MarginalCVaRDRO(BaseLinearDRO):
         dist = np.power(squareform(pdist(control_X)), self.p - 1)
 
         # Define CVXPY variables
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
 
             
         if self.fit_intercept == True:
@@ -378,7 +384,14 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
         constraints = []
 
-        theta = cp.Variable(self.input_dim, name='theta')
+        if self.kernel != 'linear':
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            theta = cp.Variable(sample_size)
+        else:
+            theta = cp.Variable(self.input_dim)
+        
         b_var = cp.Variable(name='b') if self.fit_intercept else 0.0
         eta = cp.Variable(nonneg=True, name='eta')
         s = cp.Variable(sample_size, nonneg=True, name='s')
@@ -400,12 +413,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
         problem = cp.Problem(cp.Minimize(cost), constraints)
         try:
             problem.solve(
-                solver=cp.MOSEK if self.solver == 'MOSEK' else cp.ECOS,
-                verbose=True,
-                mosek_params={
-                    'MSK_DPAR_INTPNT_CO_TOL_REL_GAP': 1e-3,
-                    'MSK_IPAR_NUM_THREADS': 8
-                } if self.solver == 'MOSEK' else {}
+                solver = self.solver
             )
         except cp.SolverError as e:
             raise RuntimeError(f"Solver Failed: {str(e)}")
