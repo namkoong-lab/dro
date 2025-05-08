@@ -66,7 +66,8 @@ class MMD_DRO(BaseLinearDRO):
         
         self.eta = 0.1
         self.sampling_method = sampling_method  
-        self.n_certify_ratio = 1        
+        self.n_certify_ratio = 1  
+        self.n_components = None      
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update MMD-DRO model configuration.

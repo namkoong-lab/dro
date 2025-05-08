@@ -155,12 +155,13 @@ class Chi2DRO(BaseLinearDRO):
             raise Chi2DROError("Input X and target y must have the same number of samples.")
 
         if self.kernel != 'linear':
-            self.cost_matrix = np.eye(sample_size)
-            self.cost_inv_transform = np.eye(sample_size)
             self.support_vectors_ = X
             if not isinstance(self.kernel_gamma, float):
                 self.kernel_gamma = 1 / (self.input_dim * np.var(X))
-            theta = cp.Variable(sample_size)
+            if self.n_components is None:
+                theta = cp.Variable(sample_size)
+            else:
+                theta = cp.Variable(self.n_components)
         else:
             theta = cp.Variable(self.input_dim)
             

@@ -5,6 +5,7 @@ from sklearn.metrics import f1_score
 from typing import Optional, Tuple, Union
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_kernels
+from sklearn.kernel_approximation import Nystroem
 
 class DROError(Exception):
     """Base exception class for all errors in DRO models.
@@ -63,6 +64,7 @@ class BaseLinearDRO:
         self.model_type = model_type
         self.kernel = kernel
         self.kernel_gamma = 'scale'
+        self.n_components = None
 
         if self.kernel == 'linear':
             self.theta = np.zeros(self.input_dim)
@@ -104,6 +106,12 @@ class BaseLinearDRO:
                 self.kernel_gamma = 1 / self.input_dim
             else:
                 self.kernel_gamma = kernel_gamma
+
+        if 'n_components' in config:
+            n_components = config['n_components']
+            if not isinstance(n_components, (int)):
+                raise TypeError("n_components should be int")
+            self.n_components = n_components
         
 
     def update(self, config: dict):
@@ -159,7 +167,11 @@ class BaseLinearDRO:
         if self.kernel == 'linear':
             scores = X @ self.theta + self.b
         else:
-            K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
+            if self.n_components is None:
+                K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
+            else:
+                nystroem = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                K = nystroem.fit(self.support_vectors_).transform(X)
             scores = K.dot(self.theta) + self.b
         if self.model_type in ['ols', 'lad']:
             return scores
@@ -234,7 +246,11 @@ class BaseLinearDRO:
         if self.kernel == 'linear':
             inner_product = X @ self.theta
         else:
-            K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
+            if self.n_components is None:
+                K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
+            else:
+                nystroem = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                K = nystroem.fit(self.support_vectors_).transform(X)
             inner_product = K @ self.theta
         if self.model_type == 'svm':
             return np.maximum(1 - y * (inner_product + self.b), 0)
@@ -271,7 +287,11 @@ class BaseLinearDRO:
         if self.kernel == 'linear':
             inner_product = X @ theta
         else:
-            K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel,  gamma = self.kernel_gamma)
+            if self.n_components is None:
+                K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
+            else:
+                nystroem = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                K = nystroem.fit(self.support_vectors_).transform(X)
             inner_product = K @ theta
 
         if self.model_type == 'svm':
