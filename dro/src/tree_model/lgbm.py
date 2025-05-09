@@ -149,7 +149,7 @@ class KLDRO_LGBM:
         f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
         return acc, f1
 
-class KLDRO_LGBM:
+class Chi2DRO_LGBM:
     """Light GBM model with Chi2-Divergence Distributionally Robust Optimization (DRO)
     
     :param float eps: Chi2 divergence constraint parameter (ε > 0, default: 0.1)
@@ -209,7 +209,7 @@ class KLDRO_LGBM:
             return (preds.reshape(-1) - labels.reshape(-1))**2
         raise NotImplementedError(f"Unsupported task type: {self.kind}")
 
-    def _chi_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> Tuple[np.ndarray, np.ndarray]:
+    def _chi2_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> Tuple[np.ndarray, np.ndarray]:
         """Compute Chi2-DRO gradients and Hessians
         
         :param numpy.ndarray preds: Raw model predictions
@@ -270,7 +270,7 @@ class KLDRO_LGBM:
         del self.config['eps']
 
         self.config['verbosity']=-1
-        self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round, fobj=lambda preds, dtrain: self._kl_dro_loss(preds, dtrain, self.eps))
+        self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round, fobj=lambda preds, dtrain: self._chi2_dro_loss(preds, dtrain, self.eps))
 
 
     def predict(self, X: np.ndarray) -> np.ndarray:
