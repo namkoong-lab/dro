@@ -47,8 +47,7 @@ class KLDRO_LGBM:
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
         
-        self.eps = config.pop("eps")
-        
+        self.eps = config["eps"] 
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:
@@ -118,6 +117,7 @@ class KLDRO_LGBM:
         dtrain = lightgbm.Dataset(X, y)
         num_boost_round = self.config["num_boost_round"]
         del self.config["num_boost_round"]
+        del self.config['eps']
         self.config['verbosity']=-1
         self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round, fobj=lambda preds, dtrain: self._kl_dro_loss(preds, dtrain, self.eps))
 
@@ -190,7 +190,7 @@ class KLDRO_LGBM:
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
         
-        self.eps = config.pop("eps")
+        self.eps = config["eps"]
         
         self.config = config
 
@@ -267,6 +267,8 @@ class KLDRO_LGBM:
         dtrain = lightgbm.Dataset(X, y)
         num_boost_round = self.config["num_boost_round"]
         del self.config["num_boost_round"]
+        del self.config['eps']
+
         self.config['verbosity']=-1
         self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round, fobj=lambda preds, dtrain: self._kl_dro_loss(preds, dtrain, self.eps))
 
@@ -342,7 +344,7 @@ class CVaRDRO_LGBM:
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
         
-        self.eps = config.pop("eps")
+        self.eps = config["eps"]
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:
@@ -402,6 +404,7 @@ class CVaRDRO_LGBM:
         dtrain = lightgbm.Dataset(X, y)
         num_boost_round = self.config["num_boost_round"]
         del self.config["num_boost_round"]
+        del self.config['eps']
         self.config['verbosity']=-1
         self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round, fobj=lambda preds, dtrain: self._cvar_dro_loss(preds, dtrain, self.eps))
         

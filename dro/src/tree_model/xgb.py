@@ -48,7 +48,7 @@ class KLDRO_XGB:
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
         
-        self.eps = config.pop("eps")
+        self.eps = config["eps"]
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:
@@ -118,7 +118,7 @@ class KLDRO_XGB:
             dtrain = DMatrix(X, label=y)
             config = self.config.copy()
             num_round = config.pop("num_boost_round")
-            
+            config.pop('eps')
             self.model = xgb.train(
                 config,
                 dtrain,
@@ -197,7 +197,7 @@ class Chi2DRO_XGB:
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
         
-        self.eps = config.pop("eps")
+        self.eps = config["eps"]
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:
@@ -273,7 +273,7 @@ class Chi2DRO_XGB:
             dtrain = DMatrix(X, label=y)
             config = self.config.copy()
             num_round = config.pop("num_boost_round")
-            
+            config.pop('eps')
             self.model = xgb.train(
                 config,
                 dtrain,
@@ -353,7 +353,7 @@ class CVaRDRO_XGB:
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
         
-        self.eps = config.pop("eps")
+        self.eps = config["eps"]
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:
@@ -414,6 +414,7 @@ class CVaRDRO_XGB:
             dtrain = DMatrix(X, label=y)
             config = self.config.copy()
             num_round = config.pop("num_boost_round")
+            config.pop('eps')
             
             self.model = xgb.train(
                 config,
