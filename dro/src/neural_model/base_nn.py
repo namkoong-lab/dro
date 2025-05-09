@@ -109,6 +109,9 @@ class MLP(torch.nn.Module):
     :param dropout_rate: Dropout probability :math:`p \in [0,1)`, 
         defaults to 0.1
     :type dropout_rate: float
+    :param num_layers: Number of layers,
+        defaults to 2
+    :type num_layers: int
 
     Example::
         >>> model = MLP(
@@ -127,7 +130,8 @@ class MLP(torch.nn.Module):
     def __init__(self, input_dim: int, num_classes: int, 
                 hidden_units: int = 16, 
                 activation: torch.nn.Module = nn.ReLU(),
-                dropout_rate: float = 0.1):
+                dropout_rate: float = 0.1,
+                num_layers: int = 2):
         super().__init__()
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥1, got {input_dim}")
@@ -138,11 +142,16 @@ class MLP(torch.nn.Module):
         if not 0 <= dropout_rate < 1:
             raise ValueError(f"dropout_rate ∈ [0,1), got {dropout_rate}")
 
-        self.layer1 = nn.Linear(input_dim, hidden_units)
-        self.activation = activation
+        self.num_layers = num_layers
+        self.nonlin = activation
         self.dropout = nn.Dropout(dropout_rate)
-        self.layer2 = nn.Linear(hidden_units, hidden_units)
-        self.output = nn.Linear(hidden_units, num_classes)
+        layers = [nn.Linear(input_dim, hidden_units), activation, self.dropout]
+        for _ in range(num_layers - 2):  
+            layers.extend([nn.Linear(hidden_units, hidden_units), activation, self.dropout])
+        
+        layers.append(nn.Linear(hidden_units, num_classes))
+        
+        self.model = nn.Sequential(*layers)
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
         """Forward propagation with dropout regularization.
@@ -154,10 +163,7 @@ class MLP(torch.nn.Module):
         :rtype: torch.Tensor
         
         """
-        X = self.activation(self.layer1(X.float()))
-        X = self.dropout(X)
-        X = self.activation(self.layer2(X))
-        return self.output(X)
+        return self.model(X.float())
 
 
 class BaseNNDRO:
