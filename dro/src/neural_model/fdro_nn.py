@@ -91,7 +91,8 @@ class Chi2NNDRO(BaseNNDRO):
         self.lr = config["lr"]
         self.batch_size = config["batch_size"]
         self.train_epochs = config["train_epochs"]
-        self.model = MLP(self.input_dim, self.num_classes, hidden_units=config["hidden_size"], dropout_rate=config["dropout_ratio"]).to(self.device)
+        self.layer_num = config["layer_num"]
+        self.model = MLP(self.input_dim, self.num_classes, hidden_units=config["hidden_size"], dropout_rate=config["dropout_ratio"], num_layers=self.layer_num).to(self.device)
 
         self.size = config["size"]
         self.reg = config["reg"]
@@ -188,7 +189,8 @@ class CVaRNNDRO(BaseNNDRO):
         self.lr = config["lr"]
         self.batch_size = config["batch_size"]
         self.train_epochs = config["train_epochs"]
-        self.model = MLP(self.input_dim, self.num_classes, hidden_units=config["hidden_size"], dropout_rate=config["dropout_ratio"]).to(self.device)
+        self.layer_num = config["layer_num"]
+        self.model = MLP(self.input_dim, self.num_classes, hidden_units=config["hidden_size"], dropout_rate=config["dropout_ratio"], num_layers=self.layer_num).to(self.device)
         self.size = config["size"]
         self.reg = config["reg"]
         
