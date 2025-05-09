@@ -6,6 +6,7 @@ from scipy.linalg import sqrtm
 from typing import Dict, Any
 import warnings
 from sklearn.metrics.pairwise import pairwise_kernels
+from sklearn.kernel_approximation import Nystroem
 
 
 
@@ -194,7 +195,12 @@ class WassersteinDRO(BaseLinearDRO):
 
         """
         if self.kernel != 'linear':
-            theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
+            if self.n_components is not None:
+                nystrom = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                Phi_X = nystrom.fit_transform(self.support_vectors_)
+                theta_K = sqrtm(Phi_X.T @ Phi_X) @ theta
+            else:
+                theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
 
         else:
             theta_K = theta
@@ -254,15 +260,17 @@ class WassersteinDRO(BaseLinearDRO):
             raise WassersteinDROError("Input X and target y must have the same number of samples.")
 
         if self.kernel != 'linear':
-            self.cost_matrix = np.eye(sample_size)
-            self.cost_inv_transform = np.eye(sample_size)
             self.support_vectors_ = X
             if not isinstance(self.kernel_gamma, float):
                 self.kernel_gamma = 1 / (self.input_dim * np.var(X))
             if self.n_components is None:
                 theta = cp.Variable(sample_size)
+                self.cost_matrix = np.eye(sample_size)
+                self.cost_inv_transform = np.eye(sample_size)
             else:
                 theta = cp.Variable(self.n_components)
+                self.cost_matrix = np.eye(self.n_components)
+                self.cost_inv_transform = np.eye(self.n_components)
         else:
             theta = cp.Variable(self.input_dim)
         if self.fit_intercept == True:
@@ -665,11 +673,29 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             if not is_valid:
                 raise WassersteinDROSatisificingError("classification labels not in {-1, +1}")
     
-        theta = cp.Variable(self.input_dim)
-        
         if self.kernel != 'linear':
-            self.support_vectors_ = X 
-            theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            if self.n_components is None:
+                theta = cp.Variable(sample_size)
+                self.cost_matrix = np.eye(sample_size)
+                self.cost_inv_transform = np.eye(sample_size)
+            else:
+                theta = cp.Variable(self.n_components)
+                self.cost_matrix = np.eye(self.n_components)
+                self.cost_inv_transform = np.eye(self.n_components)
+        else:
+            theta = cp.Variable(self.input_dim)
+        
+    
+        if self.kernel != 'linear':
+            if self.n_components is not None:
+                nystrom = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                Phi_X = nystrom.fit_transform(self.support_vectors_)
+                theta_K = sqrtm(Phi_X.T @ Phi_X) @ theta
+            else:
+                theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
 
         else:
             theta_K = theta
@@ -747,19 +773,24 @@ class WassersteinDROsatisficing(BaseLinearDRO):
     #     model_params["theta"] = self.theta.reshape(-1).tolist()
     #     return model_params
     
-    def _penalization(self, theta: np.ndarray) -> float:
+    def _penalization(self, theta: cp.Expression) -> float:
         """
         Module for computing the regularization part in the standard Wasserstein DRO problem.
 
         Args:
-            theta (np.ndarray): Feature vector with shape (n_feature,).
+            theta (:py:class:`cvxpy.Expression`): Feature vector with shape (n_feature,).
         
         Returns:
             Float: Regularization term part.
 
         """
         if self.kernel != 'linear':
-            theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
+            if self.n_components is not None:
+                nystrom = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                Phi_X = nystrom.fit_transform(self.support_vectors_)
+                theta_K = sqrtm(Phi_X.T @ Phi_X) @ theta
+            else:
+                theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
 
         else:
             theta_K = theta
@@ -770,7 +801,6 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             dual_norm = 1 / (1 - 1 / self.p)
         else:
             dual_norm = 1
-
         if self.model_type == 'ols':
             return cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
         elif self.model_type in ['svm', 'logistic']:
@@ -803,7 +833,21 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             raise WassersteinDROError("Input X and target y must have the same number of samples.")
 
 
-        theta = cp.Variable(self.input_dim)
+        if self.kernel != 'linear':
+            self.support_vectors_ = X
+            if not isinstance(self.kernel_gamma, float):
+                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
+            if self.n_components is None:
+                theta = cp.Variable(sample_size)
+                self.cost_matrix = np.eye(sample_size)
+                self.cost_inv_transform = np.eye(sample_size)
+            else:
+                theta = cp.Variable(self.n_components)
+                self.cost_matrix = np.eye(self.n_components)
+                self.cost_inv_transform = np.eye(self.n_components)
+        else:
+            theta = cp.Variable(self.input_dim)
+            
         if self.fit_intercept == True:
             b = cp.Variable()
         else:
