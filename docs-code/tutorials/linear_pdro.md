@@ -5,9 +5,7 @@ $$\min_{\theta \in \Theta}\mathbb{E}_{\zeta \sim \zeta_N}[\sup_{Q \in \mathcal{Q
 where $\zeta_N$ denotes the posterior distribution of the parametric distribution of $\xi$  given $\{\xi_i\}_{i \in [N]}$. And $\mathcal{Q}_{\zeta}(d, \epsilon) = \{Q: d(Q, P_{\zeta}) \leq \epsilon\}$ with $P_{\zeta}$ denotes the distribution parametrized by $\zeta$. 
 
 
-In general, we approximate the outer expectation $\zeta \sim \zeta_N$ via finite samples generated from the posterior distribution of $\zeta_N$. In this sense, the optimization problem can be reformulated as:
-
-where we can reformulate the constrained part by corresponding optimization problems.
+In practice, we approximate the outer expectation $\zeta \sim \zeta_N$ via finite samples generated from the posterior distribution of $\zeta_N$. In this sense, the optimization problem can be reformulated as a optimization problem with finite variables.
 
 Note that the idea of parametric distributions is often utilized in operational settings (e.g., newsvendor [1], portfolio optimization [2]), where we can modify ``_cvx_loss`` to incorporate that. Specifically, we consider two preliminary settings. We implement the `Exponential` distribution class used in the numerical experiments in [1] where we use the rate $\zeta$ in the exponential distribution as the parameter and set $\Gamma(1, 1)$ as the default prior. To accomodate machine learning problems, we also consider ``Gaussian`` distribution class for $\xi$ with a normal prior on the mean vector $\mu$ and an inverse-Wishart prior on the covariance matrix $\Sigma$. Formally, 
 
