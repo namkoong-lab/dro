@@ -360,7 +360,7 @@ class WassersteinDRO(BaseLinearDRO):
             return np.inf
     
     def worst_distribution(self, X: np.ndarray, y: np.ndarray, 
-                      compute_type: str, gamma: float = 0) -> Dict[str, Any]:
+                      compute_type: str = 'asymp', gamma: float = 0) -> Dict[str, Any]:
         """Compute worst-case distribution under Wasserstein ambiguity set.
 
         :param X: Input feature matrix. Shape: (n_samples, n_features)
