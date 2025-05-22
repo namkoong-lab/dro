@@ -5,9 +5,11 @@ In general, when rewritting the function for a new class, one way is to apply th
 from types import MethodType
 def _loss(self, X, y):
     xxx
-def
+def _cvx_loss(self, X, y, theta, b):
+    xxx
 
 model = XXDRO(...)
+model._loss = MethodType(_loss, model)
 model._cvx_loss = MethodType(_cvx_loss, model)
 ```
 if we want to modify the ``self._cvx_loss`` and ``_loss`` functions in the model class.
@@ -19,7 +21,7 @@ In DRO models that are solved exactly, for each particular DRO type, we change `
 In KLDRO, Chi2DRO, CVaRDRO, TVDRO (and corresponding BayesianDRO), we only need to rewrite ``_loss`` and ``_cvx_loss``.
 
 ### Wasserstein DRO
-To adjust Wasserstein DRO, besides modifying the `_cvx_loss` (and ``_loss``) functions, we also need to modify the `_penalization` function to adjust the regularization component, where the regularization part denotes the additional part besides the empirical objective. 
+To adjust Wasserstein DRO, besides modifying the `_cvx_loss` (and ``_loss``) functions, we also need to modify the `_penalization` function to adjust the regularization component, where the regularization component denotes the additional part besides the empirical objective in the Wasserstein DRO objective after the problem reformulation. 
 
 ### Remark
 We remark that for more complicated losses, e.g., losses with a mixture of distances, we have not implemented the personalize loss yet.
