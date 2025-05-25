@@ -107,11 +107,11 @@ def test_regression_scoring():
 def test_classification_scoring():
     """Test scoring for classification models"""
     X, y = make_classification(n_samples=100, n_features=5)
-    y = (y > 0).astype(float)
+    y = 2 * y - 1
     model = SinkhornLinearDRO(input_dim=5, model_type='svm')
     
     # Mock perfect predictions
-    mock_pred = y.reshape(-1, 1)
+    mock_pred = y.reshape(1, -1)
     model.predict = lambda x: mock_pred
     acc, __ = model.score(X, y)
     assert acc == 1.0

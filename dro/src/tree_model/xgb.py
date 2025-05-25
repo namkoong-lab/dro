@@ -118,7 +118,8 @@ class KLDRO_XGB:
             dtrain = DMatrix(X, label=y)
             config = self.config.copy()
             num_round = config.pop("num_boost_round")
-            config.pop('eps')
+            if "eps" in config:
+                config.pop('eps')
             self.model = xgb.train(
                 config,
                 dtrain,
@@ -273,7 +274,8 @@ class Chi2DRO_XGB:
             dtrain = DMatrix(X, label=y)
             config = self.config.copy()
             num_round = config.pop("num_boost_round")
-            config.pop('eps')
+            if "eps" in config:
+                config.pop("eps")
             self.model = xgb.train(
                 config,
                 dtrain,
@@ -414,7 +416,8 @@ class CVaRDRO_XGB:
             dtrain = DMatrix(X, label=y)
             config = self.config.copy()
             num_round = config.pop("num_boost_round")
-            config.pop('eps')
+            if "eps" in config:
+                config.pop('eps')
             
             self.model = xgb.train(
                 config,
