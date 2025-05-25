@@ -31,7 +31,7 @@ class TestNeuralDROModels(unittest.TestCase):
             self.assertEqual(preds.shape, (5,))
 
         # Test scoring
-        score = model.score(self.X_cls, self.y_cls)
+        score = model.score(self.X_cls, self.y_cls)[0]
         self.assertIsInstance(score, float)
 
     def _test_invalid_parameters(self, model_class):

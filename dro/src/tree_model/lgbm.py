@@ -120,7 +120,8 @@ class KLDRO_LGBM:
         if "eps" in self.config:
             self.config.pop('eps')
         self.config['verbosity']=-1
-        self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round, fobj=lambda preds, dtrain: self._kl_dro_loss(preds, dtrain, self.eps))
+        self.config['objective'] = lambda preds, dtrain: self._kl_dro_loss(preds, dtrain, self.eps)
+        self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round)
 
 
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -272,7 +273,8 @@ class Chi2DRO_LGBM:
             self.config.pop('eps')
 
         self.config['verbosity']=-1
-        self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round, fobj=lambda preds, dtrain: self._chi2_dro_loss(preds, dtrain, self.eps))
+        self.config['objective'] = lambda preds, dtrain: self._chi2_dro_loss(preds, dtrain, self.eps)
+        self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round)
 
 
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -409,7 +411,8 @@ class CVaRDRO_LGBM:
         if "eps" in self.config:
             self.config.pop('eps')
         self.config['verbosity']=-1
-        self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round, fobj=lambda preds, dtrain: self._cvar_dro_loss(preds, dtrain, self.eps))
+        self.config['objective'] = lambda preds, dtrain: self._cvar_dro_loss(preds, dtrain, self.eps)
+        self.model = lightgbm.train(self.config, dtrain, num_boost_round=num_boost_round)
         
 
     def predict(self, X: np.ndarray) -> np.ndarray:
