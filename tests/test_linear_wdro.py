@@ -107,6 +107,41 @@ class TestWassersteinDRO:
         assert isinstance(params['theta'], list)
         if model.fit_intercept:
             assert 'b' in params
+
+    @pytest.mark.parametrize("model_type", ['svm'])
+    def test_fit_kernel_interface(self, model_type):
+        """Validate fit method input/output contracts"""
+        if model_type in {"svm", "logistic"}:
+            X, y = make_classification(
+                n_samples=100,
+                n_features=5,
+                n_informative=3,
+                random_state=42
+                )
+            y = np.sign(y - 0.5)
+        else:
+             X, y = make_regression(
+                    n_samples=100,
+                    n_features=5,
+                    random_state=42
+                )
+        
+        model = WassersteinDRO(
+            input_dim=X.shape[1],
+            model_type=model_type,
+            solver='MOSEK'
+        )
+        model.update({'eps': 0.1, 'p': 2})
+        model.update_kernel({'metric': 'rbf', 'kernel_gamma': 1})
+        params = model.fit(X, y)
+        model.update_kernel({'metric': 'rbf', 'kernel_gamma': 'scale', 'n_components': 5})
+        params = model.fit(X, y)
+        
+        # Validate output structure
+        assert 'theta' in params
+        assert isinstance(params['theta'], list)
+        if model.fit_intercept:
+            assert 'b' in params
     
     @pytest.mark.parametrize("compute_type", ['asymp', 'exact'])
     def test_worst_distribution(self, dataset, compute_type):
@@ -312,6 +347,12 @@ def test_satisficing_lad_constraints(model_type):
     
     params = model.fit(X, y)
     assert 'theta' in params  # Verify solution exists
+    model.update_kernel({'metric': 'rbf', 'kernel_gamma': 1})
+    params = model.fit(X, y)
+    model.update_kernel({'metric': 'rbf', 'kernel_gamma': 'scale', 'n_components': 5})
+    params = model.fit(X, y)
+    assert 'theta' in params  # Verify solution exists
+
 
 @pytest.mark.parametrize("model_type", ['ols', 'svm', 'lad', 'logistic'])
 def test_satisficing_lad_constraints(model_type):
@@ -434,7 +475,7 @@ def test_distance_with_infinite_kappa():
         Y_1=1.0,
         Y_2=-1.0
     )
-    assert 'abs' not in str(dist)  # Y分量不应出现
+    assert 'abs' not in str(dist)  
 
 # --------------------------
 # Worst-case Distribution (Exact)

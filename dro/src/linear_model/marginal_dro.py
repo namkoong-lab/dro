@@ -201,6 +201,10 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
         :type y: numpy.ndarray
 
+        :param accelerate: Whether to use acceleration for quadratic approximation.
+
+        :type accelerate: bool
+
         :returns: Solution dictionary containing:
             
             - ``theta``: Weight vector of shape `(n_features,)`

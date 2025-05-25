@@ -4,7 +4,7 @@ import xgboost as xgb
 from sklearn.datasets import make_classification, make_regression
 from sklearn.model_selection import train_test_split
 from sklearn.exceptions import NotFittedError
-from dro.src.tree_model.xgb import KLDRO_XGB, CVaRDRO_XGB, NotFittedError
+from dro.src.tree_model.xgb import KLDRO_XGB, CVaRDRO_XGB, Chi2DRO_XGB, NotFittedError
 
 # --------------------------
 # Test Data Fixtures
@@ -148,6 +148,46 @@ class TestCVaRDRO_XGB:
         
         preds = model.predict(X)
         assert preds.dtype == np.float32
+
+# --------------------------
+# Chi2DRO_XGB Test Class
+# --------------------------
+
+class TestChi2DRO_XGB:
+    """Test CVaR-DRO XGBoost model functionality"""
+    
+    @pytest.mark.parametrize("eps", [-0.1, 0.0, 1.0, 1.5])
+    def test_epsilon_validation(self, eps):
+        """Verify CVaR epsilon parameter constraints"""
+        if eps <= 0:
+            with pytest.raises(ValueError):
+                Chi2DRO_XGB(eps=eps)
+    
+    def test_chi2_implementation(self, xgb_dataset):
+        """Test Chi2-specific implementation details"""
+        X_train, X_test, y_train, y_test = xgb_dataset
+        
+        model = Chi2DRO_XGB(eps=0.2)
+        model.update({
+            "num_boost_round": 10,
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "eps":0.5
+        })
+        
+        model.fit(X_train, y_train)
+        assert model.model.num_boosted_rounds() == 10
+        
+    def test_regression_support(self):
+        """Validate regression task implementation"""
+        X, y = make_regression(n_samples=100, random_state=42)
+        model = Chi2DRO_XGB(kind='regression', eps=0.1)
+        model.update({"num_boost_round": 10, "learning_rate": 0.1})
+        model.fit(X, y)
+        
+        preds = model.predict(X)
+        assert preds.dtype == np.float32
+
 
 # --------------------------
 # Shared Functionality Tests

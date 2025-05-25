@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.datasets import make_classification, make_regression
 from sklearn.model_selection import train_test_split
 from sklearn.exceptions import NotFittedError
-from dro.src.tree_model.lgbm import KLDRO_LGBM, CVaRDRO_LGBM, NotFittedError 
+from dro.src.tree_model.lgbm import KLDRO_LGBM, CVaRDRO_LGBM, Chi2DRO_LGBM, NotFittedError 
 import lightgbm
 
 # --------------------------
@@ -153,6 +153,45 @@ class TestCVaRDRO_LGBM:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
         
         model = CVaRDRO_LGBM(kind='regression', eps=0.1)
+        model.update({"num_boost_round": 10, "learning_rate": 0.1, "eps":0.5})
+        model.fit(X_train, y_train)
+        
+        preds = model.predict(X_test)
+        assert preds.dtype == float
+
+# --------------------------
+# Chi2DRO_LGBM Test Class  
+# --------------------------
+
+class TestChi2DRO_LGBM:
+    """Test core functionality of CVaR-DRO LightGBM model"""
+    
+    @pytest.mark.parametrize("eps", [0.0, -1.0])
+    def test_invalid_epsilon(self, eps):
+        """Validate CVaR epsilon range constraints"""
+        with pytest.raises(ValueError):
+            Chi2DRO_LGBM(eps=eps)
+
+    def test_invalid_kind(self):
+        with pytest.raises(ValueError):
+            Chi2DRO_LGBM(kind="")
+    
+    def test_cvar_loss_mechanism(self):
+        """Verify CVaR loss calculation logic"""
+        model = Chi2DRO_LGBM(eps=0.2)
+        X, y = make_classification(n_samples=100, random_state=42)
+        model.update({"num_boost_round": 5, "max_depth": 2})
+        model.fit(X, y)
+        
+        # Validate model type
+        assert isinstance(model.model, lightgbm.Booster)
+        
+    def test_regression_support(self):
+        """Validate regression task implementation"""
+        X, y = make_regression(n_samples=100, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+        
+        model = Chi2DRO_LGBM(kind='regression', eps=0.1)
         model.update({"num_boost_round": 10, "learning_rate": 0.1, "eps":0.5})
         model.fit(X_train, y_train)
         

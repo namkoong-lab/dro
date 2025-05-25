@@ -148,7 +148,10 @@ class MMD_DRO(BaseLinearDRO):
         kernel_gamma = 1.0 / (2 * kernel_width ** 2)
         return kernel_width, kernel_gamma
     
-    def fit_old(self, X: np.ndarray, y: np.ndarray) -> None:
+
+
+    def fit(self, X: np.ndarray, y: np.ndarray, accelerate: bool = True) -> None:
+        """Vectorized implementation of MMD-DRO fit function."""
         """Fit the MMD-DRO model to the data.
         
         :param X: Training feature matrix of shape `(n_samples, n_features)`.
@@ -163,6 +166,10 @@ class MMD_DRO(BaseLinearDRO):
 
         :type y: numpy.ndarray
 
+        :param accelerate: Whether to use acceleration for kernel approximation.
+
+        :type accelerate: bool
+
         :returns: Dictionary containing trained parameters:
         
             - ``theta``: Weight vector of shape `(n_features,)`
@@ -170,25 +177,6 @@ class MMD_DRO(BaseLinearDRO):
         :rtype: Dict[str, Any]
 
         """
-        if self.model_type in {'svm', 'logistic'}:
-            is_valid = np.all((y == -1) | (y == 1))
-            if not is_valid:
-                raise MMDDROError("classification labels not in {-1, +1}")
-
-
-        # Ensure input data is valid
-        if len(X.shape) != 2 or len(y.shape) != 1:
-            raise ValueError("X must be a 2D array and y must be a 1D array.")
-
-        sample_size, _ = X.shape
-        n_certify = int(self.n_certify_ratio * sample_size)
-
-
-
-    
-
-    def fit(self, X: np.ndarray, y: np.ndarray, accelerate: bool = True) -> None:
-        """Vectorized implementation of MMD-DRO fit function."""
         
         if self.model_type in {'svm', 'logistic'}:
             if not np.all(np.isin(y, [-1, 1])):
