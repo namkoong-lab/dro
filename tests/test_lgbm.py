@@ -94,7 +94,8 @@ class TestKLDRO_LGBM:
         model.update({
             "num_boost_round": 10,
             "max_depth": 2,
-            "learning_rate": 0.1
+            "learning_rate": 0.1,
+            "eps":0.5
         })
         
         # Training validation
@@ -152,7 +153,7 @@ class TestCVaRDRO_LGBM:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
         
         model = CVaRDRO_LGBM(kind='regression', eps=0.1)
-        model.update({"num_boost_round": 10, "learning_rate": 0.1})
+        model.update({"num_boost_round": 10, "learning_rate": 0.1, "eps":0.5})
         model.fit(X_train, y_train)
         
         preds = model.predict(X_test)

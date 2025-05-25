@@ -96,6 +96,7 @@ class TestMarginalCVaRDRO(unittest.TestCase):
     def test_successful_svm_fit(self):
         """Test basic SVM fitting with valid binary labels."""
         params = self.default_model.fit(self.valid_X, self.valid_y)
+        params = self.default_model.fit(self.valid_X, self.valid_y, accelerate=False)
         self._validate_output_structure(params)
         self.assertTrue(np.isfinite(params['theta']).all())
 
@@ -127,7 +128,7 @@ class TestMarginalCVaRDRO(unittest.TestCase):
 
     def _validate_output_structure(self, params: dict):
         """Validate output dictionary structure and value ranges."""
-        mandatory_keys = {'theta', 'B', 'threshold'}
+        mandatory_keys = {'theta', 'threshold'}
         self.assertTrue(mandatory_keys.issubset(params.keys()))
         self.assertEqual(len(params['theta']), self.default_model.input_dim)
         

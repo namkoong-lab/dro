@@ -46,8 +46,8 @@ class KLDRO_LGBM:
             raise TypeError(f"Expected dictionary, got {type(config)}")
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
-        
-        self.eps = config["eps"] 
+        if "eps" in config:
+            self.eps = config["eps"] 
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:
@@ -189,8 +189,8 @@ class Chi2DRO_LGBM:
             raise TypeError(f"Expected dictionary, got {type(config)}")
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
-        
-        self.eps = config["eps"]
+        if 'eps' in config:
+            self.eps = config["eps"]
         
         self.config = config
 
@@ -343,8 +343,8 @@ class CVaRDRO_LGBM:
             raise TypeError(f"Expected dictionary, got {type(config)}")
         if 'num_boost_round' not in config:
             raise KeyError("Configuration must contain 'num_boost_round'")
-        
-        self.eps = config["eps"]
+        if "eps" in config:
+            self.eps = config["eps"]
         self.config = config
 
     def loss(self, preds: np.ndarray, labels: np.ndarray) -> np.ndarray:

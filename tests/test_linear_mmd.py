@@ -82,6 +82,7 @@ class TestMMDDROModel(unittest.TestCase):
         model = MMD_DRO(input_dim=5, model_type='ols', sampling_method='hull')
         valid_y = np.random.randn(100)
         params = model.fit(self.valid_X, valid_y)
+        params = model.fit(self.valid_X, valid_y, accelerate=False)
         self._validate_output_structure(params)
 
     def test_unsupported_sampling_method(self):

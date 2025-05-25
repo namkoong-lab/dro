@@ -183,82 +183,16 @@ class MMD_DRO(BaseLinearDRO):
         sample_size, _ = X.shape
         n_certify = int(self.n_certify_ratio * sample_size)
 
-        # Define decision variable
-        theta = cp.Variable(self.input_dim)
 
-        # DRO variables
-        a = cp.Variable(sample_size + n_certify)
-        f0 = cp.Variable()
 
-        # --------------------------------------------------------------------------------
-        # Step 1: Generate the sampled support
-        # --------------------------------------------------------------------------------
-        if self.sampling_method == 'bound':
-            zeta = np.random.uniform(-1, 1, size=(n_certify, self.input_dim + 1))
-        elif self.sampling_method == 'hull':
-            if self.model_type in ["ols", "lad"]:
-                zeta1 = np.random.uniform(np.min(X), np.max(X), size=(n_certify, self.input_dim))
-                zeta2 = np.random.uniform(np.min(y), np.max(y), size=(n_certify, 1))
-            elif self.model_type in ["svm", "logistic"]:
-                zeta1 = np.random.uniform(-1, 1, size=(n_certify, self.input_dim))
-                zeta2 = np.random.choice([-1, 1], size=(n_certify, 1))
-            else:
-                raise NotImplementedError(f"Model type {self.model_type} is not supported.")
-            zeta = np.concatenate([zeta1, zeta2], axis=1)
-
-        # Include empirical data in sampled support
-        data = np.concatenate([X, y.reshape(-1, 1)], axis=1)
-        zeta = np.concatenate([data, zeta])
-
-        # Validate zeta dimensions
-        assert zeta.shape[1] == self.input_dim + 1, "Generated zeta does not match expected dimensions."
-
-        if self.fit_intercept == True:
-            b = cp.Variable()
-        else:
-            b = 0
-
-        # --------------------------------------------------------------------------------
-        # Step 2: Kernel matrix computation
-        # --------------------------------------------------------------------------------
-        kernel_width, kernel_gamma = self._medium_heuristic(zeta, zeta)
-        K = rbf_kernel(zeta, zeta, gamma=kernel_gamma)
-
-        # --------------------------------------------------------------------------------
-        # Step 3: Define objective and constraints
-        # --------------------------------------------------------------------------------
-        f = a @ K
-        constraints = [self._cvx_loss(zeta[i][:-1], zeta[i][-1], theta, b) <= f0 + f[i] for i in range(len(zeta))]
-        objective = f0 + cp.sum(f[:sample_size]) / sample_size + self.eta * cp.norm(a.T @ self._matrix_decomp(K))
-
-        # Solve optimization problem
-        problem = cp.Problem(cp.Minimize(objective), constraints)
-        problem.solve(solver=self.solver)
-
-        # Check optimization status
-        if problem.status not in [cp.OPTIMAL, cp.OPTIMAL_INACCURATE]:
-            raise ValueError("Optimization problem did not converge.")
-
-        # Store results
-        self.theta = theta.value
-
-        # Validate optimization results
-        if self.theta is None or not np.all(np.isfinite(self.theta)):
-            raise ValueError("Optimization resulted in invalid theta values.")
-
-        if self.fit_intercept == True:
-            self.b = b.value
-
-        # Return model parameters in dictionary format
-        return {"theta": self.theta.tolist(), "b": self.b}
     
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray, accelerate: bool = True) -> None:
         """Vectorized implementation of MMD-DRO fit function."""
         
         if self.model_type in {'svm', 'logistic'}:
             if not np.all(np.isin(y, [-1, 1])):
-                raise MMDDROError("Classification labels must be in {-1, +1}")
+                raise MMDDROError("classification labels must be in {-1, +1}")
 
         if len(X.shape) != 2 or len(y.shape) != 1:
             raise ValueError("X must be 2D array and y must be 1D array")
@@ -270,110 +204,181 @@ class MMD_DRO(BaseLinearDRO):
         n_components = 100  # Low-rank kernel approximation
         n_certify = int(self.n_certify_ratio * sample_size)
 
-        if self.fit_intercept == True:
-            b = cp.Variable()
-        else:
-            b = 0
-        
-        theta = cp.Variable(self.input_dim)
-        
-        # Generate all certify samples at once (no loops)
-        if self.sampling_method == 'bound':
-            # Uniform sampling in [-1, 1]^d
-            zeta_certify = np.random.uniform(-1, 1, (n_certify, self.input_dim + 1))
-        elif self.sampling_method == 'hull':
-            # Feature-wise bounds
-            feat_mins = X.min(axis=0)
-            feat_maxs = X.max(axis=0)
-            # Generate features in [min, max]^d via matrix op
-            zeta_feat = np.random.uniform(feat_mins, feat_maxs, (n_certify, self.input_dim))
-            
-            # Label generation
-            if self.model_type in ["svm", "logistic"]:
-                zeta_label = np.random.choice([-1, 1], n_certify)
+        if accelerate == True:
+
+            if self.fit_intercept == True:
+                b = cp.Variable()
             else:
-                label_min, label_max = y.min(), y.max()
-                zeta_label = np.random.uniform(label_min, label_max, n_certify)
+                b = 0
             
-            zeta_certify = np.hstack([zeta_feat, zeta_label.reshape(-1, 1)])
+            theta = cp.Variable(self.input_dim)
+            
+            # Generate all certify samples at once (no loops)
+            if self.sampling_method == 'bound':
+                # Uniform sampling in [-1, 1]^d
+                zeta_certify = np.random.uniform(-1, 1, (n_certify, self.input_dim + 1))
+            elif self.sampling_method == 'hull':
+                # Feature-wise bounds
+                feat_mins = X.min(axis=0)
+                feat_maxs = X.max(axis=0)
+                # Generate features in [min, max]^d via matrix op
+                zeta_feat = np.random.uniform(feat_mins, feat_maxs, (n_certify, self.input_dim))
+                
+                # Label generation
+                if self.model_type in ["svm", "logistic"]:
+                    zeta_label = np.random.choice([-1, 1], n_certify)
+                else:
+                    label_min, label_max = y.min(), y.max()
+                    zeta_label = np.random.uniform(label_min, label_max, n_certify)
+                
+                zeta_certify = np.hstack([zeta_feat, zeta_label.reshape(-1, 1)])
 
-        # Merge with original data (no loops)
-        zeta = np.vstack([
-            np.hstack([X, y.reshape(-1, 1)]),  # Original data
-            zeta_certify                       # Certify samples
-        ])
+            # Merge with original data (no loops)
+            zeta = np.vstack([
+                np.hstack([X, y.reshape(-1, 1)]),  # Original data
+                zeta_certify                       # Certify samples
+            ])
 
-        if self.model_type in ["ols", "lad"]:
-            distsqr = np.sum((X[:, None, :] - X[None, :, :]) ** 2, axis=-1)
-        else:
-            distsqr = np.sum((X[:, None, :-1] - X[None, :, :-1]) ** 2, axis=-1)
-        kernel_width = np.sqrt(0.5 * np.median(distsqr))
-        kernel_gamma = 1.0 / (2 * kernel_width ** 2)        
-        
-        def transform_batch(batch):
-            nystroem = Nystroem(
-                kernel='rbf', gamma=kernel_gamma, 
-                n_components=n_components, random_state=0
+            if self.model_type in ["ols", "lad"]:
+                distsqr = np.sum((X[:, None, :] - X[None, :, :]) ** 2, axis=-1)
+            else:
+                distsqr = np.sum((X[:, None, :-1] - X[None, :, :-1]) ** 2, axis=-1)
+            kernel_width = np.sqrt(0.5 * np.median(distsqr))
+            kernel_gamma = 1.0 / (2 * kernel_width ** 2)        
+            
+            def transform_batch(batch):
+                nystroem = Nystroem(
+                    kernel='rbf', gamma=kernel_gamma, 
+                    n_components=n_components, random_state=0
+                )
+                return nystroem.fit_transform(batch)
+
+            batches = [zeta[i:i+5000] for i in range(0, len(zeta), 5000)]
+            K_approx_list = Parallel(n_jobs=4)(delayed(transform_batch)(b) for b in batches)
+            K_approx = np.vstack(K_approx_list)
+
+
+
+            a = cp.Variable(K_approx.shape[1])
+            f0 = cp.Variable()
+
+
+            n_total = zeta.shape[0]
+            n_selected = min(5000, n_total)
+            selected_indices = np.random.choice(n_total, n_selected, replace=False)
+
+            # Batch extraction of selected samples (no loops)
+            X_selected = zeta[selected_indices, :-1]  # Shape: (n_selected, input_dim)
+            y_selected = zeta[selected_indices, -1]   # Shape: (n_selected,)
+
+            # Vectorized loss computation
+            if self.model_type == 'svm':
+                # SVM: 1 - y*(X@theta + b) <= s --> s >= 1 - y*(X@theta + b)
+                losses = 1 - cp.multiply(y_selected, (X_selected @ theta + b))
+            elif self.model_type == 'logistic':
+                # Logistic: log(1 + exp(-y*(X@theta + b))) <= s
+                linear_term = cp.multiply(y_selected, (X_selected @ theta + b))
+                losses = cp.logistic(-linear_term)
+            elif self.model_type == 'ols':
+                # OLS: (y - X@theta - b)^2 <= s
+                residuals = y_selected - (X_selected @ theta + b)
+                losses = cp.square(residuals)
+            elif self.model_type == 'lad':
+                # LAD: |y - X@theta - b| <= s
+                residuals = y_selected - (X_selected @ theta + b)
+                losses = cp.abs(residuals)
+
+            # Vectorized RHS: f0 + K_approx_selected @ a
+            rhs = f0 + K_approx[selected_indices] @ a
+
+            # All constraints in one line (no loops)
+            constraints = [losses <= rhs]
+
+            loss_term = cp.sum(K_approx[:sample_size] @ a) / sample_size
+            reg_term = self.eta * cp.norm(K_approx @ a)
+
+            objective = cp.Minimize(f0 + loss_term + reg_term)
+
+            problem = cp.Problem(objective, constraints)
+            problem.solve(
+                solver=self.solver, 
+                verbose=True, 
+                mosek_params={'MSK_IPAR_NUM_THREADS': 8} if self.solver == 'MOSEK' else {}
             )
-            return nystroem.fit_transform(batch)
 
-        batches = [zeta[i:i+5000] for i in range(0, len(zeta), 5000)]
-        K_approx_list = Parallel(n_jobs=4)(delayed(transform_batch)(b) for b in batches)
-        K_approx = np.vstack(K_approx_list)
+            self.theta = theta.value
+            if self.fit_intercept:
+                self.b = b.value
+            else:
+                self.b = 0.0
 
-
-
-        a = cp.Variable(K_approx.shape[1])
-        f0 = cp.Variable()
-
-
-        n_total = zeta.shape[0]
-        n_selected = min(5000, n_total)
-        selected_indices = np.random.choice(n_total, n_selected, replace=False)
-
-        # Batch extraction of selected samples (no loops)
-        X_selected = zeta[selected_indices, :-1]  # Shape: (n_selected, input_dim)
-        y_selected = zeta[selected_indices, -1]   # Shape: (n_selected,)
-
-        # Vectorized loss computation
-        if self.model_type == 'svm':
-            # SVM: 1 - y*(X@theta + b) <= s --> s >= 1 - y*(X@theta + b)
-            losses = 1 - cp.multiply(y_selected, (X_selected @ theta + b))
-        elif self.model_type == 'logistic':
-            # Logistic: log(1 + exp(-y*(X@theta + b))) <= s
-            linear_term = cp.multiply(y_selected, (X_selected @ theta + b))
-            losses = cp.logistic(-linear_term)
-        elif self.model_type == 'ols':
-            # OLS: (y - X@theta - b)^2 <= s
-            residuals = y_selected - (X_selected @ theta + b)
-            losses = cp.square(residuals)
-        elif self.model_type == 'lad':
-            # LAD: |y - X@theta - b| <= s
-            residuals = y_selected - (X_selected @ theta + b)
-            losses = cp.abs(residuals)
-
-        # Vectorized RHS: f0 + K_approx_selected @ a
-        rhs = f0 + K_approx[selected_indices] @ a
-
-        # All constraints in one line (no loops)
-        constraints = [losses <= rhs]
-
-        loss_term = cp.sum(K_approx[:sample_size] @ a) / sample_size
-        reg_term = self.eta * cp.norm(K_approx @ a)
-
-        objective = cp.Minimize(f0 + loss_term + reg_term)
-
-        problem = cp.Problem(objective, constraints)
-        problem.solve(
-            solver=self.solver, 
-            verbose=True, 
-            mosek_params={'MSK_IPAR_NUM_THREADS': 8} if self.solver == 'MOSEK' else {}
-        )
-
-        self.theta = theta.value
-        if self.fit_intercept:
-            self.b = b.value
+            return {"theta": self.theta.tolist(), "b": float(self.b)}
         else:
-            self.b = 0.0
+            # Define decision variable
+            theta = cp.Variable(self.input_dim)
 
-        return {"theta": self.theta.tolist(), "b": float(self.b)}
+            # DRO variables
+            a = cp.Variable(sample_size + n_certify)
+            f0 = cp.Variable()
+
+            # --------------------------------------------------------------------------------
+            # Step 1: Generate the sampled support
+            # --------------------------------------------------------------------------------
+            if self.sampling_method == 'bound':
+                zeta = np.random.uniform(-1, 1, size=(n_certify, self.input_dim + 1))
+            elif self.sampling_method == 'hull':
+                if self.model_type in ["ols", "lad"]:
+                    zeta1 = np.random.uniform(np.min(X), np.max(X), size=(n_certify, self.input_dim))
+                    zeta2 = np.random.uniform(np.min(y), np.max(y), size=(n_certify, 1))
+                elif self.model_type in ["svm", "logistic"]:
+                    zeta1 = np.random.uniform(-1, 1, size=(n_certify, self.input_dim))
+                    zeta2 = np.random.choice([-1, 1], size=(n_certify, 1))
+                else:
+                    raise NotImplementedError(f"Model type {self.model_type} is not supported.")
+                zeta = np.concatenate([zeta1, zeta2], axis=1)
+
+            # Include empirical data in sampled support
+            data = np.concatenate([X, y.reshape(-1, 1)], axis=1)
+            zeta = np.concatenate([data, zeta])
+
+            # Validate zeta dimensions
+            assert zeta.shape[1] == self.input_dim + 1, "Generated zeta does not match expected dimensions."
+
+            if self.fit_intercept == True:
+                b = cp.Variable()
+            else:
+                b = 0
+
+            # --------------------------------------------------------------------------------
+            # Step 2: Kernel matrix computation
+            # --------------------------------------------------------------------------------
+            kernel_width, kernel_gamma = self._medium_heuristic(zeta, zeta)
+            K = rbf_kernel(zeta, zeta, gamma=kernel_gamma)
+
+            # --------------------------------------------------------------------------------
+            # Step 3: Define objective and constraints
+            # --------------------------------------------------------------------------------
+            f = a @ K
+            constraints = [self._cvx_loss(zeta[i][:-1], zeta[i][-1], theta, b) <= f0 + f[i] for i in range(len(zeta))]
+            objective = f0 + cp.sum(f[:sample_size]) / sample_size + self.eta * cp.norm(a.T @ self._matrix_decomp(K))
+
+            # Solve optimization problem
+            problem = cp.Problem(cp.Minimize(objective), constraints)
+            problem.solve(solver=self.solver)
+
+            # Check optimization status
+            if problem.status not in [cp.OPTIMAL, cp.OPTIMAL_INACCURATE]:
+                raise ValueError("Optimization problem did not converge.")
+
+            # Store results
+            self.theta = theta.value
+
+            # Validate optimization results
+            if self.theta is None or not np.all(np.isfinite(self.theta)):
+                raise ValueError("Optimization resulted in invalid theta values.")
+
+            if self.fit_intercept == True:
+                self.b = b.value
+
+            # Return model parameters in dictionary format
+            return {"theta": self.theta.tolist(), "b": self.b}

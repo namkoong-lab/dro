@@ -175,136 +175,8 @@ class MarginalCVaRDRO(BaseLinearDRO):
                 raise MarginalCVaRDROError("Parameter 'alpha' must be in the range (0, 1].")
             self.alpha = float(alpha)
 
-    def fit_old(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
-        """Solve the Marginal CVaR-DRO problem via convex optimization without any approximation.
-
-        Constructs and solves the following distributionally robust optimization problem:
-
-        :param X: Training feature matrix of shape `(n_samples, n_features)`.
-            Must satisfy `n_features == self.input_dim`.
-        :type X: numpy.ndarray
         
-        :param y: Target vector of shape `(n_samples,)`. Format requirements depend on model_type:
-
-            - Classification (`svm`/`logistic`):
-                
-                - Binary labels in {-1, +1}
-                
-                - No missing values allowed
-
-            - Regression** (`ols`/`lad`):
-                
-                - Continuous real values
-
-                - May contain NaN
-
-        :type y: numpy.ndarray
-
-        :returns: Solution dictionary containing:
-            
-            - ``theta``: Weight vector of shape `(n_features,)`
-
-            - ``b``: Intercept term (exists if `fit_intercept=True`)
-
-            - ``B``: Marginal robustness dual matrix of shape `(n_samples, n_samples)`
-
-            - ``threshold``: CVaR threshold value
-
-            
-        :rtype: Dict[str, Any]
-
-        :raises MarginalCVaRDROError: 
-
-            - If `X.shape[1] != self.input_dim`
-
-            - If `X.shape[0] != y.shape[0]`
-
-            - If optimization fails (problem infeasible/solver error)
-
-            - If `control_name` indices exceed feature dimensions
-
-        Example:
-            >>> model = MarginalCVaRDRO(input_dim=3, control_name=[0,2], L=5.0)
-            >>> X = np.random.randn(100, 3)
-            >>> y = np.sign(np.random.randn(100)) 
-            >>> sol = model.fit(X, y)
-            >>> print(sol["theta"].shape)  # (3,)
-            >>> print(sol["B"].shape)      # (2, 2)
-
-        """
-        if self.model_type in {'svm', 'logistic'}:
-            is_valid = np.all((y == -1) | (y == 1))
-            if not is_valid:
-                raise MarginalCVaRDROError("classification labels not in {-1, +1}")
-
-        sample_size, feature_size = X.shape
-        if feature_size != self.input_dim:
-            raise MarginalCVaRDROError(f"Expected input with {self.input_dim} features, got {feature_size}.")
-        if sample_size != y.shape[0]:
-            raise MarginalCVaRDROError("Input X and target y must have the same number of samples.")
-
-        # Select control features for calculating distances
-        control_X = X[:, self.control_name] if self.control_name else X
-        dist = np.power(squareform(pdist(control_X)), self.p - 1)
-
-        # Define CVXPY variables
-        if self.kernel != 'linear':
-            self.support_vectors_ = X
-            if not isinstance(self.kernel_gamma, float):
-                self.kernel_gamma = 1 / (self.input_dim * np.var(X))
-            theta = cp.Variable(sample_size)
-        else:
-            theta = cp.Variable(self.input_dim)
-
-            
-        if self.fit_intercept == True:
-            b = cp.Variable()
-        else:
-            b = 0
-
-        eta = cp.Variable()
-        B_var = cp.Variable((sample_size, sample_size), nonneg=True)
-        s = cp.Variable(sample_size, nonneg=True)
-
-        # Define constraints for optimization problem
-        cons = [
-            s >= self._cvx_loss(X, y, theta, b) - (cp.sum(B_var, axis=1) - cp.sum(B_var, axis=0)) / sample_size - eta,
-            B_var >= 0
-        ]
-
-        # Define the cost function
-        cost = (
-            cp.sum(s) / (self.alpha * sample_size) +
-            self.L ** (self.p - 1) * cp.sum(cp.multiply(dist, B_var)) / (sample_size ** 2)
-        )
-
-        # Set up and solve the optimization problem
-        problem = cp.Problem(cp.Minimize(cost + eta), cons)
-        
-        try:
-            
-            problem.solve(solver=self.solver)
-            
-            self.theta = theta.value
-            self.B_val = B_var.value
-            self.threshold_val = eta.value
-        except cp.error.SolverError as e:
-            raise MarginalCVaRDROError(f"Optimization failed to solve using {self.solver}.") from e
-
-        if self.theta is None or self.threshold_val is None or self.B_val is None:
-            raise MarginalCVaRDROError("Optimization did not converge to a solution.")
-
-        if self.fit_intercept == True:
-            self.b = b.value
-
-        return {
-            "theta": self.theta.tolist(),
-            "B": self.B_val.tolist(),
-            "b": self.b,
-            "threshold": self.threshold_val
-        }
-    
-    def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+    def fit(self, X: np.ndarray, y: np.ndarray, accelerate: bool = True) -> Dict[str, Any]:
         """Solve the Marginal CVaR-DRO problem via convex optimization with approximation.
 
         Constructs and solves the following distributionally robust optimization problem:
@@ -379,10 +251,6 @@ class MarginalCVaRDRO(BaseLinearDRO):
         dist = triu(dist_sparse, format='coo')
         dist.data = (dist.data ** (self.p-1)).astype(np.float32)
 
-        B_rowsum = cp.Variable(sample_size)  
-        B_colsum = cp.Variable(sample_size) 
-
-        constraints = []
 
         if self.kernel != 'linear':
             self.support_vectors_ = X
@@ -395,41 +263,96 @@ class MarginalCVaRDRO(BaseLinearDRO):
         else:
             theta = cp.Variable(self.input_dim)
         
-        b_var = cp.Variable(name='b') if self.fit_intercept else 0.0
-        eta = cp.Variable(nonneg=True, name='eta')
-        s = cp.Variable(sample_size, nonneg=True, name='s')
-        
-        loss_vector = self._cvx_loss(X, y, theta, b_var)
-        constraints += [
-            s >= loss_vector - (B_rowsum - B_colsum)/sample_size - eta,
-            B_rowsum >= 0,
-            B_colsum >= 0
-        ]
 
-        trace_term = cp.sum(dist.data * (B_rowsum[dist.row] + B_colsum[dist.col])/2)
-        cost = (
-            cp.sum(s)/(self.alpha * sample_size) +
-            self.L ** (self.p-1) * trace_term/(sample_size ** 2) +
-            eta
-        )
+        if accelerate == True:
+            B_rowsum = cp.Variable(sample_size)  
+            B_colsum = cp.Variable(sample_size) 
 
-        problem = cp.Problem(cp.Minimize(cost), constraints)
-        try:
-            problem.solve(
-                solver = self.solver
+            constraints = []
+
+            b_var = cp.Variable(name='b') if self.fit_intercept else 0.0
+            eta = cp.Variable(nonneg=True, name='eta')
+            s = cp.Variable(sample_size, nonneg=True, name='s')
+            
+            loss_vector = self._cvx_loss(X, y, theta, b_var)
+            constraints += [
+                s >= loss_vector - (B_rowsum - B_colsum)/sample_size - eta,
+                B_rowsum >= 0,
+                B_colsum >= 0
+            ]
+
+            trace_term = cp.sum(dist.data * (B_rowsum[dist.row] + B_colsum[dist.col])/2)
+            cost = (
+                cp.sum(s)/(self.alpha * sample_size) +
+                self.L ** (self.p-1) * trace_term/(sample_size ** 2) +
+                eta
             )
-        except cp.SolverError as e:
-            raise RuntimeError(f"Solver Failed: {str(e)}")
 
-        if theta.value is None or not np.isfinite(eta.value):
-            raise RuntimeError("Not Converged!")
+            problem = cp.Problem(cp.Minimize(cost), constraints)
+            try:
+                problem.solve(
+                    solver = self.solver
+                )
+            except cp.SolverError as e:
+                raise RuntimeError(f"Solver Failed: {str(e)}")
 
-        self.theta = theta.value
-        self.b = b_var.value if self.fit_intercept else 0.0
-        self.threshold = eta.value
+            if theta.value is None or not np.isfinite(eta.value):
+                raise RuntimeError("Not Converged!")
 
-        return {
-            "theta": self.theta.tolist(),
-            "b": self.b,
-            "threshold": self.threshold
-        }
+            self.theta = theta.value
+            self.b = b_var.value if self.fit_intercept else 0.0
+            self.threshold = eta.value
+
+            return {
+                "theta": self.theta.tolist(),
+                "b": self.b,
+                "threshold": self.threshold
+            }
+
+        else:
+            if self.fit_intercept == True:
+                b = cp.Variable()
+            else:
+                b = 0
+            eta = cp.Variable()
+            B_var = cp.Variable((sample_size, sample_size), nonneg=True)
+            s = cp.Variable(sample_size, nonneg=True)
+
+            # Define constraints for optimization problem
+            cons = [
+                s >= self._cvx_loss(X, y, theta, b) - (cp.sum(B_var, axis=1) - cp.sum(B_var, axis=0)) / sample_size - eta,
+                B_var >= 0
+            ]
+
+            # Define the cost function
+            cost = (
+                cp.sum(s) / (self.alpha * sample_size) +
+                self.L ** (self.p - 1) * cp.sum(cp.multiply(dist, B_var)) / (sample_size ** 2)
+            )
+
+            # Set up and solve the optimization problem
+            problem = cp.Problem(cp.Minimize(cost + eta), cons)
+            
+            try:
+                
+                problem.solve(solver=self.solver)
+                
+                self.theta = theta.value
+                self.B_val = B_var.value
+                self.threshold_val = eta.value
+            except cp.error.SolverError as e:
+                raise MarginalCVaRDROError(f"Optimization failed to solve using {self.solver}.") from e
+
+            if self.theta is None or self.threshold_val is None or self.B_val is None:
+                raise MarginalCVaRDROError("Optimization did not converge to a solution.")
+
+            if self.fit_intercept == True:
+                self.b = b.value
+
+            return {
+                "theta": self.theta.tolist(),
+                "B": self.B_val.tolist(),
+                "b": self.b,
+                "threshold": self.threshold_val
+            }
+        

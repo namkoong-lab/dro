@@ -72,7 +72,8 @@ class TestKLDRO_XGB:
         model.update({
             "num_boost_round": 10,
             "max_depth": 3,
-            "learning_rate": 0.1
+            "learning_rate": 0.1,
+            "eps":0.5
         })
         
         # Training validation
@@ -131,7 +132,8 @@ class TestCVaRDRO_XGB:
         model.update({
             "num_boost_round": 10,
             "max_depth": 3,
-            "learning_rate": 0.1
+            "learning_rate": 0.1,
+            "eps":0.5
         })
         
         model.fit(X_train, y_train)

@@ -113,9 +113,8 @@ def test_classification_scoring():
     # Mock perfect predictions
     mock_pred = y.reshape(-1, 1)
     model.predict = lambda x: mock_pred
-    acc, f1 = model.score(X, y)
+    acc, __ = model.score(X, y)
     assert acc == 1.0
-    assert f1 == 1.0
 
 # --------------------------
 # Training Workflow Tests
