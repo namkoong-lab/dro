@@ -64,9 +64,9 @@ class TestKLDRO_XGB:
         model.update(valid_config)
         assert model.config == valid_config
     
-    def test_full_training_cycle(self, xgb_dataset):
+    def test_full_training_cycle(self):
         """End-to-end training workflow test"""
-        X_train, X_test, y_train, y_test = xgb_dataset
+        X_train, y_train = make_classification(n_samples=100, random_state=42)
         
         model = KLDRO_XGB(eps=0.1)
         model.update({
@@ -78,11 +78,12 @@ class TestKLDRO_XGB:
         
         # Training validation
         model.fit(X_train, y_train)
+        model.score(X_train, y_train)
         assert isinstance(model.model, xgb.Booster)
         
         # Prediction validation
-        preds = model.predict(X_test)
-        assert preds.shape == y_test.shape
+        preds = model.predict(X_train)
+        assert preds.shape == y_train.shape
         
         # Output type checks
         if model.kind == 'classification':
@@ -124,9 +125,10 @@ class TestCVaRDRO_XGB:
             with pytest.raises(ValueError):
                 CVaRDRO_XGB(eps=eps)
     
-    def test_cvar_implementation(self, xgb_dataset):
+
+    def test_cvar_implementation(self):
         """Test CVaR-specific implementation details"""
-        X_train, X_test, y_train, y_test = xgb_dataset
+        X_train, y_train = make_classification(n_samples=100, random_state=42)
         
         model = CVaRDRO_XGB(eps=0.2)
         model.update({
@@ -137,6 +139,8 @@ class TestCVaRDRO_XGB:
         })
         
         model.fit(X_train, y_train)
+        model.score(X_train, y_train)
+
         assert model.model.num_boosted_rounds() == 10
         
     def test_regression_support(self):
@@ -145,6 +149,8 @@ class TestCVaRDRO_XGB:
         model = CVaRDRO_XGB(kind='regression', eps=0.1)
         model.update({"num_boost_round": 10, "learning_rate": 0.1})
         model.fit(X, y)
+        model.score(X, y)
+
         
         preds = model.predict(X)
         assert preds.dtype == np.float32
@@ -163,9 +169,9 @@ class TestChi2DRO_XGB:
             with pytest.raises(ValueError):
                 Chi2DRO_XGB(eps=eps)
     
-    def test_chi2_implementation(self, xgb_dataset):
+    def test_chi2_implementation(self):
         """Test Chi2-specific implementation details"""
-        X_train, X_test, y_train, y_test = xgb_dataset
+        X_train, y_train = make_classification(n_samples=100, random_state=42)
         
         model = Chi2DRO_XGB(eps=0.2)
         model.update({
@@ -176,6 +182,7 @@ class TestChi2DRO_XGB:
         })
         
         model.fit(X_train, y_train)
+        model.score(X_train, y_train)
         assert model.model.num_boosted_rounds() == 10
         
     def test_regression_support(self):
@@ -184,6 +191,7 @@ class TestChi2DRO_XGB:
         model = Chi2DRO_XGB(kind='regression', eps=0.1)
         model.update({"num_boost_round": 10, "learning_rate": 0.1})
         model.fit(X, y)
+        model.score(X, y)
         
         preds = model.predict(X)
         assert preds.dtype == np.float32

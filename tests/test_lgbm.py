@@ -75,6 +75,7 @@ class TestKLDRO_LGBM:
         
         # Training validation
         model.fit(X_train, y_train)
+        model.score(X_train, y_train)
         assert model.model is not None
         
         # Prediction validation
@@ -100,6 +101,8 @@ class TestKLDRO_LGBM:
         
         # Training validation
         model.fit(X_train, y_train)
+        model.score(X_train, y_train)
+
         assert model.model is not None
         
         # Prediction validation
@@ -143,6 +146,8 @@ class TestCVaRDRO_LGBM:
         X, y = make_classification(n_samples=100, random_state=42)
         model.update({"num_boost_round": 5, "max_depth": 2})
         model.fit(X, y)
+        model.score(X, y)
+
         
         # Validate model type
         assert isinstance(model.model, lightgbm.Booster)
@@ -155,6 +160,7 @@ class TestCVaRDRO_LGBM:
         model = CVaRDRO_LGBM(kind='regression', eps=0.1)
         model.update({"num_boost_round": 10, "learning_rate": 0.1, "eps":0.5})
         model.fit(X_train, y_train)
+        model.score(X_train, y_train)
         
         preds = model.predict(X_test)
         assert preds.dtype == float
@@ -182,6 +188,7 @@ class TestChi2DRO_LGBM:
         X, y = make_classification(n_samples=100, random_state=42)
         model.update({"num_boost_round": 5, "max_depth": 2})
         model.fit(X, y)
+        model.score(X, y)
         
         # Validate model type
         assert isinstance(model.model, lightgbm.Booster)
@@ -194,7 +201,9 @@ class TestChi2DRO_LGBM:
         model = Chi2DRO_LGBM(kind='regression', eps=0.1)
         model.update({"num_boost_round": 10, "learning_rate": 0.1, "eps":0.5})
         model.fit(X_train, y_train)
-        
+        model.score(X_train, y_train)
+
+
         preds = model.predict(X_test)
         assert preds.dtype == float
 

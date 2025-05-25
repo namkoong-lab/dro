@@ -146,10 +146,15 @@ class KLDRO_LGBM:
     def score(self, X, y):
         """Testing function
         """
-        y_pred = self.predict(X)
-        acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
-        f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
-        return acc, f1
+        if self.kind == "classification":
+            y_pred = self.predict(X)
+            acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
+            f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
+            return acc, f1
+        else:
+            y_pred = self.predict(X).flatten()
+            return np.mean((y_pred - y.flatten()) ** 2)
+
 
 class Chi2DRO_LGBM:
     """Light GBM model with Chi2-Divergence Distributionally Robust Optimization (DRO)
@@ -299,10 +304,14 @@ class Chi2DRO_LGBM:
     def score(self, X, y):
         """Testing function
         """
-        y_pred = self.predict(X)
-        acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
-        f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
-        return acc, f1
+        if self.kind == "classification":
+            y_pred = self.predict(X)
+            acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
+            f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
+            return acc, f1
+        else:
+            y_pred = self.predict(X).flatten()
+            return np.mean((y_pred - y.flatten()) ** 2)
 
 
 
@@ -437,10 +446,14 @@ class CVaRDRO_LGBM:
     def score(self, X, y):
         """Testing function
         """
-        y_pred = self.predict(X)
-        acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
-        f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
-        return acc, f1
+        if self.kind == "classification":
+            y_pred = self.predict(X)
+            acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
+            f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
+            return acc, f1
+        else:
+            y_pred = self.predict(X).flatten()
+            return np.mean((y_pred - y.flatten()) ** 2)
 
 
 

@@ -151,10 +151,14 @@ class KLDRO_XGB:
     def score(self, X, y):
         """Testing function
         """
-        y_pred = self.predict(X)
-        acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
-        f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
-        return acc, f1
+        if self.kind == "classification":
+            y_pred = self.predict(X)
+            acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
+            f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
+            return acc, f1
+        else:
+            y_pred = self.predict(X)
+            return np.mean((y_pred.reshape(-1) - y.reshape(-1)) ** 2)
 
 
 class Chi2DRO_XGB:
@@ -307,10 +311,14 @@ class Chi2DRO_XGB:
     def score(self, X, y):
         """Testing function
         """
-        y_pred = self.predict(X)
-        acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
-        f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
-        return acc, f1
+        if self.kind == "classification":
+            y_pred = self.predict(X)
+            acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
+            f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
+            return acc, f1
+        else:
+            y_pred = self.predict(X)
+            return np.mean((y_pred.reshape(-1) - y.reshape(-1)) ** 2)
 
 
 
@@ -450,10 +458,14 @@ class CVaRDRO_XGB:
     def score(self, X, y):
         """Testing function
         """
-        y_pred = self.predict(X)
-        acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
-        f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
-        return acc, f1
+        if self.kind == "classification":
+            y_pred = self.predict(X)
+            acc = (y_pred.reshape(-1) == y.reshape(-1)).mean()
+            f1 = f1_score(y.reshape(-1), y_pred.reshape(-1), average='macro')
+            return acc, f1
+        else:
+            y_pred = self.predict(X)
+            return np.mean((y_pred.reshape(-1) - y.reshape(-1)) ** 2)
         
 
 
