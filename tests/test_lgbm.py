@@ -61,10 +61,9 @@ class TestKLDRO_LGBM:
         with pytest.raises(KeyError):
             model.update({"learning_rate": 0.1})
     
-    def test_training_workflow(self, dataset):
+    def test_training_workflow(self):
         """End-to-end training pipeline validation"""
-        X_train, X_test, y_train, y_test = dataset
-        
+        X_train, y_train = make_classification(n_samples=100, random_state=42)        
         # Model initialization
         model = KLDRO_LGBM(eps=0.1)
         model.update({
@@ -79,17 +78,16 @@ class TestKLDRO_LGBM:
         assert model.model is not None
         
         # Prediction validation
-        preds = model.predict(X_test)
-        assert preds.shape == y_test.shape
+        preds = model.predict(X_train)
+        assert preds.shape == y_train.shape
         
         # Classification output check
         if model.kind == 'classification':
             assert set(preds).issubset({0, 1})
 
-    def test_training_workflow2(self, dataset):
+    def test_training_workflow2(self):
         """End-to-end training pipeline validation"""
-        X_train, X_test, y_train, y_test = dataset
-        
+        X_train, y_train = make_regression(n_samples=100, random_state=42)         
         # Model initialization
         model = KLDRO_LGBM(eps=0.1, kind="regression")
         model.update({
@@ -106,8 +104,8 @@ class TestKLDRO_LGBM:
         assert model.model is not None
         
         # Prediction validation
-        preds = model.predict(X_test)
-        assert preds.shape == y_test.shape
+        preds = model.predict(X_train)
+        assert preds.shape == y_train.shape
         
         
     def test_unfitted_error(self, dataset):
