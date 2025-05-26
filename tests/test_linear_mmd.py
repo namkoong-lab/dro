@@ -51,6 +51,8 @@ class TestMMDDROModel(unittest.TestCase):
         """Test parameter update with non-positive eta."""
         with self.assertRaises(ValueError) as context:
             self.default_model.update({'eta': -0.1})
+        with self.assertRaises(ValueError) as context:
+            self.default_model.update({'n_certify_ratio': -0.1})
         self.assertIn("must be a positive float", str(context.exception))
     
     def test_successful_svm_fit(self):
@@ -58,6 +60,7 @@ class TestMMDDROModel(unittest.TestCase):
         params = self.default_model.fit(self.valid_X, self.valid_y)
         self._validate_output_structure(params)
         self.assertTrue(np.isfinite(params['theta']).all())
+    
 
     def test_invalid_label_values(self):
         """Test classification with 0/1 labels instead of ±1."""
@@ -83,6 +86,17 @@ class TestMMDDROModel(unittest.TestCase):
         valid_y = np.random.randn(100)
         params = model.fit(self.valid_X, valid_y)
         params = model.fit(self.valid_X, valid_y, accelerate=False)
+
+        model = MMD_DRO(input_dim=5, model_type='lad', sampling_method='hull')
+        valid_y = np.random.randn(100)
+        params = model.fit(self.valid_X, valid_y)
+        params = model.fit(self.valid_X, valid_y, accelerate=False)
+
+        model = MMD_DRO(input_dim=5, model_type='logistic', sampling_method='bound', fit_intercept=False)
+        valid_y = np.sign(np.random.randn(100))
+        params = model.fit(self.valid_X, valid_y)
+        params = model.fit(self.valid_X, valid_y, accelerate=False)
+
         self._validate_output_structure(params)
 
     def test_unsupported_sampling_method(self):

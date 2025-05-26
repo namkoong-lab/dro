@@ -63,7 +63,6 @@ class KLDRO_LGBM:
             return -labels * np.log(preds + 1e-8) - (1 - labels) * np.log(1 - preds + 1e-8)
         elif self.kind == "regression":
             return (preds.reshape(-1) - labels.reshape(-1))**2
-        raise NotImplementedError(f"Unsupported task type: {self.kind}")
 
     def _kl_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> Tuple[np.ndarray, np.ndarray]:
         """Compute KL-DRO gradients and Hessians
@@ -214,7 +213,6 @@ class Chi2DRO_LGBM:
             return -labels * np.log(preds + 1e-8) - (1 - labels) * np.log(1 - preds + 1e-8)
         elif self.kind == "regression":
             return (preds.reshape(-1) - labels.reshape(-1))**2
-        raise NotImplementedError(f"Unsupported task type: {self.kind}")
 
     def _chi2_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> Tuple[np.ndarray, np.ndarray]:
         """Compute Chi2-DRO gradients and Hessians
@@ -373,7 +371,6 @@ class CVaRDRO_LGBM:
             return -labels * np.log(preds + 1e-8) - (1 - labels) * np.log(1 - preds + 1e-8)
         elif self.kind == "regression":
             return (preds.reshape(-1) - labels.reshape(-1))**2
-        raise NotImplementedError(f"Unsupported task type: {self.kind}")
 
     def _cvar_dro_loss(self, preds: np.ndarray, dtrain: lightgbm.Dataset, epsilon: float = 0.1) -> Tuple[np.ndarray, np.ndarray]:
         """Compute CVaR-DRO gradients and Hessians

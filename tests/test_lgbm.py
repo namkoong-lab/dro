@@ -137,6 +137,14 @@ class TestCVaRDRO_LGBM:
     def test_invalid_kind(self):
         with pytest.raises(ValueError):
             CVaRDRO_LGBM(kind="")
+
+
+        model = CVaRDRO_LGBM()
+        with pytest.raises(TypeError):
+            model.update(["config",1])
+        model = CVaRDRO_LGBM()
+        with pytest.raises(KeyError):
+            model.update({'eps':1})
     
     def test_cvar_loss_mechanism(self):
         """Verify CVaR loss calculation logic"""
@@ -179,7 +187,14 @@ class TestChi2DRO_LGBM:
     def test_invalid_kind(self):
         with pytest.raises(ValueError):
             Chi2DRO_LGBM(kind="")
-    
+
+        model = Chi2DRO_LGBM()
+        with pytest.raises(TypeError):
+            model.update(["config",1])
+        model = Chi2DRO_LGBM()
+        with pytest.raises(KeyError):
+            model.update({'eps':1})
+
     def test_cvar_loss_mechanism(self):
         """Verify CVaR loss calculation logic"""
         model = Chi2DRO_LGBM(eps=0.2)

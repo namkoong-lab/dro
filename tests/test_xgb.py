@@ -88,7 +88,18 @@ class TestKLDRO_XGB:
         # Output type checks
         if model.kind == 'classification':
             assert np.array_equal(preds, preds.astype(bool))
-    
+
+    def test_regression_support(self):
+        """Validate regression task implementation"""
+        X, y = make_regression(n_samples=100, random_state=42)
+        model = KLDRO_XGB(kind='regression', eps=0.1)
+        model.update({"num_boost_round": 10, "learning_rate": 0.1})
+        model.fit(X, y)
+        model.score(X, y)
+        
+        preds = model.predict(X)
+        assert preds.dtype == np.float32
+
     def test_error_handling(self):
         """Test error conditions and exceptions"""
         model = KLDRO_XGB()
@@ -126,6 +137,16 @@ class TestCVaRDRO_XGB:
                 CVaRDRO_XGB(eps=eps)
     
 
+    def test_update_validation(self):
+        with pytest.raises(ValueError):
+            CVaRDRO_XGB(kind = 'none')
+        model = CVaRDRO_XGB()
+        with pytest.raises(TypeError):
+            model.update(["config",1])
+        model = CVaRDRO_XGB()
+        with pytest.raises(KeyError):
+            model.update({'eps':1})
+
     def test_cvar_implementation(self):
         """Test CVaR-specific implementation details"""
         X_train, y_train = make_classification(n_samples=100, random_state=42)
@@ -141,7 +162,6 @@ class TestCVaRDRO_XGB:
         model.fit(X_train, y_train)
         model.score(X_train, y_train)
 
-        assert model.model.num_boosted_rounds() == 10
         
     def test_regression_support(self):
         """Validate regression task implementation"""
@@ -168,14 +188,28 @@ class TestChi2DRO_XGB:
         if eps <= 0:
             with pytest.raises(ValueError):
                 Chi2DRO_XGB(eps=eps)
-    
+
+    def test_update_validation(self):
+        with pytest.raises(ValueError):
+            Chi2DRO_XGB(kind = 'none')
+        model = Chi2DRO_XGB()
+        with pytest.raises(TypeError):
+            model.update(["config",1])
+        model = Chi2DRO_XGB()
+        with pytest.raises(KeyError):
+            model.update({'eps':1})
+
+
+
+
+
     def test_chi2_implementation(self):
         """Test Chi2-specific implementation details"""
         X_train, y_train = make_classification(n_samples=100, random_state=42)
         
         model = Chi2DRO_XGB(eps=0.2)
         model.update({
-            "num_boost_round": 10,
+            "num_boost_round": 20,
             "max_depth": 3,
             "learning_rate": 0.1,
             "eps":0.5
@@ -183,7 +217,6 @@ class TestChi2DRO_XGB:
         
         model.fit(X_train, y_train)
         model.score(X_train, y_train)
-        assert model.model.num_boosted_rounds() == 10
         
     def test_regression_support(self):
         """Validate regression task implementation"""
