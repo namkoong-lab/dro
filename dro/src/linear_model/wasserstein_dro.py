@@ -858,7 +858,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         lamb_da = cp.Variable()
         cons = [lamb_da >= self._penalization(theta)]
         if self.model_type == 'ols':
-            final_loss = cp.norm(X @ theta + b - y) / math.sqrt(sample_size) + math.sqrt(self.eps) * lamb_da
+            final_loss = cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size + math.sqrt(self.eps) * lamb_da
 
         else:
             if self.model_type in ['svm', 'logistic']:

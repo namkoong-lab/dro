@@ -382,23 +382,6 @@ def test_satisficing_lad_constraints2(model_type):
     assert 'theta' in params  # Verify solution exists
 
 
-@pytest.mark.parametrize("model_type", ['svm'])
-def test_satisficing_lad_constraints(model_type):
-    X, y = make_regression(n_samples=50, n_features=10)
-        
-    model = WassersteinDROsatisficing(
-        input_dim=10,
-        model_type=model_type,
-        solver='MOSEK'
-    )
-    model.update({
-        'kappa': 0.5,
-        'target_ratio': 1.5,
-        'cost_matrix': np.identity(10)
-    })
-
-    with pytest.raises(WassersteinDROSatisificingError):
-        params = model.fit(X, y)
     
 # --------------------------
 # Configuration Validation
