@@ -668,6 +668,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             self.kappa = config['kappa']
     
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+        sample_size = len(X)
         if self.model_type in {'logistic', 'svm'}:
             is_valid = np.all((y == -1) | (y == 1))
             if not is_valid:

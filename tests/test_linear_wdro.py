@@ -348,34 +348,14 @@ def test_satisficing_lad_constraints(model_type):
     params = model.fit(X, y)
     assert 'theta' in params  # Verify solution exists
     model.update_kernel({'metric': 'rbf', 'kernel_gamma': 1})
+    print('=========')
     params = model.fit(X, y)
+    print(model.kernel)
+    print('========')
     model.update_kernel({'metric': 'rbf', 'kernel_gamma': 'scale', 'n_components': 5})
     params = model.fit(X, y)
     assert 'theta' in params  # Verify solution exists
 
-
-@pytest.mark.parametrize("model_type", ['ols', 'svm', 'lad', 'logistic'])
-def test_satisficing_lad_constraints(model_type):
-    """Test constraint formulation for LAD satisficing model"""
-    if model_type in {"lad", "ols"}:
-        X, y = make_regression(n_samples=50, n_features=10)
-    else:
-        X, y = make_classification(n_samples=50, n_features=10)
-        y = np.sign(y-0.5)
-
-    model = WassersteinDROsatisficing(
-        input_dim=10,
-        model_type=model_type,
-        solver='MOSEK',
-        kernel='others'
-    )
-    model.update({
-        'kappa': 0.5,
-        'target_ratio': 1.5
-    })
-    
-    params = model.fit(X, y)
-    assert 'theta' in params  # Verify solution exists
 
 @pytest.mark.parametrize("model_type", ['lad'])
 def test_satisficing_lad_constraints2(model_type):
@@ -394,7 +374,8 @@ def test_satisficing_lad_constraints2(model_type):
     )
     model.update({
         'kappa': 'inf',
-        'target_ratio': 1.5
+        'target_ratio': 1.5,
+        'cost_matrix': np.identity(10)
     })
     
     params = model.fit(X, y)
@@ -412,7 +393,8 @@ def test_satisficing_lad_constraints(model_type):
     )
     model.update({
         'kappa': 0.5,
-        'target_ratio': 1.5
+        'target_ratio': 1.5,
+        'cost_matrix': np.identity(10)
     })
 
     with pytest.raises(WassersteinDROSatisificingError):
@@ -453,6 +435,7 @@ def test_p():
     y = np.sign(y-0.5)
     model = WassersteinDROsatisficing(input_dim=10, model_type='svm')
     model.update({"p":2})
+    
     model.fit(X, y)
 
     with pytest.raises(Warning):
