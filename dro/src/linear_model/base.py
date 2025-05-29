@@ -97,7 +97,7 @@ class BaseLinearDRO:
                 raise ValueError("not predefined kernel")
         if 'kernel_gamma' in config:
             kernel_gamma = config['kernel_gamma']
-            if not isinstance(kernel_gamma, (float, int)) and (kernel_gamma not in ['scale', 'auto']):
+            if not isinstance(kernel_gamma, (float, int)) and ('kernel_gamma' not in ['scale', 'auto']):
                 raise TypeError("gamma must be float or 'scale' or 'auto'")
             elif isinstance(kernel_gamma, (float, int)) and kernel_gamma <= 0:
                 raise ValueError("Float gamma must be non-negative")
@@ -170,8 +170,9 @@ class BaseLinearDRO:
             if self.n_components is None:
                 K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
             else:
-                nystroem = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
-                K = nystroem.fit(self.support_vectors_).transform(X)
+                # nystroem = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                # K = nystroem.fit(self.support_vectors_).transform(X)
+                K = self.nystroem_transformer.transform(X)
             scores = K.dot(self.theta) + self.b
         if self.model_type in ['ols', 'lad']:
             return scores
@@ -249,8 +250,9 @@ class BaseLinearDRO:
             if self.n_components is None:
                 K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
             else:
-                nystroem = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
-                K = nystroem.fit(self.support_vectors_).transform(X)
+                # nystroem = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                # K = nystroem.fit(self.support_vectors_).transform(X)
+                K = self.nystroem_transformer.transform(X)
             inner_product = K @ self.theta
         if self.model_type == 'svm':
             return np.maximum(1 - y * (inner_product + self.b), 0)
@@ -290,8 +292,9 @@ class BaseLinearDRO:
             if self.n_components is None:
                 K = pairwise_kernels(X, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)
             else:
-                nystroem = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
-                K = nystroem.fit(self.support_vectors_).transform(X)
+                self.nystroem_transformer = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
+                K = self.nystroem_transformer.fit_transform(X)
+                #K = nystroem.fit(self.support_vectors_).transform(X)
             inner_product = K @ theta
 
         if self.model_type == 'svm':
@@ -349,7 +352,6 @@ class BaseLinearDRO:
             grad_square = np.multiply(errors.reshape(-1, 1), X).T @ np.multiply(errors.reshape(-1, 1), X)
             
             bias = 2 * np.trace(cov_inv @ grad_square)/(sample_num ** 3)
-            print(bias)
     
         elif self.model_type == 'logistic' and self.kernel == 'linear':
             errors = self._loss(X, y)
