@@ -80,13 +80,16 @@ class BaseLinearDRO:
         
         :param config: Configuration dictionary with keys:
 
-            - ``'metric'``: 
+            - ``metric``: The metric to use when calculating kernel between instances in a feature array. 
+            - ``kernel_gamma``: Parameter gamma of the pairwise kernel specified by metric.
+            - ``n_components``: The number of 
 
         :type config: dict[str, Any]
 
         :raises ValueError:
-
-            - 
+            - If ``kernel_gamma`` is not in scale, auto;
+            - If ``n_components`` is not an int;
+            - If ``metric`` is 
         """
 
         if 'metric' in config:
@@ -97,7 +100,7 @@ class BaseLinearDRO:
                 raise ValueError("not predefined kernel")
         if 'kernel_gamma' in config:
             kernel_gamma = config['kernel_gamma']
-            if not isinstance(kernel_gamma, (float, int)) and ('kernel_gamma' not in ['scale', 'auto']):
+            if not isinstance(kernel_gamma, (float, int)) and (kernel_gamma not in ['scale', 'auto']):
                 raise TypeError("gamma must be float or 'scale' or 'auto'")
             elif isinstance(kernel_gamma, (float, int)) and kernel_gamma <= 0:
                 raise ValueError("Float gamma must be non-negative")

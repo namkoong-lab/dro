@@ -104,6 +104,12 @@ We support DRO methods including:
 * Bayesian-based DRO: Bayesian-PDRO, PDRO;
 * Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
 
+### Exact or Approximate Fitting: Kernel
+We allow kernelized distributionally robust regression or classification via ``.update_kernel()``. We mimic the standard scikit-learn kernel interface with the following hyperparameters:
+* metric: standard kernel metrics when calculating kernel between instances in a feature array, including ``additive_chi2``, ``chi2``, ``linear``, ``poly``, ``polynomial``, ``rbf``;
+* kernel_gamma:  Parameter gamma of the pairwise kernel specified by metric. It should be positive, or ``scale``, ``auto``.
+* n_components: Exact fitting -- ``None``; Approximate fitting -- int, which denotes the reduced number of data points to construct the kernel mapping in Nystroem approximation (recommend to use when $n$ is large).
+
 ### Approximate Fitting: Neural Network
 Given the complexity of neural networks, many of the explicit optimization algorithms are not applicable. And we implement four DRO methods in an "approximate" way, including:
 * $\chi^2$-DRO;
