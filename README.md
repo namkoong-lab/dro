@@ -51,7 +51,7 @@ When implementing the solvers with exact solutions, our package is built upon `c
     mv /path_to_license/mosek.lic  mosek/
     ```
 
-Alternatively, we can set the solver to be some open-source solvers such as `ECOS`, `SCS` in `cvxpy`. In any given model, this can be done during initialization:
+Alternatively, we can set the solver among some open-source solvers such as `ECOS`, `SCS` in `cvxpy` (see <a href = "https://www.cvxpy.org/tutorial/solvers/index.html">here</a> for more details). In any given DRO model, this can be done during initialization:
 
     ```
     model = XXDRO(..., solver = 'ECOS')
