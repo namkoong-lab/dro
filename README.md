@@ -74,7 +74,7 @@ For more examples, please refer to our <a href="https://python-dro.org/api/examp
 
 ## Documentation \& APIs
 
-As for the latest `v0.2.2` version, `dro` supports:
+As for the latest `v0.3.1` version, `dro` supports:
 
 ### (1) Synthetic data generation
 
