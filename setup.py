@@ -25,7 +25,10 @@ setup(
                       'ucimlrepo', 
                       'matplotlib',
                       'torchattacks',
-                      'mosek>=10.2.17'
+                      'mosek>=10.2.17',
+                      'xgboost',
+                      'lightgbm',
+                      
                       ],
     classifiers=[
         "Programming Language :: Python :: 3",

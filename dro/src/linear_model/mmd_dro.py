@@ -5,7 +5,6 @@ from typing import Dict, Any, Tuple
 from sklearn.metrics.pairwise import rbf_kernel
 from sklearn.metrics import euclidean_distances
 from sklearn.kernel_approximation import Nystroem, RBFSampler
-import torch 
 from joblib import Parallel, delayed
 
 class MMDDROError(Exception):

@@ -4,9 +4,7 @@ import cvxpy as cp
 from typing import Dict, Any
 from scipy.spatial.distance import pdist, squareform
 from sklearn.metrics import pairwise_distances
-from sklearn.kernel_approximation import Nystroem
 from sklearn.neighbors import NearestNeighbors  
-from scipy.sparse import coo_matrix
 from scipy.sparse import triu
 
 class MarginalCVaRDROError(Exception):

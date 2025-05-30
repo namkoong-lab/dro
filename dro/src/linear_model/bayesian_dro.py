@@ -1,6 +1,5 @@
 from dro.src.linear_model.base import BaseLinearDRO
 from dro.src.linear_model.base import ParameterError, InstallError
-import pandas as pd
 import numpy as np
 import cvxpy as cp
 from scipy.stats import invwishart, multivariate_normal
