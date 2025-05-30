@@ -32,8 +32,15 @@ Please refer to our <a href="https://arxiv.org/pdf/2505.23565">paper</a> for mor
 
 ## Installation
 
-### (1) Prepare `Mosek` license
-Our package is built upon `cvxpy` and `mosek` (by default), where the latter needs the license file. The steps are as follows:
+### (1) Install `dro` package
+To install `dro` package, you can simply run:
+```
+pip install dro
+```
+And it will install all required packages.
+
+### (2) Optional: Prepare `MOSEK` license
+When implementing the solvers with exact solutions, our package is built upon `cvxpy`, and called based on `MOSEK` by default, which is efficient for all optimization problems encountered in the reformulation. `MOSEK` needs the license file. The steps are as follows:
 
 * Request license at <a href="https://www.mosek.com/products/academic-licenses/">Official Website</a>, and then the license `mosek.lic` will be emailed to you.
 * Put your license in your home directory as follows:
@@ -44,12 +51,21 @@ Our package is built upon `cvxpy` and `mosek` (by default), where the latter nee
     mv /path_to_license/mosek.lic  mosek/
     ```
 
-### (2) Install `dro` package
-To install `dro` package, you can simply run:
-```
-pip install dro
-```
-And it will install all required packages.
+Alternatively, we can set the solver to be some open-source solvers such as `ECOS`, `SCS` in `cvxpy`. In any given model, this can be done during initialization:
+
+    ```
+    model = XXDRO(..., solver = 'ECOS')
+    ```
+
+by simply updating after initialization:
+
+    ```
+    model.solver = 'ECOS'
+    ```
+
+These solvers can solve all the optimization problems implemented in the package as well.
+
+
 
 
 ## Quick Start
