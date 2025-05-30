@@ -259,7 +259,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
@@ -281,16 +281,43 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="personalization">
 <h1>Personalization<a class="headerlink" href="#personalization" title="Link to this heading">¶</a></h1>
-<section id="linear-dro-methods">
-<h2>1. Linear DRO Methods<a class="headerlink" href="#linear-dro-methods" title="Link to this heading">¶</a></h2>
+<p>In general, when rewritting the function for a new class, one way is to apply the following protocol code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
+<span class="k">def</span> <span class="nf">_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">xxx</span>
+<span class="k">def</span> <span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">xxx</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">XXDRO</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_cvx_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>if we want to modify the <code class="docutils literal notranslate"><span class="pre">self._cvx_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_loss</span></code> functions in the model class.</p>
+<section id="linear-exact-dro-methods">
+<h2>1. Linear (Exact) DRO Methods<a class="headerlink" href="#linear-exact-dro-methods" title="Link to this heading">¶</a></h2>
+<p>In DRO models that are solved exactly, for each particular DRO type, we change <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> in each class.</p>
+<section id="f-dro">
+<h3><span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#f-dro" title="Link to this heading">¶</a></h3>
+<p>In KLDRO, Chi2DRO, CVaRDRO, TVDRO (and corresponding BayesianDRO), we only need to rewrite <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code>.</p>
+</section>
+<section id="wasserstein-dro">
+<h3>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h3>
+<p>To adjust Wasserstein DRO, besides modifying the <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> (and <code class="docutils literal notranslate"><span class="pre">_loss</span></code>) functions, we also need to modify the <code class="docutils literal notranslate"><span class="pre">_penalization</span></code> function to adjust the regularization component, where the regularization component denotes the additional part besides the empirical objective in the Wasserstein DRO objective after the problem reformulation.</p>
+</section>
+<section id="remark">
+<h3>Remark<a class="headerlink" href="#remark" title="Link to this heading">¶</a></h3>
+<p>We remark that for more complicated losses, e.g., losses with a mixture of distances, we have not implemented the personalize loss yet.</p>
+<p>Note that we have not implemented the personanlized constraint module yet <span class="math notranslate nohighlight">\((e.g., for \)</span>\theta$). Stay tuned for that.</p>
+</section>
 </section>
 <section id="nn-based-dro-methods">
 <h2>2. NN-Based DRO Methods<a class="headerlink" href="#nn-based-dro-methods" title="Link to this heading">¶</a></h2>
 <section id="personalized-loss">
 <h3>2.1 Personalized Loss<a class="headerlink" href="#personalized-loss" title="Link to this heading">¶</a></h3>
 <p>For <code class="docutils literal notranslate"><span class="pre">f-DRO</span></code> and <code class="docutils literal notranslate"><span class="pre">WDRO</span></code> methods, our package supports personalized loss functions.</p>
-<section id="f-dro">
-<h4><span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#f-dro" title="Link to this heading">¶</a></h4>
+<section id="id1">
+<h4><span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
 <p>If the user would like to integrate his/her own loss functions, please</p>
 <ol class="arabic simple">
 <li><p>Create a new <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">fdro.utils.py</span></code>), and re-write the <code class="docutils literal notranslate"><span class="pre">self._compute_individual_loss()</span></code> function to user-specified forms.</p></li>
@@ -313,7 +340,7 @@
 </section>
 <section id="tree-based-dro-methods">
 <h2>3. Tree-Based DRO Methods<a class="headerlink" href="#tree-based-dro-methods" title="Link to this heading">¶</a></h2>
-<p>For tree-based DRO methods, users could simply rewrite the <code class="docutils literal notranslate"><span class="pre">self.loss()</span></code> function</p>
+<p>For tree-based DRO methods, users could simply rewrite the <code class="docutils literal notranslate"><span class="pre">self.loss()</span></code> function to change loss functions. To change  the DRO type, one need to adjust <code class="docutils literal notranslate"><span class="pre">self._kl_dro_loss()</span></code> (or  <code class="docutils literal notranslate"><span class="pre">self._cvar_dro_loss()</span></code>) if their base model is <code class="docutils literal notranslate"><span class="pre">KLDRO_XX</span></code> (or <code class="docutils literal notranslate"><span class="pre">CVaRDRO_XX</span></code>) respectively.</p>
 </section>
 </section>
 
@@ -332,10 +359,15 @@
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Personalization</a><ul>
-<li><a class="reference internal" href="#linear-dro-methods">1. Linear DRO Methods</a></li>
+<li><a class="reference internal" href="#linear-exact-dro-methods">1. Linear (Exact) DRO Methods</a><ul>
+<li><a class="reference internal" href="#f-dro"><span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
+<li><a class="reference internal" href="#wasserstein-dro">Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#remark">Remark</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#nn-based-dro-methods">2. NN-Based DRO Methods</a><ul>
 <li><a class="reference internal" href="#personalized-loss">2.1 Personalized Loss</a><ul>
-<li><a class="reference internal" href="#f-dro"><span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
+<li><a class="reference internal" href="#id1"><span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
 <li><a class="reference internal" href="#wdro">WDRO</a></li>
 </ul>
 </li>

@@ -12,18 +12,18 @@ $$
 where $\mu,\nu$ are reference measures satisfying $P\ll \mu$ and $Q\ll \nu$.
 
 ### Hyperparameters
-* reg_param: Dual parameter $\lambda$. Please refer to Equation (14).
-* lambda_param: Variance ($\epsilon$) of the Gaussian noise distribution added to each sample. Please refer to Remark 8.
-* k_sample_max: $l$ in Equation (14), where $2^l$ points are sampled to approximate the sub-gradient.
+* reg_param: Dual parameter $\lambda$. Please refer to Equation (14) in [1].
+* lambda_param: Variance of the Gaussian noise distribution added to each sample. Please refer to Remark 8.
+* k_sample_max: $l$ in Equation (14) in [1], where $2^l$ points are sampled to approximate the sub-gradient.
 
 
 
 ## Holistic-DRO
 In Holistic-DRO [2], $\mathcal{P}(LP_{\mathcal N}, D_{KL}; \alpha, r) = \{P: P,Q\in\mathcal{P}, LP_{\mathcal N}(\hat{P},Q)\leq \alpha, D_{KL}(Q\|P)\leq r \}$, which depends on two metrics divergence: 
-* Levy-Prokhorov metric $LP_{\mathcal N}(P,Q) = \inf_{\gamma\in\Pi(P,Q)} \inf \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi')$, where $\mathcal N$ denotes the 
+* Levy-Prokhorov metric $LP_{\mathcal N}(P,Q) = \inf_{\gamma\in\Pi(P,Q)} \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi')$, where $\mathcal N$ denotes the perturbed ball of each sample.
 * KL-divergence $D_{KL}(Q\|P) = \int_Q \log \frac{dQ}{dP}dQ$.
 
-We support linear losses (SVM for classification and LAD for regression), where we follow Appendix D.1 and D.2 in [2], and we set the worst-case domain $\Sigma = \{(X_i, Y_i): i \in [n]\} + B_2(0,\epsilon') \times \{0\}$ and $\mathcal N = B_2(0，\epsilon) \times \{0\}$. 
+We support linear losses (SVM for classification and LAD for regression), where we follow Appendix D.1 and D.2 in [2], and we set the worst-case domain $\Sigma = \{(X_i, Y_i): i \in [n]\} + B_2(0,\epsilon') \times \{0\}$ and $\mathcal N = B_2(0, \epsilon) \times \{0\}$. 
 ### Hyperparameters
 * $r$: Robustness parameter for the KL-DRO, denoted as ``r`` in the model config.
 * $\alpha$: Robustness parameter for the Levy-Prokhorov metric DRO, denoted as ``alpha`` in the model config.

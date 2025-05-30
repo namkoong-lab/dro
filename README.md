@@ -7,17 +7,27 @@
 > Jiashuo Liu<sup>†</sup>, Tianyu Wang<sup>†</sup>, Henry Lam, Hongseok Namkoong, Jose Blanchet  
 > <sub>† equal contributions (α-β order)</sub>
 
-<p align="center"><img src='./logo.png' width='500px'/></p>
+<p align="center"><img src='./logo-new.png' width='500px'/></p>
 
-`dro` is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver `cvxpy`. The `dro` package supports different kinds of distance metrics $d(\cdot,\cdot)$ as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, neural networks...). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers.
+`dro` is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver `cvxpy`. The `dro` package supports different kinds of distance metrics $d(\cdot,\cdot)$ as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, neural networks...). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers. 
 
 
 Without specified, our DRO model is to solve the following optimization problem:
 $$\min_{\theta} \max_{P: P \in U} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))],$$
 where $U$ is the so-called ambiguity set and typically of the form $U = \\{P: d(P, \hat P) \leq \epsilon\\}$ and $\hat P := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}$ is the empirical distribution of training samples $\{(X_i, Y_i)\}_{i = 1}^n$. And $\epsilon$ is the hyperparameter. 
 
-
-
+Please refer to our <a href="https://arxiv.org/pdf/2505.23565">paper</a> for more details. 
+```bibtex
+@misc{liu2025dropythonlibrary,
+      title={DRO: A Python Library for Distributionally Robust Optimization in Machine Learning}, 
+      author={Jiashuo Liu and Tianyu Wang and Henry Lam and Hongseok Namkoong and Jose Blanchet},
+      year={2025},
+      eprint={2505.23565},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2505.23565}, 
+}
+```
 
 
 ## Installation

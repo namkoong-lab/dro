@@ -22,7 +22,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_mmddro.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Bayesian-based DRO" href="linear_pdro.html" />
+    <link rel="next" title="Bayesian (Parametric) DRO" href="linear_pdro.html" />
     <link rel="prev" title="Wasserstein DRO" href="linear_wdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -259,7 +259,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
@@ -281,7 +281,7 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="mmd-dro">
 <h1>MMD-DRO<a class="headerlink" href="#mmd-dro" title="Link to this heading">¶</a></h1>
-<p>In MMD-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{Q}(d, \eta) = \{Q: d(Q, \hat P)\leq \eta\}\)</span>.<br />
+<p>In MMD-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{P}(d, \eta) = \{Q: d(Q, \hat P)\leq \eta\}\)</span>.<br />
 Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> as the kernel distance with the Gaussian kernel, i.e., <span class="math notranslate nohighlight">\(\|\mu_P - \mu_Q\|_{\mathcal H}\)</span>, which is defined as:</p>
 <div class="math notranslate nohighlight">
 \[\|\mu_P - \mu_Q\|_{\mathcal H}^2 = \mathbb E_{x, x' \sim P}[k(x, x')] + \mathbb E_{y, y' \sim Q}[k(y, y')] - 2\mathbb{E}_{x \sim P, y \sim Q}[k(x, y)], \]</div>
@@ -344,7 +344,7 @@ Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> as the kerne
 
             <div class="right">
                 
-                    <a href="linear_pdro.html"><span>Bayesian-based DRO</span><span class="icon">&gt;</span></a>
+                    <a href="linear_pdro.html"><span>Bayesian (Parametric) DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

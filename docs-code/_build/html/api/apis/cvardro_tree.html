@@ -397,6 +397,141 @@
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.KLDRO_LGBM.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.score" title="Link to this definition">¶</a></dt>
+<dd><p>Testing function</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.tree_model.lgbm.</span></span><span class="sig-name descname"><span class="pre">Chi2DRO_LGBM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Light GBM model with Chi2-Divergence Distributionally Robust Optimization (DRO)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Chi2 divergence constraint parameter (ε &gt; 0, default: 0.1)</p></li>
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Task type (‘classification’ or ‘regression’, default: classification)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If invalid parameters are provided</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If inputs have incorrect types</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires LGBM configuration via <a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.update" title="dro.src.tree_model.lgbm.Chi2DRO_LGBM.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
+</div>
+<p>Initialize KL-DRO LGBM model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Robustness parameter (must be &gt; 0)</p></li>
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Task type specification</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – For eps &lt;= 0 or invalid task type</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.update" title="Link to this definition">¶</a></dt>
+<dd><p>Update LGBM training configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – LGBM parameters dictionary</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> – If missing ‘num_boost_round’ parameter</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – For non-dictionary input</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.loss" title="Link to this definition">¶</a></dt>
+<dd><p>Compute base loss values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Model predictions (n_samples,)</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – True labels (n_samples,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loss values array (n_samples,)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – For unsupported task types</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Train KL-DRO LGBM model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Feature matrix (n_samples, n_features)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Target values (n_samples,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – For invalid input shapes</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><strong>RuntimeError</strong></a> – For configuration or training errors</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.predict" title="Link to this definition">¶</a></dt>
+<dd><p>Generate predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Input features (n_samples, n_features)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model predictions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFittedError</strong> – If model is untrained</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.score" title="Link to this definition">¶</a></dt>
+<dd><p>Testing function</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -520,6 +655,12 @@
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.CVaRDRO_LGBM.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.score" title="Link to this definition">¶</a></dt>
+<dd><p>Testing function</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -544,6 +685,15 @@
 <li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.loss()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.fit()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.score()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM</span></code></a><ul>
+<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.loss()</span></code></a></li>
+<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.score()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM</span></code></a><ul>
@@ -551,6 +701,7 @@
 <li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.loss()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.fit()</span></code></a></li>
 <li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.score()</span></code></a></li>
 </ul>
 </li>
 </ul>

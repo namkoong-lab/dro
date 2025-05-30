@@ -311,7 +311,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.6)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.7)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
 <li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Chi-square divergence radius <span class="math notranslate nohighlight">\(\rho \geq 0\)</span> controlling distributional robustness. Larger values increase conservativeness. Defaults to 0.1.</p></li>
 <li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
 <li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
@@ -326,6 +326,11 @@
 </p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.neural_model.fdro_nn.Chi2NNDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.fdro_nn.Chi2NNDRO.update" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -357,7 +362,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.6)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.7)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
 <li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – CVaR ratio <span class="math notranslate nohighlight">\(1 \geq \rho \geq 0\)</span> controlling distributional robustness. Smaller values increase conservativeness. Defaults to 0.1.</p></li>
 <li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
 <li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
@@ -372,6 +377,11 @@
 </p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.src.neural_model.fdro_nn.CVaRNNDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.fdro_nn.CVaRNNDRO.update" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -391,8 +401,14 @@
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">f-Divergence DRO</a><ul>
-<li><a class="reference internal" href="#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a></li>
+<li><a class="reference internal" href="#dro.src.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.src.neural_model.fdro_nn.Chi2NNDRO.update"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dro.src.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.src.neural_model.fdro_nn.CVaRNNDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO.update()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

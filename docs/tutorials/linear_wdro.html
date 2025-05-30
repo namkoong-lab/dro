@@ -259,7 +259,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
@@ -287,11 +287,11 @@
 For <span class="math notranslate nohighlight">\(Z_1 = (X_1, Y_1), Z_2 = (X_2, Y_2)\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[
-W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)],
+W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(Z_1, Z_2)],
 \]</div>
 <p>where for <code class="docutils literal notranslate"><span class="pre">lad</span></code>, <code class="docutils literal notranslate"><span class="pre">svm</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic</span></code>, the inner distance is captured by the norm: <span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|.\)</span>
 For <code class="docutils literal notranslate"><span class="pre">ols</span></code>, the inner distance is captured by the norm square:
-<span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|\)</span>.</p>
+<span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|^2\)</span>.</p>
 <p>No matter in each case, the norm is defined on the product space <span class="math notranslate nohighlight">\(\mathcal{X} \times \mathbb{R}\)</span> by:</p>
 <div class="math notranslate nohighlight">
 \[

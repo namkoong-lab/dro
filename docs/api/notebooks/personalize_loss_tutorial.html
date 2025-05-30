@@ -282,12 +282,14 @@
             
   <section id="Personalized-Loss">
 <h1>Personalized Loss<a class="headerlink" href="#Personalized-Loss" title="Link to this heading">¶</a></h1>
-<p>In the following, we present a case to show how to incorporate the personalized loss and plug it into different DRO losses.</p>
+<p>In the following, we present a case to show how to incorporate the personalized loss and plug it into different DRO losses based on cvxpy and pytorch.</p>
+<section id="Exact-Solver">
+<h2>Exact Solver<a class="headerlink" href="#Exact-Solver" title="Link to this heading">¶</a></h2>
 <section id="f-divergence-DRO">
-<h2><span class="math notranslate nohighlight">\(f\)</span>-divergence DRO<a class="headerlink" href="#f-divergence-DRO" title="Link to this heading">¶</a></h2>
+<h3><span class="math notranslate nohighlight">\(f\)</span>-divergence DRO<a class="headerlink" href="#f-divergence-DRO" title="Link to this heading">¶</a></h3>
 <p>Across <span class="math notranslate nohighlight">\(f\)</span>-divergence DRO, the adaptive loss can be easily modified as follows. Below, we modify the standard loss into the quantile regression: <span class="math notranslate nohighlight">\(\ell((\theta, b);(X, Y)) = 3(Y - \theta^{\top}X - b)^+ + (\theta^{\top}X + b - Y)^+\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="nn">cp</span>
@@ -315,27 +317,86 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;theta&#39;: [-0.48891007299787476, 0.0], &#39;b&#39;: array(1.9556403)}
+{&#39;theta&#39;: [-0.47103180655319055, 0.0], &#39;b&#39;: array(1.88412725)}
+{&#39;theta&#39;: [-0.4651670885530432, 0.0], &#39;b&#39;: array(1.86066836)}
+{&#39;theta&#39;: [-0.4620192279713162, 0.0], &#39;b&#39;: array(1.84807691)}
+{&#39;theta&#39;: [-0.4599744797040242, 0.0], &#39;b&#39;: array(1.83989792)}
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/anaconda3/lib/python3.9/site-packages/dro/src/linear_model/base.py:61: UserWarning: Unsupported model_type: quantile. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.
+  warnings.warn(f&#34;Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.&#34;, UserWarning)
+</pre></div></div>
+</div>
+</section>
+<section id="Wasserstein-DRO">
+<h3>Wasserstein DRO<a class="headerlink" href="#Wasserstein-DRO" title="Link to this heading">¶</a></h3>
+<p>To adjust Wasserstein DRO, besides modifying the <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> (and <code class="docutils literal notranslate"><span class="pre">_loss</span></code>) functions, we also need to modify the <code class="docutils literal notranslate"><span class="pre">_penalization</span></code> function to adjust the regularization component, where the regularization part denotes the additional part besides the empirical objective. More specifically, in the previous quantile regression example,</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
+<span class="k">def</span> <span class="nf">_penalization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+    <span class="n">theta_K</span> <span class="o">=</span> <span class="n">theta</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">dual_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">!=</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
+        <span class="n">dual_norm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dual_norm</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">==</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_inv_transform</span> <span class="o">@</span> <span class="n">theta_K</span><span class="p">,</span> <span class="n">dual_norm</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_inv_transform</span> <span class="o">@</span> <span class="n">theta_K</span><span class="p">,</span> <span class="n">dual_norm</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_cvx_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="c1"># additional adjustment for the penalization function</span>
+<span class="n">model</span><span class="o">.</span><span class="n">_penalization</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_penalization</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;small eps&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;large eps&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [-0.4889100722052225, 0.0], &#39;b&#39;: array(1.9556403)}
-{&#39;theta&#39;: [-0.4710318069318671, 0.0], &#39;b&#39;: array(1.88412726)}
-{&#39;theta&#39;: [-0.4651670885521472, 0.0], &#39;b&#39;: array(1.86066836)}
-{&#39;theta&#39;: [-0.4620192280358392, 0.0], &#39;b&#39;: array(1.84807691)}
-{&#39;theta&#39;: [-0.4599744797051139, 0.0], &#39;b&#39;: array(1.83989792)}
+small eps {&#39;theta&#39;: [-0.5000000000064543, -8.42946033492792e-09], &#39;b&#39;: array(2.00000001)}
+large eps {&#39;theta&#39;: [-0.4999999999261157, 1.1546461152356625e-07], &#39;b&#39;: array(1.99999988)}
 </pre></div></div>
 </div>
 </section>
-<section id="Wasserstein-DRO">
-<h2>Wasserstein DRO<a class="headerlink" href="#Wasserstein-DRO" title="Link to this heading">¶</a></h2>
-<p>For more complicated losses, such as hr-dro and wasserstein-dro, where the loss difference changes with the inner function fit, it has not been implemented yet.</p>
-<p>Uncontextual and Contextual Robust Learning:</p>
-<ul class="simple">
-<li><p>uncontextual: by taking <span class="math notranslate nohighlight">\(X\)</span> as a 1-d unit one vector</p></li>
-<li><p>contextual: newsvendor (the same as quantile regression); portfolio</p></li>
-</ul>
+</section>
+<section id="Neural-Approximation">
+<h2>Neural Approximation<a class="headerlink" href="#Neural-Approximation" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -354,8 +415,12 @@
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Personalized Loss</a><ul>
+<li><a class="reference internal" href="#Exact-Solver">Exact Solver</a><ul>
 <li><a class="reference internal" href="#f-divergence-DRO"><span class="math notranslate nohighlight">\(f\)</span>-divergence DRO</a></li>
 <li><a class="reference internal" href="#Wasserstein-DRO">Wasserstein DRO</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Neural-Approximation">Neural Approximation</a></li>
 </ul>
 </li>
 </ul>

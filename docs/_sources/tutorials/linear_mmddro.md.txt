@@ -1,5 +1,5 @@
 # MMD-DRO
-In MMD-DRO [1], $\mathcal{Q}(d, \eta) = \{Q: d(Q, \hat P)\leq \eta\}$.  
+In MMD-DRO [1], $\mathcal{P}(d, \eta) = \{Q: d(Q, \hat P)\leq \eta\}$.  
 Here, $d(P, Q)$ as the kernel distance with the Gaussian kernel, i.e., $\|\mu_P - \mu_Q\|_{\mathcal H}$, which is defined as:
 
 $$\|\mu_P - \mu_Q\|_{\mathcal H}^2 = \mathbb E_{x, x' \sim P}[k(x, x')] + \mathbb E_{y, y' \sim Q}[k(y, y')] - 2\mathbb{E}_{x \sim P, y \sim Q}[k(x, y)], $$

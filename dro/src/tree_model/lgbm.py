@@ -1,4 +1,4 @@
-from typing import Dict, Any, Union, Optional, Tuple
+from typing import Dict, Any, Union, Optional, Tuple, Literal
 import numpy as np
 import lightgbm
 import math
@@ -18,7 +18,7 @@ class KLDRO_LGBM:
         Requires LGBM configuration via :meth:`update` before training
     """
 
-    def __init__(self, eps: float = 1e-1, kind: Union['classification', 'regression'] = 'classification') -> None:
+    def __init__(self, eps: float = 1e-1, kind: Literal['classification', 'regression'] = 'classification') -> None:
         """Initialize KL-DRO LGBM model
         
         :param float eps: Robustness parameter (must be > 0)
@@ -167,7 +167,7 @@ class Chi2DRO_LGBM:
         Requires LGBM configuration via :meth:`update` before training
     """
 
-    def __init__(self, eps: float = 1e-1, kind: Union['classification', 'regression'] = 'classification') -> None:
+    def __init__(self, eps: float = 1e-1, kind: Literal['classification', 'regression'] = 'classification') -> None:
         """Initialize KL-DRO LGBM model
         
         :param float eps: Robustness parameter (must be > 0)
@@ -326,7 +326,7 @@ class CVaRDRO_LGBM:
         Requires LGBM configuration via :meth:`update` before training
     """
 
-    def __init__(self, eps: float = 2e-1, kind: Union['classification', 'regression'] = 'classification') -> None:
+    def __init__(self, eps: float = 2e-1, kind: Literal['classification', 'regression'] = 'classification') -> None:
         """Initialize CVaR-DRO LGBM model
         
         :param float eps: Robustness parameter (must be > 0)

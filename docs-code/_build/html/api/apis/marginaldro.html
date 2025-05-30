@@ -422,8 +422,8 @@ Supported values: 1 (EMD), 2 (Quadratic)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.marginal_dro.MarginalCVaRDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.fit" title="Link to this definition">¶</a></dt>
-<dd><p>Solve the Marginal CVaR-DRO problem via convex optimization.</p>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accelerate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.marginal_dro.MarginalCVaRDRO.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Solve the Marginal CVaR-DRO problem via convex optimization with approximation.</p>
 <p>Constructs and solves the following distributionally robust optimization problem:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -450,6 +450,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </li>
 </ul>
 </p></li>
+<li><p><strong>accelerate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to use acceleration for quadratic approximation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

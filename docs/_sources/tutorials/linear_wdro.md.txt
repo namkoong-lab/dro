@@ -6,11 +6,11 @@ Specifically, Wasserstein distance is defined as follows:
 For $Z_1 = (X_1, Y_1), Z_2 = (X_2, Y_2)$, 
 
 $$
-W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(X, Y)],
+W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(Z_1, Z_2)],
 $$
 where for ``lad``, ``svm``, ``logistic``, the inner distance is captured by the norm: $d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|.$
 For ``ols``, the inner distance is captured by the norm square: 
-$d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|$. 
+$d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|^2$. 
 
 No matter in each case, the norm is defined on the product space $\mathcal{X} \times \mathbb{R}$ by:
 

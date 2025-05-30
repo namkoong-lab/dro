@@ -315,13 +315,17 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with keys:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">'metric'</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metric</span></code>: The metric to use when calculating kernel between instances in a feature array.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code>: Parameter gamma of the pairwise kernel specified by metric.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_components</span></code>: The number of</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
-<li></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code> is not in scale, auto;</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">n_components</span></code> is not an int;</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">metric</span></code> is</p></li>
 </ul>
 </p>
 </dd>
@@ -419,8 +423,8 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.evaluate" title="Link to this definition">¶</a></dt>
-<dd><p>Evaluate model performance with bias-corrected mean squared error (MSE).</p>
-<p>Specifically designed for OLS models to compute an unbiased performance estimate 
+<dd><p>Evaluate model performance with bias-corrected mean squared error (MSE) or binary cross entropy error (BCE).</p>
+<p>Specifically designed for OLS / Logistic models to compute an unbiased performance estimate 
 by adjusting for the covariance structure of the features. This implementation 
 accelerates evaluation by avoiding full retraining.</p>
 <dl class="field-list simple">

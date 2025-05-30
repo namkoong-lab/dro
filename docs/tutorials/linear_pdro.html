@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Bayesian-based DRO &#8212; dro 0.2.2 documentation</title>
+    <title>Bayesian (Parametric) DRO &#8212; dro 0.2.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,6 +15,8 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_pdro.html" />
@@ -257,7 +259,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Bayesian-based DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Bayesian (Parametric) DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
@@ -277,14 +279,34 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="bayesian-based-dro">
-<h1>Bayesian-based DRO<a class="headerlink" href="#bayesian-based-dro" title="Link to this heading">¶</a></h1>
-<p>Bayesian-PDRO:
-TODO</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="bayesian-parametric-dro">
+<h1>Bayesian (Parametric) DRO<a class="headerlink" href="#bayesian-parametric-dro" title="Link to this heading">¶</a></h1>
+<p>In the context of general stochastic optimization <span class="math notranslate nohighlight">\(\ell(\theta;\xi)\)</span> (where <span class="math notranslate nohighlight">\(\xi = (x, y)\)</span> in the supervised learning setup), Bayesian DRO [1] is formulated as the following nested structure:</p>
+<div class="math notranslate nohighlight">
+\[\min_{\theta \in \Theta}\mathbb{E}_{\zeta \sim \zeta_N}[\sup_{Q \in \mathcal{Q}_{\zeta}(d, \epsilon)} \mathbb{E}_{\xi \sim Q}[\ell(\theta;\xi)]],\]</div>
+<p>where <span class="math notranslate nohighlight">\(\zeta_N\)</span> denotes the posterior distribution of the parametric distribution of <span class="math notranslate nohighlight">\(\xi\)</span>  given <span class="math notranslate nohighlight">\(\{\xi_i\}_{i \in [N]}\)</span>. And <span class="math notranslate nohighlight">\(\mathcal{Q}_{\zeta}(d, \epsilon) = \{Q: d(Q, P_{\zeta}) \leq \epsilon\}\)</span> with <span class="math notranslate nohighlight">\(P_{\zeta}\)</span> denotes the distribution parametrized by <span class="math notranslate nohighlight">\(\zeta\)</span>.</p>
+<p>In practice, we approximate the outer expectation <span class="math notranslate nohighlight">\(\zeta \sim \zeta_N\)</span> via finite samples generated from the posterior distribution of <span class="math notranslate nohighlight">\(\zeta_N\)</span>. In this sense, the optimization problem can be reformulated as a optimization problem with finite variables.</p>
+<p>Note that the idea of parametric distributions is often utilized in operational settings (e.g., newsvendor [1], portfolio optimization [2]), where we can modify <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> to incorporate that. Specifically, we consider two preliminary settings. We implement the <code class="docutils literal notranslate"><span class="pre">Exponential</span></code> distribution class used in the numerical experiments in [1] where we use the rate <span class="math notranslate nohighlight">\(\zeta\)</span> in the exponential distribution as the parameter and set <span class="math notranslate nohighlight">\(\Gamma(1, 1)\)</span> as the default prior. To accomodate machine learning problems, we also consider <code class="docutils literal notranslate"><span class="pre">Gaussian</span></code> distribution class for <span class="math notranslate nohighlight">\(\xi\)</span> with a normal prior on the mean vector <span class="math notranslate nohighlight">\(\mu\)</span> and an inverse-Wishart prior on the covariance matrix <span class="math notranslate nohighlight">\(\Sigma\)</span>. Formally,</p>
+<div class="math notranslate nohighlight">
+\[\Sigma \sim IW(d+2, I), \mu | \Sigma \sim N(0, \Sigma).\]</div>
+<p>The NIW Prior is chosen such that it is conjugate to the multivariate Gaussian likelihood, allowing for closed-form posterior updates of <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\Sigma\)</span> after observing data.</p>
+<p>Despite the computable prior, <span class="math notranslate nohighlight">\({P}_{\zeta}\)</span> is still a continuous distribution where the optimization problem involves continuous integral and is not tractable. Therefore, we need to conduct Monte carlo sampling for each sampled <span class="math notranslate nohighlight">\(\zeta \sim \zeta_N\)</span>.</p>
+<section id="hyperparameters">
+<h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: Robustness parameter, denoted as <code class="docutils literal notranslate"><span class="pre">eps</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distance_type</span></code>: The choice of <span class="math notranslate nohighlight">\(d\)</span>, where we only implement <code class="docutils literal notranslate"><span class="pre">KL</span></code> and <code class="docutils literal notranslate"><span class="pre">chi2</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distribution_class</span></code>: The choice of distribution class in the parametric family, where we only implement <code class="docutils literal notranslate"><span class="pre">Gaussian</span></code> and <code class="docutils literal notranslate"><span class="pre">Exponential</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">posterior_param_num</span></code>: The number of sampled <span class="math notranslate nohighlight">\(\zeta\)</span> for <span class="math notranslate nohighlight">\(\zeta_N\)</span>, where we restrict it to be smaller than 100 for computation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">posterior_sample_ratio</span></code>: The number of Monte Carlo sampled (relative to <span class="math notranslate nohighlight">\(N\)</span>) for the number of samples for each <span class="math notranslate nohighlight">\(P_{\zeta}\)</span>.</p></li>
+</ul>
+</section>
 <section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Shapiro, Alexander, Enlu Zhou, and Yifan Lin. “Bayesian distributionally robust optimization.” SIAM Journal on Optimization 33.2 (2023): 1279-1304.</p></li>
+<li><p>[1] Shapiro, Alexander, Enlu Zhou, and Yifan Lin. “Bayesian distributionally robust optimization.” SIAM Journal on Optimization 33.2 (2023): 1279-1304.</p></li>
+<li><p>[2] G. Iyengar, H. Lam, and T. Wang. Hedging complexity in generalization via a parametric
+distributionally robust optimization framework. arXiv preprint arXiv:2212.01518, 2022.</p></li>
 </ul>
 </section>
 </section>
@@ -303,7 +325,8 @@ TODO</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Bayesian-based DRO</a><ul>
+<li><a class="reference internal" href="#">Bayesian (Parametric) DRO</a><ul>
+<li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
 <li><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>

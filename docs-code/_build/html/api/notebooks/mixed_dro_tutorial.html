@@ -282,7 +282,7 @@
             
   <section id="DRO-with-Mixed-Distances">
 <h1>DRO with Mixed Distances<a class="headerlink" href="#DRO-with-Mixed-Distances" title="Link to this heading">¶</a></h1>
-<p>In this part, we discuss Holistic DRO, Outlier-Robust Wasserstein DRO, Sinkhorn DRO，MOT DRO, and MMD DRO.</p>
+<p>In this part, we provide some examples for DRO models with mixed distances, where we exemplify with Sinkhorn DRO, MOT DRO and Outlier-Robust WDRO.</p>
 <section id="Sinkhorn-DRO">
 <h2>Sinkhorn DRO<a class="headerlink" href="#Sinkhorn-DRO" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
@@ -371,6 +371,40 @@ optimal
 </pre></div></div>
 </div>
 </section>
+<section id="OR-WDRO-+-HR-DRO">
+<h2>OR-WDRO + HR-DRO<a class="headerlink" href="#OR-WDRO-+-HR-DRO" title="Link to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Prepare Data</span>
+<span class="kn">from</span> <span class="nn">dro.src.data.dataloader_regression</span> <span class="kn">import</span> <span class="n">regression_basic</span>
+<span class="kn">from</span> <span class="nn">dro.src.data.dataloader_classification</span> <span class="kn">import</span> <span class="n">classification_basic</span>
+<span class="kn">from</span> <span class="nn">dro.src.data.draw_utils</span> <span class="kn">import</span> <span class="n">draw_classification</span>
+
+
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.or_wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1"># X = np.array([[-1, -1], [1, 1]])</span>
+<span class="c1"># y = np.array([-1, 1])</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">visualize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ORWDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">dim</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="c1"># result2 = model.fit_old(X, y)</span>
+
+<span class="kn">from</span> <span class="nn">dro.src.linear_model.hr_dro</span> <span class="kn">import</span> <span class="n">HR_DRO_LR</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">HR_DRO_LR</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">epsilon</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">epsilon_prime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+</section>
 </section>
 
 
@@ -390,6 +424,7 @@ optimal
 <li><a class="reference internal" href="#">DRO with Mixed Distances</a><ul>
 <li><a class="reference internal" href="#Sinkhorn-DRO">Sinkhorn DRO</a></li>
 <li><a class="reference internal" href="#MOT-DRO">MOT-DRO</a></li>
+<li><a class="reference internal" href="#OR-WDRO-+-HR-DRO">OR-WDRO + HR-DRO</a></li>
 </ul>
 </li>
 </ul>

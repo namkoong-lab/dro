@@ -259,7 +259,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
@@ -298,16 +298,19 @@
 </section>
 <section id="worst-case-illustration">
 <h3>Worst-case illustration<a class="headerlink" href="#worst-case-illustration" title="Link to this heading">¶</a></h3>
-<p>The above formulations are all based on joint perturbed probability.</p>
+<p>The above formulations are all based on joint perturbed probability. For example, in <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, we find the perturbed probability <span class="math notranslate nohighlight">\(\{p_i\}_{i \in [n]}\)</span> by solving the following optimization problem:</p>
+<div class="math notranslate nohighlight">
+\[\max_{p \in \Delta}\sum_{i \in [n]}p_i \cdot \ell_i,~\text{s.t.}~n \sum_{i \in [n]}n(p_i - 1/n)^2 \leq \epsilon,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\ell_i\)</span> is the loss for the <span class="math notranslate nohighlight">\(i\)</span>-th sample and <span class="math notranslate nohighlight">\(\Delta\)</span> is the probability simplex.</p>
 </section>
 <section id="evaluation">
 <h3>Evaluation<a class="headerlink" href="#evaluation" title="Link to this heading">¶</a></h3>
-<p>ADD DATA-DRIVEN EVALUATION from [6].</p>
+<p>For two smooth losses (OLS, Logistic), we provide a bias-corrected model assessment of model performance (please refer to the performance evaluation of DR-E2E from [6]) for most <span class="math notranslate nohighlight">\(f\)</span>-divergence model when the ambiguity size is small (i.e., <span class="math notranslate nohighlight">\(\epsilon = o(1)\)</span> or <span class="math notranslate nohighlight">\(1-\alpha = o(1)\)</span>).</p>
 </section>
 </section>
 <section id="partial-dro">
 <h2>Partial DRO<a class="headerlink" href="#partial-dro" title="Link to this heading">¶</a></h2>
-<p>The ambiguity set here are based on (joint) cannot be written as the standard (generalized) f-divergence DRO format. Instead, we directly use <span class="math notranslate nohighlight">\(Q(\alpha)\)</span>.</p>
+<p>The ambiguity set here are based on partial distribution shifts cannot be written as the standard (generalized) f-divergence DRO format. Instead, we directly use <span class="math notranslate nohighlight">\(\mathcal{P}(\alpha)\)</span> as the ambiguity set.</p>
 <p>If we only consider the shifts in the marginal distribution <span class="math notranslate nohighlight">\(X\)</span>,
 <span class="math notranslate nohighlight">\(\mathcal{P}(\alpha) = \{Q_0: P_X = \alpha Q_0 + (1-\alpha) Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{X}\}\)</span>, we obtain the marginal-CVaR model. Specifically, we follow the formulation of (27) in [7] to fit the model.</p>
 <p>If we consider the shift in the conditional distribution <span class="math notranslate nohighlight">\(Y|X\)</span>,

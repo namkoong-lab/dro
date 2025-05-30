@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="NN-DRO" href="neural_model.html" />
-    <link rel="prev" title="Bayesian-based DRO" href="linear_pdro.html" /> 
+    <link rel="prev" title="Bayesian (Parametric) DRO" href="linear_pdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -259,7 +259,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
@@ -293,9 +293,9 @@ W_{\epsilon}(P,Q) = \inf_{\gamma \in \Pi(P,Q)}\mathbb{E}_{(x,y)\sim \gamma}[c(x,
 <section id="hyperparameters">
 <h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>reg_param: Dual parameter <span class="math notranslate nohighlight">\(\lambda\)</span>. Please refer to Equation (14).</p></li>
-<li><p>lambda_param: Variance (<span class="math notranslate nohighlight">\(\epsilon\)</span>) of the Gaussian noise distribution added to each sample. Please refer to Remark 8.</p></li>
-<li><p>k_sample_max: <span class="math notranslate nohighlight">\(l\)</span> in Equation (14), where <span class="math notranslate nohighlight">\(2^l\)</span> points are sampled to approximate the sub-gradient.</p></li>
+<li><p>reg_param: Dual parameter <span class="math notranslate nohighlight">\(\lambda\)</span>. Please refer to Equation (14) in [1].</p></li>
+<li><p>lambda_param: Variance of the Gaussian noise distribution added to each sample. Please refer to Remark 8.</p></li>
+<li><p>k_sample_max: <span class="math notranslate nohighlight">\(l\)</span> in Equation (14) in [1], where <span class="math notranslate nohighlight">\(2^l\)</span> points are sampled to approximate the sub-gradient.</p></li>
 </ul>
 </section>
 </section>
@@ -303,10 +303,10 @@ W_{\epsilon}(P,Q) = \inf_{\gamma \in \Pi(P,Q)}\mathbb{E}_{(x,y)\sim \gamma}[c(x,
 <h2>Holistic-DRO<a class="headerlink" href="#holistic-dro" title="Link to this heading">¶</a></h2>
 <p>In Holistic-DRO [2], <span class="math notranslate nohighlight">\(\mathcal{P}(LP_{\mathcal N}, D_{KL}; \alpha, r) = \{P: P,Q\in\mathcal{P}, LP_{\mathcal N}(\hat{P},Q)\leq \alpha, D_{KL}(Q\|P)\leq r \}\)</span>, which depends on two metrics divergence:</p>
 <ul class="simple">
-<li><p>Levy-Prokhorov metric <span class="math notranslate nohighlight">\(LP_{\mathcal N}(P,Q) = \inf_{\gamma\in\Pi(P,Q)} \inf \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi')\)</span>, where <span class="math notranslate nohighlight">\(\mathcal N\)</span> denotes the</p></li>
+<li><p>Levy-Prokhorov metric <span class="math notranslate nohighlight">\(LP_{\mathcal N}(P,Q) = \inf_{\gamma\in\Pi(P,Q)} \mathbb{I}(\xi-\xi'\notin \mathcal{N})d\gamma(\xi, \xi')\)</span>, where <span class="math notranslate nohighlight">\(\mathcal N\)</span> denotes the perturbed ball of each sample.</p></li>
 <li><p>KL-divergence <span class="math notranslate nohighlight">\(D_{KL}(Q\|P) = \int_Q \log \frac{dQ}{dP}dQ\)</span>.</p></li>
 </ul>
-<p>We support linear losses (SVM for classification and LAD for regression), where we follow Appendix D.1 and D.2 in [2], and we set the worst-case domain <span class="math notranslate nohighlight">\(\Sigma = \{(X_i, Y_i): i \in [n]\} + B_2(0,\epsilon') \times \{0\}\)</span> and <span class="math notranslate nohighlight">\(\mathcal N = B_2(0，\epsilon) \times \{0\}\)</span>.</p>
+<p>We support linear losses (SVM for classification and LAD for regression), where we follow Appendix D.1 and D.2 in [2], and we set the worst-case domain <span class="math notranslate nohighlight">\(\Sigma = \{(X_i, Y_i): i \in [n]\} + B_2(0,\epsilon') \times \{0\}\)</span> and <span class="math notranslate nohighlight">\(\mathcal N = B_2(0, \epsilon) \times \{0\}\)</span>.</p>
 <section id="id1">
 <h3>Hyperparameters<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -417,7 +417,7 @@ W_p^{\eta}(P, Q) = \inf_{Q' \in \mathcal{P}(R^d), \|Q - Q'\|_{TV}\leq \eta} W_p(
             <div class="left">
                 
                 <a href="linear_pdro.html">
-                    <span class="icon">&lt;</span><span>Bayesian-based DRO</span></a>
+                    <span class="icon">&lt;</span><span>Bayesian (Parametric) DRO</span></a>
                 
             </div>
 

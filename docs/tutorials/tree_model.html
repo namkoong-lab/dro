@@ -257,7 +257,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Tree-DRO</a></li>
@@ -280,7 +280,7 @@
   <section class="tex2jax_ignore mathjax_ignore" id="tree-dro">
 <h1>Tree-DRO<a class="headerlink" href="#tree-dro" title="Link to this heading">¶</a></h1>
 <p>Besides linear models and neural networks, <code class="docutils literal notranslate"><span class="pre">dro</span></code> package also integrates tree-based ensemble models as backbone models for DRO, including XGBoost and LightGBM.</p>
-<p>Given the non-convexity of the optimization of tree-ensemble models, we only implement KL-DRO and CVaR-DRO in an approximate way. Specifically, we directly apply the DRO-kind loss functions to XGBoost and LightGBM.</p>
+<p>Given the non-convexity of the optimization of tree-ensemble models, we only implement Chi2-DRO, KL-DRO and CVaR-DRO in an approximate way. Specifically, we directly apply the DRO-kind loss functions to XGBoost and LightGBM.</p>
 </section>
 
 

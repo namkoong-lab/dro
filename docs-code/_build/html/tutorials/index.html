@@ -259,7 +259,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian-based DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
@@ -281,7 +281,7 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="formulation">
 <h1>Formulation<a class="headerlink" href="#formulation" title="Link to this heading">¶</a></h1>
-<p>Given the empirical distribution <span class="math notranslate nohighlight">\(\hat P\)</span> from the training data <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}\)</span>, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:</p>
+<p>Given the empirical distribution <span class="math notranslate nohighlight">\(\hat P\)</span> from the training data <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}_{i \in [N]}\)</span>, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:</p>
 <div class="math notranslate nohighlight">
 \[
 \min_{f \in \mathcal{F}}\max_{Q \in \mathcal{P}}\mathbb{E}_Q[\ell(f(X), Y)],
@@ -293,6 +293,10 @@
 \]</div>
 <p>Here, <span class="math notranslate nohighlight">\(d(\cdot, \cdot)\)</span> is a notion of distance between probability measures and <span class="math notranslate nohighlight">\(\epsilon\)</span> captures the size of the ambiguity set.</p>
 <p>Given each function class <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>, we classify all the models into the following cases, where each case can be further classified given each distance type <span class="math notranslate nohighlight">\(d\)</span>.</p>
+<p>We design our package based on the principle pipeline “Data -&gt; Model -&gt; Evaluation / Diagnostics” and discuss them one by one as follows:</p>
+<section id="data-module">
+<h2>Data Module<a class="headerlink" href="#data-module" title="Link to this heading">¶</a></h2>
+</section>
 <section id="synthetic-data-generation">
 <h2>Synthetic Data Generation<a class="headerlink" href="#synthetic-data-generation" title="Link to this heading">¶</a></h2>
 <p>Following the general pipeline of “Data -&gt; Model -&gt; Evaluation / Diagnostics”, we first integrate different kinds of synthetic data generating mechanisms into <code class="docutils literal notranslate"><span class="pre">dro</span></code>, including:</p>
@@ -343,8 +347,10 @@
   </tr>
 </tbody></table>
 </section>
-<section id="linear">
-<h2>Linear<a class="headerlink" href="#linear" title="Link to this heading">¶</a></h2>
+<section id="model-module">
+<h2>Model Module<a class="headerlink" href="#model-module" title="Link to this heading">¶</a></h2>
+<section id="exact-fitting-linear">
+<h3>Exact Fitting: Linear<a class="headerlink" href="#exact-fitting-linear" title="Link to this heading">¶</a></h3>
 <p>We discuss the implementations of different classification and regression losses,</p>
 <p>Classification:</p>
 <ul class="simple">
@@ -361,19 +367,28 @@
 <p>And our package can support (<span class="math notranslate nohighlight">\(\ell_2\)</span> linear regression), <span class="math notranslate nohighlight">\(\max\{1 - Y \theta^{\top}X, 0\}\)</span> (SVM loss) and etc.</p>
 <p>Across the linear module, we designate the vector <span class="math notranslate nohighlight">\(\theta = (\theta_1,\ldots, \theta_p)\)</span> as <code class="docutils literal notranslate"><span class="pre">theta</span></code> and <span class="math notranslate nohighlight">\(b\)</span> as <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
 <p>Besides this, we support other loss types.</p>
-<p>Solvers support:</p>
+<p>Solvers support: The built-in solvers in <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> (where we set <code class="docutils literal notranslate"><span class="pre">Mosek</span></code> during our test).</p>
 <p>We support DRO methods including:</p>
 <ul class="simple">
 <li><p>WDRO: (Basic) Wasserstein DRO, Satisificing Wasserstein DRO;</p></li>
 <li><p>Standard <span class="math notranslate nohighlight">\(f\)</span>-DRO: KL-DRO, <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, TV-DRO;</p></li>
 <li><p>Generalized <span class="math notranslate nohighlight">\(f\)</span>-DRO: CVaR-DRO, Marginal DRO (CVaR), Conditional DRO (CVaR);</p></li>
 <li><p>MMD-DRO;</p></li>
-<li><p>Bayesian-based DRO: Bayesian-PDRO, PDRO</p></li>
+<li><p>Bayesian-based DRO: Bayesian-PDRO, PDRO;</p></li>
 <li><p>Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).</p></li>
 </ul>
 </section>
-<section id="neural-network">
-<h2>Neural Network<a class="headerlink" href="#neural-network" title="Link to this heading">¶</a></h2>
+<section id="exact-or-approximate-fitting-kernel">
+<h3>Exact or Approximate Fitting: Kernel<a class="headerlink" href="#exact-or-approximate-fitting-kernel" title="Link to this heading">¶</a></h3>
+<p>We allow kernelized distributionally robust regression or classification via <code class="docutils literal notranslate"><span class="pre">.update_kernel()</span></code>. We mimic the standard scikit-learn kernel interface with the following hyperparameters:</p>
+<ul class="simple">
+<li><p>metric: standard kernel metrics when calculating kernel between instances in a feature array, including <code class="docutils literal notranslate"><span class="pre">additive_chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">linear</span></code>, <code class="docutils literal notranslate"><span class="pre">poly</span></code>, <code class="docutils literal notranslate"><span class="pre">polynomial</span></code>, <code class="docutils literal notranslate"><span class="pre">rbf</span></code>;</p></li>
+<li><p>kernel_gamma:  Parameter gamma of the pairwise kernel specified by metric. It should be positive, or <code class="docutils literal notranslate"><span class="pre">scale</span></code>, <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p></li>
+<li><p>n_components: Exact fitting – <code class="docutils literal notranslate"><span class="pre">None</span></code>; Approximate fitting – int, which denotes the reduced number of data points to construct the kernel mapping in Nystroem approximation (recommend to use when <span class="math notranslate nohighlight">\(n\)</span> is large).</p></li>
+</ul>
+</section>
+<section id="approximate-fitting-neural-network">
+<h3>Approximate Fitting: Neural Network<a class="headerlink" href="#approximate-fitting-neural-network" title="Link to this heading">¶</a></h3>
 <p>Given the complexity of neural networks, many of the explicit optimization algorithms are not applicable. And we implement four DRO methods in an “approximate” way, including:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO;</p></li>
@@ -390,8 +405,26 @@
 </ul>
 <p>And the users could also use their own model architecture (please refer to the <code class="docutils literal notranslate"><span class="pre">update</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code>).</p>
 </section>
+<section id="approximate-fitting-tree-based-ensemble-dro">
+<h3>Approximate Fitting: Tree-based Ensemble DRO<a class="headerlink" href="#approximate-fitting-tree-based-ensemble-dro" title="Link to this heading">¶</a></h3>
+<p>Due to the popular use of tree-based ensemble models in many applciations, we implement two DRO methods in an “approximate” way as a preliminary setting, including:</p>
+<ul class="simple">
+<li><p>KL-DRO</p></li>
+<li><p>CVaR-DRO</p></li>
+</ul>
+<p>The current model architectures supported in <code class="docutils literal notranslate"><span class="pre">dro</span></code> include:</p>
+<ul class="simple">
+<li><p>LightGBM</p></li>
+<li><p>XGBoost</p></li>
+</ul>
+</section>
+<section id="evaluation">
+<h3>Evaluation<a class="headerlink" href="#evaluation" title="Link to this heading">¶</a></h3>
+<p>In some of linear DRO models, we provide additional interfaces for understanding the worst-case model performance (refer to the <code class="docutils literal notranslate"><span class="pre">worst_distribution</span></code> function in each derivative DRO) and evaluating the true model performance in terms of the true MSE estimated from the fitted data (refer to <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code>).</p>
+</section>
+</section>
 <section id="reference">
-<h2>Reference:<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Daniel Kuhn, Soroosh Shafiee, and Wolfram Wiesemann. Distributionally robust optimization. arXiv
 preprint arXiv:2411.02549, 2024.</p></li>
@@ -414,10 +447,17 @@ preprint arXiv:2411.02549, 2024.</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Formulation</a><ul>
+<li><a class="reference internal" href="#data-module">Data Module</a></li>
 <li><a class="reference internal" href="#synthetic-data-generation">Synthetic Data Generation</a></li>
-<li><a class="reference internal" href="#linear">Linear</a></li>
-<li><a class="reference internal" href="#neural-network">Neural Network</a></li>
-<li><a class="reference internal" href="#reference">Reference:</a></li>
+<li><a class="reference internal" href="#model-module">Model Module</a><ul>
+<li><a class="reference internal" href="#exact-fitting-linear">Exact Fitting: Linear</a></li>
+<li><a class="reference internal" href="#exact-or-approximate-fitting-kernel">Exact or Approximate Fitting: Kernel</a></li>
+<li><a class="reference internal" href="#approximate-fitting-neural-network">Approximate Fitting: Neural Network</a></li>
+<li><a class="reference internal" href="#approximate-fitting-tree-based-ensemble-dro">Approximate Fitting: Tree-based Ensemble DRO</a></li>
+<li><a class="reference internal" href="#evaluation">Evaluation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>
 </ul>

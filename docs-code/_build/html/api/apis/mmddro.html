@@ -293,7 +293,7 @@
 <span id="mmd-dro"></span><h1>MMD DRO<a class="headerlink" href="#module-dro.src.linear_model.mmd_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.src.linear_model.mmd_dro.MMD_DRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.mmd_dro.</span></span><span class="sig-name descname"><span class="pre">MMD_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bound'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.mmd_dro.MMD_DRO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.mmd_dro.</span></span><span class="sig-name descname"><span class="pre">MMD_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bound'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.mmd_dro.MMD_DRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>MMD-DRO (Maximum Mean Discrepancy - Distributionally Robust Optimization)
 Implementation with flexible sampling methods and model types.</p>
@@ -326,7 +326,6 @@ Implementation with flexible sampling methods and model types.</p>
 <li><p>If <cite>model_type</cite> not in supported list</p></li>
 <li><p>If <cite>input_dim</cite> ≤ 0</p></li>
 <li><p>If <cite>sampling_method</cite> is invalid</p></li>
-<li><p>If <cite>n_certify_ratio</cite> &lt; 1</p></li>
 </ul>
 </p>
 </dd>
@@ -400,30 +399,18 @@ Defaults to current ratio.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.src.linear_model.mmd_dro.MMD_DRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.mmd_dro.MMD_DRO.fit" title="Link to this definition">¶</a></dt>
-<dd><p>Fit the MMD-DRO model to the data.</p>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accelerate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.mmd_dro.MMD_DRO.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Vectorized implementation of MMD-DRO fit function.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
-Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
-<ul>
-<li><p>Classification: ±1 labels</p></li>
-<li><p>Regression: Continuous values</p></li>
-</ul>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Dictionary containing trained parameters:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code>: Weight vector of shape <cite>(n_features,)</cite></p></li>
-</ul>
-</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>accelerate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
