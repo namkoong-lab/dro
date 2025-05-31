@@ -351,20 +351,19 @@
 <h2>Model Module<a class="headerlink" href="#model-module" title="Link to this heading">¶</a></h2>
 <section id="exact-fitting-linear">
 <h3>Exact Fitting: Linear<a class="headerlink" href="#exact-fitting-linear" title="Link to this heading">¶</a></h3>
-<p>We discuss the implementations of different classification and regression losses,</p>
+<p>We discuss the implementations of different classification and regression losses, where <span class="math notranslate nohighlight">\(f(X) = \theta^{\top}X + b\)</span>.</p>
 <p>Classification:</p>
 <ul class="simple">
-<li><p>SVM Loss (<code class="docutils literal notranslate"><span class="pre">svm</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = \max\{1 - Y (\theta^{\top}X + b), 0\}.\)</span></p></li>
-<li><p>Logistic Loss (<code class="docutils literal notranslate"><span class="pre">logistic</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = \log(1 + \exp(-Y(\theta^{\top}X + b))).\)</span></p></li>
+<li><p>SVM (Hinge) Loss (<code class="docutils literal notranslate"><span class="pre">svm</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = \max\{1 - Y f(X), 0\}.\)</span></p></li>
+<li><p>Logistic Loss (<code class="docutils literal notranslate"><span class="pre">logistic</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = \log(1 + \exp(-Y f(X))).\)</span></p></li>
 </ul>
 <p>Note that in classification tasks, <span class="math notranslate nohighlight">\(Y \in \{-1, 1\}\)</span>.</p>
 <p>Regression:</p>
 <ul class="simple">
-<li><p>Least Absolute Deviation (<code class="docutils literal notranslate"><span class="pre">lad</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = |Y - \theta^{\top}X - b|\)</span>.</p></li>
-<li><p>Ordinary Least Squares (<code class="docutils literal notranslate"><span class="pre">ols</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = (Y - \theta^{\top} X - b)^2\)</span>.</p></li>
+<li><p>Least Absolute Deviation (<code class="docutils literal notranslate"><span class="pre">lad</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = |Y - f(X)|\)</span>.</p></li>
+<li><p>Ordinary Least Squares (<code class="docutils literal notranslate"><span class="pre">ols</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = (Y - f(X))^2\)</span>.</p></li>
 </ul>
 <p>Above, we designate the <code class="docutils literal notranslate"><span class="pre">model_type</span></code> as the names in parentheses.</p>
-<p>And our package can support (<span class="math notranslate nohighlight">\(\ell_2\)</span> linear regression), <span class="math notranslate nohighlight">\(\max\{1 - Y \theta^{\top}X, 0\}\)</span> (SVM loss) and etc.</p>
 <p>Across the linear module, we designate the vector <span class="math notranslate nohighlight">\(\theta = (\theta_1,\ldots, \theta_p)\)</span> as <code class="docutils literal notranslate"><span class="pre">theta</span></code> and <span class="math notranslate nohighlight">\(b\)</span> as <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
 <p>Besides this, we support other loss types.</p>
 <p>Solvers support: The built-in solvers in <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> (where we set <code class="docutils literal notranslate"><span class="pre">Mosek</span></code> during our test).</p>
@@ -380,7 +379,8 @@
 </section>
 <section id="exact-or-approximate-fitting-kernel">
 <h3>Exact or Approximate Fitting: Kernel<a class="headerlink" href="#exact-or-approximate-fitting-kernel" title="Link to this heading">¶</a></h3>
-<p>We allow kernelized distributionally robust regression or classification via <code class="docutils literal notranslate"><span class="pre">.update_kernel()</span></code>. We mimic the standard scikit-learn kernel interface with the following hyperparameters:</p>
+<p>We allow kernelized distributionally robust regression or classification via <code class="docutils literal notranslate"><span class="pre">.update_kernel()</span></code>. More specifically, we allow all of the four types of losses (<code class="docutils literal notranslate"><span class="pre">svm</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic</span></code>, <code class="docutils literal notranslate"><span class="pre">lad</span></code>, <code class="docutils literal notranslate"><span class="pre">ols</span></code>). More specifically, in each case above, we replace <span class="math notranslate nohighlight">\(f(X) = \theta^{\top}X + b\)</span> with <span class="math notranslate nohighlight">\(f(X) = \sum_{i \in [N]}\alpha_i K(x, x_i)\)</span> where <span class="math notranslate nohighlight">\(K(\cdot,\cdot)\)</span> is the kernel and <span class="math notranslate nohighlight">\(\{\alpha\}_{i \in [N]}\)</span> are the parameters to be determined in the optimization problem.</p>
+<p>We mimic the standard scikit-learn kernel interface with the following hyperparameters:</p>
 <ul class="simple">
 <li><p>metric: standard kernel metrics when calculating kernel between instances in a feature array, including <code class="docutils literal notranslate"><span class="pre">additive_chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">linear</span></code>, <code class="docutils literal notranslate"><span class="pre">poly</span></code>, <code class="docutils literal notranslate"><span class="pre">polynomial</span></code>, <code class="docutils literal notranslate"><span class="pre">rbf</span></code>;</p></li>
 <li><p>kernel_gamma:  Parameter gamma of the pairwise kernel specified by metric. It should be positive, or <code class="docutils literal notranslate"><span class="pre">scale</span></code>, <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p></li>
@@ -411,8 +411,9 @@
 <ul class="simple">
 <li><p>KL-DRO</p></li>
 <li><p>CVaR-DRO</p></li>
+<li><p>Chi2-DRO</p></li>
 </ul>
-<p>The current model architectures supported in <code class="docutils literal notranslate"><span class="pre">dro</span></code> include:</p>
+<p>The current model architectures of <span class="math notranslate nohighlight">\(f(X)\)</span> supported in <code class="docutils literal notranslate"><span class="pre">dro</span></code> include:</p>
 <ul class="simple">
 <li><p>LightGBM</p></li>
 <li><p>XGBoost</p></li>

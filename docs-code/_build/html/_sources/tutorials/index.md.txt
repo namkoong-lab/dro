@@ -72,21 +72,19 @@ Following the general pipeline of "Data -> Model -> Evaluation / Diagnostics", w
 
 ## Model Module
 ### Exact Fitting: Linear
-We discuss the implementations of different classification and regression losses,
+We discuss the implementations of different classification and regression losses, where $f(X) = \theta^{\top}X + b$. 
 
 Classification:
-* SVM Loss (``svm``): $\ell(f(X), Y) = \max\{1 - Y (\theta^{\top}X + b), 0\}.$
-* Logistic Loss (``logistic``): $\ell(f(X), Y) = \log(1 + \exp(-Y(\theta^{\top}X + b))).$
+* SVM (Hinge) Loss (``svm``): $\ell(f(X), Y) = \max\{1 - Y f(X), 0\}.$
+* Logistic Loss (``logistic``): $\ell(f(X), Y) = \log(1 + \exp(-Y f(X))).$
 
 Note that in classification tasks, $Y \in \{-1, 1\}$.
 
 Regression:
-* Least Absolute Deviation (``lad``): $\ell(f(X), Y) = |Y - \theta^{\top}X - b|$.
-* Ordinary Least Squares (``ols``): $\ell(f(X), Y) = (Y - \theta^{\top} X - b)^2$. 
+* Least Absolute Deviation (``lad``): $\ell(f(X), Y) = |Y - f(X)|$.
+* Ordinary Least Squares (``ols``): $\ell(f(X), Y) = (Y - f(X))^2$. 
 
 Above, we designate the ``model_type`` as the names in parentheses.
-
-And our package can support ($\ell_2$ linear regression), $\max\{1 - Y \theta^{\top}X, 0\}$ (SVM loss) and etc. 
 
 
 Across the linear module, we designate the vector $\theta = (\theta_1,\ldots, \theta_p)$ as ``theta`` and $b$ as ``b``.
@@ -105,7 +103,10 @@ We support DRO methods including:
 * Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
 
 ### Exact or Approximate Fitting: Kernel
-We allow kernelized distributionally robust regression or classification via ``.update_kernel()``. We mimic the standard scikit-learn kernel interface with the following hyperparameters:
+We allow kernelized distributionally robust regression or classification via ``.update_kernel()``. More specifically, we allow all of the four types of losses (``svm``, ``logistic``, ``lad``, ``ols``). More specifically, in each case above, we replace $f(X) = \theta^{\top}X + b$ with $f(X) = \sum_{i \in [N]}\alpha_i K(x, x_i)$ where $K(\cdot,\cdot)$ is the kernel and $\{\alpha\}_{i \in [N]}$ are the parameters to be determined in the optimization problem.
+
+
+We mimic the standard scikit-learn kernel interface with the following hyperparameters:
 * metric: standard kernel metrics when calculating kernel between instances in a feature array, including ``additive_chi2``, ``chi2``, ``linear``, ``poly``, ``polynomial``, ``rbf``;
 * kernel_gamma:  Parameter gamma of the pairwise kernel specified by metric. It should be positive, or ``scale``, ``auto``.
 * n_components: Exact fitting -- ``None``; Approximate fitting -- int, which denotes the reduced number of data points to construct the kernel mapping in Nystroem approximation (recommend to use when $n$ is large).
@@ -130,8 +131,9 @@ And the users could also use their own model architecture (please refer to the `
 Due to the popular use of tree-based ensemble models in many applciations, we implement two DRO methods in an "approximate" way as a preliminary setting, including:
 * KL-DRO
 * CVaR-DRO
+* Chi2-DRO
 
-The current model architectures supported in `dro` include:
+The current model architectures of $f(X)$ supported in `dro` include:
 * LightGBM
 * XGBoost
 
