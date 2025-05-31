@@ -71,9 +71,9 @@ These solvers can solve all the optimization problems implemented in the package
 ## Quick Start
 A simple user example is as follows:
 ```python
-from dro.src.data.dataloader_classification import classification_basic
-from dro.src.data.draw_utils import draw_classification
-from dro.src.linear_model.chi2_dro import Chi2DRO
+from dro.data.dataloader_classification import classification_basic
+from dro.data.draw_utils import draw_classification
+from dro.linear_model.chi2_dro import Chi2DRO
 
 # Data generating
 X, y = classification_basic(d = 2, num_samples = 100, radius = 2, visualize = True)
@@ -105,7 +105,7 @@ As for the latest `v0.3.1` version, `dro` supports:
   </tr></thead>
 <tbody>
   <tr>
-    <td class="tg-0pky" rowspan="4"><br><br><br><br>dro.src.data.dataloader_classification</td>
+    <td class="tg-0pky" rowspan="4"><br><br><br><br>dro.data.dataloader_classification</td>
     <td class="tg-0pky">classification_basic</td>
     <td class="tg-0pky">Basic classification task</td>
   </tr>
@@ -122,7 +122,7 @@ As for the latest `v0.3.1` version, `dro` supports:
     <td class="tg-0lax">Following Section 4.1 (Classification) of <br>[3]"</td>
   </tr>
   <tr>
-    <td class="tg-0lax" rowspan="5"><br><br><br><br><br>dro.src.data.dataloader_regression</td>
+    <td class="tg-0lax" rowspan="5"><br><br><br><br><br>dro.data.dataloader_regression</td>
     <td class="tg-0lax">regression_basic</td>
     <td class="tg-0lax">Basic regression task</td>
   </tr>
@@ -155,52 +155,52 @@ The models listed below are solved by exact solvers from ``cvxpy``.
   </tr></thead>
 <tbody>
   <tr>
-    <td class="tg-0lax">dro.src.linear_dro.base</td>
+    <td class="tg-0lax">dro.linear_dro.base</td>
     <td class="tg-0lax">BaseLinearDRO</td>
     <td class="tg-0lax">Base class for linear DRO methods</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.linear_dro.chi2_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.chi2_dro</span></td>
     <td class="tg-0lax">Chi2DRO</td>
     <td class="tg-0lax">Linear chi-square divergence-based DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.linear_dro.kl_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.kl_dro</span></td>
     <td class="tg-0lax">KLDRO</td>
     <td class="tg-0lax">Kullback-Leibler divergence-based DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.linear_dro.cvar_dro</td>
+    <td class="tg-0lax">dro.linear_dro.cvar_dro</td>
     <td class="tg-0lax">CVaRDRO</td>
     <td class="tg-0lax">CVaR DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.linear_dro.tv_dro</td>
+    <td class="tg-0lax">dro.linear_dro.tv_dro</td>
     <td class="tg-0lax">TVDRO</td>
     <td class="tg-0lax">Total Variation DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.linear_dro.marginal_dro</td>
+    <td class="tg-0lax">dro.linear_dro.marginal_dro</td>
     <td class="tg-0lax">MarginalCVaRDRO</td>
     <td class="tg-0lax">Marginal-X CVaR DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.linear_dro.mmd_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.mmd_dro</span></td>
     <td class="tg-0lax">MMD_DRO</td>
     <td class="tg-0lax">Maximum Mean Discrepancy DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.linear_dro.conditional_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.conditional_dro</span></td>
     <td class="tg-0lax">ConditionalCVaRDRO</td>
     <td class="tg-0lax">Y|X (ConditionalShiftBased) CVaR DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.linear_dro.hr_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.hr_dro</span></td>
     <td class="tg-0lax">HR_DRO_LR</td>
     <td class="tg-0lax">Holistic Robust DRO on linear models</td>
   </tr>
   <tr>
-    <td class="tg-0lax" rowspan="2"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.linear_dro.wasserstein_dro</span></td>
+    <td class="tg-0lax" rowspan="2"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.wasserstein_dro</span></td>
     <td class="tg-0lax">WassersteinDRO</td>
     <td class="tg-0lax">Wasserstein DRO</td>
   </tr>
@@ -209,17 +209,17 @@ The models listed below are solved by exact solvers from ``cvxpy``.
     <td class="tg-0lax">Robust satisficing version of Wasserstein DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.linear_dro.sinkhorn_dro</td>
+    <td class="tg-0lax">dro.linear_dro.sinkhorn_dro</td>
     <td class="tg-0lax">SinkhornLinearDRO</td>
     <td class="tg-0lax">Sinkhorn DRO on linear models</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.linear_dro.mot_dro</td>
+    <td class="tg-0lax">dro.linear_dro.mot_dro</td>
     <td class="tg-0lax">MOTDRO</td>
     <td class="tg-0lax">Optimal Transport DRO with Conditional Moment Constraints</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.linear_dro.or_wasserstein_dro</td>
+    <td class="tg-0lax">dro.linear_dro.or_wasserstein_dro</td>
     <td class="tg-0lax">ORWDRO</td>
     <td class="tg-0lax">Outlier-Robust Wasserstein DRO</td>
   </tr>
@@ -240,22 +240,22 @@ The models listed below are solved by gradient descent (``Pytorch``).
   </tr></thead>
 <tbody>
   <tr>
-    <td class="tg-0lax">dro.src.neural_model.base_nn</td>
+    <td class="tg-0lax">dro.neural_model.base_nn</td>
     <td class="tg-0lax">BaseNNDRO</td>
     <td class="tg-0lax">Base model for neural-network-based DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.neural_model.fdro_nn</td>
+    <td class="tg-0lax">dro.neural_model.fdro_nn</td>
     <td class="tg-0lax">Chi2NNDRO</td>
     <td class="tg-0lax">Chi-square Divergence-based Neural DRO Model</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.neural_model.wdro_nn</td>
+    <td class="tg-0lax">dro.neural_model.wdro_nn</td>
     <td class="tg-0lax">WNNDRO</td>
     <td class="tg-0lax">Wasserstein Neural DRO with Adversarial Robustness.</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.src.neural_model.hrdro_nn</td>
+    <td class="tg-0lax">dro.neural_model.hrdro_nn</td>
     <td class="tg-0lax">HRNNDRO</td>
     <td class="tg-0lax">Holistic Robust NN DRO</td>
   </tr>
@@ -272,7 +272,7 @@ The models listed below are solved by function approximation (``xgboost``, ``lig
     <th class="tg-0lax">Description</th>
   </tr></thead>
 <tbody>
-    <td class="tg-0lax" rowspan="3"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.tree_model.lgbm</span></td>
+    <td class="tg-0lax" rowspan="3"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.tree_model.lgbm</span></td>
     <td class="tg-0lax">KLDRO_LGBM</td>
     <td class="tg-0lax">KL Divergence-based Robust LightGBM</td>
   </tr>
@@ -287,7 +287,7 @@ The models listed below are solved by function approximation (``xgboost``, ``lig
     <td class="tg-0lax">CVaRDRO_LGBM</td>
     <td class="tg-0lax">CVaR Robust LightGBM</td>
   </tr>
-    <td class="tg-0lax" rowspan="3"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.tree_model.xgb</span></td>
+    <td class="tg-0lax" rowspan="3"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.tree_model.xgb</span></td>
     <td class="tg-0lax">KLDRO_XGB</td>
     <td class="tg-0lax">KL Divergence-based Robust XGBoost</td>
   </tr>
