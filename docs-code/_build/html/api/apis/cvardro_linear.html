@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>CVaR DRO &#8212; dro 0.2.2 documentation</title>
+    <title>CVaR DRO &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -289,12 +289,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.src.linear_model.cvar_dro">
-<span id="cvar-dro"></span><h1>CVaR DRO<a class="headerlink" href="#module-dro.src.linear_model.cvar_dro" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.linear_model.cvar_dro">
+<span id="cvar-dro"></span><h1>CVaR DRO<a class="headerlink" href="#module-dro.linear_model.cvar_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.cvar_dro.</span></span><span class="sig-name descname"><span class="pre">CVaRDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
+<dt class="sig sig-object py" id="dro.linear_model.cvar_dro.CVaRDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.cvar_dro.</span></span><span class="sig-name descname"><span class="pre">CVaRDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.cvar_dro.CVaRDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Conditional Value-at-Risk (CVaR) Distributionally Robust Optimization (DRO) model.</p>
 <p>This model minimizes a robust loss function for both regression and classification tasks
 under a CVaR constraint.</p>
@@ -330,8 +330,8 @@ Defaults to 1.0 (equivalent to worst-case optimization).</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.cvar_dro.CVaRDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.cvar_dro.CVaRDRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Dynamically update CVaR-DRO model configuration parameters.</p>
 <p>Modifies risk-sensitive hyperparameters and optimization settings. Changes take effect immediately but require re-fitting the model to update solutions.</p>
 <dl class="field-list simple">
@@ -370,15 +370,15 @@ Defaults to 1.0 (equivalent to worst-case optimization).</p></li>
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>Decreasing <code class="docutils literal notranslate"><span class="pre">alpha</span></code> makes the model less conservative (focuses on average risk)</p></li>
-<li><p>Requires manual re-fitting via <a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.fit" title="dro.src.linear_model.cvar_dro.CVaRDRO.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> after configuration changes</p></li>
+<li><p>Requires manual re-fitting via <a class="reference internal" href="#dro.linear_model.cvar_dro.CVaRDRO.fit" title="dro.linear_model.cvar_dro.CVaRDRO.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> after configuration changes</p></li>
 <li><p>Configuration keys other than <code class="docutils literal notranslate"><span class="pre">alpha</span></code> will be silently ignored</p></li>
 </ul>
 </div>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.cvar_dro.CVaRDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.cvar_dro.CVaRDRO.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Solve the CVaR-constrained distributionally robust optimization problem.</p>
 <p>Constructs and solves the convex optimization problem to find model parameters 
 that minimize the worst-case CVaR of the loss distribution. The solution defines 
@@ -452,8 +452,8 @@ for regression, use continuous values.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution">
-<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.cvar_dro.CVaRDRO.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.cvar_dro.CVaRDRO.worst_distribution" title="Link to this definition">¶</a></dt>
 <dd><p>Compute the worst-case distribution under CVaR constraint.</p>
 <p>Identifies samples contributing to the alpha-tail risk distribution and assigns uniform weights to these 
 high-loss scenarios. This represents the adversarial distribution that maximizes the conditional expected loss.</p>
@@ -495,7 +495,7 @@ Compensates for numerical instability in loss computations. Defaults to 1e-5.</p
 <p>where:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\tau_\alpha\)</span> = CVaR threshold from <a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.fit" title="dro.src.linear_model.cvar_dro.CVaRDRO.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_\alpha\)</span> = CVaR threshold from <a class="reference internal" href="#dro.linear_model.cvar_dro.CVaRDRO.fit" title="dro.linear_model.cvar_dro.CVaRDRO.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a></p></li>
 <li><p><span class="math notranslate nohighlight">\(\epsilon\)</span> = precision parameter</p></li>
 <li><p>Weights are assigned uniformly: <span class="math notranslate nohighlight">\(p_i = 1 / |\mathcal{P}_{\text{worst}}|\)</span></p></li>
 </ul>
@@ -544,10 +544,10 @@ Compensates for numerical instability in loss computations. Defaults to 1e-5.</p
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">CVaR DRO</a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO"><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.fit()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.cvar_dro.CVaRDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.worst_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.cvar_dro.CVaRDRO"><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.linear_model.cvar_dro.CVaRDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.cvar_dro.CVaRDRO.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.cvar_dro.CVaRDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">CVaRDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
 </ul>

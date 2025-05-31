@@ -1,7 +1,7 @@
 Regression Data
 ====================
 
-.. automodule:: dro.src.data.dataloader_regression
+.. automodule:: dro.data.dataloader_regression
    :members:
    :undoc-members:
    :show-inheritance:

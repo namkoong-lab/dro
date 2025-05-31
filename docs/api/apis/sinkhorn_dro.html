@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Sinkhorn DRO &#8212; dro 0.2.2 documentation</title>
+    <title>Sinkhorn DRO &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -289,12 +289,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.src.linear_model.sinkhorn_dro">
-<span id="sinkhorn-dro"></span><h1>Sinkhorn DRO<a class="headerlink" href="#module-dro.src.linear_model.sinkhorn_dro" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.linear_model.sinkhorn_dro">
+<span id="sinkhorn-dro"></span><h1>Sinkhorn DRO<a class="headerlink" href="#module-dro.linear_model.sinkhorn_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">SinkhornLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_sample_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
+<dt class="sig sig-object py" id="dro.linear_model.sinkhorn_dro.SinkhornLinearDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.sinkhorn_dro.</span></span><span class="sig-name descname"><span class="pre">SinkhornLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_sample_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Sinkhorn Distributionally Robust Optimization with Linear Models.</p>
 <p>Reference: &lt;<a class="reference external" href="https://arxiv.org/abs/2109.11926">https://arxiv.org/abs/2109.11926</a>&gt;</p>
 <p>Initialize Sinkhorn Distributionally Robust Optimization model.</p>
@@ -356,8 +356,8 @@ Supported: <code class="docutils literal notranslate"><span class="pre">'cpu'</s
 </ul>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update hyperparameters for Sinkhorn optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -393,8 +393,8 @@ Supported: <code class="docutils literal notranslate"><span class="pre">'cpu'</s
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Generate predictions using the optimized Sinkhorn DRO model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -438,8 +438,8 @@ Supported dtype: float32/float64</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.score" title="Link to this definition">¶</a></dt>
 <dd><p>Evaluate model performance on given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -491,8 +491,8 @@ Must match model’s expected input dimension</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimization_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimization_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Train the Sinkhorn DRO model with specified optimization strategy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -563,11 +563,11 @@ Should match model’s input dimension (n_features == input_dim)</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Sinkhorn DRO</a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.predict()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.score()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.score()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO.fit()</span></code></a></li>
 </ul>
 </li>
 </ul>

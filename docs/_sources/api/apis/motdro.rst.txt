@@ -1,7 +1,7 @@
 MOT DRO 
 ===========
 
-.. automodule:: dro.src.linear_model.mot_dro
+.. automodule:: dro.linear_model.mot_dro
    :members:
    :undoc-members:
    :show-inheritance:

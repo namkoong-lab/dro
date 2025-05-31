@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>About &#8212; dro 0.2.2 documentation</title>
+    <title>About &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <script src="../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -269,7 +269,7 @@
             
   <section id="about">
 <span id="id1"></span><h1>About<a class="headerlink" href="#about" title="Link to this heading">¶</a></h1>
-<a class="reference internal image-reference" href="../_images/logo.png"><img alt="../_images/logo.png" class="align-center" src="../_images/logo.png" style="width: 800px;" />
+<a class="reference internal image-reference" href="../_images/logo-new.png"><img alt="../_images/logo-new.png" class="align-center" src="../_images/logo-new.png" style="width: 800px;" />
 </a>
 <p><cite>dro</cite> is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code>. The <cite>dro</cite> package supports different kinds of distance metrics <span class="math notranslate nohighlight">\(d(\cdot,\cdot)\)</span> as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, tree-ensembles, neural networks…). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers.</p>
 <p>Without specified, our DRO model is to solve the following optimization problem:</p>
@@ -282,9 +282,9 @@
 <table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Synthetic Data Generation Modules</span><a class="headerlink" href="#id2" title="Link to this table">¶</a></caption>
 <colgroup>
-<col style="width: 25.0%" />
-<col style="width: 25.0%" />
-<col style="width: 50.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 60.0%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Python Module</p></th>
@@ -299,15 +299,15 @@
 </tr>
 <tr class="row-odd"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">classification_DN21</span></code></p></td>
-<td><p>Following Section 3.1.1 of “Learning Models with Uniform Performance via Distributionally Robust Optimization”</p></td>
+<td><p>Following Section 3.1.1 of [1]</p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">classification_SNVD20</span></code></p></td>
-<td><p>Following Section 5.1 of “Certifying Some Distributional Robustness with Principled Adversarial Training”</p></td>
+<td><p>Following Section 5.1 of [2]</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">classification_LWLC</span></code></p></td>
-<td><p>Following Section 4.1 (Classification) of “Distributionally Robust Optimization with Data Geometry”</p></td>
+<td><p>Following Section 4.1 (Classification) of [3]</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.data.dataloader_regression</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_basic</span></code></p></td>
@@ -315,22 +315,25 @@
 </tr>
 <tr class="row-odd"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_DN20_1</span></code></p></td>
-<td><p>Following Section 3.1.2 of “Learning Models with Uniform Performance via Distributionally Robust Optimization”</p></td>
+<td><p>Following Section 3.1.2 of [1]</p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_DN20_2</span></code></p></td>
-<td><p>Following Section 3.1.3 of “Learning Models with Uniform Performance via Distributionally Robust Optimization”</p></td>
+<td><p>Following Section 3.1.3 of [1]</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_DN20_3</span></code></p></td>
-<td><p>Following Section 3.3 of “Learning Models with Uniform Performance via Distributionally Robust Optimization”</p></td>
+<td><p>Following Section 3.3 of [1]</p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_LWLC</span></code></p></td>
-<td><p>Following Section 4.1 (Regression) of “Distributionally Robust Optimization with Data Geometry”</p></td>
+<td><p>Following Section 4.1 (Regression) of [3]</p></td>
 </tr>
 </tbody>
 </table>
+<p>[1] Learning Models with Uniform Performance via Distributionally Robust Optimization.</p>
+<p>[2] Certifying Some Distributional Robustness with Principled Adversarial Training.</p>
+<p>[3] Distributionally Robust Optimization with Data Geometry.</p>
 </section>
 <section id="linear-dro-models">
 <h2>(2) Linear DRO models<a class="headerlink" href="#linear-dro-models" title="Link to this heading">¶</a></h2>
@@ -466,13 +469,21 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB</span></code></p></td>
 <td><p>CVaR-DRO for XGBoost</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.xgb</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB</span></code></p></td>
+<td><p>Chi2-DRO for XGBoost</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM</span></code></p></td>
 <td><p>KL-DRO for Light GBM</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM</span></code></p></td>
 <td><p>CVaR-DRO for Light GBM</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM</span></code></p></td>
+<td><p>Chi2-DRO for Light GBM</p></td>
 </tr>
 </tbody>
 </table>

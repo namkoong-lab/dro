@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wasserstein DRO &#8212; dro 0.2.2 documentation</title>
+    <title>Wasserstein DRO &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -289,12 +289,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.src.linear_model.wasserstein_dro">
-<span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.src.linear_model.wasserstein_dro" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.linear_model.wasserstein_dro">
+<span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.linear_model.wasserstein_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Wasserstein Distributionally Robust Optimization (WDRO) model</p>
 <p>This model minimizes a Wasserstein-robust loss function for both regression and classification.</p>
 <p>The Wasserstein distance is defined as the minimum probability coupling of two distributions for the distance metric:</p>
@@ -361,8 +361,8 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 </ul>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update Wasserstein-DRO model parameters dynamically.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -418,8 +418,8 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDRO.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Fit the model using CVXPY to solve the WDRO problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -451,8 +451,8 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution">
-<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'asymp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'asymp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution" title="Link to this definition">¶</a></dt>
 <dd><p>Compute worst-case distribution under Wasserstein ambiguity set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -531,9 +531,9 @@ Defaults to 0.</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDROsatisficing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDROsatisficing">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDROsatisficing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Robust satisficing version of Wasserstein DRO</p>
 <p>This model minimizes the subject to (approximated version) of the robust satisficing constraint of Wasserstein DRO. The Wasserstein Distance is defined as the minimum probability coupling of two distributions for the distance metric:</p>
 <div class="math notranslate nohighlight">
@@ -588,8 +588,8 @@ Disable for standardized data. Defaults to True.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update model parameters based on configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -602,8 +602,8 @@ Disable for standardized data. Defaults to True.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Fit model to data by solving an optimization problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -619,8 +619,8 @@ Disable for standardized data. Defaults to True.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle">
-<span class="sig-name descname"><span class="pre">fit_oracle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle">
+<span class="sig-name descname"><span class="pre">fit_oracle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle" title="Link to this definition">¶</a></dt>
 <dd><p>Depreciated, find the optimal that given the ambiguity constraint.</p>
 <dl>
 <dt>Args:</dt><dd><p>X (np.ndarray): Input feature matrix with shape (n_samples, n_features).</p>
@@ -632,8 +632,8 @@ Disable for standardized data. Defaults to True.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution">
-<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -655,17 +655,17 @@ Disable for standardized data. Defaults to True.</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Wasserstein DRO</a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.fit()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.worst_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDRO"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDRO.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDRO.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit_oracle()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.worst_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing</span></code></a><ul>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.update"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.fit_oracle()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.worst_distribution"><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing.worst_distribution()</span></code></a></li>
 </ul>
 </li>
 </ul>

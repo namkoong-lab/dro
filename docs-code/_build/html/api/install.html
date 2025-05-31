@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Installation Guide &#8212; dro 0.2.2 documentation</title>
+    <title>Installation Guide &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <script src="../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -152,7 +152,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -269,7 +269,8 @@
 <h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading">¶</a></h1>
 <section id="prepare-mosek-license">
 <h2>(1) Prepare <code class="docutils literal notranslate"><span class="pre">Mosek</span></code> license<a class="headerlink" href="#prepare-mosek-license" title="Link to this heading">¶</a></h2>
-<p>Our package is built upon <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> and <code class="docutils literal notranslate"><span class="pre">mosek</span></code>, which needs the license file. The steps are as follows:</p>
+<p>Our package is built upon <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> and <code class="docutils literal notranslate"><span class="pre">mosek</span></code> (optional), which needs the license file. The steps are as follows.</p>
+<p>If you want to use <code class="docutils literal notranslate"><span class="pre">mosek</span></code> as the solver, please:</p>
 <ul>
 <li><p>Request license at <a class="reference external" href="https://www.mosek.com/products/academic-licenses/">Official Website</a>, and then the license <code class="docutils literal notranslate"><span class="pre">mosek.lic</span></code> will be emailed to you.</p></li>
 <li><p>Put your license in your home directory as follows:</p>
@@ -280,6 +281,19 @@ mv<span class="w"> </span>/path_to_license/mosek.lic<span class="w"> </span>mose
 </div>
 </li>
 </ul>
+<p>Otherwise, you can set the solver among some open-source solvers such as <cite>ECOS</cite>, <cite>SCS</cite> in <cite>cvxpy</cite> (see “<a class="reference external" href="https://www.cvxpy.org/tutorial/solvers/index.html">https://www.cvxpy.org/tutorial/solvers/index.html</a>” for more details). In any given DRO model, this can be done during initialization:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>XXDRO<span class="o">(</span>...,<span class="w"> </span><span class="nv">solver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ECOS&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>by simply updating after initialization:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>model.solver<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ECOS&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>These solvers can solve all the optimization problems implemented in the package as well.</p>
 </section>
 <section id="install-dro-package">
 <h2>(2) Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package<a class="headerlink" href="#install-dro-package" title="Link to this heading">¶</a></h2>

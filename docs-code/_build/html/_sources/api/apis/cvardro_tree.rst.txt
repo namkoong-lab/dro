@@ -1,7 +1,7 @@
 LGBM
 ================
 
-.. automodule:: dro.src.tree_model.lgbm
+.. automodule:: dro.tree_model.lgbm
    :members: 
    :undoc-members:
    :show-inheritance:

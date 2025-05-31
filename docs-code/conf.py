@@ -5,13 +5,13 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.abspath('../dro/src'))  
+sys.path.insert(0, os.path.abspath('../src/dro'))  
 print(sys.path)
 
 project = 'dro'
 copyright = '2025, DRO developers'
 author = 'DRO developers'
-release = '0.2.2'
+release = '0.3.3'
 
 # html_static_path = ['../docs']
 html_baseurl = 'https://namkoong-lab.github.io/dro/' 
@@ -67,6 +67,7 @@ html_theme_options = {
     "globaltoc_collapse": True,
     "banner_text": 'A GIFT to the whole DRO community!',
     "banner_hiding": "temporal",
+    'body_max_width': '1500px'
     # 'navigation_depth': 4,
     # 'collapse_navigation': True
     # "canonical_url": "", 

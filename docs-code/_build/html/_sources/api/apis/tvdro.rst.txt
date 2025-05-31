@@ -1,7 +1,7 @@
 TV DRO 
 ==========
 
-.. automodule:: dro.src.linear_model.tv_dro
+.. automodule:: dro.linear_model.tv_dro
    :members:
    :undoc-members:
    :show-inheritance:

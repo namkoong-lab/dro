@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>KL-DRO &#8212; dro 0.2.2 documentation</title>
+    <title>KL-DRO &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -289,12 +289,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.src.linear_model.kl_dro">
-<span id="kl-dro"></span><h1>KL-DRO<a class="headerlink" href="#module-dro.src.linear_model.kl_dro" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.linear_model.kl_dro">
+<span id="kl-dro"></span><h1>KL-DRO<a class="headerlink" href="#module-dro.linear_model.kl_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.kl_dro.</span></span><span class="sig-name descname"><span class="pre">KLDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
+<dt class="sig sig-object py" id="dro.linear_model.kl_dro.KLDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.kl_dro.</span></span><span class="sig-name descname"><span class="pre">KLDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.kl_dro.KLDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Kullback-Leibler divergence-based Distributionally Robust Optimization (KL-DRO) model.</p>
 <p>This model minimizes a KL-robust loss function for both regression and classification.</p>
 <p>Reference: &lt;<a class="reference external" href="https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf">https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf</a>&gt;</p>
@@ -360,8 +360,8 @@ Disable when data is pre-centered.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.kl_dro.KLDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.kl_dro.KLDRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update KL-DRO model configuration parameters dynamically.</p>
 <p>Primarily handles robustness parameter (eps) updates while maintaining 
 optimization problem structure. Preserves existing dual variables until
@@ -401,8 +401,8 @@ Recognized keys:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.kl_dro.KLDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.kl_dro.KLDRO.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Solve KL-constrained distributionally robust optimization problem.</p>
 <p>Constructs and solves the convex optimization problem:</p>
 <div class="math notranslate nohighlight">
@@ -464,8 +464,8 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.kl_dro.KLDRO.worst_distribution">
-<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.kl_dro.KLDRO.worst_distribution" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.kl_dro.KLDRO.worst_distribution">
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.kl_dro.KLDRO.worst_distribution" title="Link to this definition">¶</a></dt>
 <dd><p>Compute the worst-case distribution under KL divergence constraint.</p>
 <p>The worst-case distribution weights are computed via exponential tilting:</p>
 <div class="math notranslate nohighlight">
@@ -542,10 +542,10 @@ Must match <code class="docutils literal notranslate"><span class="pre">self.inp
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">KL-DRO</a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO"><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.update"><code class="docutils literal notranslate"><span class="pre">KLDRO.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO.fit()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.kl_dro.KLDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">KLDRO.worst_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.kl_dro.KLDRO"><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.linear_model.kl_dro.KLDRO.update"><code class="docutils literal notranslate"><span class="pre">KLDRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.kl_dro.KLDRO.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.kl_dro.KLDRO.worst_distribution"><code class="docutils literal notranslate"><span class="pre">KLDRO.worst_distribution()</span></code></a></li>
 </ul>
 </li>
 </ul>

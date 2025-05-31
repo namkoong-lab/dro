@@ -2,11 +2,11 @@ from setuptools import setup,find_packages
 import os 
 
 here = os.path.abspath(os.path.dirname(__file__))
-md_path = os.path.join(here, 'dro/README.md')
+md_path = os.path.join(here, 'src/README.md')
 
 setup(
     name='dro',
-    version='0.3.2',    
+    version='0.3.3',    
     license='MIT License',
     description='A package of distributionally robust optimization (DRO) methods. Implemented via cvxpy and PyTorch',
     long_description=open(md_path, encoding='utf-8').read(),
@@ -14,7 +14,8 @@ setup(
     url='https://github.com/namkoong-lab/dro',
     author='DRO developers.',
     author_email='liujiashuo77@gmail.com, tw2837@columbia.edu',
-    packages=find_packages(),
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     install_requires=['pandas',
                       'numpy>=1.20',                     
                       'scikit-learn',

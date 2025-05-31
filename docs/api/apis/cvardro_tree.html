@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>LGBM &#8212; dro 0.2.2 documentation</title>
+    <title>LGBM &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -151,7 +151,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -274,11 +274,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.src.tree_model.lgbm">
-<span id="lgbm"></span><h1>LGBM<a class="headerlink" href="#module-dro.src.tree_model.lgbm" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.tree_model.lgbm">
+<span id="lgbm"></span><h1>LGBM<a class="headerlink" href="#module-dro.tree_model.lgbm" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.KLDRO_LGBM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.tree_model.lgbm.</span></span><span class="sig-name descname"><span class="pre">KLDRO_LGBM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.KLDRO_LGBM" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.KLDRO_LGBM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.tree_model.lgbm.</span></span><span class="sig-name descname"><span class="pre">KLDRO_LGBM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.KLDRO_LGBM" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Light GBM model with KL-Divergence Distributionally Robust Optimization (DRO)</p>
 <dl class="field-list simple">
@@ -297,7 +297,7 @@
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Requires LGBM configuration via <a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.update" title="dro.src.tree_model.lgbm.KLDRO_LGBM.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
+<p>Requires LGBM configuration via <a class="reference internal" href="#dro.tree_model.lgbm.KLDRO_LGBM.update" title="dro.tree_model.lgbm.KLDRO_LGBM.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
 </div>
 <p>Initialize KL-DRO LGBM model</p>
 <dl class="field-list simple">
@@ -312,8 +312,8 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.KLDRO_LGBM.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.KLDRO_LGBM.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.KLDRO_LGBM.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update LGBM training configuration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -332,8 +332,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.KLDRO_LGBM.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.loss" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.KLDRO_LGBM.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.KLDRO_LGBM.loss" title="Link to this definition">¶</a></dt>
 <dd><p>Compute base loss values</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -355,8 +355,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.KLDRO_LGBM.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.KLDRO_LGBM.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.KLDRO_LGBM.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Train KL-DRO LGBM model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -378,8 +378,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.KLDRO_LGBM.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.predict" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.KLDRO_LGBM.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.KLDRO_LGBM.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Generate predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -398,16 +398,16 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.KLDRO_LGBM.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.score" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.KLDRO_LGBM.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.KLDRO_LGBM.score" title="Link to this definition">¶</a></dt>
 <dd><p>Testing function</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.tree_model.lgbm.</span></span><span class="sig-name descname"><span class="pre">Chi2DRO_LGBM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.Chi2DRO_LGBM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.tree_model.lgbm.</span></span><span class="sig-name descname"><span class="pre">Chi2DRO_LGBM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.Chi2DRO_LGBM" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Light GBM model with Chi2-Divergence Distributionally Robust Optimization (DRO)</p>
 <dl class="field-list simple">
@@ -426,7 +426,7 @@
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Requires LGBM configuration via <a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.update" title="dro.src.tree_model.lgbm.Chi2DRO_LGBM.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
+<p>Requires LGBM configuration via <a class="reference internal" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.update" title="dro.tree_model.lgbm.Chi2DRO_LGBM.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
 </div>
 <p>Initialize KL-DRO LGBM model</p>
 <dl class="field-list simple">
@@ -441,8 +441,8 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.Chi2DRO_LGBM.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update LGBM training configuration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -461,8 +461,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.loss" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.Chi2DRO_LGBM.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.loss" title="Link to this definition">¶</a></dt>
 <dd><p>Compute base loss values</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -484,8 +484,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.Chi2DRO_LGBM.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Train KL-DRO LGBM model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -507,8 +507,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.predict" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.Chi2DRO_LGBM.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Generate predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -527,16 +527,16 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.Chi2DRO_LGBM.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.score" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.Chi2DRO_LGBM.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.score" title="Link to this definition">¶</a></dt>
 <dd><p>Testing function</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.CVaRDRO_LGBM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.tree_model.lgbm.</span></span><span class="sig-name descname"><span class="pre">CVaRDRO_LGBM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.CVaRDRO_LGBM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.tree_model.lgbm.</span></span><span class="sig-name descname"><span class="pre">CVaRDRO_LGBM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.CVaRDRO_LGBM" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>LGBM model with Conditional Value-at-Risk (CVaR) Distributionally Robust Optimization (DRO)</p>
 <dl class="field-list simple">
@@ -555,7 +555,7 @@
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Requires LGBM configuration via <a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.update" title="dro.src.tree_model.lgbm.CVaRDRO_LGBM.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
+<p>Requires LGBM configuration via <a class="reference internal" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.update" title="dro.tree_model.lgbm.CVaRDRO_LGBM.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
 </div>
 <p>Initialize CVaR-DRO LGBM model</p>
 <dl class="field-list simple">
@@ -570,8 +570,8 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.CVaRDRO_LGBM.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.CVaRDRO_LGBM.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update LGBM training configuration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -590,8 +590,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.CVaRDRO_LGBM.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.loss" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.CVaRDRO_LGBM.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.loss" title="Link to this definition">¶</a></dt>
 <dd><p>Compute base loss values</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -613,8 +613,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.CVaRDRO_LGBM.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.CVaRDRO_LGBM.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Train CVaR-DRO LGBM model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -636,8 +636,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.CVaRDRO_LGBM.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.predict" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.CVaRDRO_LGBM.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Generate predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -656,8 +656,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.tree_model.lgbm.CVaRDRO_LGBM.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.score" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.tree_model.lgbm.CVaRDRO_LGBM.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.score" title="Link to this definition">¶</a></dt>
 <dd><p>Testing function</p>
 </dd></dl>
 
@@ -680,28 +680,28 @@
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">LGBM</a><ul>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.update"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.loss()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.fit()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.predict()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.KLDRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.score()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.KLDRO_LGBM"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM</span></code></a><ul>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.KLDRO_LGBM.update"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.KLDRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.loss()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.KLDRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.KLDRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.KLDRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM.score()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.loss()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.fit()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.predict()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.Chi2DRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.score()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.Chi2DRO_LGBM"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM</span></code></a><ul>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.loss()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM.score()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.loss()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.fit()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.predict()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.tree_model.lgbm.CVaRDRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.score()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.CVaRDRO_LGBM"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM</span></code></a><ul>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.loss"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.loss()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.predict"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.score"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM.score()</span></code></a></li>
 </ul>
 </li>
 </ul>

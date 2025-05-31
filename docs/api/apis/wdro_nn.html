@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wasserstein DRO &#8212; dro 0.2.2 documentation</title>
+    <title>Wasserstein DRO &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -279,12 +279,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.src.neural_model.wdro_nn">
-<span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.src.neural_model.wdro_nn" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.neural_model.wdro_nn">
+<span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.neural_model.wdro_nn" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.neural_model.wdro_nn.WNNDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.neural_model.wdro_nn.</span></span><span class="sig-name descname"><span class="pre">WNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PGD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.neural_model.wdro_nn.WNNDRO" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.src.neural_model.base_nn.BaseNNDRO" title="dro.src.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
+<dt class="sig sig-object py" id="dro.neural_model.wdro_nn.WNNDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.wdro_nn.</span></span><span class="sig-name descname"><span class="pre">WNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PGD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.wdro_nn.WNNDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.neural_model.base_nn.BaseNNDRO" title="dro.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
 <p>Wasserstein Neural DRO with Adversarial Robustness.</p>
 <p>Initialize Wasserstein DRO model with adversarial training.</p>
 <dl class="field-list simple">
@@ -367,7 +367,7 @@ Defaults to 0.02.</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Wasserstein DRO</a><ul>
-<li><a class="reference internal" href="#dro.src.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a></li>
+<li><a class="reference internal" href="#dro.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a></li>
 </ul>
 </li>
 </ul>

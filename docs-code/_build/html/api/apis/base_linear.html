@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Linear DRO Base Class &#8212; dro 0.2.2 documentation</title>
+    <title>Linear DRO Base Class &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -152,7 +152,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -287,11 +287,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.src.linear_model.base">
-<span id="linear-dro-base-class"></span><h1>Linear DRO Base Class<a class="headerlink" href="#module-dro.src.linear_model.base" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.linear_model.base">
+<span id="linear-dro-base-class"></span><h1>Linear DRO Base Class<a class="headerlink" href="#module-dro.linear_model.base" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.base.</span></span><span class="sig-name descname"><span class="pre">BaseLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.base.</span></span><span class="sig-name descname"><span class="pre">BaseLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for Linear Distributionally Robust Optimization (DRO) models.</p>
 <p>This class supports both regression and binary classification tasks. To ensure convex optimization,
@@ -308,8 +308,8 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.update_kernel">
-<span class="sig-name descname"><span class="pre">update_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.update_kernel" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO.update_kernel">
+<span class="sig-name descname"><span class="pre">update_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO.update_kernel" title="Link to this definition">¶</a></dt>
 <dd><p>Update model class (kernel parameters) based on configuration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -333,8 +333,8 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update model parameters based on configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -344,8 +344,8 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Fit model to data by solving an optimization problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -358,8 +358,8 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.load" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO.load" title="Link to this definition">¶</a></dt>
 <dd><p>Load model parameters from a configuration dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -369,8 +369,8 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.predict" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict output based on input data and model parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -386,8 +386,8 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.score" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO.score" title="Link to this definition">¶</a></dt>
 <dd><p>Compute accuracy and F1 score for classification tasks, or MSE for regression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -421,8 +421,8 @@ this class only supports linear models or kernelized models, e.g., SVM, Linear R
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.base.BaseLinearDRO.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.base.BaseLinearDRO.evaluate" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>Evaluate model performance with bias-corrected mean squared error (MSE) or binary cross entropy error (BCE).</p>
 <p>Specifically designed for OLS / Logistic models to compute an unbiased performance estimate 
 by adjusting for the covariance structure of the features. This implementation 
@@ -491,14 +491,14 @@ Must match the model’s <cite>input_dim</cite> (n_features).</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Linear DRO Base Class</a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.update_kernel"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update_kernel()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.fit()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.load"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.load()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.predict()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.score()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.base.BaseLinearDRO.evaluate"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.update_kernel"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update_kernel()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.fit"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.load"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.load()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.predict"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.score()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.evaluate"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.evaluate()</span></code></a></li>
 </ul>
 </li>
 </ul>

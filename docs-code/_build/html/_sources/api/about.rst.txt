@@ -3,7 +3,7 @@
 About
 ======
 
-.. image:: ./logo.png
+.. image:: ./logo-new.png
    :width: 800px
    :align: center
 
@@ -23,7 +23,7 @@ As for the latest ``v0.2.2`` version, `dro` supports:
 
 .. list-table:: Synthetic Data Generation Modules
    :header-rows: 1
-   :widths: 25 25 50
+   :widths: 20 20 60
 
    * - Python Module
      - Function Name
@@ -33,28 +33,35 @@ As for the latest ``v0.2.2`` version, `dro` supports:
      - Basic classification task
    * - 
      - ``classification_DN21``
-     - Following Section 3.1.1 of "Learning Models with Uniform Performance via Distributionally Robust Optimization"
+     - Following Section 3.1.1 of [1]
    * - 
      - ``classification_SNVD20``
-     - Following Section 5.1 of "Certifying Some Distributional Robustness with Principled Adversarial Training"
+     - Following Section 5.1 of [2]
    * - 
      - ``classification_LWLC``
-     - Following Section 4.1 (Classification) of "Distributionally Robust Optimization with Data Geometry"
+     - Following Section 4.1 (Classification) of [3]
    * - :file:`dro.src.data.dataloader_regression`
      - ``regression_basic``
      - Basic regression task
    * - 
      - ``regression_DN20_1``
-     - Following Section 3.1.2 of "Learning Models with Uniform Performance via Distributionally Robust Optimization"
+     - Following Section 3.1.2 of [1]
    * - 
      - ``regression_DN20_2``
-     - Following Section 3.1.3 of "Learning Models with Uniform Performance via Distributionally Robust Optimization"
+     - Following Section 3.1.3 of [1]
    * - 
      - ``regression_DN20_3``
-     - Following Section 3.3 of "Learning Models with Uniform Performance via Distributionally Robust Optimization"
+     - Following Section 3.3 of [1]
    * - 
      - ``regression_LWLC``
-     - Following Section 4.1 (Regression) of "Distributionally Robust Optimization with Data Geometry"
+     - Following Section 4.1 (Regression) of [3]
+  
+[1] Learning Models with Uniform Performance via Distributionally Robust Optimization.
+
+[2] Certifying Some Distributional Robustness with Principled Adversarial Training.
+
+[3] Distributionally Robust Optimization with Data Geometry.
+
 
 (2) Linear DRO models
 ---------------------
@@ -150,9 +157,15 @@ As for the latest ``v0.2.2`` version, `dro` supports:
    * - :file:`dro.src.tree_model.xgb`
      - ``CVaRDRO_XGB``
      - CVaR-DRO for XGBoost
+   * - :file:`dro.src.tree_model.xgb`
+     - ``Chi2DRO_XGB``
+     - Chi2-DRO for XGBoost
    * - :file:`dro.src.tree_model.lgbm`
      - ``KLDRO_LGBM``
      - KL-DRO for Light GBM
    * - :file:`dro.src.tree_model.lgbm`
      - ``CVaRDRO_LGBM``
      - CVaR-DRO for Light GBM
+   * - :file:`dro.src.tree_model.lgbm`
+     - ``Chi2DRO_LGBM``
+     - Chi2-DRO for Light GBM

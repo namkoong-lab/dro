@@ -1,7 +1,7 @@
 CVaR DRO 
 ==========
 
-.. automodule:: dro.src.linear_model.cvar_dro
+.. automodule:: dro.linear_model.cvar_dro
    :members: 
    :undoc-members:
    :show-inheritance:

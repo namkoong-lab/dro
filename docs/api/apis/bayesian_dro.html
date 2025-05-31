@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Bayesian DRO &#8212; dro 0.2.2 documentation</title>
+    <title>Bayesian DRO &#8212; dro 0.3.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -152,7 +152,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.2.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -287,12 +287,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.src.linear_model.bayesian_dro">
-<span id="bayesian-dro"></span><h1>Bayesian DRO<a class="headerlink" href="#module-dro.src.linear_model.bayesian_dro" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.linear_model.bayesian_dro">
+<span id="bayesian-dro"></span><h1>Bayesian DRO<a class="headerlink" href="#module-dro.linear_model.bayesian_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dro.src.linear_model.bayesian_dro.BayesianDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.src.linear_model.bayesian_dro.</span></span><span class="sig-name descname"><span class="pre">BayesianDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.bayesian_dro.BayesianDRO" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.src.linear_model.base.BaseLinearDRO" title="dro.src.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
+<dt class="sig sig-object py" id="dro.linear_model.bayesian_dro.BayesianDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.bayesian_dro.</span></span><span class="sig-name descname"><span class="pre">BayesianDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.bayesian_dro.BayesianDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>This model minimizes a Bayesian version for regression and other types of losses</p>
 <p>Reference: &lt;<a class="reference external" href="https://epubs.siam.org/doi/10.1137/21M1465548">https://epubs.siam.org/doi/10.1137/21M1465548</a>&gt;</p>
 <p>Initialize the Bayesian DRO model.</p>
@@ -309,8 +309,8 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.bayesian_dro.BayesianDRO.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.update" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.bayesian_dro.BayesianDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.bayesian_dro.BayesianDRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update the model configuration dynamically.</p>
 <p>Modify parameters like robustness level (<cite>eps</cite>), optimization solver, distance metric type, 
 or other algorithm settings during runtime.</p>
@@ -352,8 +352,8 @@ or negative values for parameters like <code class="docutils literal notranslate
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.bayesian_dro.BayesianDRO.resample">
-<span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.resample" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.bayesian_dro.BayesianDRO.resample">
+<span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.bayesian_dro.BayesianDRO.resample" title="Link to this definition">¶</a></dt>
 <dd><p>Generate resampled data based on posterior parameters.</p>
 <p>This method produces new feature and target arrays whose dimensions are determined by the model’s posterior parameters, input dimensionality, and the sample size of the original data.</p>
 <dl class="field-list simple">
@@ -394,8 +394,8 @@ or negative values for parameters like <code class="docutils literal notranslate
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dro.src.linear_model.bayesian_dro.BayesianDRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.fit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dro.linear_model.bayesian_dro.BayesianDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.bayesian_dro.BayesianDRO.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Train the Bayesian DRO model by solving the convex optimization problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -472,10 +472,10 @@ where K = <cite>posterior_param_num</cite>, eps = <cite>self.eps</cite></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Bayesian DRO</a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.bayesian_dro.BayesianDRO"><code class="docutils literal notranslate"><span class="pre">BayesianDRO</span></code></a><ul>
-<li><a class="reference internal" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.update"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.update()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.resample"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.resample()</span></code></a></li>
-<li><a class="reference internal" href="#dro.src.linear_model.bayesian_dro.BayesianDRO.fit"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.bayesian_dro.BayesianDRO"><code class="docutils literal notranslate"><span class="pre">BayesianDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.linear_model.bayesian_dro.BayesianDRO.update"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.bayesian_dro.BayesianDRO.resample"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.resample()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.bayesian_dro.BayesianDRO.fit"><code class="docutils literal notranslate"><span class="pre">BayesianDRO.fit()</span></code></a></li>
 </ul>
 </li>
 </ul>
