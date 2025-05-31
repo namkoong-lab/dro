@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 from sklearn.datasets import make_classification, make_regression
-from dro.src.linear_model.chi2_dro import Chi2DRO, Chi2DROError  
-from dro.src.linear_model.base import ParameterError 
+from dro.linear_model.chi2_dro import Chi2DRO, Chi2DROError  
+from dro.linear_model.base import ParameterError 
 
 
 @pytest.fixture(params=['classification', 'regression'])

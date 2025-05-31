@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
-from dro.src.linear_model.hr_dro import HR_DRO_LR, HRDROError
-from dro.src.linear_model.base import DataValidationError
+from dro.linear_model.hr_dro import HR_DRO_LR, HRDROError
+from dro.linear_model.base import DataValidationError
 
 class TestHRDROLinearRegression(unittest.TestCase):
     """Unit tests for HR_DRO_LR class."""

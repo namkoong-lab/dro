@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from sklearn.datasets import make_classification, make_regression
-from dro.src.linear_model.cvar_dro import CVaRDRO, CVaRDROError
+from dro.linear_model.cvar_dro import CVaRDRO, CVaRDROError
 
 # --------------------------
 # Test Data Fixtures

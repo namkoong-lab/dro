@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from dro.src.linear_model.marginal_dro import MarginalCVaRDRO, MarginalCVaRDROError
+from dro.linear_model.marginal_dro import MarginalCVaRDRO, MarginalCVaRDROError
 
 class TestMarginalCVaRDRO(unittest.TestCase):
     """Unit tests for Marginal CVaR-DRO model."""

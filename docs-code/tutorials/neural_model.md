@@ -19,7 +19,7 @@ We follow [1] to implement these two $f$-DROs. Our code is largely based on http
 - reg: the strength of the $l_2$-regularization
 
 
-[1] Large-Scale Methods for Distributionally Robust Optimization. Daniel Levy, Yair Carmon, John Duchi, and Aaron Sidford. 
+[1] Large-Scale Methods for Distributionally Robust Optimization. Daniel Levy, Yair Carmon, John Duchi, and Aaron Sidford. NeurIPS 2020.
 
 
 ## 2. Wasserstein DRO
@@ -32,7 +32,7 @@ For WDRO on neural networks, the main challenge is the perturbation. In our pack
 - adversarial_step_size: Learning rate of the inner adversarial attacking.
 
 
-[2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi.
+[2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi. ICLR 2018.
 
 
 ## 3. Holistic Robust DRO
@@ -44,4 +44,4 @@ We follow [3], and our code is largely based on https://github.com/RyanLucas3/HR
 * $\epsilon$: Robustness parameter for the model noise (perturbed ball size), denoted as ``epsilon`` in the model config.
 
 
-[3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys.
+[3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.

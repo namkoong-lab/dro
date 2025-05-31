@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from dro.src.linear_model.tv_dro import TVDRO, TVDROError
+from dro.linear_model.tv_dro import TVDRO, TVDROError
 
 class TestTVDROModel(unittest.TestCase):
     """Unit tests for TV-DRO model implementation."""

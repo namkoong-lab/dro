@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import torch
-from dro.src.neural_model.hrdro_nn import HRNNDRO, DROError
+from dro.neural_model.hrdro_nn import HRNNDRO, DROError
 
 class TestHRNNDROModel(unittest.TestCase):
     def test_attack_robustness(self):

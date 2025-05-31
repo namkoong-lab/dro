@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import torch
-from dro.src.neural_model.wdro_nn import WNNDRO
+from dro.neural_model.wdro_nn import WNNDRO
 
 class TestWNNDROModel(unittest.TestCase):
     def test_attack_robustness(self):

@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 import torch
-from dro.src.neural_model.fdro_nn import Chi2NNDRO, CVaRNNDRO
-from dro.src.neural_model.base_nn import DataValidationError
+from dro.neural_model.fdro_nn import Chi2NNDRO, CVaRNNDRO
+from dro.neural_model.base_nn import DataValidationError
 
 class TestNeuralDROModels(unittest.TestCase):
     """Unit tests for Neural DRO model implementations."""

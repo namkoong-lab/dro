@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from dro.src.linear_model.mot_dro import MOTDRO, MOTDROError
+from dro.linear_model.mot_dro import MOTDRO, MOTDROError
 
 class TestMOTDROModel(unittest.TestCase):
     """Unit tests for MOT-DRO model implementation."""

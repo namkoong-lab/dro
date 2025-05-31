@@ -1,11 +1,11 @@
 import pytest
 import numpy as np
 from sklearn.datasets import make_classification, make_regression
-from dro.src.linear_model.conditional_dro import (  
+from dro.linear_model.conditional_dro import (  
     ConditionalCVaRDRO, 
     ConditionalCVaRDROError
 )
-from dro.src.linear_model.base import ParameterError, InstallError
+from dro.linear_model.base import ParameterError, InstallError
 
 # --------------------------
 # Test Fixtures

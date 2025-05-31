@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
-from dro.src.linear_model.mmd_dro import MMD_DRO, MMDDROError
-from dro.src.linear_model.base import ParameterError
+from dro.linear_model.mmd_dro import MMD_DRO, MMDDROError
+from dro.linear_model.base import ParameterError
 
 class TestMMDDROModel(unittest.TestCase):
     """Unit tests for MMD-DRO model implementation."""

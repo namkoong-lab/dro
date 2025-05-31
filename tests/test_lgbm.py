@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.datasets import make_classification, make_regression
 from sklearn.model_selection import train_test_split
 from sklearn.exceptions import NotFittedError
-from dro.src.tree_model.lgbm import KLDRO_LGBM, CVaRDRO_LGBM, Chi2DRO_LGBM, NotFittedError 
+from dro.tree_model.lgbm import KLDRO_LGBM, CVaRDRO_LGBM, Chi2DRO_LGBM, NotFittedError 
 import lightgbm
 
 # --------------------------

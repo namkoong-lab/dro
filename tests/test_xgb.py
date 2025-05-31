@@ -4,7 +4,7 @@ import xgboost as xgb
 from sklearn.datasets import make_classification, make_regression
 from sklearn.model_selection import train_test_split
 from sklearn.exceptions import NotFittedError
-from dro.src.tree_model.xgb import KLDRO_XGB, CVaRDRO_XGB, Chi2DRO_XGB, NotFittedError
+from dro.tree_model.xgb import KLDRO_XGB, CVaRDRO_XGB, Chi2DRO_XGB, NotFittedError
 
 # --------------------------
 # Test Data Fixtures
