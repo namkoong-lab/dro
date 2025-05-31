@@ -1,0 +1,4 @@
+*.md
+*.ipynb
+docs/
+docs-code/
