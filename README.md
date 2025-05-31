@@ -95,6 +95,8 @@ As for the latest `v0.3.1` version, `dro` supports:
 ### (1) Synthetic data generation
 
 
+
+
 <table class="tg"><thead>
   <tr>
     <th class="tg-0pky">Python Module</th>
@@ -109,15 +111,15 @@ As for the latest `v0.3.1` version, `dro` supports:
   </tr>
   <tr>
     <td class="tg-0pky">classification_DN21</td>
-    <td class="tg-0pky">Following Section 3.1.1 of <br>"Learning Models with Uniform Performance via Distributionally Robust Optimization"</td>
+    <td class="tg-0pky">Following Section 3.1.1 of <br>[1]</td>
   </tr>
   <tr>
     <td class="tg-0pky">classification_SNVD20</td>
-    <td class="tg-0pky">Following Section 5.1 of <br>"Certifying Some Distributional Robustness with Principled Adversarial Training"</td>
+    <td class="tg-0pky">Following Section 5.1 of <br>[2]</td>
   </tr>
   <tr>
     <td class="tg-0lax">classification_LWLC</td>
-    <td class="tg-0lax">Following Section 4.1 (Classification) of <br>"Distributionally Robust Optimization with Data Geometry"</td>
+    <td class="tg-0lax">Following Section 4.1 (Classification) of <br>[3]"</td>
   </tr>
   <tr>
     <td class="tg-0lax" rowspan="5"><br><br><br><br><br>dro.src.data.dataloader_regression</td>
@@ -126,19 +128,19 @@ As for the latest `v0.3.1` version, `dro` supports:
   </tr>
   <tr>
     <td class="tg-0lax">regression_DN20_1</td>
-    <td class="tg-0lax">Following Section 3.1.2 of <br>"Learning Models with Uniform Performance via Distributionally Robust Optimization"</td>
+    <td class="tg-0lax">Following Section 3.1.2 of <br>[1]</td>
   </tr>
   <tr>
     <td class="tg-0lax">regression_DN20_2</td>
-    <td class="tg-0lax">Following Section 3.1.3 of <br>"Learning Models with Uniform Performance via Distributionally Robust Optimization"</td>
+    <td class="tg-0lax">Following Section 3.1.3 of <br>[1]</td>
   </tr>
   <tr>
     <td class="tg-0lax">regression_DN20_3</td>
-    <td class="tg-0lax">Following Section 3.3 of <br>"Learning Models with Uniform Performance via Distributionally Robust Optimization"</td>
+    <td class="tg-0lax">Following Section 3.3 of <br>[1]</td>
   </tr>
   <tr>
     <td class="tg-0lax">regression_LWLC</td>
-    <td class="tg-0lax">Following Section 4.1 (Regression) <br>of "Distributionally Robust Optimization with Data Geometry"</td>
+    <td class="tg-0lax">Following Section 4.1 (Regression) <br>of [3]</td>
   </tr>
 </tbody></table>
 
@@ -270,7 +272,7 @@ The models listed below are solved by function approximation (``xgboost``, ``lig
     <th class="tg-0lax">Description</th>
   </tr></thead>
 <tbody>
-    <td class="tg-0lax" rowspan="2"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.tree_model.lgbm</span></td>
+    <td class="tg-0lax" rowspan="3"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.tree_model.lgbm</span></td>
     <td class="tg-0lax">KLDRO_LGBM</td>
     <td class="tg-0lax">KL Divergence-based Robust LightGBM</td>
   </tr>
@@ -285,7 +287,7 @@ The models listed below are solved by function approximation (``xgboost``, ``lig
     <td class="tg-0lax">CVaRDRO_LGBM</td>
     <td class="tg-0lax">CVaR Robust LightGBM</td>
   </tr>
-    <td class="tg-0lax" rowspan="2"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.tree_model.xgb</span></td>
+    <td class="tg-0lax" rowspan="3"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.src.tree_model.xgb</span></td>
     <td class="tg-0lax">KLDRO_XGB</td>
     <td class="tg-0lax">KL Divergence-based Robust XGBoost</td>
   </tr>
@@ -326,3 +328,12 @@ In linear DRO models, we provide additional interfaces for understanding the wor
 For more details, please refer to https://python-dro.org for more details!
 
 ps: our logo is generated via GPT:)
+
+
+### Other Reference
+[1] Learning Models with Uniform Performance via Distributionally Robust Optimization. Annals of Statistics. Annals of Statistics. 2021.
+
+[2] Certifying Some Distributional Robustness with Principled Adversarial Training. ICLR 2018.
+
+[3] Distributionally Robust Optimization with Data Geometry. NeurIPS 2022.
+
