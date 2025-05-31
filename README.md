@@ -4,8 +4,9 @@
 [![codecov](https://codecov.io/github/namkoong-lab/dro/graph/badge.svg?token=QFYLOVYZXF)](https://codecov.io/github/namkoong-lab/dro)
 
 # `dro`: A Python Package for Distributionally Robust Optimization in Machine Learning
-> Jiashuo Liu<sup>†</sup>, Tianyu Wang<sup>†</sup>, Henry Lam, Hongseok Namkoong, Jose Blanchet  
+> Jiashuo Liu<sup>†</sup>, Tianyu Wang<sup>†</sup>, Henry Lam<sup>*</sup>, Hongseok Namkoong<sup>*</sup>, Jose Blanchet<sup>*</sup>  
 > <sub>† equal contributions (α-β order)</sub>
+> <sup>* equal advising</sup>
 
 <p align="center"><img src='./logo-new.png' width='500px'/></p>
 
