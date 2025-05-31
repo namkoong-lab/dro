@@ -5,8 +5,7 @@
 
 # `dro`: A Python Package for Distributionally Robust Optimization in Machine Learning
 > Jiashuo Liu<sup>†</sup>, Tianyu Wang<sup>†</sup>, Henry Lam<sup>*</sup>, Hongseok Namkoong<sup>*</sup>, Jose Blanchet<sup>*</sup>  
-> <sub>† equal contributions (α-β order)</sub>
-> <sup>* equal advising</sup>
+> <sub>† equal contributions (α-β order)   * equal advising</sub>
 
 <p align="center"><img src='./logo-new.png' width='500px'/></p>
 
