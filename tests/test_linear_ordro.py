@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from sklearn.datasets import make_classification, make_regression
-from dro.linear_model.or_wasserstein_dro import ORWDRO, ORWDROError
+from src.dro.linear_model.or_wasserstein_dro import ORWDRO, ORWDROError
 
 # --------------------------
 # Test Fixtures

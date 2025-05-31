@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 from sklearn.datasets import make_classification, make_regression
-from dro.linear_model.sinkhorn_dro import SinkhornLinearDRO, SinkhornDROError 
-from dro.linear_model.base import ParameterError
+from src.dro.linear_model.sinkhorn_dro import SinkhornLinearDRO, SinkhornDROError 
+from src.dro.linear_model.base import ParameterError
 import torch 
 
 # --------------------------

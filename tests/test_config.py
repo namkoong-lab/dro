@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
-from dro.tree_model.lgbm import KLDRO_LGBM  
+from src.dro.tree_model.lgbm import KLDRO_LGBM  
 
 @pytest.fixture(scope="module")
 def fixed_data():

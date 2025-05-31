@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 from sklearn.datasets import make_classification, make_regression
-from dro.linear_model.bayesian_dro import BayesianDRO, BayesianDROError 
-from dro.linear_model.base import ParameterError, InstallError
+from src.dro.linear_model.bayesian_dro import BayesianDRO, BayesianDROError 
+from src.dro.linear_model.base import ParameterError, InstallError
 import cvxpy as cp
 # --------------------------
 # Test Fixtures

@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from sklearn.datasets import make_classification, make_regression
-from dro.linear_model.wasserstein_dro import (
+from src.dro.linear_model.wasserstein_dro import (
     WassersteinDRO,
     WassersteinDROsatisficing,
     WassersteinDROError,

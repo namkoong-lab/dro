@@ -2,7 +2,7 @@ import pytest
 import torch
 import numpy as np
 from scipy import optimize
-from dro.neural_model.fdro_utils import (  # Replace with actual import
+from src.dro.neural_model.fdro_utils import (  # Replace with actual import
     RobustLoss, chi_square_doro, cvar_doro,bisection,
     DROError, ParameterError, NumericalError
 )

@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
-from dro.linear_model.kl_dro import KLDRO, KLDROError
-from dro.linear_model.base import ParameterError
+from src.dro.linear_model.kl_dro import KLDRO, KLDROError
+from src.dro.linear_model.base import ParameterError
 
 class TestKLDROModel(unittest.TestCase):
     """Unit tests for Kullback-Leibler DRO model implementation."""
