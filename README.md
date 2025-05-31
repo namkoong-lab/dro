@@ -283,10 +283,6 @@ The models listed below are solved by function approximation (``xgboost``, ``lig
     <td class="tg-0lax">Chi2DRO_LGBM</td>
     <td class="tg-0lax">Chi2 Divergence-based Robust LightGBM</td>
   </tr>
-  <tr>
-    <td class="tg-0lax">CVaRDRO_LGBM</td>
-    <td class="tg-0lax">CVaR Robust LightGBM</td>
-  </tr>
     <td class="tg-0lax" rowspan="3"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.tree_model.xgb</span></td>
     <td class="tg-0lax">KLDRO_XGB</td>
     <td class="tg-0lax">KL Divergence-based Robust XGBoost</td>
