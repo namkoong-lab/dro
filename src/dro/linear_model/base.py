@@ -180,9 +180,20 @@ class BaseLinearDRO:
         if self.model_type in ['ols', 'lad']:
             return scores
 
-        preds = np.where(scores >= (0 if self.model_type == 'svm' else 0.5), 1, -1)
+        # For SVM, threshold on raw score at 0 (sign)
+        if self.model_type == 'svm':
+            preds = np.where(scores >= 0, 1, -1)
+        # For logistic, convert raw score (logit) to probability via sigmoid and threshold at 0.5
+        elif self.model_type == 'logistic':
+            # numerically stable sigmoid
+            safe_scores = np.clip(scores, -709, 709)
+            probs = 1.0 / (1.0 + np.exp(-safe_scores))
+            preds = np.where(probs >= 0.5, 1, -1)
+        else:
+            raise NotImplementedError("Prediction not implemented for the specified model_type value.")
         return preds
 
+            
     def score(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> Union[float, Tuple[float, float]]:
         """Compute accuracy and F1 score for classification tasks, or MSE for regression.
         
