@@ -33,6 +33,7 @@ src/dro/neural_model/base_nn.py
 src/dro/neural_model/fdro_nn.py
 src/dro/neural_model/fdro_utils.py
 src/dro/neural_model/hrdro_nn.py
+src/dro/neural_model/sinkhorn_nn.py
 src/dro/neural_model/wdro_nn.py
 src/dro/tree_model/__init__.py
 src/dro/tree_model/lgbm.py
@@ -54,6 +55,7 @@ tests/test_linear_tvdro.py
 tests/test_linear_wdro.py
 tests/test_nn_fdro.py
 tests/test_nn_hrdro.py
+tests/test_nn_sinkhorn.py
 tests/test_nn_wdro.py
 tests/test_robust_util.py
 tests/test_xgb.py
