@@ -8,6 +8,7 @@ SPHINXOPTS    = -W --keep-going -n
 SPHINXBUILD   = sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build
+SITEDIR       = ../docs
 LIVEPORT      = 8000
 DOCTREES      = $(BUILDDIR)/doctrees
 
@@ -15,12 +16,13 @@ DOCTREES      = $(BUILDDIR)/doctrees
 IGNORE_PATTERNS = "*.swp" "*.tmp" "*.bak" "*.pdf"
 
 # 伪目标声明
-.PHONY: help clean html dirhtml singlehtml livehtml epub latex pdf
+.PHONY: help clean html site dirhtml singlehtml livehtml epub latex pdf
 
 help:
 	@echo "请使用以下命令构建文档:"
 	@echo "  make clean       删除所有构建文件"
 	@echo "  make html        生成标准HTML文档"
+	@echo "  make site        生成网站HTML至 ../docs"
 	@echo "  make livehtml    启动实时预览服务器（开发模式）"
 	@echo "  make pdf         生成PDF文档（需要LaTeX）"
 	@echo "  make check       验证文档完整性"
@@ -34,6 +36,11 @@ html:
 	$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS)
 	@echo
 	@echo "构建完成。打开 $(BUILDDIR)/html/index.html 查看文档"
+
+site:
+	$(SPHINXBUILD) -b html -E -a "$(SOURCEDIR)" "$(SITEDIR)" $(SPHINXOPTS)
+	@echo
+	@echo "网站构建完成。打开 $(SITEDIR)/index.html 查看文档"
 
 livehtml:
 	@sphinx-autobuild -b html \

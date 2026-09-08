@@ -1,0 +1,7 @@
+Sphinx==8.1.3
+myst-parser
+nbsphinx
+piccolo-theme
+pypandoc-binary
+sphinx-autodoc-typehints
+sphinx-copybutton

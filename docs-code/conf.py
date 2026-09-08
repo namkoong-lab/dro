@@ -5,8 +5,7 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.abspath('../src/dro'))  
-print(sys.path)
+sys.path.insert(0, os.path.abspath('../src'))
 
 project = 'dro'
 copyright = '2025, DRO developers'
@@ -46,10 +45,18 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None)
 }
 
+# Allow local builds without network access. Published builds should leave this
+# unset so cross-project API links are resolved normally.
+if os.environ.get('DRO_DOCS_OFFLINE'):
+    intersphinx_mapping = {}
+    autodoc_mock_imports = ['cvxpy']
+
 source_suffix = {
     ".rst": "restructuredtext",
     ".md": "markdown",
 }
+
+exclude_patterns = ['_build']
 
 autodoc_typehints = "description" 
 
@@ -89,11 +96,12 @@ myst_enable_extensions = [
     "linkify",      
 ]
 
-nbsphinx_execute = 'auto'
+# Render committed notebook content without re-running long training examples.
+# Execute notebooks explicitly before committing when updated outputs are wanted.
+nbsphinx_execute = 'never'
 nbsphinx_kernel_name = 'python3'
 nbsphinx_timeout = 600
 nbsphinx_prompt_width = "0"
-nbsphinx_include_pattern = [] 
 
 
 autoclass_content = 'both'  
@@ -123,5 +131,6 @@ nitpick_ignore = [
     ('py:exc', 'DROError'),
     ('py:exc', 'CVaRDROError'),
     ('py:exc', 'LinearModel'),
-    ('py:exc', 'NotFittedError')
+    ('py:exc', 'NotFittedError'),
+    ('py:class', 'dro.neural_model.base_nn.DROError')
 ]
