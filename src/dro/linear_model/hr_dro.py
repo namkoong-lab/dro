@@ -282,6 +282,7 @@ class HR_DRO_LR(BaseLinearDRO):
         self.lambda_ = lambda_.value
         self.beta = beta.value
         self.eta = eta.value
+        self.robust_obj = float(problem.value)
 
         # Return model parameters in dictionary format
         return {"theta": self.theta.tolist(), "b": self.b}

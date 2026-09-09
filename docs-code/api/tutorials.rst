@@ -13,10 +13,11 @@ Tutorial
    :caption: Linear DRO
 
    ../tutorials/linear
+   ../tutorials/linear_groupdro
    ../tutorials/linear_fdro
-   ../tutorials/linear_wdro 
+   ../tutorials/linear_wdro
    ../tutorials/linear_mmddro
-   ../tutorials/linear_pdro 
+   ../tutorials/linear_pdro
    ../tutorials/linear_mixdro
 
 
@@ -25,14 +26,13 @@ Tutorial
    :caption: NN DRO
 
    ../tutorials/neural_model
-   
-   
+
 .. toctree::
    :maxdepth: 2
    :caption: Tree DRO
 
    ../tutorials/tree_model
-   
+
 
 .. toctree::
    :maxdepth: 2

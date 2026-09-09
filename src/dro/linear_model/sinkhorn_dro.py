@@ -325,6 +325,7 @@ class SinkhornLinearDRO(BaseLinearDRO):
         except RuntimeError as e:
             raise SinkhornDROError(f"Training failed: {str(e)}") from e
 
+        self.robust_obj = self._estimate_robust_objective(dataloader)
         return self._extract_parameters()
 
     #region Private Methods
@@ -366,6 +367,32 @@ class SinkhornLinearDRO(BaseLinearDRO):
             residuals = torch.clamp(1 - targets * predictions, min = 0) / lambda_reg
         residual_matrix = residuals.view(m, -1)
         return torch.mean(torch.logsumexp(residual_matrix, dim=0)-math.log(m)) * lambda_reg
+
+    def _estimate_robust_objective(self, dataloader: DataLoader) -> float:
+        """Estimate the fitted Sinkhorn objective on the training sample."""
+        self.model.eval()
+        lambda_reg = self.lambda_param * self.reg_param
+        m = 2 ** self.k_sample_max
+        objective_sum = 0.0
+        sample_count = 0
+
+        with torch.no_grad():
+            for data, target in dataloader:
+                data, target = data.to(self.device), target.to(self.device)
+                noise = (
+                    torch.randn((m, *data.shape), device=self.device)
+                    * math.sqrt(self.reg_param)
+                )
+                noisy_data = (data + noise).view(-1, data.shape[1])
+                repeated_target = target.repeat(m, 1)
+                predictions = self.model(noisy_data)
+                batch_objective = self._compute_loss(
+                    predictions, repeated_target, m, lambda_reg
+                )
+                objective_sum += batch_objective.item() * len(data)
+                sample_count += len(data)
+
+        return float(objective_sum / sample_count)
 
     def _sg_optimizer(self, dataloader: DataLoader) -> None:
         """Stochastic Gradient optimization."""
@@ -461,4 +488,3 @@ class SinkhornLinearDRO(BaseLinearDRO):
                 loss = self._compute_loss(predictions, repeated_target, m, lambda_reg)
                 (loss / level_probs[k]).backward()
                 optimizer.step()
-

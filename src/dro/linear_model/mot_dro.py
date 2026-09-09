@@ -244,6 +244,7 @@ class MOTDRO(BaseLinearDRO):
         self.theta = theta.value
         if self.fit_intercept == True:
             self.b = b.value
+        self.robust_obj = float(problem.value)
 
         model_params = {}
         model_params["theta"] = self.theta.reshape(-1).tolist()

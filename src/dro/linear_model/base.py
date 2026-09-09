@@ -42,6 +42,9 @@ class BaseLinearDRO:
     This class supports both regression and binary classification tasks. To ensure convex optimization,
     this class only supports linear models or kernelized models, e.g., SVM, Linear Regression, and Logistic Regression.
 
+    :ivar robust_obj: Robust empirical optimization objective from the most
+        recent successful fit, or ``None`` before it is available.
+
     """
     def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
         """
@@ -70,6 +73,7 @@ class BaseLinearDRO:
             self.theta = np.zeros(self.input_dim)
         self.fit_intercept = fit_intercept
         self.b = 0
+        self.robust_obj = None
 
         if solver not in cp.installed_solvers():
             raise InstallError(f"Unsupported solver {solver}. It does not exist in your package. Please change the solver or install {solver}.")

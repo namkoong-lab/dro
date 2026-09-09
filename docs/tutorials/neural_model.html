@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>NN-DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -281,7 +281,7 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="nn-dro">
 <h1>NN-DRO<a class="headerlink" href="#nn-dro" title="Link to this heading">¶</a></h1>
-<p>For <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO, and Holistic Robust DRO, we implement their <code class="docutils literal notranslate"><span class="pre">neural-network</span></code> version, where the backbone model is (by default) MLP.</p>
+<p>For <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO, Holistic Robust DRO, and Sinkhorn DRO, we implement their <code class="docutils literal notranslate"><span class="pre">neural-network</span></code> version, where the backbone model is (by default) MLP.</p>
 <p>We support the following NN architectures:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code>: Linear Model</p></li>
@@ -329,6 +329,59 @@ Implementation details are as follows:</p>
 <p>[3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.</p>
 </section>
 </section>
+<section id="sinkhorn-dro">
+<h2>4. Sinkhorn DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
+<p>Sinkhorn DRO uses an entropic-regularized Wasserstein distance and Gaussian input perturbations to construct a smooth robust loss. The implementation supports standard stochastic gradient (SG), multilevel Monte Carlo (MLMC), and randomized truncated MLMC (RTMLMC) optimization [4].</p>
+<section id="id3">
+<h3>Hyperparameters<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg_param</span></code>: Entropic regularization strength <span class="math notranslate nohighlight">\(\varepsilon &gt; 0\)</span>. It also sets the perturbation variance. Default: <code class="docutils literal notranslate"><span class="pre">1e-3</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lambda_param</span></code>: Positive loss-scaling factor <span class="math notranslate nohighlight">\(\lambda\)</span>. Together, <code class="docutils literal notranslate"><span class="pre">lambda_param</span> <span class="pre">*</span> <span class="pre">reg_param</span></code> controls the scale of the log-sum-exp robust loss. Default: <code class="docutils literal notranslate"><span class="pre">1e2</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">k_sample_max</span></code>: Maximum Monte Carlo level. SG uses <span class="math notranslate nohighlight">\(2^{\mathtt{k\_sample\_max}}\)</span> perturbation samples, so increasing this value improves the sampling approximation but increases computation exponentially. Default: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimization_type</span></code>: Stochastic estimator used during training. Choose <code class="docutils literal notranslate"><span class="pre">&quot;SG&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;MLMC&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;RTMLMC&quot;</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;SG&quot;</span></code>.</p></li>
+</ul>
+<p>The usual neural-model arguments are also available: <code class="docutils literal notranslate"><span class="pre">task_type</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;classification&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;regression&quot;</span></code>), <code class="docutils literal notranslate"><span class="pre">model_type</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;mlp&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;linear&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;resnet&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;alexnet&quot;</span></code>), and <code class="docutils literal notranslate"><span class="pre">device</span></code>.</p>
+</section>
+<section id="hyperparameter-setup">
+<h3>Hyperparameter setup<a class="headerlink" href="#hyperparameter-setup" title="Link to this heading">¶</a></h3>
+<p>The following classification setup uses all of the Sinkhorn defaults explicitly. <code class="docutils literal notranslate"><span class="pre">X</span></code> may be a NumPy array or PyTorch tensor, and <code class="docutils literal notranslate"><span class="pre">y</span></code> should contain class indices.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">SinkhornNNDRO</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
+    <span class="n">reg_param</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">lambda_param</span><span class="o">=</span><span class="mf">1e2</span><span class="p">,</span>
+    <span class="n">k_sample_max</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">optimization_type</span><span class="o">=</span><span class="s2">"SG"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For faster initial experiments, reduce <code class="docutils literal notranslate"><span class="pre">k_sample_max</span></code> (for example, to <code class="docutils literal notranslate"><span class="pre">3</span></code>) and increase it for the final run after selecting the other hyperparameters. The <code class="docutils literal notranslate"><span class="pre">lr</span></code>, <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, <code class="docutils literal notranslate"><span class="pre">epochs</span></code>, and <code class="docutils literal notranslate"><span class="pre">train_ratio</span></code> training settings are passed to <code class="docutils literal notranslate"><span class="pre">fit()</span></code>, rather than to the constructor.</p>
+<p>An existing Sinkhorn model can be reconfigured with <code class="docutils literal notranslate"><span class="pre">update()</span></code>. Note that the update keys are <code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">lambda</span></code>, whereas the corresponding constructor arguments are <code class="docutils literal notranslate"><span class="pre">reg_param</span></code> and <code class="docutils literal notranslate"><span class="pre">lambda_param</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="s2">"reg"</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span>
+    <span class="s2">"lambda"</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
+    <span class="s2">"k_sample_max"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">"optimization_type"</span><span class="p">:</span> <span class="s2">"MLMC"</span><span class="p">,</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="../api/notebooks/sinkhorn-nn.html"><span class="doc">Sinkhorn NN notebook</span></a> for classification, regression, custom-model, and optimizer examples.</p>
+<p>[4] <a class="reference external" href="https://arxiv.org/abs/2109.11926">Sinkhorn Distributionally Robust Optimization</a>. Jie Wang, Rui Gao, and Yao Xie.</p>
+</section>
+</section>
 </section>
 
 
@@ -356,6 +409,11 @@ Implementation details are as follows:</p>
 </li>
 <li><a class="reference internal" href="#holistic-robust-dro">3. Holistic Robust DRO</a><ul>
 <li><a class="reference internal" href="#id2">Hyperparameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sinkhorn-dro">4. Sinkhorn DRO</a><ul>
+<li><a class="reference internal" href="#id3">Hyperparameters</a></li>
+<li><a class="reference internal" href="#hyperparameter-setup">Hyperparameter setup</a></li>
 </ul>
 </li>
 </ul>

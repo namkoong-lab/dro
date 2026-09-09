@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>NN-DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -256,6 +256,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
@@ -281,7 +282,7 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="nn-dro">
 <h1>NN-DRO<a class="headerlink" href="#nn-dro" title="Link to this heading">¶</a></h1>
-<p>For <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO, and Holistic Robust DRO, we implement their <code class="docutils literal notranslate"><span class="pre">neural-network</span></code> version, where the backbone model is (by default) MLP.</p>
+<p>For <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO, Holistic Robust DRO, Sinkhorn DRO, and Group DRO, we implement their <code class="docutils literal notranslate"><span class="pre">neural-network</span></code> version, where the backbone model is (by default) MLP.</p>
 <p>We support the following NN architectures:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code>: Linear Model</p></li>
@@ -301,6 +302,8 @@ Implementation details are as follows:</p>
 <li><p>reg: the strength of the <span class="math notranslate nohighlight">\(l_2\)</span>-regularization</p></li>
 </ul>
 <p>[1] Large-Scale Methods for Distributionally Robust Optimization. Daniel Levy, Yair Carmon, John Duchi, and Aaron Sidford. NeurIPS 2020.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">general NN DRO notebook</span></a>
+for companion neural <span class="math notranslate nohighlight">\(f\)</span>-DRO material.</p>
 </section>
 </section>
 <section id="wasserstein-dro">
@@ -314,6 +317,8 @@ Implementation details are as follows:</p>
 <li><p>adversarial_step_size: Learning rate of the inner adversarial attacking.</p></li>
 </ul>
 <p>[2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi. ICLR 2018.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">general NN DRO notebook</span></a>
+for companion neural Wasserstein DRO material.</p>
 </section>
 </section>
 <section id="holistic-robust-dro">
@@ -327,6 +332,153 @@ Implementation details are as follows:</p>
 <li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: Robustness parameter for the model noise (perturbed ball size), denoted as <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> in the model config.</p></li>
 </ul>
 <p>[3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">general NN DRO notebook</span></a>
+for companion Holistic Robust DRO material.</p>
+</section>
+</section>
+<section id="sinkhorn-dro">
+<h2>4. Sinkhorn DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
+<p>Sinkhorn DRO uses an entropic-regularized Wasserstein distance and Gaussian input perturbations to construct a smooth robust loss. The implementation supports standard stochastic gradient (SG), multilevel Monte Carlo (MLMC), and randomized truncated MLMC (RTMLMC) optimization [4].</p>
+<section id="id3">
+<h3>Hyperparameters<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg_param</span></code>: Entropic regularization strength <span class="math notranslate nohighlight">\(\varepsilon &gt; 0\)</span>. It also sets the perturbation variance. Default: <code class="docutils literal notranslate"><span class="pre">1e-3</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lambda_param</span></code>: Positive loss-scaling factor <span class="math notranslate nohighlight">\(\lambda\)</span>. Together, <code class="docutils literal notranslate"><span class="pre">lambda_param</span> <span class="pre">*</span> <span class="pre">reg_param</span></code> controls the scale of the log-sum-exp robust loss. Default: <code class="docutils literal notranslate"><span class="pre">1e2</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">k_sample_max</span></code>: Maximum Monte Carlo level. SG uses <span class="math notranslate nohighlight">\(2^{\mathtt{k\_sample\_max}}\)</span> perturbation samples, so increasing this value improves the sampling approximation but increases computation exponentially. Default: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimization_type</span></code>: Stochastic estimator used during training. Choose <code class="docutils literal notranslate"><span class="pre">&quot;SG&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;MLMC&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;RTMLMC&quot;</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;SG&quot;</span></code>.</p></li>
+</ul>
+<p>The usual neural-model arguments are also available: <code class="docutils literal notranslate"><span class="pre">task_type</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;classification&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;regression&quot;</span></code>), <code class="docutils literal notranslate"><span class="pre">model_type</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;mlp&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;linear&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;resnet&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;alexnet&quot;</span></code>), and <code class="docutils literal notranslate"><span class="pre">device</span></code>.</p>
+</section>
+<section id="hyperparameter-setup">
+<h3>Hyperparameter setup<a class="headerlink" href="#hyperparameter-setup" title="Link to this heading">¶</a></h3>
+<p>The following classification setup uses all of the Sinkhorn defaults explicitly. <code class="docutils literal notranslate"><span class="pre">X</span></code> may be a NumPy array or PyTorch tensor, and <code class="docutils literal notranslate"><span class="pre">y</span></code> should contain class indices.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">SinkhornNNDRO</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
+    <span class="n">reg_param</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">lambda_param</span><span class="o">=</span><span class="mf">1e2</span><span class="p">,</span>
+    <span class="n">k_sample_max</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For faster initial experiments, reduce <code class="docutils literal notranslate"><span class="pre">k_sample_max</span></code> (for example, to <code class="docutils literal notranslate"><span class="pre">3</span></code>) and increase it for the final run after selecting the other hyperparameters. The <code class="docutils literal notranslate"><span class="pre">lr</span></code>, <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, <code class="docutils literal notranslate"><span class="pre">epochs</span></code>, and <code class="docutils literal notranslate"><span class="pre">train_ratio</span></code> training settings are passed to <code class="docutils literal notranslate"><span class="pre">fit()</span></code>, rather than to the constructor.</p>
+<p>An existing Sinkhorn model can be reconfigured with <code class="docutils literal notranslate"><span class="pre">update()</span></code>. Note that the update keys are <code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">lambda</span></code>, whereas the corresponding constructor arguments are <code class="docutils literal notranslate"><span class="pre">reg_param</span></code> and <code class="docutils literal notranslate"><span class="pre">lambda_param</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="s2">&quot;reg&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span>
+    <span class="s2">&quot;lambda&quot;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
+    <span class="s2">&quot;k_sample_max&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;optimization_type&quot;</span><span class="p">:</span> <span class="s2">&quot;MLMC&quot;</span><span class="p">,</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="../api/notebooks/sinkhorn-nn.html"><span class="doc">Sinkhorn NN notebook</span></a> for classification, regression, custom-model, and optimizer examples.</p>
+<p>[4] <a class="reference external" href="https://arxiv.org/abs/2109.11926">Sinkhorn Distributionally Robust Optimization</a>. Jie Wang, Rui Gao, and Yao Xie.</p>
+</section>
+</section>
+<section id="group-dro">
+<h2>5. Group DRO<a class="headerlink" href="#group-dro" title="Link to this heading">¶</a></h2>
+<p>Group DRO targets uniform performance across a finite set of observed groups.
+For group-average losses <span class="math notranslate nohighlight">\(L_g(\theta)\)</span>, its objective is</p>
+<div class="math notranslate nohighlight">
+\[
+\min_\theta\max_{g\in\mathcal{G}}L_g(\theta).
+\]</div>
+<p>The neural implementation follows the stochastic exponentiated-gradient
+method in [5]. It maintains adversarial group probabilities <span class="math notranslate nohighlight">\(q_g\)</span> and updates
+them after each mini-batch:</p>
+<div class="math notranslate nohighlight">
+\[
+q_g \leftarrow
+\frac{q_g\exp(\eta_q L_g)}
+{\sum_j q_j\exp(\eta_q L_j)}.
+\]</div>
+<p>The network minimizes the resulting weighted group loss. Groups with larger
+loss receive increasing adversarial probability, so training focuses on the
+current worst-performing groups. If a mini-batch omits a category, the loss
+renormalizes the current weights over the groups present in that batch; no
+gradient is fabricated for an absent group.</p>
+<section id="group-feature-and-supported-models">
+<h3>Group feature and supported models<a class="headerlink" href="#group-feature-and-supported-models" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">group_idx</span></code> is the zero-based index of a finite categorical column in the
+two-dimensional input matrix <code class="docutils literal notranslate"><span class="pre">X</span></code>. The category column remains an input to the
+network. <code class="docutils literal notranslate"><span class="pre">GroupNNDRO</span></code> therefore supports the tabular <code class="docutils literal notranslate"><span class="pre">&quot;linear&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;mlp&quot;</span></code>
+architectures. <code class="docutils literal notranslate"><span class="pre">&quot;resnet&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;alexnet&quot;</span></code> are not supported because an image
+tensor does not provide one scalar feature column per sample.</p>
+<p>Classification targets must be integer class indices from <code class="docutils literal notranslate"><span class="pre">0</span></code> through
+<code class="docutils literal notranslate"><span class="pre">num_classes</span> <span class="pre">-</span> <span class="pre">1</span></code>. Regression targets are numeric, and prediction returns the
+raw one-dimensional network output.</p>
+</section>
+<section id="id4">
+<h3>Hyperparameters<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">group_idx</span></code>: required column containing the group category.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step_size</span></code>: adversarial exponentiated-gradient step <span class="math notranslate nohighlight">\(\eta_q&gt;0\)</span>. The default
+is <code class="docutils literal notranslate"><span class="pre">0.01</span></code>. Larger values move weight toward high-loss groups more quickly,
+while smaller values produce smoother, slower changes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">input_dim</span></code>: number of input columns, including the group feature.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_classes</span></code>: output class count for classification; regression uses one
+output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">task_type</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;classification&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;regression&quot;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">model_type</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;mlp&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;linear&quot;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">device</span></code>: PyTorch device used for training.</p></li>
+</ul>
+<p>The standard training arguments remain on <code class="docutils literal notranslate"><span class="pre">fit()</span></code>: <code class="docutils literal notranslate"><span class="pre">train_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">lr</span></code>,
+<code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, <code class="docutils literal notranslate"><span class="pre">epochs</span></code>, and <code class="docutils literal notranslate"><span class="pre">verbose</span></code>. This preserves the same call pattern as
+the other neural DRO estimators.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupNNDRO</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">GroupNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">group_idx</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
+    <span class="n">step_size</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>After fitting, <code class="docutils literal notranslate"><span class="pre">group_values_</span></code> gives the category order and <code class="docutils literal notranslate"><span class="pre">group_weights_</span></code>
+contains the final adversarial probabilities in the same order.
+<code class="docutils literal notranslate"><span class="pre">batch_group_losses_</span></code> contains the most recently observed mini-batch loss for
+each group. Both <code class="docutils literal notranslate"><span class="pre">group_idx</span></code> and <code class="docutils literal notranslate"><span class="pre">step_size</span></code> can be changed before refitting:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;group_idx&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;step_size&quot;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Regularization and early stopping are especially important for
+over-parameterized networks: a model can drive every training-group loss near
+zero while still generalizing poorly on a minority group. Monitor held-out
+worst-group performance rather than only aggregate validation accuracy.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/groupdro_tutorial.html"><span class="doc">Group DRO notebook</span></a> for an
+end-to-end linear and neural example.</p>
+<p>[5] <a class="reference external" href="https://arxiv.org/abs/1911.08731">Distributionally Robust Neural Networks for Group Shifts: On the
+Importance of Regularization for Worst-Case
+Generalization</a>. Shiori Sagawa, Pang Wei Koh,
+Tatsunori B. Hashimoto, and Percy Liang, ICLR 2020. The exponentiated
+group-weight update is adapted from the authors’ <a class="reference external" href="https://github.com/kohpangwei/group_DRO">reference
+implementation</a>.</p>
 </section>
 </section>
 </section>
@@ -356,6 +508,16 @@ Implementation details are as follows:</p>
 </li>
 <li><a class="reference internal" href="#holistic-robust-dro">3. Holistic Robust DRO</a><ul>
 <li><a class="reference internal" href="#id2">Hyperparameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sinkhorn-dro">4. Sinkhorn DRO</a><ul>
+<li><a class="reference internal" href="#id3">Hyperparameters</a></li>
+<li><a class="reference internal" href="#hyperparameter-setup">Hyperparameter setup</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#group-dro">5. Group DRO</a><ul>
+<li><a class="reference internal" href="#group-feature-and-supported-models">Group feature and supported models</a></li>
+<li><a class="reference internal" href="#id4">Hyperparameters</a></li>
 </ul>
 </li>
 </ul>

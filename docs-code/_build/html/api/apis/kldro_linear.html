@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>KL-DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
@@ -307,8 +307,8 @@ The ambiguity set is defined by:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimension of input features. Must match training data features.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of input features. Must match training data features.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
@@ -316,16 +316,16 @@ The ambiguity set is defined by:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, adds intercept term <span class="math notranslate nohighlight">\(b\)</span> to linear model:
+<li><p><strong>fit_intercept</strong> (<em>bool</em>) – If True, adds intercept term <span class="math notranslate nohighlight">\(b\)</span> to linear model:
 <span class="math notranslate nohighlight">\(\theta^T X + b\)</span>
 Disable when data is pre-centered.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Convex optimization solver, supported values:</p>
+<li><p><strong>solver</strong> (<em>str</em>) – <p>Convex optimization solver, supported values:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (recommended): Requires academic/commercial license</p></li>
 </ul>
 </p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
-<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – <p>KL divergence bound (ε ≥ 0). Special cases:</p>
+<li><p><strong>kernel</strong> (<em>str</em>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – <p>KL divergence bound (ε ≥ 0). Special cases:</p>
 <ul>
 <li><p>ε = 0: Reduces to standard empirical risk minimization (no distributional robustness)</p></li>
 <li><p>ε → ∞: Approaches worst-case distribution (maximally conservative). Typical practical range: 0.01 ≤ ε ≤ 5.0</p></li>
@@ -334,7 +334,7 @@ Disable when data is pre-centered.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If input_dim ≤ 0</p></li>
 <li><p>If eps &lt; 0</p></li>
 <li><p>If unsupported solver specified</p></li>
@@ -368,7 +368,7 @@ optimization problem structure. Preserves existing dual variables until
 next <code class="docutils literal notranslate"><span class="pre">fit()</span></code> call.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary containing parameters to update.
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary containing parameters to update.
 Recognized keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: (float) New KL divergence bound (ε ≥ 0). Other keys are silently ignored.</p></li>
@@ -382,11 +382,11 @@ Recognized keys:</p>
 <li><p>If provided <code class="docutils literal notranslate"><span class="pre">eps</span></code> &gt; 100.0 (empirical stability threshold)</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If config is not a dictionary</p></li>
+<li><p><strong>TypeError</strong> – If config is not a dictionary</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 <dl>
@@ -412,9 +412,9 @@ Recognized keys:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
 Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
 <ul>
 <li><p>Classification: Binary labels in {-1, +1}</p></li>
 <li><p>Regression: Continuous real values</p></li>
@@ -432,7 +432,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[str, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -441,7 +441,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <li><p>If solver fails to converge</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
+<li><p><strong>ValueError</strong> – <ul>
 <li><p>If <cite>X.shape[1] != self.input_dim</cite></p></li>
 <li><p>If <cite>X.shape[0] != y.shape[0]</cite></p></li>
 <li><p>If classification labels not in {-1, +1}</p></li>
@@ -474,9 +474,9 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Feature matrix of shape <cite>(n_samples, n_features)</cite>.
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Feature matrix of shape <cite>(n_samples, n_features)</cite>.
 Must match <code class="docutils literal notranslate"><span class="pre">self.input_dim</span></code> and training data dimension.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target vector of shape <cite>(n_samples,)</cite>. Format constraints:</p>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – <p>Target vector of shape <cite>(n_samples,)</cite>. Format constraints:</p>
 <ul>
 <li><p>Classification: Labels in {-1, +1}</p></li>
 <li><p>Regression: Continuous values</p></li>
@@ -494,7 +494,7 @@ Must match <code class="docutils literal notranslate"><span class="pre">self.inp
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[str, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -504,7 +504,7 @@ Must match <code class="docutils literal notranslate"><span class="pre">self.inp
 <li><p>If weight normalization fails (sum → 0)</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
+<li><p><strong>ValueError</strong> – <ul>
 <li><p>If input dimensions mismatch</p></li>
 <li><p>If classification labels violate binary constraints</p></li>
 </ul>

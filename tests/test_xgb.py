@@ -80,6 +80,8 @@ class TestKLDRO_XGB:
         model.fit(X_train, y_train)
         model.score(X_train, y_train)
         assert isinstance(model.model, xgb.Booster)
+        assert isinstance(model.robust_obj, float)
+        assert np.isfinite(model.robust_obj)
         
         # Prediction validation
         preds = model.predict(X_train)
@@ -161,6 +163,8 @@ class TestCVaRDRO_XGB:
         
         model.fit(X_train, y_train)
         model.score(X_train, y_train)
+        assert isinstance(model.robust_obj, float)
+        assert np.isfinite(model.robust_obj)
 
         
     def test_regression_support(self):
@@ -217,6 +221,8 @@ class TestChi2DRO_XGB:
         
         model.fit(X_train, y_train)
         model.score(X_train, y_train)
+        assert isinstance(model.robust_obj, float)
+        assert np.isfinite(model.robust_obj)
         
     def test_regression_support(self):
         """Validate regression task implementation"""

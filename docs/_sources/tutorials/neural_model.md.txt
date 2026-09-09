@@ -1,6 +1,6 @@
 # NN-DRO
 
-For $\chi^2$-DRO, CVaR-DRO, Wasserstein DRO, and Holistic Robust DRO, we implement their `neural-network` version, where the backbone model is (by default) MLP.
+For $\chi^2$-DRO, CVaR-DRO, Wasserstein DRO, Holistic Robust DRO, and Sinkhorn DRO, we implement their `neural-network` version, where the backbone model is (by default) MLP.
 
 We support the following NN architectures:
 - `linear`: Linear Model
@@ -45,3 +45,60 @@ We follow [3], and our code is largely based on https://github.com/RyanLucas3/HR
 
 
 [3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.
+
+
+## 4. Sinkhorn DRO
+Sinkhorn DRO uses an entropic-regularized Wasserstein distance and Gaussian input perturbations to construct a smooth robust loss. The implementation supports standard stochastic gradient (SG), multilevel Monte Carlo (MLMC), and randomized truncated MLMC (RTMLMC) optimization [4].
+
+### Hyperparameters
+- `reg_param`: Entropic regularization strength $\varepsilon > 0$. It also sets the perturbation variance. Default: `1e-3`.
+- `lambda_param`: Positive loss-scaling factor $\lambda$. Together, `lambda_param * reg_param` controls the scale of the log-sum-exp robust loss. Default: `1e2`.
+- `k_sample_max`: Maximum Monte Carlo level. SG uses $2^{\mathtt{k\_sample\_max}}$ perturbation samples, so increasing this value improves the sampling approximation but increases computation exponentially. Default: `5`.
+- `optimization_type`: Stochastic estimator used during training. Choose `"SG"`, `"MLMC"`, or `"RTMLMC"`. Default: `"SG"`.
+
+The usual neural-model arguments are also available: `task_type` (`"classification"` or `"regression"`), `model_type` (`"mlp"`, `"linear"`, `"resnet"`, or `"alexnet"`), and `device`.
+
+### Hyperparameter setup
+The following classification setup uses all of the Sinkhorn defaults explicitly. `X` may be a NumPy array or PyTorch tensor, and `y` should contain class indices.
+
+```python
+from dro.neural_model import SinkhornNNDRO
+
+model = SinkhornNNDRO(
+    input_dim=X.shape[1],
+    num_classes=2,
+    task_type="classification",
+    model_type="mlp",
+    reg_param=1e-3,
+    lambda_param=1e2,
+    k_sample_max=5,
+    optimization_type="SG",
+)
+
+metrics = model.fit(
+    X,
+    y,
+    train_ratio=0.8,
+    lr=1e-3,
+    batch_size=32,
+    epochs=100,
+)
+```
+
+For faster initial experiments, reduce `k_sample_max` (for example, to `3`) and increase it for the final run after selecting the other hyperparameters. The `lr`, `batch_size`, `epochs`, and `train_ratio` training settings are passed to `fit()`, rather than to the constructor.
+
+An existing Sinkhorn model can be reconfigured with `update()`. Note that the update keys are `reg` and `lambda`, whereas the corresponding constructor arguments are `reg_param` and `lambda_param`.
+
+```python
+model.update({
+    "reg": 1e-2,
+    "lambda": 50.0,
+    "k_sample_max": 4,
+    "optimization_type": "MLMC",
+})
+```
+
+See the {doc}`Sinkhorn NN notebook <../api/notebooks/sinkhorn-nn>` for classification, regression, custom-model, and optimizer examples.
+
+
+[4] [Sinkhorn Distributionally Robust Optimization](https://arxiv.org/abs/2109.11926). Jie Wang, Rui Gao, and Yao Xie.

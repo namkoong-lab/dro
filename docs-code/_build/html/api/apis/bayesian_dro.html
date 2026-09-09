@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Bayesian DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
@@ -294,17 +294,33 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.bayesian_dro.</span></span><span class="sig-name descname"><span class="pre">BayesianDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.bayesian_dro.BayesianDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>This model minimizes a Bayesian version for regression and other types of losses</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robust_obj</strong> – Robust empirical optimization objective from the most
+recent successful fit, or <code class="docutils literal notranslate"><span class="pre">None</span></code> before it is available.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>)</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>)</p></li>
+<li><p><strong>fit_intercept</strong> (<em>bool</em>)</p></li>
+<li><p><strong>solver</strong> (<em>str</em>)</p></li>
+<li><p><strong>eps</strong> (<em>float</em>)</p></li>
+<li><p><strong>distance_type</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+</dl>
 <p>Reference: &lt;<a class="reference external" href="https://epubs.siam.org/doi/10.1137/21M1465548">https://epubs.siam.org/doi/10.1137/21M1465548</a>&gt;</p>
 <p>Initialize the Bayesian DRO model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimensionality of the input features.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Type of base model. Supported values: ‘svm’, ‘logistic’, ‘ols’, ‘lad’(‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression with L2-loss, ‘lad’ for Linear Regression with L1-loss). Defaults to ‘svm’.</p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to fit an intercept term. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered). Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optimization solver. Supported solvers: ‘MOSEK’.</p></li>
-<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Robustness parameter for KL-divergence ambiguity set. A higher value increases robustness. Defaults to 0.0 (non-robust).</p></li>
-<li><p><strong>distance_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Distance type in DRO model, default = ‘KL’. Also support ‘chi2’. Default to ‘KL’.</p></li>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimensionality of the input features.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – Type of base model. Supported values: ‘svm’, ‘logistic’, ‘ols’, ‘lad’(‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression with L2-loss, ‘lad’ for Linear Regression with L1-loss). Defaults to ‘svm’.</p></li>
+<li><p><strong>fit_intercept</strong> (<em>bool</em>) – Whether to fit an intercept term. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered). Defaults to True.</p></li>
+<li><p><strong>solver</strong> (<em>str</em>) – Optimization solver. Supported solvers: ‘MOSEK’.</p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – Robustness parameter for KL-divergence ambiguity set. A higher value increases robustness. Defaults to 0.0 (non-robust).</p></li>
+<li><p><strong>distance_type</strong> (<em>str</em>) – Distance type in DRO model, default = ‘KL’. Also support ‘chi2’. Default to ‘KL’.</p></li>
 </ul>
 </dd>
 </dl>
@@ -316,7 +332,7 @@
 or other algorithm settings during runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing configuration key-value pairs to update. Supported keys include:</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing configuration key-value pairs to update. Supported keys include:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: Robustness parameter (non-negative float)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">solver</span></code>: Optimization solver (e.g., ‘MOSEK’, ‘SCS’)</p></li>
@@ -329,11 +345,11 @@ or other algorithm settings during runtime.</p>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the configuration contains invalid keys, unsupported values, 
+<dd class="field-even"><p><strong>ValueError</strong> – If the configuration contains invalid keys, unsupported values, 
 or negative values for parameters like <code class="docutils literal notranslate"><span class="pre">eps</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -359,8 +375,8 @@ or negative values for parameters like <code class="docutils literal notranslate
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Original feature matrix of shape <cite>(sample_size, input_dim)</cite>.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Original target values of shape <cite>(sample_size,)</cite> or <cite>(sample_size, n_targets)</cite>.</p></li>
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Original feature matrix of shape <cite>(sample_size, input_dim)</cite>.</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Original target values of shape <cite>(sample_size,)</cite> or <cite>(sample_size, n_targets)</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -372,10 +388,10 @@ or negative values for parameters like <code class="docutils literal notranslate
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a>]</p>
+<dd class="field-odd"><p>tuple[numpy.ndarray, numpy.ndarray]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If <cite>X</cite> and <cite>y</cite> have inconsistent sample sizes (first dimension mismatch).</p></li>
 <li><p>If <cite>posterior_param_num</cite> is not initialized (e.g., model not yet fitted).</p></li>
 </ul>
@@ -400,8 +416,8 @@ or negative values for parameters like <code class="docutils literal notranslate
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Feature matrix of shape <cite>(original_sample_size, input_dim)</cite>.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Target values of shape <cite>(original_sample_size,)</cite> for classification or <cite>(original_sample_size, n_targets)</cite> for regression.</p></li>
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Feature matrix of shape <cite>(original_sample_size, input_dim)</cite>.</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Target values of shape <cite>(original_sample_size,)</cite> for classification or <cite>(original_sample_size, n_targets)</cite> for regression.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -413,12 +429,12 @@ or negative values for parameters like <code class="docutils literal notranslate
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Union[List[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>], <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>]]</p>
+<dd class="field-odd"><p>Dict[str, Union[List[float], float]]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>BayesianDROError</strong> – If the optimization solver fails to converge.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
+<li><p><strong>ValueError</strong> – <ul>
 <li><p>If <cite>X</cite> and <cite>y</cite> have inconsistent sample sizes.</p></li>
 <li><p>If resampled data dimensions are incompatible with <cite>posterior_param_num</cite>.</p></li>
 </ul>

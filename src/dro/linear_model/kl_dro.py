@@ -255,6 +255,7 @@ class KLDRO(BaseLinearDRO):
 
         if self.fit_intercept == True:
             self.b = b.value
+        self.robust_obj = float(problem.value)
 
         return {"theta": self.theta.tolist(), "dual": self.dual_variable, "b": self.b}
 

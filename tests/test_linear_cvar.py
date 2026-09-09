@@ -95,6 +95,8 @@ def test_fit_success(model_type):
     
     # Validate parameter shapes
     assert len(params["theta"]) == X.shape[1]
+    assert isinstance(model.robust_obj, float)
+    assert np.isfinite(model.robust_obj)
     if model.fit_intercept:
         assert "b" in params
     assert "threshold" in params
@@ -188,4 +190,3 @@ def test_threshold_calculation(dataset):
     params = model.fit(X, y)
     
     assert params["threshold"] == model.threshold_val
-    

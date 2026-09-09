@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>MMD-DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -256,6 +256,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">MMD-DRO</a></li>
@@ -281,22 +282,60 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="mmd-dro">
 <h1>MMD-DRO<a class="headerlink" href="#mmd-dro" title="Link to this heading">¶</a></h1>
-<p>In MMD-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{P}(d, \eta) = \{Q: d(Q, \hat P)\leq \eta\}\)</span>.<br />
-Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> as the kernel distance with the Gaussian kernel, i.e., <span class="math notranslate nohighlight">\(\|\mu_P - \mu_Q\|_{\mathcal H}\)</span>, which is defined as:</p>
+<p>In MMD-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{P}(d, \eta) = \{Q: d(Q, \hat P)\leq \eta\}\)</span>.
+Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> is the kernel distance <span class="math notranslate nohighlight">\(\|\mu_P - \mu_Q\|_{\mathcal H}\)</span>, which is defined as:</p>
 <div class="math notranslate nohighlight">
 \[\|\mu_P - \mu_Q\|_{\mathcal H}^2 = \mathbb E_{x, x' \sim P}[k(x, x')] + \mathbb E_{y, y' \sim Q}[k(y, y')] - 2\mathbb{E}_{x \sim P, y \sim Q}[k(x, y)], \]</div>
-<p>with <span class="math notranslate nohighlight">\(k(x, y) = \exp(-\|x - y\|_2^2 / (2\sigma^2))\)</span>.</p>
+<p>The kernel <span class="math notranslate nohighlight">\(k\)</span> controls which differences between distributions are emphasized. The default is the Gaussian RBF kernel,</p>
+<div class="math notranslate nohighlight">
+\[k(x,y)=\exp(-\gamma\|x-y\|_2^2),\]</div>
+<p>but the implementation also supports Laplacian, polynomial, and linear kernels.</p>
 <p>In the computation, we apply Equation (7) 3.1.1 in [1], which requires the following hyperparameters:</p>
 <section id="hyperparameters">
-<h2>hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h2>
+<h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\eta\)</span>, the size of the MMD ambigiuty set, denoted as <code class="docutils literal notranslate"><span class="pre">eta</span></code>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta\)</span>, the size of the MMD ambiguity set, denoted as <code class="docutils literal notranslate"><span class="pre">eta</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernel</span></code>, the kernel defining the MMD ambiguity set. Choose from:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">rbf</span></code> (default): <span class="math notranslate nohighlight">\(\exp(-\gamma\|x-y\|_2^2)\)</span>. When <code class="docutils literal notranslate"><span class="pre">kernel_gamma=None</span></code>, <span class="math notranslate nohighlight">\(\gamma\)</span> is the reciprocal of the median nonzero squared pairwise distance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">laplacian</span></code>: <span class="math notranslate nohighlight">\(\exp(-\gamma\|x-y\|_1)\)</span>. When <code class="docutils literal notranslate"><span class="pre">kernel_gamma=None</span></code>, <span class="math notranslate nohighlight">\(\gamma\)</span> is the reciprocal of the median nonzero <span class="math notranslate nohighlight">\(\ell_1\)</span> distance. This is another characteristic kernel and is often useful for less smooth similarity.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">polynomial</span></code> (alias <code class="docutils literal notranslate"><span class="pre">poly</span></code>): <span class="math notranslate nohighlight">\((\gamma x^\top y+c_0)^d\)</span>. The defaults are degree <span class="math notranslate nohighlight">\(d=2\)</span>, offset <span class="math notranslate nohighlight">\(c_0=1\)</span>, and <span class="math notranslate nohighlight">\(\gamma=1/p\)</span>, where <span class="math notranslate nohighlight">\(p\)</span> is the dimension of the joint sample <span class="math notranslate nohighlight">\((X,Y)\)</span>. Tune <code class="docutils literal notranslate"><span class="pre">kernel_degree</span></code> over small positive integers such as 2 or 3; large degrees can make the Gram matrix poorly scaled.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code>: <span class="math notranslate nohighlight">\(x^\top y\)</span>. It has no kernel-specific parameters and captures differences in first moments only.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code>, an optional positive numeric value overriding the automatic scale for RBF, Laplacian, and polynomial kernels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernel_degree</span></code>, a positive integer used by the polynomial kernel (default: <code class="docutils literal notranslate"><span class="pre">2</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernel_coef0</span></code>, a non-negative offset used by the polynomial kernel (default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>). Non-negative values together with positive <code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code> and an integer degree preserve a positive-semidefinite polynomial kernel.</p></li>
 </ul>
 <p>Besides, MMD-DRO requires constructing ambiguity sets supported on some <span class="math notranslate nohighlight">\(\{(\tilde X_j, \tilde Y_j)\}_{j \in [M]}\subseteq \mathcal{X} \times \mathcal{Y}\)</span>, where setting <span class="math notranslate nohighlight">\((\tilde X_j, \tilde Y_j) = (X_j, Y_j)\)</span> for <span class="math notranslate nohighlight">\(j \in [n]\)</span> and creates new data which leads to additional input parameters:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sampling_method</span></code>, chosen from <code class="docutils literal notranslate"><span class="pre">bound</span></code> or <code class="docutils literal notranslate"><span class="pre">hull</span></code>. When <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">bound</span></code>, we set each new <span class="math notranslate nohighlight">\((\tilde X, \tilde Y)\)</span> uniformly sampled from <span class="math notranslate nohighlight">\([-1, 1]^{d + 1}\)</span>; When <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">hull</span></code>, we set each new <span class="math notranslate nohighlight">\((\tilde X, \tilde Y)\)</span> uniformly sampled from the range of each individual component for regression problems while setting <span class="math notranslate nohighlight">\(X\)</span> sampled from <span class="math notranslate nohighlight">\([-1,1]^d\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> samplefor classification problems.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sampling_method</span></code>, chosen from <code class="docutils literal notranslate"><span class="pre">bound</span></code> or <code class="docutils literal notranslate"><span class="pre">hull</span></code>. When <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">bound</span></code>, we set each new <span class="math notranslate nohighlight">\((\tilde X, \tilde Y)\)</span> uniformly sampled from <span class="math notranslate nohighlight">\([-1, 1]^{d + 1}\)</span>; when <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">hull</span></code>, each regression coordinate is sampled within its observed range, while classification labels are sampled from <span class="math notranslate nohighlight">\(\{-1,+1\}\)</span>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">n_certify_ratio</span></code>, the additional number of samples created, i.e., the size <span class="math notranslate nohighlight">\(\frac{M - n}{n}\)</span>.</p></li>
 </ul>
+<p>For example, the default RBF kernel needs no explicit kernel settings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.mmd_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">MMD_DRO</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;svm&quot;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;eta&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;sampling_method&quot;</span><span class="p">:</span> <span class="s2">&quot;hull&quot;</span><span class="p">})</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To use an inhomogeneous quadratic polynomial kernel:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;svm&quot;</span><span class="p">,</span>
+    <span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+    <span class="n">kernel_degree</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">kernel_coef0</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">kernel_gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># defaults to 1 / (input_dim + 1)</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;eta&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;sampling_method&quot;</span><span class="p">:</span> <span class="s2">&quot;hull&quot;</span><span class="p">})</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Because MMD-DRO applies the ambiguity-set kernel to the joint samples <span class="math notranslate nohighlight">\((X,Y)\)</span>, standardizing continuous features and targets before fitting is recommended, especially for polynomial kernels.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/kernel_dro_tutorial.html"><span class="doc">kernel DRO notebook</span></a> for
+an end-to-end MMD-DRO example and ambiguity-set kernel selection guidance.</p>
 </section>
 <section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
@@ -321,7 +360,7 @@ Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> as the kerne
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">MMD-DRO</a><ul>
-<li><a class="reference internal" href="#hyperparameters">hyperparameters</a></li>
+<li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
 <li><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>

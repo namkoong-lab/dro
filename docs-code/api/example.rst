@@ -8,6 +8,7 @@ Example
    notebooks/WassersteinDRO_tutorial
    notebooks/mixed_dro_tutorial
    notebooks/neural_dro_tutorial
+   notebooks/groupdro_tutorial
    notebooks/sinkhorn-nn
    notebooks/param_dro
    notebooks/tree_dro_tutorial

@@ -94,6 +94,8 @@ def test_fit_interface(dataset, distance_type):
     model.update({"posterior_param_num": 3})
     
     params = model.fit(X, y)
+    assert isinstance(model.robust_obj, float)
+    assert np.isfinite(model.robust_obj)
     
     # Validate output structure
     assert 'theta' in params

@@ -104,6 +104,8 @@ class TestWassersteinDRO:
         
         # Validate output structure
         assert 'theta' in params
+        assert isinstance(model.robust_obj, float)
+        assert np.isfinite(model.robust_obj)
         assert isinstance(params['theta'], list)
         if model.fit_intercept:
             assert 'b' in params
@@ -186,6 +188,8 @@ class TestWassersteinSatisficing:
         
         # Validate solution feasibility
         assert params['theta'] is not None
+        assert isinstance(model.robust_obj, float)
+        assert np.isfinite(model.robust_obj)
         assert 'b' in params
     
     @pytest.mark.parametrize("ratio,valid", [
@@ -595,7 +599,7 @@ def test_invalid_kappa_for_asymptotic():
 #         solver='MOSEK'
 #     )
 #     model.update({'eps': 0.0})
-    
+
 #     params = model.fit(X, y)
 #     dist = model.worst_distribution(X, y, compute_type='exact')
-#     assert np.allclose(dist['sample_pts'][0], X)  
+#     assert np.allclose(dist['sample_pts'][0], X)

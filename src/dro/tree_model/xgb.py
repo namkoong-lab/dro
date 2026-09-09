@@ -7,6 +7,75 @@ from xgboost import DMatrix
 from sklearn.utils.validation import check_X_y, check_array
 from sklearn.metrics import f1_score
 
+
+def _sigmoid(values: np.ndarray) -> np.ndarray:
+    """Apply a numerically stable sigmoid to raw boosting scores."""
+    values = np.asarray(values)
+    positive = values >= 0
+    result = np.empty_like(values, dtype=float)
+    result[positive] = 1.0 / (1.0 + np.exp(-values[positive]))
+    exp_values = np.exp(values[~positive])
+    result[~positive] = exp_values / (1.0 + exp_values)
+    return result
+
+
+def _kl_robust_objective(loss: np.ndarray, epsilon: float) -> float:
+    """Evaluate the entropic KL-robust objective used during boosting."""
+    lambda_param = 1.0 / epsilon
+    scaled_loss = loss / lambda_param
+    max_loss = np.max(scaled_loss)
+    log_mean_exp = max_loss + np.log(
+        np.mean(np.exp(scaled_loss - max_loss))
+    )
+    return float(lambda_param * log_mean_exp)
+
+
+def _chi2_weights(loss: np.ndarray, epsilon: float) -> np.ndarray:
+    """Return the empirical chi-square adversarial sample weights."""
+    sample_size = len(loss)
+    centered_loss = loss - np.mean(loss)
+    centered_norm = np.linalg.norm(centered_loss)
+    if centered_norm == 0:
+        return np.ones(sample_size)
+
+    weights = (
+        1
+        + math.sqrt(sample_size * epsilon)
+        / centered_norm
+        * centered_loss
+    )
+    if np.all(weights >= 0):
+        return weights
+
+    probabilities = cp.Variable(sample_size)
+    problem = cp.Problem(
+        cp.Maximize(probabilities @ loss),
+        [
+            cp.sum(probabilities) == 1,
+            probabilities >= 0,
+            cp.sum_squares(probabilities - (1 / sample_size))
+            <= epsilon / sample_size,
+        ],
+    )
+    problem.solve()
+    if probabilities.value is None:
+        raise RuntimeError("Unable to compute chi-square robust objective")
+    return np.asarray(probabilities.value) * sample_size
+
+
+def _chi2_robust_objective(loss: np.ndarray, epsilon: float) -> float:
+    """Evaluate worst-case empirical loss in the chi-square ambiguity set."""
+    return float(np.mean(_chi2_weights(loss, epsilon) * loss))
+
+
+def _cvar_robust_objective(loss: np.ndarray, epsilon: float) -> float:
+    """Evaluate the empirical CVaR objective used during boosting."""
+    threshold = np.percentile(loss, epsilon * 100)
+    return float(
+        threshold + np.mean(np.maximum(loss - threshold, 0)) / (1 - epsilon)
+    )
+
+
 class KLDRO_XGB:
     """XGBoost model with KL-Divergence Distributionally Robust Optimization (DRO)
     
@@ -17,6 +86,9 @@ class KLDRO_XGB:
     
     .. note::
         Requires XGBoost configuration via :meth:`update` before training
+
+    :ivar robust_obj: Fitted robust empirical objective, or ``None`` before
+        fitting.
     """
 
     def __init__(self, eps: float = 1e-1, kind: Literal['classification', 'regression'] = 'classification') -> None:
@@ -35,6 +107,7 @@ class KLDRO_XGB:
         self.kind = kind
         self.config: Dict[str, Any] = {}
         self.model: Optional[xgb.Booster] = None
+        self.robust_obj: Optional[float] = None
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update XGBoost training configuration
@@ -126,6 +199,12 @@ class KLDRO_XGB:
                 num_boost_round=num_round,
                 obj=lambda p, d: self._kl_dro_loss(p, d, self.eps)
             )
+            fitted_preds = self.model.predict(dtrain, output_margin=True)
+            if self.kind == "classification":
+                fitted_preds = _sigmoid(fitted_preds)
+            self.robust_obj = _kl_robust_objective(
+                self.loss(fitted_preds, y), self.eps
+            )
         except xgb.core.XGBoostError as e:
             raise RuntimeError(f"XGBoost training failed: {str(e)}") from e
 
@@ -171,6 +250,9 @@ class Chi2DRO_XGB:
     
     .. note::
         Requires XGBoost configuration via :meth:`update` before training
+
+    :ivar robust_obj: Fitted robust empirical objective, or ``None`` before
+        fitting.
     """
 
     def __init__(self, eps: float = 1e-1, kind: Literal['classification', 'regression'] = 'classification') -> None:
@@ -189,6 +271,7 @@ class Chi2DRO_XGB:
         self.kind = kind
         self.config: Dict[str, Any] = {}
         self.model: Optional[xgb.Booster] = None
+        self.robust_obj: Optional[float] = None
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update XGBoost training configuration
@@ -286,6 +369,12 @@ class Chi2DRO_XGB:
                 num_boost_round=num_round,
                 obj=lambda p, d: self._chi2_dro_loss(p, d, self.eps)
             )
+            fitted_preds = self.model.predict(dtrain, output_margin=True)
+            if self.kind == "classification":
+                fitted_preds = _sigmoid(fitted_preds)
+            self.robust_obj = _chi2_robust_objective(
+                self.loss(fitted_preds, y), self.eps
+            )
         except xgb.core.XGBoostError as e:
             raise RuntimeError(f"XGBoost training failed: {str(e)}") from e
 
@@ -332,6 +421,9 @@ class CVaRDRO_XGB:
     
     .. note::
         Requires XGBoost configuration via :meth:`update` before training
+
+    :ivar robust_obj: Fitted robust empirical objective, or ``None`` before
+        fitting.
     """
 
     def __init__(self, eps: float = 2e-1, kind: Literal['classification', 'regression'] = 'classification') -> None:
@@ -350,6 +442,7 @@ class CVaRDRO_XGB:
         self.kind = kind
         self.config: Dict[str, Any] = {}
         self.model: Optional[xgb.Booster] = None
+        self.robust_obj: Optional[float] = None
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update XGBoost training configuration
@@ -432,6 +525,12 @@ class CVaRDRO_XGB:
                 dtrain,
                 num_boost_round=num_round,
                 obj=lambda p, d: self._cvar_dro_loss(p, d, self.eps)
+            )
+            fitted_preds = self.model.predict(dtrain, output_margin=True)
+            if self.kind == "classification":
+                fitted_preds = _sigmoid(fitted_preds)
+            self.robust_obj = _cvar_robust_objective(
+                self.loss(fitted_preds, y), self.eps
             )
         except xgb.core.XGBoostError as e:
             raise RuntimeError(f"XGBoost training failed: {str(e)}") from e

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>MMD DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
@@ -293,7 +293,7 @@
 <span id="mmd-dro"></span><h1>MMD DRO<a class="headerlink" href="#module-dro.linear_model.mmd_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.linear_model.mmd_dro.MMD_DRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.mmd_dro.</span></span><span class="sig-name descname"><span class="pre">MMD_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bound'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.mmd_dro.</span></span><span class="sig-name descname"><span class="pre">MMD_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bound'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_coef0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>MMD-DRO (Maximum Mean Discrepancy - Distributionally Robust Optimization)
 Implementation with flexible sampling methods and model types.</p>
@@ -302,8 +302,8 @@ Implementation with flexible sampling methods and model types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimension of input features. Must match training data.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model type. Supported:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of input features. Must match training data.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Base model type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Support Vector Machine (hinge loss)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic Regression (log loss)</p></li>
@@ -311,27 +311,39 @@ Implementation with flexible sampling methods and model types.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least Absolute Deviation (L1 loss)</p></li>
 </ul>
 </p></li>
-<li><p><strong>sampling_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Supported:</p>
+<li><p><strong>sampling_method</strong> (<em>str</em>) – <p>Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'bound'</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'hull'</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>kernel</strong> (<em>str</em>) – Kernel defining the MMD ambiguity set. Supported values are
+<code class="docutils literal notranslate"><span class="pre">'rbf'</span></code> (default), <code class="docutils literal notranslate"><span class="pre">'laplacian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'polynomial'</span></code> (or
+<code class="docutils literal notranslate"><span class="pre">'poly'</span></code>), and <code class="docutils literal notranslate"><span class="pre">'linear'</span></code>.</p></li>
+<li><p><strong>kernel_gamma</strong> (<em>float</em><em> or </em><em>None</em>) – Positive kernel scale for RBF, Laplacian, and
+polynomial kernels. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, RBF and Laplacian use a robust
+median-distance heuristic, while polynomial uses
+<code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">(input_dim</span> <span class="pre">+</span> <span class="pre">1)</span></code>.</p></li>
+<li><p><strong>kernel_degree</strong> (<em>int</em>) – Positive integer degree of the polynomial kernel.
+Defaults to 2.</p></li>
+<li><p><strong>kernel_coef0</strong> (<em>float</em>) – Non-negative independent term in the polynomial
+kernel. Defaults to 1.0.</p></li>
+<li><p><strong>fit_intercept</strong> (<em>bool</em>)</p></li>
+<li><p><strong>solver</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If <cite>model_type</cite> not in supported list</p></li>
 <li><p>If <cite>input_dim</cite> ≤ 0</p></li>
 <li><p>If <cite>sampling_method</cite> is invalid</p></li>
+<li><p>If <cite>kernel</cite> or its hyperparameters are invalid</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">sampling_method</span> <span class="o">=</span> <span class="s1">&#39;hull&#39;</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="mf">0.5</span>  
 </pre></div>
@@ -339,12 +351,28 @@ Implementation with flexible sampling methods and model types.</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="dro.linear_model.mmd_dro.MMD_DRO.update_kernel">
+<span class="sig-name descname"><span class="pre">update_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO.update_kernel" title="Link to this definition">¶</a></dt>
+<dd><p>Update the MMD kernel using the package’s kernel-update convention.</p>
+<p><code class="docutils literal notranslate"><span class="pre">metric</span></code> is accepted as an alias for <code class="docutils literal notranslate"><span class="pre">kernel</span></code>; <code class="docutils literal notranslate"><span class="pre">degree</span></code> and
+<code class="docutils literal notranslate"><span class="pre">coef0</span></code> are accepted as aliases for their <code class="docutils literal notranslate"><span class="pre">kernel_</span></code> counterparts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dro.linear_model.mmd_dro.MMD_DRO.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO.update" title="Link to this definition">¶</a></dt>
 <dd><p>Update MMD-DRO model configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary containing optional keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary containing optional keys:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">eta</span></code> (float): </dt><dd><p>MMD radius controlling distributional robustness. 
@@ -369,11 +397,33 @@ Defaults to current ratio.</p>
 </dd>
 </dl>
 </li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">kernel</span></code> (str):</dt><dd><p>MMD kernel. One of <code class="docutils literal notranslate"><span class="pre">'rbf'</span></code>, <code class="docutils literal notranslate"><span class="pre">'laplacian'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'polynomial'</span></code>/<code class="docutils literal notranslate"><span class="pre">'poly'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'linear'</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code> (float or None):</dt><dd><p>Positive kernel scale. <code class="docutils literal notranslate"><span class="pre">None</span></code> selects the kernel-specific
+data-driven default.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">kernel_degree</span></code> (int):</dt><dd><p>Positive polynomial degree. Defaults to 2.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">kernel_coef0</span></code> (float):</dt><dd><p>Non-negative polynomial offset. Defaults to 1.0.</p>
+</dd>
+</dl>
+</li>
 </ul>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">eta</span></code> is non-positive</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">sampling_method</span></code> not in {‘bound’, ‘hull’}</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">n_certify_ratio</span></code> ∉ (0, 1]</p></li>
@@ -382,17 +432,65 @@ Defaults to current ratio.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
 <span class="gp">... </span>    <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>              
-<span class="gp">... </span>    <span class="s1">&#39;sampling_method&#39;</span><span class="p">:</span> <span class="s1">&#39;hull&#39;</span> 
+<span class="gp">... </span>    <span class="s1">&#39;sampling_method&#39;</span><span class="p">:</span> <span class="s1">&#39;hull&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="s1">&#39;polynomial&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;kernel_degree&#39;</span><span class="p">:</span> <span class="mi">2</span>
 <span class="gp">... </span><span class="p">})</span>
 </pre></div>
 </div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.linear_model.mmd_dro.MMD_DRO.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO.predict" title="Link to this definition">¶</a></dt>
+<dd><p>Predict with the linear model; <code class="docutils literal notranslate"><span class="pre">kernel</span></code> only defines the MMD set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>X</strong> (<em>ndarray</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.linear_model.mmd_dro.MMD_DRO.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO.load" title="Link to this definition">¶</a></dt>
+<dd><p>Load linear MMD-DRO parameters independently of the MMD kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.linear_model.mmd_dro.MMD_DRO.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO.evaluate" title="Link to this definition">¶</a></dt>
+<dd><p>Evaluate the linear predictor independently of the MMD kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>X</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>fast</strong> (<em>bool</em>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -403,13 +501,13 @@ Defaults to current ratio.</p>
 <dd><p>Vectorized implementation of MMD-DRO fit function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>accelerate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+<li><p><strong>X</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>accelerate</strong> (<em>bool</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -435,7 +533,11 @@ Defaults to current ratio.</p>
                 <ul>
 <li><a class="reference internal" href="#">MMD DRO</a><ul>
 <li><a class="reference internal" href="#dro.linear_model.mmd_dro.MMD_DRO"><code class="docutils literal notranslate"><span class="pre">MMD_DRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.linear_model.mmd_dro.MMD_DRO.update_kernel"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.update_kernel()</span></code></a></li>
 <li><a class="reference internal" href="#dro.linear_model.mmd_dro.MMD_DRO.update"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.mmd_dro.MMD_DRO.predict"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.mmd_dro.MMD_DRO.load"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.load()</span></code></a></li>
+<li><a class="reference internal" href="#dro.linear_model.mmd_dro.MMD_DRO.evaluate"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.evaluate()</span></code></a></li>
 <li><a class="reference internal" href="#dro.linear_model.mmd_dro.MMD_DRO.fit"><code class="docutils literal notranslate"><span class="pre">MMD_DRO.fit()</span></code></a></li>
 </ul>
 </li>

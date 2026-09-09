@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Marginal DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
@@ -305,8 +305,8 @@ under a CVaR constraint only for the marginal distribution of X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimension of input features. Must be ≥ 1.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of input features. Must be ≥ 1.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
@@ -314,23 +314,23 @@ under a CVaR constraint only for the marginal distribution of X.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>. 
+<li><p><strong>fit_intercept</strong> (<em>bool</em>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>. 
 Set False for pre-centered data. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Convex optimization solver. Defaults to ‘MOSEK’.</p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
-<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – CVaR risk level controlling tail expectation. 
+<li><p><strong>solver</strong> (<em>str</em>) – Convex optimization solver. Defaults to ‘MOSEK’.</p></li>
+<li><p><strong>kernel</strong> (<em>str</em>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – CVaR risk level controlling tail expectation. 
 Must satisfy 0 &lt; α ≤ 1. 
 Defaults to 1.0.</p></li>
-<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Wasserstein radius scaling factor. 
+<li><p><strong>L</strong> (<em>float</em>) – Wasserstein radius scaling factor. 
 Larger values increase distributional robustness. Must satisfy L ≥ 0.
 Defaults to 10.0.</p></li>
-<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Order of Wasserstein distance. 
+<li><p><strong>p</strong> (<em>int</em>) – Order of Wasserstein distance. 
 Supported values: 1 (Earth Mover’s Distance) or 2 (Quadratic Wasserstein).
 Defaults to 2.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
 <li><p>If alpha ∉ (0, 1]</p></li>
 <li><p>If L &lt; 0</p></li>
@@ -361,7 +361,7 @@ Defaults to 2.</p></li>
 Preserves existing solutions until next <code class="docutils literal notranslate"><span class="pre">fit()</span></code> call.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with optional keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with optional keys:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">control_name</span></code> (List[int]): </dt><dd><p>Indices of features to protect against marginal shifts. Constraints:</p>
@@ -404,7 +404,7 @@ Supported values: 1 (EMD), 2 (Quadratic)</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 <dl>
@@ -428,9 +428,9 @@ Supported values: 1 (EMD), 2 (Quadratic)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
 Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target vector of shape <cite>(n_samples,)</cite>. Format requirements depend on model_type:</p>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – <p>Target vector of shape <cite>(n_samples,)</cite>. Format requirements depend on model_type:</p>
 <ul>
 <li><p>Classification (<cite>svm</cite>/<cite>logistic</cite>):</p>
 <blockquote>
@@ -450,7 +450,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </li>
 </ul>
 </p></li>
-<li><p><strong>accelerate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to use acceleration for quadratic approximation.</p></li>
+<li><p><strong>accelerate</strong> (<em>bool</em>) – Whether to use acceleration for quadratic approximation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -464,7 +464,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[str, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>MarginalCVaRDROError</strong> – <ul class="simple">

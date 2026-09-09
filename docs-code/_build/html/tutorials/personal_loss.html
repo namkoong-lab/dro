@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Personalization &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -256,6 +256,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
@@ -282,10 +283,10 @@
   <section class="tex2jax_ignore mathjax_ignore" id="personalization">
 <h1>Personalization<a class="headerlink" href="#personalization" title="Link to this heading">¶</a></h1>
 <p>In general, when rewritting the function for a new class, one way is to apply the following protocol code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
-<span class="k">def</span> <span class="nf">_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MethodType</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">xxx</span>
-<span class="k">def</span> <span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="n">xxx</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">XXDRO</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
@@ -341,6 +342,8 @@
 <section id="tree-based-dro-methods">
 <h2>3. Tree-Based DRO Methods<a class="headerlink" href="#tree-based-dro-methods" title="Link to this heading">¶</a></h2>
 <p>For tree-based DRO methods, users could simply rewrite the <code class="docutils literal notranslate"><span class="pre">self.loss()</span></code> function to change loss functions. To change  the DRO type, one need to adjust <code class="docutils literal notranslate"><span class="pre">self._kl_dro_loss()</span></code> (or  <code class="docutils literal notranslate"><span class="pre">self._cvar_dro_loss()</span></code>) if their base model is <code class="docutils literal notranslate"><span class="pre">KLDRO_XX</span></code> (or <code class="docutils literal notranslate"><span class="pre">CVaRDRO_XX</span></code>) respectively.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/personalize_loss_tutorial.html"><span class="doc">personalized-loss notebook</span></a>
+for end-to-end linear and neural customization examples.</p>
 </section>
 </section>
 

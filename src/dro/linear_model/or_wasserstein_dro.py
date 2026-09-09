@@ -355,6 +355,7 @@ class ORWDRO(BaseLinearDRO):
 
         if self.theta is None or not np.all(np.isfinite(self.theta)):
             raise ORWDROError("Optimization did not converge to a valid solution")
+        self.robust_obj = float(problem.value)
 
         return {"theta": self.theta.tolist()}
 
@@ -498,4 +499,3 @@ class ORWDRO(BaseLinearDRO):
         #     "sample_pts": sample_pts,  
         #     "weight": weights          
         # }
-        

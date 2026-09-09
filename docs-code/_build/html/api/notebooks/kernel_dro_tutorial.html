@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Kernel Distributionally Robust Optimization &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
@@ -262,6 +262,8 @@
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO with Linear and Neural Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Sinkhorn DRO with Neural Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">DRO on Tree-Ensemble Models</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Kernel Distributionally Robust Optimization</a></li>
@@ -282,15 +284,48 @@
             
   <section id="Kernel-Distributionally-Robust-Optimization">
 <h1>Kernel Distributionally Robust Optimization<a class="headerlink" href="#Kernel-Distributionally-Robust-Optimization" title="Link to this heading">¶</a></h1>
-<p>This is not MMD-DRO. Instead, we still define DRO ambiguity sets through standard DRO models, while the model class is set beyond the kernel feature.</p>
+<p>Kernels enter this package in two different ways. In MMD-DRO, a kernel defines the distance between the empirical distribution and distributions in the ambiguity set. Other examples below use kernels to construct a nonlinear prediction model while retaining a standard DRO ambiguity set.</p>
+<section id="Choosing-an-ambiguity-set-kernel-for-MMD-DRO">
+<h2>Choosing an ambiguity-set kernel for MMD-DRO<a class="headerlink" href="#Choosing-an-ambiguity-set-kernel-for-MMD-DRO" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">MMD_DRO</span></code> uses the RBF kernel by default. RBF and Laplacian kernels are characteristic, so their MMD distinguishes probability distributions under standard conditions. The polynomial kernel emphasizes interactions up to a selected degree, while the linear kernel compares first moments only.</p>
+<p>For RBF and Laplacian kernels, leaving <code class="docutils literal notranslate"><span class="pre">kernel_gamma=None</span></code> selects a robust median-distance scale. For a polynomial kernel, the automatic default is <code class="docutils literal notranslate"><span class="pre">gamma</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">/</span> <span class="pre">p</span></code>, where <code class="docutils literal notranslate"><span class="pre">p</span></code> is the dimension of the joint sample <code class="docutils literal notranslate"><span class="pre">(X,</span> <span class="pre">y)</span></code>; the default degree is 2 and the default offset is 1.0. Small degrees such as 2 or 3 are usually the most stable starting points. Standardize continuous variables before comparing kernels, particularly when using a polynomial kernel.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.mmd_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">MMD_DRO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.data.dataloader_classification</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_basic</span>
+
+<span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">X_mmd</span><span class="p">,</span> <span class="n">y_mmd</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">visualize</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Omitting kernel selects the default RBF kernel and median heuristic.</span>
+<span class="n">rbf_mmd</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+
+<span class="c1"># An inhomogeneous quadratic polynomial kernel. gamma=None gives 1 / (d + 1).</span>
+<span class="n">polynomial_mmd</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span>
+    <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;polynomial&#39;</span><span class="p">,</span>
+    <span class="n">kernel_gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">kernel_degree</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">kernel_coef0</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">polynomial_mmd</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;sampling_method&#39;</span><span class="p">:</span> <span class="s1">&#39;hull&#39;</span><span class="p">})</span>
+<span class="n">mmd_params</span> <span class="o">=</span> <span class="n">polynomial_mmd</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_mmd</span><span class="p">,</span> <span class="n">y_mmd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dro.data.dataloader_regression</span> <span class="kn">import</span> <span class="n">regression_basic</span>
-<span class="kn">from</span> <span class="nn">dro.data.dataloader_classification</span> <span class="kn">import</span> <span class="n">classification_basic</span>
-<span class="kn">from</span> <span class="nn">dro.data.draw_utils</span> <span class="kn">import</span> <span class="n">draw_classification</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.wasserstein_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.data.dataloader_regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">regression_basic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.data.dataloader_classification</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_basic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.data.draw_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_classification</span>
 
 <span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span><span class="n">d</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">visualize</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -308,12 +343,12 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dro.linear_model.kl_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dro.linear_model.tv_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dro.linear_model.cvar_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dro.linear_model.marginal_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dro.linear_model.conditional_dro</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.chi2_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.kl_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.tv_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.cvar_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.marginal_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.conditional_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">&#39;poly&#39;</span><span class="p">)</span>
 <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
@@ -373,10 +408,10 @@ This code path has been hit 2 times so far.
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
-<span class="kn">from</span> <span class="nn">dro.data.dataloader_regression</span> <span class="kn">import</span> <span class="n">regression_basic</span>
-<span class="kn">from</span> <span class="nn">dro.data.dataloader_classification</span> <span class="kn">import</span> <span class="n">classification_basic</span>
-<span class="kn">from</span> <span class="nn">dro.data.draw_utils</span> <span class="kn">import</span> <span class="n">draw_classification</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.data.dataloader_regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">regression_basic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.data.dataloader_classification</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_basic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.data.draw_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_classification</span>
 
 <span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span><span class="n">d</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">visualize</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -452,12 +487,30 @@ coef [[-0.25769266 -0.64158585 -3.57086163 -0.78030986 -0.43010956 -0.01490551
 </pre></div></div>
 </div>
 </section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Kernel Distributionally Robust Optimization</a><ul>
+<li><a class="reference internal" href="#Choosing-an-ambiguity-set-kernel-for-MMD-DRO">Choosing an ambiguity-set kernel for MMD-DRO</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

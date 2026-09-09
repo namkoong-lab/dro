@@ -45,7 +45,7 @@ site:
 livehtml:
 	@sphinx-autobuild -b html \
 		--port $(LIVEPORT) \
-		--ignore $(IGNORE_PATTERNS) \
+		$(foreach pattern,$(IGNORE_PATTERNS),--ignore $(pattern)) \
 		"$(SOURCEDIR)" "$(BUILDDIR)/html" \
 		$(SPHINXOPTS)
 	@echo

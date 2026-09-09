@@ -11,7 +11,7 @@ Models listed here can all be formulated with the distance being $d(P, Q) = E_{Q
 For KL-DRO problem, we apply $f(x) = x \log x - (x - 1)$ and follow the reformulation in Theorem 4 of [2] to fit the model.
 
 
-For $\chi^2$-DRO problem, we apply $f(x) = (x - 1)^2$ and follow the reformulation in Lemma 1 of [3] to fit the model. 
+For $\chi^2$-DRO problem, we apply $f(x) = (x - 1)^2$ and follow the reformulation in Lemma 1 of [3] to fit the model.
 
 For TV-DRO problem, we apply $f(x) = |x - 1|$ and follow the reformulation in Theorem 1 of [4] to fit the model.
 
@@ -19,7 +19,7 @@ For the CVaR-DRO problem, we apply $f(x) = 0$ if $x \in [\frac{1}{\alpha}, \alph
 
 
 ### Hyperparameters
-Across all the above models except CVaR-DRO problem, the only model-specific hyperparameter is the ambiguity size ``eps``. $\epsilon \geq 0$ (and reduce to ERM when $\epsilon = 0$). Specifically for TV-DRO problem, since TV-Distance is bounded between [0, 1], the corresponding $\epsilon \in [0, 1]$. In CVaR-DRO problem, the model-specific hyperparameter is the worst-case ratio ``alpha``, that takes values in (0, 1] (and reduce to ERM when $\alpha = 0$). 
+Across all the above models except CVaR-DRO problem, the only model-specific hyperparameter is the ambiguity size ``eps``. $\epsilon \geq 0$ (and reduce to ERM when $\epsilon = 0$). Specifically for TV-DRO problem, since TV-Distance is bounded between [0, 1], the corresponding $\epsilon \in [0, 1]$. In CVaR-DRO problem, the model-specific hyperparameter is the worst-case ratio ``alpha``, that takes values in (0, 1] (and reduce to ERM when $\alpha = 0$).
 
 ### Worst-case illustration
 The above formulations are all based on joint perturbed probability. For example, in $\chi^2$-DRO, we find the perturbed probability $\{p_i\}_{i \in [n]}$ by solving the following optimization problem:
@@ -35,11 +35,14 @@ For two smooth losses (OLS, Logistic), we provide a bias-corrected model assessm
 ## Partial DRO
 The ambiguity set here are based on partial distribution shifts cannot be written as the standard (generalized) f-divergence DRO format. Instead, we directly use $\mathcal{P}(\alpha)$ as the ambiguity set.
 
-If we only consider the shifts in the marginal distribution $X$, 
+If we only consider the shifts in the marginal distribution $X$,
 $\mathcal{P}(\alpha) = \{Q_0: P_X = \alpha Q_0 + (1-\alpha) Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{X}\}$, we obtain the marginal-CVaR model. Specifically, we follow the formulation of (27) in [7] to fit the model.
 
-If we consider the shift in the conditional distribution $Y|X$, 
-$\mathcal{P}(\alpha) = \{Q_0: P_{Y|X} = \alpha Q_0 + (1-\alpha)Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{Y}\}$, we obtain the conditional-CVaR model. Specifically, we follow the formulation of Theorem 2 in [8] to fit the model where approximating $\alpha(x) = \theta^{\top}x$. 
+If we consider the shift in the conditional distribution $Y|X$,
+$\mathcal{P}(\alpha) = \{Q_0: P_{Y|X} = \alpha Q_0 + (1-\alpha)Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{Y}\}$, we obtain the conditional-CVaR model. Specifically, we follow the formulation of Theorem 2 in [8] to fit the model where approximating $\alpha(x) = \theta^{\top}x$.
+
+See the {doc}`f-divergence DRO notebook <../api/notebooks/f_dro_tutorial>`
+for end-to-end standard and partial-distribution-shift examples.
 
 
 ## Reference
@@ -52,6 +55,5 @@ $\mathcal{P}(\alpha) = \{Q_0: P_{Y|X} = \alpha Q_0 + (1-\alpha)Q_1, \text{for so
 * [6] Iyengar G, Lam H, Wang T. Optimizer's Information Criterion: Dissecting and Correcting Bias in Data-Driven Optimization. arXiv preprint arXiv:2306.10081, 2023.
 * [7] Duchi, John, Tatsunori Hashimoto, and Hongseok Namkoong. "Distributionally robust losses for latent covariate mixtures." arXiv:2007.13982, 2020.
 * [8] Sahoo R, Lei L, Wager S. Learning from a biased sample. arXiv preprint arXiv:2209.01754, 2022.
-
 
 

@@ -180,6 +180,9 @@ class BaseNNDRO:
 
         - :math:`\mathcal{B}_\epsilon(P)`: Wasserstein ambiguity set
 
+    :ivar robust_obj: Final-epoch estimate of the empirical optimization
+        objective, or ``None`` before fitting.
+
     """
 
     def __init__(self, 
@@ -250,6 +253,7 @@ class BaseNNDRO:
         self.device = device
         self.model_type = model_type
         self.task_type = task_type
+        self.robust_obj = None
 
         self._initialize_model(model_type)
         self.model.to(self.device)
@@ -437,6 +441,7 @@ class BaseNNDRO:
         optimizer = torch.optim.Adam(self.model.parameters(), lr=lr)
         
         total_batches = epochs * len(train_loader)
+        self.robust_obj = None
         
         with tqdm(total=total_batches, unit="batch", disable=not verbose) as pbar:
             for epoch in range(epochs):
@@ -456,6 +461,7 @@ class BaseNNDRO:
                     pbar.update(1)
                 
                 avg_epoch_loss = epoch_loss / len(train_loader)
+                self.robust_obj = float(avg_epoch_loss)
                 pbar.set_postfix(loss=avg_epoch_loss)
 
         # Validation phase

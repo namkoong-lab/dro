@@ -73,6 +73,8 @@ def test_fit_success(model_type):
     params = model.fit(X, y)
     
     assert len(params["theta"]) == X.shape[1]
+    assert isinstance(model.robust_obj, float)
+    assert np.isfinite(model.robust_obj)
     if model.fit_intercept:
         assert "b" in params
 

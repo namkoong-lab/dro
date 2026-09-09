@@ -76,6 +76,8 @@ class TestKLDRO_LGBM:
         model.fit(X_train, y_train)
         model.score(X_train, y_train)
         assert model.model is not None
+        assert isinstance(model.robust_obj, float)
+        assert np.isfinite(model.robust_obj)
         
         # Prediction validation
         preds = model.predict(X_train)
@@ -153,6 +155,8 @@ class TestCVaRDRO_LGBM:
         model.update({"num_boost_round": 5, "max_depth": 2})
         model.fit(X, y)
         model.score(X, y)
+        assert isinstance(model.robust_obj, float)
+        assert np.isfinite(model.robust_obj)
 
         
         # Validate model type
@@ -202,6 +206,8 @@ class TestChi2DRO_LGBM:
         model.update({"num_boost_round": 5, "max_depth": 2})
         model.fit(X, y)
         model.score(X, y)
+        assert isinstance(model.robust_obj, float)
+        assert np.isfinite(model.robust_obj)
         
         # Validate model type
         assert isinstance(model.model, lightgbm.Booster)

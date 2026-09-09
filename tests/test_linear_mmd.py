@@ -23,6 +23,36 @@ class TestMMDDROModel(unittest.TestCase):
         model = MMD_DRO(input_dim=4, model_type='logistic', sampling_method='hull')
         self.assertEqual(model.input_dim, 4)
         self.assertEqual(model.sampling_method, 'hull')
+        self.assertEqual(model.kernel, 'rbf')
+
+    def test_supported_kernel_initialization(self):
+        """Test the supported MMD kernels and the polynomial alias."""
+        for kernel in ('rbf', 'laplacian', 'linear'):
+            model = MMD_DRO(input_dim=4, kernel=kernel)
+            self.assertEqual(model.kernel, kernel)
+
+        model = MMD_DRO(
+            input_dim=4,
+            kernel='poly',
+            kernel_gamma=0.25,
+            kernel_degree=3,
+            kernel_coef0=1.5,
+        )
+        self.assertEqual(model.kernel, 'polynomial')
+        self.assertEqual(model.kernel_gamma, 0.25)
+        self.assertEqual(model.kernel_degree, 3)
+        self.assertEqual(model.kernel_coef0, 1.5)
+
+    def test_invalid_kernel_configuration(self):
+        """Test validation of kernel names and shape parameters."""
+        with self.assertRaises(MMDDROError):
+            MMD_DRO(input_dim=4, kernel='invalid')
+        with self.assertRaises(ValueError):
+            MMD_DRO(input_dim=4, kernel_gamma=0)
+        with self.assertRaises(ValueError):
+            MMD_DRO(input_dim=4, kernel='polynomial', kernel_degree=0)
+        with self.assertRaises(ValueError):
+            MMD_DRO(input_dim=4, kernel='polynomial', kernel_coef0=-1)
 
     def test_invalid_model_type(self):
         """Test initialization with unsupported model type."""
@@ -43,9 +73,63 @@ class TestMMDDROModel(unittest.TestCase):
     
     def test_valid_parameter_update(self):
         """Test successful parameter updates."""
-        self.default_model.update({'eta': 0.5, 'sampling_method': 'hull'})
+        self.default_model.update({
+            'eta': 0.5,
+            'sampling_method': 'hull',
+            'kernel': 'polynomial',
+            'kernel_gamma': 0.2,
+            'kernel_degree': 3,
+            'kernel_coef0': 2.0,
+        })
         self.assertEqual(self.default_model.eta, 0.5)
         self.assertEqual(self.default_model.sampling_method, 'hull')
+        self.assertEqual(self.default_model.kernel, 'polynomial')
+        self.assertEqual(self.default_model.kernel_gamma, 0.2)
+        self.assertEqual(self.default_model.kernel_degree, 3)
+        self.assertEqual(self.default_model.kernel_coef0, 2.0)
+
+    def test_update_kernel_aliases(self):
+        """Test the common update_kernel API and polynomial aliases."""
+        self.default_model.update_kernel({
+            'metric': 'poly',
+            'kernel_gamma': 0.25,
+            'degree': 3,
+            'coef0': 1.5,
+            'n_components': 20,
+        })
+        self.assertEqual(self.default_model.kernel, 'polynomial')
+        self.assertEqual(self.default_model.kernel_gamma, 0.25)
+        self.assertEqual(self.default_model.kernel_degree, 3)
+        self.assertEqual(self.default_model.kernel_coef0, 1.5)
+        self.assertEqual(self.default_model.n_components, 20)
+
+    def test_kernel_matrix_choices(self):
+        """Test formulas and positive semidefiniteness of all MMD kernels."""
+        zeta = np.array([
+            [-1.0, 0.0, -1.0],
+            [0.0, 1.0, 1.0],
+            [1.0, -1.0, 1.0],
+        ])
+
+        polynomial_model = MMD_DRO(
+            input_dim=2,
+            kernel='polynomial',
+            kernel_gamma=0.5,
+            kernel_degree=2,
+            kernel_coef0=1.0,
+        )
+        polynomial_gram = polynomial_model._kernel_matrix(zeta)
+        expected = (0.5 * (zeta @ zeta.T) + 1.0) ** 2
+        np.testing.assert_allclose(polynomial_gram, expected)
+
+        default_polynomial = MMD_DRO(input_dim=2, kernel='polynomial')
+        self.assertEqual(default_polynomial._kernel_parameters(zeta)['gamma'], 1 / 3)
+
+        for kernel in ('rbf', 'laplacian', 'polynomial', 'linear'):
+            model = MMD_DRO(input_dim=2, kernel=kernel)
+            gram = model._kernel_matrix(zeta)
+            np.testing.assert_allclose(gram, gram.T)
+            self.assertGreaterEqual(np.linalg.eigvalsh(gram).min(), -1e-10)
 
     def test_invalid_eta_update(self):
         """Test parameter update with non-positive eta."""
@@ -60,6 +144,24 @@ class TestMMDDROModel(unittest.TestCase):
         params = self.default_model.fit(self.valid_X, self.valid_y)
         self._validate_output_structure(params)
         self.assertTrue(np.isfinite(params['theta']).all())
+        self.assertIsInstance(self.default_model.robust_obj, float)
+        self.assertTrue(np.isfinite(self.default_model.robust_obj))
+
+    def test_successful_polynomial_kernel_fit(self):
+        """Test the Nyström fitting path with a polynomial MMD kernel."""
+        model = MMD_DRO(
+            input_dim=5,
+            model_type='svm',
+            kernel='polynomial',
+            kernel_gamma=0.2,
+            kernel_degree=2,
+            kernel_coef0=1.0,
+        )
+        params = model.fit(self.valid_X, self.valid_y)
+        self._validate_output_structure(params)
+        self.assertTrue(np.isfinite(params['theta']).all())
+        predictions = model.predict(self.valid_X)
+        self.assertTrue(np.all(np.isin(predictions, [-1, 1])))
     
 
     def test_invalid_label_values(self):

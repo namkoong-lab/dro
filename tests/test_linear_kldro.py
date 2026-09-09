@@ -40,6 +40,8 @@ class TestKLDROModel(unittest.TestCase):
         
         # Verify solution structure
         self.assertIn('theta', params)
+        self.assertIsInstance(model.robust_obj, float)
+        self.assertTrue(np.isfinite(model.robust_obj))
         self.assertEqual(len(params['theta']), 100)  # For RBF, theta matches sample size
 
     def test_valid_initialization(self):
@@ -119,4 +121,3 @@ class TestKLDROModel(unittest.TestCase):
         model = KLDRO(input_dim=5, fit_intercept=False)
         params = model.fit(self.valid_X, self.valid_y)
         assert params["b"] == 0.0
-        

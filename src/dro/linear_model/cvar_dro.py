@@ -214,6 +214,7 @@ class CVaRDRO(BaseLinearDRO):
 
         if self.fit_intercept == True:
             self.b = b.value
+        self.robust_obj = float(problem.value)
 
         return {"theta": self.theta.tolist(), "threshold": self.threshold_val, "b":self.b}
     

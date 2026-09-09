@@ -186,6 +186,7 @@ class Chi2DRO(BaseLinearDRO):
         self.theta = theta.value
         if self.fit_intercept == True:
             self.b = b.value
+        self.robust_obj = float(problem.value)
 
         return {"theta": self.theta.reshape(-1).tolist(), "b": self.b}
 
@@ -278,4 +279,3 @@ class Chi2DRO(BaseLinearDRO):
             raise Chi2DROError("Worst-case distribution optimization did not converge to a solution.")
 
         return {'sample_pts': [X, y], 'weight': prob.value}
-

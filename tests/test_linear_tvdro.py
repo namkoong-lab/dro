@@ -34,6 +34,8 @@ class TestTVDROModel(unittest.TestCase):
         
         # Verify solution structure
         self.assertIn('theta', params)
+        self.assertIsInstance(model.robust_obj, float)
+        self.assertTrue(np.isfinite(model.robust_obj))
         self.assertEqual(len(params['theta']), 100)  # For RBF, theta matches sample size
 
 
@@ -106,4 +108,3 @@ class TestTVDROModel(unittest.TestCase):
         mandatory_keys = {'theta', 'threshold', 'b'}
         self.assertTrue(mandatory_keys.issubset(params.keys()))
         self.assertEqual(len(params['theta']), self.default_model.input_dim)
-        

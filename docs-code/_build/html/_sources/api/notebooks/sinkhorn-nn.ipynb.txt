@@ -1,0 +1,379 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# Sinkhorn DRO with Neural Networks\n",
+        "\n",
+        "This notebook demonstrates how to use `SinkhornNNDRO` for distributionally robust optimization with neural network models. \n",
+        "\n",
+        "Sinkhorn DRO uses the entropic-regularized Wasserstein distance to define the ambiguity set. The key idea is to add Gaussian perturbations to input features and aggregate per-sample losses via logsumexp, yielding a smooth surrogate of the worst-case expected loss:\n",
+        "\n",
+        "$$\n",
+        "\\hat{R}(\\theta) = \\lambda \\varepsilon \\cdot \\frac{1}{N}\\sum_{i=1}^{N} \\log\\left(\\frac{1}{m}\\sum_{j=1}^{m}\\exp\\left(\\frac{\\ell(f_\\theta(x_i + \\sigma_j), y_i)}{\\lambda \\varepsilon}\\right)\\right), \\quad \\sigma_j \\sim \\mathcal{N}(0, \\varepsilon I)\n",
+        "$$\n",
+        "\n",
+        "Three stochastic optimization algorithms are supported:\n",
+        "- **SG** (Stochastic Gradient): fixed $m = 2^{K_{\\max}}$ Monte Carlo samples\n",
+        "- **MLMC** (Multilevel Monte Carlo): hierarchical variance reduction\n",
+        "- **RTMLMC** (Randomized Truncated MLMC): randomized single-level estimation\n",
+        "\n",
+        "**Reference**: [Sinkhorn Distributionally Robust Optimization](https://arxiv.org/abs/2109.11926)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "import torch\n",
+        "from sklearn.datasets import make_classification, make_regression\n",
+        "from dro.neural_model.sinkhorn_nn import SinkhornNNDRO"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Classification Example\n",
+        "\n",
+        "We first demonstrate Sinkhorn NN DRO on a binary classification task using all three optimization methods."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "# Generate classification data\n",
+        "X_cls, y_cls = make_classification(\n",
+        "    n_samples=500, n_features=10, n_informative=5,\n",
+        "    n_classes=2, random_state=42\n",
+        ")\n",
+        "print(f\"Classification data: X={X_cls.shape}, y={y_cls.shape}, classes={np.unique(y_cls)}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### SG (Stochastic Gradient) Optimization"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "# SG optimization (default)\n",
+        "model_sg = SinkhornNNDRO(\n",
+        "    input_dim=10,\n",
+        "    num_classes=2,\n",
+        "    task_type=\"classification\",\n",
+        "    model_type=\"mlp\",\n",
+        "    reg_param=0.1,          # entropic regularization ε\n",
+        "    lambda_param=10.0,       # loss scaling factor λ\n",
+        "    k_sample_max=3,          # m = 2^3 = 8 noise samples\n",
+        "    optimization_type=\"SG\",\n",
+        ")\n",
+        "\n",
+        "metrics_sg = model_sg.fit(X_cls, y_cls, epochs=10, lr=1e-3, verbose=True)\n",
+        "print(f\"\\nSG Results: acc={metrics_sg['acc']:.4f}, f1={metrics_sg['f1']:.4f}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### MLMC (Multilevel Monte Carlo) Optimization\n",
+        "\n",
+        "MLMC uses a hierarchy of sample levels for variance reduction while maintaining the same expected gradient."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "model_mlmc = SinkhornNNDRO(\n",
+        "    input_dim=10,\n",
+        "    num_classes=2,\n",
+        "    task_type=\"classification\",\n",
+        "    model_type=\"mlp\",\n",
+        "    reg_param=0.1,\n",
+        "    lambda_param=10.0,\n",
+        "    k_sample_max=3,\n",
+        "    optimization_type=\"MLMC\",\n",
+        ")\n",
+        "\n",
+        "metrics_mlmc = model_mlmc.fit(X_cls, y_cls, epochs=10, lr=1e-3, verbose=True)\n",
+        "print(f\"\\nMLMC Results: acc={metrics_mlmc['acc']:.4f}, f1={metrics_mlmc['f1']:.4f}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### RTMLMC (Randomized Truncated MLMC) Optimization\n",
+        "\n",
+        "RTMLMC randomly selects a single level per iteration from a truncated geometric distribution, scaling the loss by inverse selection probability. This further reduces per-iteration cost."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "model_rtmlmc = SinkhornNNDRO(\n",
+        "    input_dim=10,\n",
+        "    num_classes=2,\n",
+        "    task_type=\"classification\",\n",
+        "    model_type=\"mlp\",\n",
+        "    reg_param=0.1,\n",
+        "    lambda_param=10.0,\n",
+        "    k_sample_max=3,\n",
+        "    optimization_type=\"RTMLMC\",\n",
+        ")\n",
+        "\n",
+        "metrics_rtmlmc = model_rtmlmc.fit(X_cls, y_cls, epochs=10, lr=1e-3, verbose=True)\n",
+        "print(f\"\\nRTMLMC Results: acc={metrics_rtmlmc['acc']:.4f}, f1={metrics_rtmlmc['f1']:.4f}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Compare Optimization Methods"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "print(\"=\" * 50)\n",
+        "print(f\"{'Method':<10} {'Accuracy':>10} {'F1':>10}\")\n",
+        "print(\"-\" * 50)\n",
+        "print(f\"{'SG':<10} {metrics_sg['acc']:>10.4f} {metrics_sg['f1']:>10.4f}\")\n",
+        "print(f\"{'MLMC':<10} {metrics_mlmc['acc']:>10.4f} {metrics_mlmc['f1']:>10.4f}\")\n",
+        "print(f\"{'RTMLMC':<10} {metrics_rtmlmc['acc']:>10.4f} {metrics_rtmlmc['f1']:>10.4f}\")\n",
+        "print(\"=\" * 50)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Regression Example\n",
+        "\n",
+        "Sinkhorn NN DRO also supports regression tasks by setting `task_type=\"regression\"`."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "# Generate regression data\n",
+        "X_reg, y_reg = make_regression(\n",
+        "    n_samples=500, n_features=10, noise=5.0, random_state=42\n",
+        ")\n",
+        "print(f\"Regression data: X={X_reg.shape}, y={y_reg.shape}\")\n",
+        "\n",
+        "# Train with SG\n",
+        "model_reg = SinkhornNNDRO(\n",
+        "    input_dim=10,\n",
+        "    num_classes=1,             # auto-set to 1 for regression\n",
+        "    task_type=\"regression\",\n",
+        "    model_type=\"mlp\",\n",
+        "    reg_param=0.01,\n",
+        "    lambda_param=50.0,\n",
+        "    k_sample_max=3,\n",
+        "    optimization_type=\"SG\",\n",
+        ")\n",
+        "\n",
+        "metrics_reg = model_reg.fit(X_reg, y_reg, epochs=20, lr=1e-3, verbose=True)\n",
+        "print(f\"\\nRegression MSE: {metrics_reg['mse']:.4f}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Dynamic Hyperparameter Tuning\n",
+        "\n",
+        "The `update()` method allows changing Sinkhorn DRO hyperparameters on-the-fly without re-initializing the model."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "model = SinkhornNNDRO(\n",
+        "    input_dim=10, num_classes=2,\n",
+        "    reg_param=0.1, lambda_param=10.0,\n",
+        "    k_sample_max=2, optimization_type=\"SG\",\n",
+        ")\n",
+        "\n",
+        "# Update hyperparameters dynamically\n",
+        "model.update({\n",
+        "    \"reg\": 0.05,\n",
+        "    \"lambda\": 50.0,\n",
+        "    \"k_sample_max\": 4,\n",
+        "    \"optimization_type\": \"MLMC\",\n",
+        "})\n",
+        "\n",
+        "print(f\"Updated: reg_param={model.reg_param}, lambda_param={model.lambda_param}\")\n",
+        "print(f\"         k_sample_max={model.k_sample_max}, optimization_type={model.optimization_type}\")\n",
+        "\n",
+        "# Train with updated parameters\n",
+        "metrics = model.fit(X_cls, y_cls, epochs=5, lr=1e-3, verbose=False)\n",
+        "print(f\"Metrics: {metrics}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Using a Custom Model\n",
+        "\n",
+        "You can plug in your own PyTorch model via `update_user_mode()`, which is inherited from `BaseNNDRO`."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "import torch.nn as nn\n",
+        "\n",
+        "# Define a custom 3-layer network\n",
+        "class CustomNet(nn.Module):\n",
+        "    def __init__(self, input_dim, num_classes):\n",
+        "        super().__init__()\n",
+        "        self.net = nn.Sequential(\n",
+        "            nn.Linear(input_dim, 64),\n",
+        "            nn.ReLU(),\n",
+        "            nn.Dropout(0.2),\n",
+        "            nn.Linear(64, 32),\n",
+        "            nn.ReLU(),\n",
+        "            nn.Linear(32, num_classes),\n",
+        "        )\n",
+        "    def forward(self, x):\n",
+        "        return self.net(x)\n",
+        "\n",
+        "# Initialize SinkhornNNDRO and plug in the custom model\n",
+        "model_custom = SinkhornNNDRO(\n",
+        "    input_dim=10, num_classes=2,\n",
+        "    reg_param=0.1, lambda_param=10.0,\n",
+        "    k_sample_max=3, optimization_type=\"SG\",\n",
+        ")\n",
+        "model_custom.update_user_mode(\n",
+        "    input_dim=10,\n",
+        "    num_classes=2,\n",
+        "    model=CustomNet(10, 2),\n",
+        "    task_type=\"classification\",\n",
+        ")\n",
+        "\n",
+        "metrics_custom = model_custom.fit(X_cls, y_cls, epochs=10, lr=1e-3, verbose=True)\n",
+        "print(f\"\\nCustom Model: acc={metrics_custom['acc']:.4f}, f1={metrics_custom['f1']:.4f}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Effect of Regularization Strength\n",
+        "\n",
+        "The entropic regularization parameter $\\varepsilon$ (`reg_param`) controls the smoothness of the Sinkhorn distance. Larger $\\varepsilon$ → smoother transport plan → more regularized (closer to ERM); smaller $\\varepsilon$ → closer to true Wasserstein DRO."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "reg_values = [0.001, 0.01, 0.1, 1.0]\n",
+        "\n",
+        "print(f\"{'reg_param':<12} {'Accuracy':>10} {'F1':>10}\")\n",
+        "print(\"-\" * 35)\n",
+        "\n",
+        "for reg in reg_values:\n",
+        "    m = SinkhornNNDRO(\n",
+        "        input_dim=10, num_classes=2,\n",
+        "        task_type=\"classification\", model_type=\"mlp\",\n",
+        "        reg_param=reg, lambda_param=10.0,\n",
+        "        k_sample_max=3, optimization_type=\"SG\",\n",
+        "    )\n",
+        "    result = m.fit(X_cls, y_cls, epochs=10, lr=1e-3, verbose=False)\n",
+        "    print(f\"{reg:<12} {result['acc']:>10.4f} {result['f1']:>10.4f}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Multi-class Classification\n",
+        "\n",
+        "`SinkhornNNDRO` naturally extends to multi-class problems."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "# 5-class classification\n",
+        "X_multi, y_multi = make_classification(\n",
+        "    n_samples=800, n_features=20, n_informative=10,\n",
+        "    n_classes=5, n_clusters_per_class=1, random_state=42\n",
+        ")\n",
+        "\n",
+        "model_multi = SinkhornNNDRO(\n",
+        "    input_dim=20,\n",
+        "    num_classes=5,\n",
+        "    task_type=\"classification\",\n",
+        "    model_type=\"mlp\",\n",
+        "    reg_param=0.1,\n",
+        "    lambda_param=10.0,\n",
+        "    k_sample_max=3,\n",
+        "    optimization_type=\"SG\",\n",
+        ")\n",
+        "\n",
+        "metrics_multi = model_multi.fit(X_multi, y_multi, epochs=15, lr=1e-3, verbose=True)\n",
+        "print(f\"\\nMulti-class (5): acc={metrics_multi['acc']:.4f}, f1={metrics_multi['f1']:.4f}\")\n",
+        "\n",
+        "# Prediction\n",
+        "preds = model_multi.predict(X_multi[:10])\n",
+        "print(f\"Sample predictions: {preds}\")\n",
+        "print(f\"True labels:        {y_multi[:10]}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": []
+    }
+  ],
+  "metadata": {
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 2
+}

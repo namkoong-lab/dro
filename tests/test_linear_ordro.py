@@ -86,6 +86,8 @@ def test_fit_interface(dataset):
     params = model.fit(X, y)
     assert 'theta' in params
     assert len(params['theta']) == X.shape[1]
+    assert isinstance(model.robust_obj, float)
+    assert np.isfinite(model.robust_obj)
     
     # Dimension mismatch
     with pytest.raises(ORWDROError):

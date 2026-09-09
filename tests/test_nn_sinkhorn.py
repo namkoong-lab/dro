@@ -141,6 +141,8 @@ class TestSinkhornNNDRO(unittest.TestCase):
         metrics = model.fit(self.X_cls, self.y_cls, epochs=2, verbose=False)
         self.assertIn("acc", metrics)
         self.assertIn("f1", metrics)
+        self.assertIsInstance(model.robust_obj, float)
+        self.assertTrue(np.isfinite(model.robust_obj))
 
         preds = model.predict(self.X_cls[:10])
         self.assertEqual(preds.shape, (10,))

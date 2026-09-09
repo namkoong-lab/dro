@@ -17,6 +17,9 @@ class BayesianDRO(BaseLinearDRO):
     
     This model minimizes a Bayesian version for regression and other types of losses
 
+    :ivar robust_obj: Robust empirical optimization objective from the most
+        recent successful fit, or ``None`` before it is available.
+
     Reference: <https://epubs.siam.org/doi/10.1137/21M1465548>
     """
 
@@ -45,6 +48,7 @@ class BayesianDRO(BaseLinearDRO):
         self.model_type = model_type
         self.fit_intercept = fit_intercept
         self.b = 0
+        self.robust_obj = None
 
         if solver not in cp.installed_solvers():
             raise InstallError(f"Unsupported solver {solver}. It does not exist in your package. Please change the solver or install {solver}.")
@@ -303,6 +307,8 @@ class BayesianDRO(BaseLinearDRO):
         if self.fit_intercept == True:
             self.b = b.value
 
+        self.robust_obj = float(problem.value)
+
         model_params = {}
         model_params["theta"] = self.theta.reshape(-1).tolist()
         model_params['b'] = self.b
@@ -324,6 +330,5 @@ class BayesianDRO(BaseLinearDRO):
             return 1 * cp.pos(y - X @ theta) + cp.pos(X @ theta - y)
         else:
             raise NotImplementedError("CVXPY loss not implemented for the specified model_type value.")
-
 
 

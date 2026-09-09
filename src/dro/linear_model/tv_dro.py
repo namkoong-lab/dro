@@ -181,6 +181,7 @@ class TVDRO(BaseLinearDRO):
             raise TVDROError("Optimization did not converge to a solution.")
         if self.fit_intercept == True:
             self.b = b.value
+        self.robust_obj = float(problem.value)
 
         return {"theta": self.theta.tolist(), "threshold": self.threshold_val, "b": self.b}
 

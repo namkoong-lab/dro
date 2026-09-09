@@ -62,6 +62,8 @@ class TestMOTDROModel(unittest.TestCase):
         params = self.default_model.fit(self.valid_X, self.valid_y)
         self._validate_output_structure(params)
         self.assertEqual(len(params['theta']), 5)
+        self.assertIsInstance(self.default_model.robust_obj, float)
+        self.assertTrue(np.isfinite(self.default_model.robust_obj))
 
     def test_invalid_label_values(self):
         """Test classification with 0/1 labels instead of ±1."""
@@ -95,4 +97,3 @@ class TestMOTDROModel(unittest.TestCase):
         mandatory_keys = {'theta', 'b'}
         self.assertTrue(mandatory_keys.issubset(params.keys()))
         self.assertEqual(len(params['theta']), self.default_model.input_dim)
-        

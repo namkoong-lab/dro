@@ -134,6 +134,8 @@ def test_training_workflow(dataset, optim_type):
     params = model.fit(X, y, optimization_type=optim_type)
     assert 'theta' in params
     assert params['theta'].shape == (X.shape[1],)
+    assert isinstance(model.robust_obj, float)
+    assert np.isfinite(model.robust_obj)
     if model.fit_intercept:
         assert 'bias' in params
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>CVaR DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
@@ -303,8 +303,8 @@ under a CVaR constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of input features. Must match training data dimension.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Number of input features. Must match training data dimension.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
@@ -312,17 +312,17 @@ under a CVaR constraint.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn an intercept term. Disable if data is pre-centered.
+<li><p><strong>fit_intercept</strong> (<em>bool</em>) – Whether to learn an intercept term. Disable if data is pre-centered.
 Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Convex optimization solver. Recommended: ‘MOSEK’ (commercial).
+<li><p><strong>solver</strong> (<em>str</em>) – Convex optimization solver. Recommended: ‘MOSEK’ (commercial).
 Defaults to ‘MOSEK’.</p></li>
-<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Risk level controlling the CVaR conservativeness. Must satisfy 0 &lt; alpha ≤ 1.
+<li><p><strong>alpha</strong> (<em>float</em>) – Risk level controlling the CVaR conservativeness. Must satisfy 0 &lt; alpha ≤ 1.
 Defaults to 1.0 (equivalent to worst-case optimization).</p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>kernel</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">model_type</span></code> is not in [‘svm’, ‘logistic’, ‘ols’]</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">alpha</span></code> is outside (0, 1]</p></li>
 </ul>
@@ -336,7 +336,7 @@ Defaults to 1.0 (equivalent to worst-case optimization).</p></li>
 <p>Modifies risk-sensitive hyperparameters and optimization settings. Changes take effect immediately but require re-fitting the model to update solutions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary of configuration updates. Supported keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary of configuration updates. Supported keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code>: Risk level parameter controlling CVaR conservativeness (must satisfy 0 &lt; alpha ≤ 1)</p></li>
 </ul>
@@ -350,7 +350,7 @@ Defaults to 1.0 (equivalent to worst-case optimization).</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 <dl>
@@ -386,9 +386,9 @@ a robust decision boundary/regression plane under adversarial distribution shift
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>. 
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>. 
 Must match the <cite>input_dim</cite> specified during initialization.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Target values of shape <cite>(n_samples,)</cite>. For classification, use ±1 labels; 
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Target values of shape <cite>(n_samples,)</cite>. For classification, use ±1 labels; 
 for regression, use continuous values.</p></li>
 </ul>
 </dd>
@@ -402,7 +402,7 @@ for regression, use continuous values.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[str, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -411,7 +411,7 @@ for regression, use continuous values.</p></li>
 <li><p>If the problem is infeasible with current <cite>alpha</cite></p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
+<li><p><strong>ValueError</strong> – <ul>
 <li><p>If <cite>X.shape[1] != self.input_dim</cite></p></li>
 <li><p>If <cite>X.shape[0] != y.shape[0]</cite></p></li>
 </ul>
@@ -460,15 +460,15 @@ high-loss scenarios. This represents the adversarial distribution that maximizes
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Feature matrix of shape <cite>(n_samples, n_features)</cite>.
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Feature matrix of shape <cite>(n_samples, n_features)</cite>.
 Must match the model’s <cite>input_dim</cite> (n_features).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target vector of shape <cite>(n_samples,)</cite>. Requires pre-processed labels:</p>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – <p>Target vector of shape <cite>(n_samples,)</cite>. Requires pre-processed labels:</p>
 <ul>
 <li><p>Binary classification: ±1 labels</p></li>
 <li><p>Regression: Continuous values</p></li>
 </ul>
 </p></li>
-<li><p><strong>precision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Perturbation tolerance for loss threshold comparison. 
+<li><p><strong>precision</strong> (<em>float</em>) – Perturbation tolerance for loss threshold comparison. 
 Compensates for numerical instability in loss computations. Defaults to 1e-5.</p></li>
 </ul>
 </dd>
@@ -479,7 +479,7 @@ Compensates for numerical instability in loss computations. Defaults to 1e-5.</p
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[str, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>CVaRDROError</strong> – <ul class="simple">

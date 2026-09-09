@@ -10,6 +10,8 @@ class TestWNNDROModel(unittest.TestCase):
         y = np.random.randint(0, 2, 100)  
         model = WNNDRO(input_dim=3*64*64, num_classes=2, model_type='alexnet', task_type="classification")
         metrics = model.fit(X, y, epochs=1)
+        self.assertIsInstance(model.robust_obj, float)
+        self.assertTrue(np.isfinite(model.robust_obj))
         preds = model.predict(X[:5])
         acc = model.score(X, y)
         f1 = model.f1score(X, y)

@@ -58,6 +58,8 @@ class TestHRDROLinearRegression(unittest.TestCase):
         params = self.default_model.fit(self.valid_X, self.valid_y)
         self.assertIn('theta', params)
         self.assertEqual(len(params['theta']), 5)
+        self.assertIsInstance(self.default_model.robust_obj, float)
+        self.assertTrue(np.isfinite(self.default_model.robust_obj))
 
     def test_successful_fit_lad(self):
         """Test successful LAD model fitting."""

@@ -230,6 +230,7 @@ class ConditionalCVaRDRO(BaseLinearDRO):
 
         if self.fit_intercept == True:
             self.b = b.value
+        self.robust_obj = float(prob.value)
 
         model_params = {}
         model_params['theta'] = self.theta.reshape(-1).tolist()

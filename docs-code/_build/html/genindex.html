@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <script src="_static/documentation_options.js?v=d5a15cff"></script>
@@ -312,10 +312,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/apis/chi2dro_linear.html#dro.linear_model.chi2_dro.Chi2DRO">Chi2DRO (class in dro.linear_model.chi2_dro)</a>
 </li>
-      <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.Chi2DRO_LGBM">Chi2DRO_LGBM (class in dro.tree_model.lgbm)</a>
-</li>
-      <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.Chi2DRO_XGB">Chi2DRO_XGB (class in dro.tree_model.xgb)</a>
-</li>
       <li><a href="api/apis/fdro_nn.html#dro.neural_model.fdro_nn.Chi2NNDRO">Chi2NNDRO (class in dro.neural_model.fdro_nn)</a>
 </li>
       <li><a href="api/apis/dataloader_classification.html#dro.data.dataloader_classification.classification_basic">classification_basic() (in module dro.data.dataloader_classification)</a>
@@ -331,10 +327,6 @@
       <li><a href="api/apis/conditionaldro.html#dro.linear_model.conditional_dro.ConditionalCVaRDRO">ConditionalCVaRDRO (class in dro.linear_model.conditional_dro)</a>
 </li>
       <li><a href="api/apis/cvardro_linear.html#dro.linear_model.cvar_dro.CVaRDRO">CVaRDRO (class in dro.linear_model.cvar_dro)</a>
-</li>
-      <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.CVaRDRO_LGBM">CVaRDRO_LGBM (class in dro.tree_model.lgbm)</a>
-</li>
-      <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.CVaRDRO_XGB">CVaRDRO_XGB (class in dro.tree_model.xgb)</a>
 </li>
       <li><a href="api/apis/fdro_nn.html#dro.neural_model.fdro_nn.CVaRNNDRO">CVaRNNDRO (class in dro.neural_model.fdro_nn)</a>
 </li>
@@ -407,6 +399,8 @@
         <li><a href="api/apis/kldro_linear.html#module-dro.linear_model.kl_dro">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     dro.linear_model.marginal_dro
 
@@ -421,8 +415,6 @@
         <li><a href="api/apis/mmddro.html#module-dro.linear_model.mmd_dro">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     dro.linear_model.mot_dro
 
@@ -472,34 +464,6 @@
         <li><a href="api/apis/fdro_nn.html#module-dro.neural_model.fdro_nn">module</a>
 </li>
       </ul></li>
-      <li>
-    dro.neural_model.hrdro_nn
-
-      <ul>
-        <li><a href="api/apis/hrdro_nn.html#module-dro.neural_model.hrdro_nn">module</a>
-</li>
-      </ul></li>
-      <li>
-    dro.neural_model.wdro_nn
-
-      <ul>
-        <li><a href="api/apis/wdro_nn.html#module-dro.neural_model.wdro_nn">module</a>
-</li>
-      </ul></li>
-      <li>
-    dro.tree_model.lgbm
-
-      <ul>
-        <li><a href="api/apis/cvardro_tree.html#module-dro.tree_model.lgbm">module</a>
-</li>
-      </ul></li>
-      <li>
-    dro.tree_model.xgb
-
-      <ul>
-        <li><a href="api/apis/kldro_tree.html#module-dro.tree_model.xgb">module</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -507,7 +471,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/apis/base_linear.html#dro.linear_model.base.BaseLinearDRO.evaluate">evaluate() (dro.linear_model.base.BaseLinearDRO method)</a>
+
+      <ul>
+        <li><a href="api/apis/mmddro.html#dro.linear_model.mmd_dro.MMD_DRO.evaluate">(dro.linear_model.mmd_dro.MMD_DRO method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -549,20 +517,6 @@
 </li>
         <li><a href="api/apis/base_nn.html#dro.neural_model.base_nn.BaseNNDRO.fit">(dro.neural_model.base_nn.BaseNNDRO method)</a>
 </li>
-        <li><a href="api/apis/hrdro_nn.html#dro.neural_model.hrdro_nn.HRNNDRO.fit">(dro.neural_model.hrdro_nn.HRNNDRO method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.Chi2DRO_LGBM.fit">(dro.tree_model.lgbm.Chi2DRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.CVaRDRO_LGBM.fit">(dro.tree_model.lgbm.CVaRDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.KLDRO_LGBM.fit">(dro.tree_model.lgbm.KLDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.Chi2DRO_XGB.fit">(dro.tree_model.xgb.Chi2DRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.CVaRDRO_XGB.fit">(dro.tree_model.xgb.CVaRDRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.KLDRO_XGB.fit">(dro.tree_model.xgb.KLDRO_XGB method)</a>
-</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -583,22 +537,12 @@
       <li><a href="api/apis/hrdro.html#dro.linear_model.hr_dro.HR_DRO_LR">HR_DRO_LR (class in dro.linear_model.hr_dro)</a>
 </li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/apis/hrdro_nn.html#dro.neural_model.hrdro_nn.HRNNDRO">HRNNDRO (class in dro.neural_model.hrdro_nn)</a>
-</li>
-  </ul></td>
 </tr></table>
 
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/apis/kldro_linear.html#dro.linear_model.kl_dro.KLDRO">KLDRO (class in dro.linear_model.kl_dro)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.KLDRO_LGBM">KLDRO_LGBM (class in dro.tree_model.lgbm)</a>
-</li>
-      <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.KLDRO_XGB">KLDRO_XGB (class in dro.tree_model.xgb)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -608,20 +552,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/apis/base_nn.html#dro.neural_model.base_nn.Linear">Linear (class in dro.neural_model.base_nn)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/apis/base_linear.html#dro.linear_model.base.BaseLinearDRO.load">load() (dro.linear_model.base.BaseLinearDRO method)</a>
-</li>
-      <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.Chi2DRO_LGBM.loss">loss() (dro.tree_model.lgbm.Chi2DRO_LGBM method)</a>
 
       <ul>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.CVaRDRO_LGBM.loss">(dro.tree_model.lgbm.CVaRDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.KLDRO_LGBM.loss">(dro.tree_model.lgbm.KLDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.Chi2DRO_XGB.loss">(dro.tree_model.xgb.Chi2DRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.CVaRDRO_XGB.loss">(dro.tree_model.xgb.CVaRDRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.KLDRO_XGB.loss">(dro.tree_model.xgb.KLDRO_XGB method)</a>
+        <li><a href="api/apis/mmddro.html#dro.linear_model.mmd_dro.MMD_DRO.load">(dro.linear_model.mmd_dro.MMD_DRO method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -676,14 +612,6 @@
 </li>
         <li><a href="api/apis/fdro_nn.html#module-dro.neural_model.fdro_nn">dro.neural_model.fdro_nn</a>
 </li>
-        <li><a href="api/apis/hrdro_nn.html#module-dro.neural_model.hrdro_nn">dro.neural_model.hrdro_nn</a>
-</li>
-        <li><a href="api/apis/wdro_nn.html#module-dro.neural_model.wdro_nn">dro.neural_model.wdro_nn</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#module-dro.tree_model.lgbm">dro.tree_model.lgbm</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#module-dro.tree_model.xgb">dro.tree_model.xgb</a>
-</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -706,23 +634,11 @@
       <li><a href="api/apis/base_linear.html#dro.linear_model.base.BaseLinearDRO.predict">predict() (dro.linear_model.base.BaseLinearDRO method)</a>
 
       <ul>
+        <li><a href="api/apis/mmddro.html#dro.linear_model.mmd_dro.MMD_DRO.predict">(dro.linear_model.mmd_dro.MMD_DRO method)</a>
+</li>
         <li><a href="api/apis/sinkhorn_dro.html#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.predict">(dro.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
 </li>
         <li><a href="api/apis/base_nn.html#dro.neural_model.base_nn.BaseNNDRO.predict">(dro.neural_model.base_nn.BaseNNDRO method)</a>
-</li>
-        <li><a href="api/apis/hrdro_nn.html#dro.neural_model.hrdro_nn.HRNNDRO.predict">(dro.neural_model.hrdro_nn.HRNNDRO method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.Chi2DRO_LGBM.predict">(dro.tree_model.lgbm.Chi2DRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.CVaRDRO_LGBM.predict">(dro.tree_model.lgbm.CVaRDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.KLDRO_LGBM.predict">(dro.tree_model.lgbm.KLDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.Chi2DRO_XGB.predict">(dro.tree_model.xgb.Chi2DRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.CVaRDRO_XGB.predict">(dro.tree_model.xgb.CVaRDRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.KLDRO_XGB.predict">(dro.tree_model.xgb.KLDRO_XGB method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -757,18 +673,6 @@
         <li><a href="api/apis/sinkhorn_dro.html#dro.linear_model.sinkhorn_dro.SinkhornLinearDRO.score">(dro.linear_model.sinkhorn_dro.SinkhornLinearDRO method)</a>
 </li>
         <li><a href="api/apis/base_nn.html#dro.neural_model.base_nn.BaseNNDRO.score">(dro.neural_model.base_nn.BaseNNDRO method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.Chi2DRO_LGBM.score">(dro.tree_model.lgbm.Chi2DRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.CVaRDRO_LGBM.score">(dro.tree_model.lgbm.CVaRDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.KLDRO_LGBM.score">(dro.tree_model.lgbm.KLDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.Chi2DRO_XGB.score">(dro.tree_model.xgb.Chi2DRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.CVaRDRO_XGB.score">(dro.tree_model.xgb.CVaRDRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.KLDRO_XGB.score">(dro.tree_model.xgb.KLDRO_XGB method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -828,23 +732,15 @@
 </li>
         <li><a href="api/apis/fdro_nn.html#dro.neural_model.fdro_nn.CVaRNNDRO.update">(dro.neural_model.fdro_nn.CVaRNNDRO method)</a>
 </li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.Chi2DRO_LGBM.update">(dro.tree_model.lgbm.Chi2DRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.CVaRDRO_LGBM.update">(dro.tree_model.lgbm.CVaRDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/cvardro_tree.html#dro.tree_model.lgbm.KLDRO_LGBM.update">(dro.tree_model.lgbm.KLDRO_LGBM method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.Chi2DRO_XGB.update">(dro.tree_model.xgb.Chi2DRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.CVaRDRO_XGB.update">(dro.tree_model.xgb.CVaRDRO_XGB method)</a>
-</li>
-        <li><a href="api/apis/kldro_tree.html#dro.tree_model.xgb.KLDRO_XGB.update">(dro.tree_model.xgb.KLDRO_XGB method)</a>
-</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/apis/base_linear.html#dro.linear_model.base.BaseLinearDRO.update_kernel">update_kernel() (dro.linear_model.base.BaseLinearDRO method)</a>
+
+      <ul>
+        <li><a href="api/apis/mmddro.html#dro.linear_model.mmd_dro.MMD_DRO.update_kernel">(dro.linear_model.mmd_dro.MMD_DRO method)</a>
 </li>
+      </ul></li>
       <li><a href="api/apis/base_nn.html#dro.neural_model.base_nn.BaseNNDRO.update_user_mode">update_user_mode() (dro.neural_model.base_nn.BaseNNDRO method)</a>
 </li>
   </ul></td>
@@ -856,8 +752,6 @@
       <li><a href="api/apis/wdro_linear.html#dro.linear_model.wasserstein_dro.WassersteinDRO">WassersteinDRO (class in dro.linear_model.wasserstein_dro)</a>
 </li>
       <li><a href="api/apis/wdro_linear.html#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing">WassersteinDROsatisficing (class in dro.linear_model.wasserstein_dro)</a>
-</li>
-      <li><a href="api/apis/wdro_nn.html#dro.neural_model.wdro_nn.WNNDRO">WNNDRO (class in dro.neural_model.wdro_nn)</a>
 </li>
       <li><a href="api/apis/chi2dro_linear.html#dro.linear_model.chi2_dro.Chi2DRO.worst_distribution">worst_distribution() (dro.linear_model.chi2_dro.Chi2DRO method)</a>
 

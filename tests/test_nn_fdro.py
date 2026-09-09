@@ -23,6 +23,9 @@ class TestNeuralDROModels(unittest.TestCase):
     # region Common Tests
     def _validate_model_interface(self, model, is_classification=True):
         """Validate standard model interface and outputs."""
+        self.assertIsInstance(model.robust_obj, float)
+        self.assertTrue(np.isfinite(model.robust_obj))
+
         # Test prediction shape
         preds = model.predict(self.X_cls[:5])
         if is_classification:

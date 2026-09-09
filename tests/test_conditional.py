@@ -121,6 +121,8 @@ def test_fit_interface(dataset):
     params = model.fit(X, y)
     assert 'theta' in params
     assert 'b' in params
+    assert isinstance(model.robust_obj, float)
+    assert np.isfinite(model.robust_obj)
     assert len(params['theta']) == X.shape[1]
 
     model.update_kernel({"metric": "rbf"})

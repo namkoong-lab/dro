@@ -306,6 +306,7 @@ class WassersteinDRO(BaseLinearDRO):
         self.theta = theta.value
         if self.fit_intercept == True:
             self.b = b.value
+        self.robust_obj = float(problem.value)
 
         model_params = {}
         model_params["theta"] = self.theta.reshape(-1).tolist()
@@ -729,6 +730,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         self.theta = theta.value
         if self.fit_intercept == True:
             self.b = b.value
+        self.robust_obj = float(problem.value)
 
         model_params = {}
         model_params["theta"] = self.theta.reshape(-1).tolist()
@@ -878,7 +880,8 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         if self.fit_intercept == True:
             self.b = b
 
-        return problem.value
+        self.robust_obj = float(problem.value)
+        return self.robust_obj
         
     
     def worst_distribution(self, X, y):

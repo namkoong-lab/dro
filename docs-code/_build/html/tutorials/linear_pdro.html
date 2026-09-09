@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Bayesian (Parametric) DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -256,6 +256,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
@@ -300,6 +301,8 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">posterior_param_num</span></code>: The number of sampled <span class="math notranslate nohighlight">\(\zeta\)</span> for <span class="math notranslate nohighlight">\(\zeta_N\)</span>, where we restrict it to be smaller than 100 for computation.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">posterior_sample_ratio</span></code>: The number of Monte Carlo sampled (relative to <span class="math notranslate nohighlight">\(N\)</span>) for the number of samples for each <span class="math notranslate nohighlight">\(P_{\zeta}\)</span>.</p></li>
 </ul>
+<p>See the <a class="reference internal" href="../api/notebooks/param_dro.html"><span class="doc">Bayesian DRO notebook</span></a> for
+end-to-end frequentist and Bayesian parametric examples.</p>
 </section>
 <section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>

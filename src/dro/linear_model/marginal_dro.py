@@ -304,6 +304,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
             self.theta = theta.value
             self.b = b_var.value if self.fit_intercept else 0.0
             self.threshold = eta.value
+            self.robust_obj = float(problem.value)
 
             return {
                 "theta": self.theta.tolist(),
@@ -350,6 +351,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
             if self.fit_intercept == True:
                 self.b = b.value
+            self.robust_obj = float(problem.value)
 
             return {
                 "theta": self.theta.tolist(),
