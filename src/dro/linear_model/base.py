@@ -184,8 +184,12 @@ class BaseLinearDRO:
         if self.model_type in ['ols', 'lad']:
             return scores
 
-        preds = np.where(scores >= (0 if self.model_type == 'svm' else 0.5), 1, -1)
-        return preds
+        if self.model_type in {'svm', 'logistic'}:
+            return np.where(scores >= 0, 1, -1)
+
+        raise NotImplementedError(
+            "Prediction not implemented for the specified model_type value."
+        )
 
     def score(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> Union[float, Tuple[float, float]]:
         """Compute accuracy and F1 score for classification tasks, or MSE for regression.

@@ -33,7 +33,7 @@ class WassersteinDRO(BaseLinearDRO):
 
         - :math:`p`;
 
-        - square (notation depending on the model type), where square = 2 for 'svm', 'logistic', 'lad'; square = 1 for 'ols'.
+        - square (notation depending on the model type), where square = 1 for 'svm', 'logistic', 'lad'; square = 2 for 'ols'.
 
     Reference:
 
