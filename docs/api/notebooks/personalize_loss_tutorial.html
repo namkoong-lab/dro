@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Personalized Loss &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <title>Personalized Losses &#8212; dro 0.3.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
@@ -262,10 +262,12 @@
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO with Linear and Neural Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Sinkhorn DRO with Neural Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">DRO on Tree-Ensemble Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel Distributionally Robust Optimization</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Personalized Loss</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Personalized Losses</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -280,107 +282,293 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="Personalized-Loss">
-<h1>Personalized Loss<a class="headerlink" href="#Personalized-Loss" title="Link to this heading">¶</a></h1>
-<p>In the following, we present a case to show how to incorporate the personalized loss and plug it into different DRO losses based on cvxpy and pytorch.</p>
-<section id="Exact-Solver">
-<h2>Exact Solver<a class="headerlink" href="#Exact-Solver" title="Link to this heading">¶</a></h2>
-<section id="f-divergence-DRO">
-<h3><span class="math notranslate nohighlight">\(f\)</span>-divergence DRO<a class="headerlink" href="#f-divergence-DRO" title="Link to this heading">¶</a></h3>
-<p>Across <span class="math notranslate nohighlight">\(f\)</span>-divergence DRO, the adaptive loss can be easily modified as follows. Below, we modify the standard loss into the quantile regression: <span class="math notranslate nohighlight">\(\ell((\theta, b);(X, Y)) = 3(Y - \theta^{\top}X - b)^+ + (\theta^{\top}X + b - Y)^+\)</span>.</p>
-<div class="nbinput docutils container">
+  <section id="Personalized-Losses">
+<h1>Personalized Losses<a class="headerlink" href="#Personalized-Losses" title="Link to this heading">¶</a></h1>
+<p>In this notebook, we personalize the loss as a convex piecewise-affine loss. We use the same loss with exact <span class="math notranslate nohighlight">\(f\)</span>-DRO and Wasserstein DRO models, then carry its asymmetric decision costs into the neural approximation classes.</p>
+<section id="A-general-convex-piecewise-affine-loss">
+<h2>A general convex piecewise-affine loss<a class="headerlink" href="#A-general-convex-piecewise-affine-loss" title="Link to this heading">¶</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(t=\theta^\top x+b\)</span> be the prediction and <span class="math notranslate nohighlight">\(z=t-y\)</span> its residual. We parameterize the loss as</p>
+<div class="math notranslate nohighlight">
+\[L(z)=\max_{j=1,\ldots,J}\{a_jz+c_j\}.\]</div>
+<p>A maximum of affine pieces is convex. Changing the arrays of slopes <span class="math notranslate nohighlight">\(a_j\)</span> and offsets <span class="math notranslate nohighlight">\(c_j\)</span> creates many losses without rewriting the DRO formulation. LAD, pinball loss, and epsilon-insensitive loss are special cases.</p>
+<section id="Original-newsvendor-loss">
+<h3>Original newsvendor loss<a class="headerlink" href="#Original-newsvendor-loss" title="Link to this heading">¶</a></h3>
+<p>This loss covers a lot of operational examples. For example, the original asymmetric newsvendor loss</p>
+<div class="math notranslate nohighlight">
+\[L(z)=3(-z)^+ + z^+=\max\{-3z,z\},\]</div>
+<p>where under-prediction costs three times as much as over-prediction. Thus its piecewise-affine slopes are <code class="docutils literal notranslate"><span class="pre">[-3,</span> <span class="pre">1]</span></code> and both offsets are zero. The helper functions below remain general: substitute any finite slope and offset arrays to define another convex piecewise-affine loss.</p>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="nn">cp</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dro.src.linear_model.chi2_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MethodType</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">cvxpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.chi2_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chi2DRO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.wasserstein_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">WassersteinDRO</span>
 
-<span class="k">def</span> <span class="nf">_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">return</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">UNDERAGE_COST</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">OVERAGE_COST</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">NEWSVENDOR_SLOPES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">UNDERAGE_COST</span><span class="p">,</span> <span class="n">OVERAGE_COST</span><span class="p">])</span>
+<span class="n">NEWSVENDOR_OFFSETS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">return</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">X</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+<span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
 
-<span class="n">model</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_cvx_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)})</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">piecewise_affine_numpy</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span> <span class="n">slopes</span><span class="p">,</span> <span class="n">offsets</span><span class="p">):</span>
+    <span class="n">pieces</span> <span class="o">=</span> <span class="n">slopes</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">residual</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pieces</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">piecewise_affine_cvxpy</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span> <span class="n">slopes</span><span class="p">,</span> <span class="n">offsets</span><span class="p">):</span>
+    <span class="n">pieces</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span>
+        <span class="n">slope</span> <span class="o">*</span> <span class="n">residual</span> <span class="o">+</span> <span class="n">offset</span>
+        <span class="k">for</span> <span class="n">slope</span><span class="p">,</span> <span class="n">offset</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">slopes</span><span class="p">,</span> <span class="n">offsets</span><span class="p">)</span>
+    <span class="p">])</span>
+    <span class="k">return</span> <span class="n">cp</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pieces</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">newsvendor_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">prediction</span> <span class="o">-</span> <span class="n">y</span>
+    <span class="k">return</span> <span class="n">piecewise_affine_numpy</span><span class="p">(</span>
+        <span class="n">residual</span><span class="p">,</span> <span class="n">NEWSVENDOR_SLOPES</span><span class="p">,</span> <span class="n">NEWSVENDOR_OFFSETS</span>
+    <span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">newsvendor_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">y</span>
+    <span class="k">return</span> <span class="n">piecewise_affine_cvxpy</span><span class="p">(</span>
+        <span class="n">residual</span><span class="p">,</span> <span class="n">NEWSVENDOR_SLOPES</span><span class="p">,</span> <span class="n">NEWSVENDOR_OFFSETS</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
+</section>
+</section>
+<section id="Exact-f-DRO">
+<h2>Exact <span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#Exact-f-DRO" title="Link to this heading">¶</a></h2>
+<p>For an <span class="math notranslate nohighlight">\(f\)</span>-divergence ambiguity set, the inner problem changes the probabilities assigned to the observed samples. It only needs the numerical per-sample newsvendor loss (<code class="docutils literal notranslate"><span class="pre">_loss</span></code>) and its CVXPY representation (<code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code>). The same two hooks can be attached to <code class="docutils literal notranslate"><span class="pre">KLDRO</span></code>, <code class="docutils literal notranslate"><span class="pre">Chi2DRO</span></code>, <code class="docutils literal notranslate"><span class="pre">TVDRO</span></code>, or <code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code>; Chi-squared DRO is used here as a representative.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fdro_model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;lad&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;CLARABEL&#39;</span>
+<span class="p">)</span>
+<span class="n">fdro_model</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_loss</span><span class="p">,</span> <span class="n">fdro_model</span><span class="p">)</span>
+<span class="n">fdro_model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_cvx_loss</span><span class="p">,</span> <span class="n">fdro_model</span><span class="p">)</span>
+<span class="n">fdro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">})</span>
+
+<span class="n">fdro_parameters</span> <span class="o">=</span> <span class="n">fdro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">fdro_parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [-0.48891007299787476, 0.0], &#39;b&#39;: array(1.9556403)}
-{&#39;theta&#39;: [-0.47103180655319055, 0.0], &#39;b&#39;: array(1.88412725)}
-{&#39;theta&#39;: [-0.4651670885530432, 0.0], &#39;b&#39;: array(1.86066836)}
-{&#39;theta&#39;: [-0.4620192279713162, 0.0], &#39;b&#39;: array(1.84807691)}
-{&#39;theta&#39;: [-0.4599744797040242, 0.0], &#39;b&#39;: array(1.83989792)}
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/opt/anaconda3/lib/python3.9/site-packages/dro/src/linear_model/base.py:61: UserWarning: Unsupported model_type: quantile. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.
-  warnings.warn(f&#34;Unsupported model_type: {model_type}. Default supported types are svm, logistic, ols, lad. Please define your personalized loss.&#34;, UserWarning)
+{&#39;theta&#39;: [-0.47101600668852506, 0.9420320649788056], &#39;b&#39;: array(0.94203196)}
 </pre></div></div>
 </div>
 </section>
-<section id="Wasserstein-DRO">
-<h3>Wasserstein DRO<a class="headerlink" href="#Wasserstein-DRO" title="Link to this heading">¶</a></h3>
-<p>To adjust Wasserstein DRO, besides modifying the <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> (and <code class="docutils literal notranslate"><span class="pre">_loss</span></code>) functions, we also need to modify the <code class="docutils literal notranslate"><span class="pre">_penalization</span></code> function to adjust the regularization component, where the regularization part denotes the additional part besides the empirical objective. More specifically, in the previous quantile regression example,</p>
+<section id="Exact-Wasserstein-DRO">
+<h2>Exact Wasserstein DRO<a class="headerlink" href="#Exact-Wasserstein-DRO" title="Link to this heading">¶</a></h2>
+<p>Wasserstein DRO also needs the loss’s Lipschitz penalty. For ground cost</p>
+<div class="math notranslate nohighlight">
+\[d((x,y),(x',y'))=\lVert A(x-x')\rVert_p+\kappa|y-y'|,\]</div>
+<p>let <span class="math notranslate nohighlight">\(q\)</span> be dual to <span class="math notranslate nohighlight">\(p\)</span>. On an unrestricted input-output space, the residual loss above has penalty</p>
+<div class="math notranslate nohighlight">
+\[\max_j|a_j|\,\max\left\{\lVert A^{-1}\theta\rVert_q,\frac{1}{\kappa}\right\}.\]</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">kappa='inf'</span></code>, labels cannot move and the <span class="math notranslate nohighlight">\(1/\kappa\)</span> term is omitted. This is the Lipschitz reformulation behind Theorem 4 of <a class="reference external" href="https://jmlr.org/papers/v20/17-633.html">Regularization via Mass Transportation</a>. The helper below targets the linear-kernel case; a custom kernel representation must supply its corresponding feature norm.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
-<span class="k">def</span> <span class="nf">_penalization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
-    <span class="n">theta_K</span> <span class="o">=</span> <span class="n">theta</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">newsvendor_penalization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">!=</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s1">&#39;This tutorial penalty is written for a linear feature map.&#39;</span>
+        <span class="p">)</span>
+
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">dual_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">!=</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
-        <span class="n">dual_norm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
         <span class="n">dual_norm</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">==</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_inv_transform</span> <span class="o">@</span> <span class="n">theta_K</span><span class="p">,</span> <span class="n">dual_norm</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">cp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_inv_transform</span> <span class="o">@</span> <span class="n">theta_K</span><span class="p">,</span> <span class="n">dual_norm</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span><span class="p">)</span>
-<br/></pre></div>
+        <span class="n">dual_norm</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="n">residual_lipschitz</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">NEWSVENDOR_SLOPES</span><span class="p">)))</span>
+    <span class="n">feature_term</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_inv_transform</span> <span class="o">@</span> <span class="n">theta</span><span class="p">,</span>
+        <span class="n">dual_norm</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">==</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">residual_lipschitz</span> <span class="o">*</span> <span class="n">feature_term</span>
+    <span class="k">return</span> <span class="n">residual_lipschitz</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+        <span class="n">feature_term</span><span class="p">,</span>
+        <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wdro_model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;lad&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;CLARABEL&#39;</span>
+<span class="p">)</span>
+<span class="n">wdro_model</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_loss</span><span class="p">,</span> <span class="n">wdro_model</span><span class="p">)</span>
+<span class="n">wdro_model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_cvx_loss</span><span class="p">,</span> <span class="n">wdro_model</span><span class="p">)</span>
+<span class="n">wdro_model</span><span class="o">.</span><span class="n">_penalization</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_penalization</span><span class="p">,</span> <span class="n">wdro_model</span><span class="p">)</span>
+<span class="n">wdro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="s1">&#39;inf&#39;</span><span class="p">})</span>
+
+<span class="n">wdro_parameters</span> <span class="o">=</span> <span class="n">wdro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">wdro_parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;theta&#39;: [-0.4999999974041001, 3.802290229295084e-14], &#39;b&#39;: array(2.)}
+</pre></div></div>
+</div>
+</section>
+<section id="Neural-approximation-with-a-decision-aware-piecewise-loss">
+<h2>Neural approximation with a decision-aware piecewise loss<a class="headerlink" href="#Neural-approximation-with-a-decision-aware-piecewise-loss" title="Link to this heading">¶</a></h2>
+<p>The same newsvendor decision problem can be approximated with a neural predictor. More generally, suppose under-prediction and over-prediction lead to different downstream costs. The corresponding unbalanced L1 loss is</p>
+<div class="math notranslate nohighlight">
+\[\ell(\hat y,y)=c_{\mathrm{under}}(y-\hat y)^+ + c_{\mathrm{over}}(\hat y-y)^+.\]</div>
+<p>For positive costs, only one term can be active, so this is equivalently the maximum of two affine pieces. It is therefore a personalized, convex, piecewise-affine decision loss. The loss function below returns one value per sample: neural <span class="math notranslate nohighlight">\(f\)</span>-DRO robustly aggregates that vector, while neural Wasserstein DRO evaluates it after generating perturbed inputs.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.fdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chi2NNDRO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.fdro_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">RobustLoss</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.wdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">WNNDRO</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">unbalanced_l1</span><span class="p">(</span>
+    <span class="n">predictions</span><span class="p">,</span>
+    <span class="n">targets</span><span class="p">,</span>
+    <span class="n">underage_cost</span><span class="o">=</span><span class="n">UNDERAGE_COST</span><span class="p">,</span>
+    <span class="n">overage_cost</span><span class="o">=</span><span class="n">OVERAGE_COST</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="n">targets</span><span class="o">.</span><span class="n">reshape_as</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">pieces</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
+        <span class="n">underage_cost</span> <span class="o">*</span> <span class="p">(</span><span class="n">targets</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">),</span>
+        <span class="n">overage_cost</span> <span class="o">*</span> <span class="p">(</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">targets</span><span class="p">),</span>
+    <span class="p">])</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">pieces</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pieces</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<section id="Neural-f-DRO">
+<h3>Neural <span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#Neural-f-DRO" title="Link to this heading">¶</a></h3>
+<p>Subclass <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> to replace its individual loss while retaining its chi-squared or CVaR probability optimization. Bind the resulting scalar robust criterion to the neural model.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DecisionAwareRobustLoss</span><span class="p">(</span><span class="n">RobustLoss</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">underage_cost</span><span class="p">,</span> <span class="n">overage_cost</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">is_regression</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">underage_cost</span> <span class="o">=</span> <span class="n">underage_cost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overage_cost</span> <span class="o">=</span> <span class="n">overage_cost</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_individual_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">unbalanced_l1</span><span class="p">(</span>
+            <span class="n">outputs</span><span class="p">,</span>
+            <span class="n">targets</span><span class="p">,</span>
+            <span class="n">underage_cost</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">underage_cost</span><span class="p">,</span>
+            <span class="n">overage_cost</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">overage_cost</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<span class="n">decision_robust_loss</span> <span class="o">=</span> <span class="n">DecisionAwareRobustLoss</span><span class="p">(</span>
+    <span class="n">underage_cost</span><span class="o">=</span><span class="n">UNDERAGE_COST</span><span class="p">,</span>
+    <span class="n">overage_cost</span><span class="o">=</span><span class="n">OVERAGE_COST</span><span class="p">,</span>
+    <span class="n">geometry</span><span class="o">=</span><span class="s1">&#39;chi-square&#39;</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fdro_nn</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">decision_aware_fdro_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">decision_robust_loss</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+<span class="n">fdro_nn</span><span class="o">.</span><span class="n">_criterion</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">decision_aware_fdro_criterion</span><span class="p">,</span> <span class="n">fdro_nn</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Neural-Wasserstein-DRO">
+<h3>Neural Wasserstein DRO<a class="headerlink" href="#Neural-Wasserstein-DRO" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">WNNDRO._loss</span></code> must return the per-sample loss vector. Its existing criterion handles adversarial input generation and then averages these personalized losses. The rest of the training API is unchanged.</p>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dro.linear_model.wasserstein_dro</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wdro_nn</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+    <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">),</span>
+<span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_cvx_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="c1"># additional adjustment for the penalization function</span>
-<span class="n">model</span><span class="o">.</span><span class="n">_penalization</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_penalization</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decision_aware_wdro_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">unbalanced_l1</span><span class="p">(</span>
+        <span class="n">outputs</span><span class="p">,</span>
+        <span class="n">labels</span><span class="p">,</span>
+        <span class="n">underage_cost</span><span class="o">=</span><span class="n">UNDERAGE_COST</span><span class="p">,</span>
+        <span class="n">overage_cost</span><span class="o">=</span><span class="n">OVERAGE_COST</span><span class="p">,</span>
+    <span class="p">)</span>
 
-<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">})</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;small eps&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">wdro_nn</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">decision_aware_wdro_loss</span><span class="p">,</span> <span class="n">wdro_nn</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>During training, we call <code class="docutils literal notranslate"><span class="pre">fdro_nn.fit(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">wdro_nn.fit(...)</span></code> normally after binding the hooks. For positive-epsilon Wasserstein regression, we use an adversarial generator compatible with continuous targets; the package’s built-in <code class="docutils literal notranslate"><span class="pre">torchattacks</span></code> path is primarily designed for classification.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_predictions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.6</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">batch_targets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
 
-<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">})</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;large eps&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">fdro_objective</span> <span class="o">=</span> <span class="n">fdro_nn</span><span class="o">.</span><span class="n">_criterion</span><span class="p">(</span><span class="n">batch_predictions</span><span class="p">,</span> <span class="n">batch_targets</span><span class="p">)</span>
+<span class="n">wdro_individual_losses</span> <span class="o">=</span> <span class="n">wdro_nn</span><span class="o">.</span><span class="n">_loss</span><span class="p">(</span><span class="n">batch_predictions</span><span class="p">,</span> <span class="n">batch_targets</span><span class="p">)</span>
+<span class="n">combined_check</span> <span class="o">=</span> <span class="n">fdro_objective</span> <span class="o">+</span> <span class="n">wdro_individual_losses</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">combined_check</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;f-DRO robust objective:&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">fdro_objective</span><span class="o">.</span><span class="n">detach</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WDRO individual losses:&#39;</span><span class="p">,</span> <span class="n">wdro_individual_losses</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;gradient shape:&#39;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">batch_predictions</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -389,14 +577,12 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-small eps {&#39;theta&#39;: [-0.5000000000064543, -8.42946033492792e-09], &#39;b&#39;: array(2.00000001)}
-large eps {&#39;theta&#39;: [-0.4999999999261157, 1.1546461152356625e-07], &#39;b&#39;: array(1.99999988)}
+f-DRO robust objective: 1.0904502868652344
+WDRO individual losses: [0.59999996 0.20000005 1.5       ]
+gradient shape: (3, 1)
 </pre></div></div>
 </div>
 </section>
-</section>
-<section id="Neural-Approximation">
-<h2>Neural Approximation<a class="headerlink" href="#Neural-Approximation" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -414,13 +600,18 @@ large eps {&#39;theta&#39;: [-0.4999999999261157, 1.1546461152356625e-07], &#39;
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Personalized Loss</a><ul>
-<li><a class="reference internal" href="#Exact-Solver">Exact Solver</a><ul>
-<li><a class="reference internal" href="#f-divergence-DRO"><span class="math notranslate nohighlight">\(f\)</span>-divergence DRO</a></li>
-<li><a class="reference internal" href="#Wasserstein-DRO">Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#">Personalized Losses</a><ul>
+<li><a class="reference internal" href="#A-general-convex-piecewise-affine-loss">A general convex piecewise-affine loss</a><ul>
+<li><a class="reference internal" href="#Original-newsvendor-loss">Original newsvendor loss</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#Neural-Approximation">Neural Approximation</a></li>
+<li><a class="reference internal" href="#Exact-f-DRO">Exact <span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
+<li><a class="reference internal" href="#Exact-Wasserstein-DRO">Exact Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#Neural-approximation-with-a-decision-aware-piecewise-loss">Neural approximation with a decision-aware piecewise loss</a><ul>
+<li><a class="reference internal" href="#Neural-f-DRO">Neural <span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
+<li><a class="reference internal" href="#Neural-Wasserstein-DRO">Neural Wasserstein DRO</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -71,74 +71,56 @@ Following the general pipeline of "Data -> Model -> Evaluation / Diagnostics", w
 </tbody></table>
 
 ## Model Module
-### Exact Fitting: Linear
-We discuss the implementations of different classification and regression losses, where $f(X) = \theta^{\top}X + b$. 
+Models expose the robust empirical optimization objective from the most recent fit as ``model.robust_obj`` whenever it can be computed; otherwise, the value is ``None``.
 
-Classification:
-* SVM (Hinge) Loss (``svm``): $\ell(f(X), Y) = \max\{1 - Y f(X), 0\}.$
-* Logistic Loss (``logistic``): $\ell(f(X), Y) = \log(1 + \exp(-Y f(X))).$
+### Linear and Kernel Models
 
-Note that in classification tasks, $Y \in \{-1, 1\}$.
+#### Model and Loss Setup
+
+For linear models, $f(X) = \theta^{\top}X + b$. Across the linear module, the coefficient vector $\theta = (\theta_1,\ldots, \theta_p)$ is stored as ``theta`` and the intercept $b$ as ``b``. Set ``model_type`` to the name in parentheses for one of the following losses.
+
+Classification, where $Y \in \{-1, 1\}$:
+
+* SVM (hinge) loss (``svm``): $\ell(f(X), Y) = \max\{1 - Y f(X), 0\}$.
+* Logistic loss (``logistic``): $\ell(f(X), Y) = \log(1 + \exp(-Y f(X)))$.
 
 Regression:
-* Least Absolute Deviation (``lad``): $\ell(f(X), Y) = |Y - f(X)|$.
-* Ordinary Least Squares (``ols``): $\ell(f(X), Y) = (Y - f(X))^2$. 
 
-Above, we designate the ``model_type`` as the names in parentheses.
+* Least absolute deviation (``lad``): $\ell(f(X), Y) = |Y - f(X)|$.
+* Ordinary least squares (``ols``): $\ell(f(X), Y) = (Y - f(X))^2$.
 
+The linear models use built-in ``cvxpy`` solvers; our tests use ``MOSEK``.
 
-Across the linear module, we designate the vector $\theta = (\theta_1,\ldots, \theta_p)$ as ``theta`` and $b$ as ``b``.
+#### Kernel Setup
 
-Besides this, we support other loss types.
+Kernelized distributionally robust regression and classification are configured through ``.update_kernel()`` and support the same four loss types. The predictor becomes $f(X) = \sum_{i \in [N]}\alpha_i K(x, x_i)$, where $K(\cdot,\cdot)$ is the kernel and $\{\alpha_i\}_{i \in [N]}$ are fitted parameters.
 
-Solvers support: The built-in solvers in ``cvxpy`` (where we set ``Mosek`` during our test).
+The kernel interface follows scikit-learn:
 
+* ``metric``: ``additive_chi2``, ``chi2``, ``linear``, ``poly``, ``polynomial``, or ``rbf``.
+* ``kernel_gamma``: a positive gamma value, ``scale``, or ``auto``.
+* ``n_components``: ``None`` for exact fitting, or an integer for a Nystroem approximation when $n$ is large.
 
-We support DRO methods including:
-* WDRO: (Basic) Wasserstein DRO, Satisificing Wasserstein DRO;
-* Standard $f$-DRO: KL-DRO, $\chi^2$-DRO, TV-DRO;
-* Generalized $f$-DRO: CVaR-DRO, Marginal DRO (CVaR), Conditional DRO (CVaR);
-* MMD-DRO;
-* Bayesian-based DRO: Bayesian-PDRO, PDRO;
-* Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
+#### Supported DRO Methods
 
-### Exact or Approximate Fitting: Kernel
-We allow kernelized distributionally robust regression or classification via ``.update_kernel()``. More specifically, we allow all of the four types of losses (``svm``, ``logistic``, ``lad``, ``ols``). More specifically, in each case above, we replace $f(X) = \theta^{\top}X + b$ with $f(X) = \sum_{i \in [N]}\alpha_i K(x, x_i)$ where $K(\cdot,\cdot)$ is the kernel and $\{\alpha\}_{i \in [N]}$ are the parameters to be determined in the optimization problem.
+* WDRO: basic Wasserstein DRO and satisficing Wasserstein DRO.
+* Standard $f$-DRO: KL-DRO, $\chi^2$-DRO, and TV-DRO.
+* Generalized $f$-DRO: CVaR-DRO, Marginal DRO (CVaR), and Conditional DRO (CVaR).
+* MMD-DRO.
+* Bayesian-based DRO: Bayesian-PDRO and PDRO.
+* Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, and Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
 
+### Neural Network Models (Approximate Fitting)
 
-We mimic the standard scikit-learn kernel interface with the following hyperparameters:
-* metric: standard kernel metrics when calculating kernel between instances in a feature array, including ``additive_chi2``, ``chi2``, ``linear``, ``poly``, ``polynomial``, ``rbf``;
-* kernel_gamma:  Parameter gamma of the pairwise kernel specified by metric. It should be positive, or ``scale``, ``auto``.
-* n_components: Exact fitting -- ``None``; Approximate fitting -- int, which denotes the reduced number of data points to construct the kernel mapping in Nystroem approximation (recommend to use when $n$ is large).
+The neural module implements $\chi^2$-DRO, CVaR-DRO, Wasserstein DRO through adversarial training, and Holistic Robust DRO. Supported architectures are linear models, vanilla MLP, AlexNet, and ResNet18. Users can also supply their own architecture through the `update` function in `BaseNNDRO`.
 
-### Approximate Fitting: Neural Network
-Given the complexity of neural networks, many of the explicit optimization algorithms are not applicable. And we implement four DRO methods in an "approximate" way, including:
-* $\chi^2$-DRO;
-* CVaR-DRO;
-* Wasserstein DRO: we approximate it via adversarial training;
-* Holistic Robust DRO.
+### Tree-based Ensemble Models (Approximate Fitting)
 
-Furthermore, the model architectures supported in `dro` include:
-* Linear Models;
-* Vanilla MLP;
-* AlexNet;
-* ResNet18.
-  
-And the users could also use their own model architecture (please refer to the `update` function in `BaseNNDRO`).
+The tree module supports KL-DRO, CVaR-DRO, and $\chi^2$-DRO with LightGBM and XGBoost.
 
+### Evaluation and Diagnostics
 
-### Approximate Fitting: Tree-based Ensemble DRO
-Due to the popular use of tree-based ensemble models in many applciations, we implement two DRO methods in an "approximate" way as a preliminary setting, including:
-* KL-DRO
-* CVaR-DRO
-* Chi2-DRO
-
-The current model architectures of $f(X)$ supported in `dro` include:
-* LightGBM
-* XGBoost
-
-### Evaluation
-In some of linear DRO models, we provide additional interfaces for understanding the worst-case model performance (refer to the ``worst_distribution`` function in each derivative DRO) and evaluating the true model performance in terms of the true MSE estimated from the fitted data (refer to `evaluate` function in `BaseLinearDRO`). 
+Some linear DRO models provide ``worst_distribution`` to inspect worst-case model performance. The ``evaluate`` function in `BaseLinearDRO` estimates true model performance from fitted data.
 
 
 ## Reference

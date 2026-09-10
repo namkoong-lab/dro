@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Formulation &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -256,6 +256,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
@@ -349,79 +350,57 @@
 </section>
 <section id="model-module">
 <h2>Model Module<a class="headerlink" href="#model-module" title="Link to this heading">¶</a></h2>
-<section id="exact-fitting-linear">
-<h3>Exact Fitting: Linear<a class="headerlink" href="#exact-fitting-linear" title="Link to this heading">¶</a></h3>
-<p>We discuss the implementations of different classification and regression losses, where <span class="math notranslate nohighlight">\(f(X) = \theta^{\top}X + b\)</span>.</p>
-<p>Classification:</p>
+<p>Models expose the robust empirical optimization objective from the most recent fit as <code class="docutils literal notranslate"><span class="pre">model.robust_obj</span></code> whenever it can be computed; otherwise, the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<section id="linear-and-kernel-models">
+<h3>Linear and Kernel Models<a class="headerlink" href="#linear-and-kernel-models" title="Link to this heading">¶</a></h3>
+<section id="model-and-loss-setup">
+<h4>Model and Loss Setup<a class="headerlink" href="#model-and-loss-setup" title="Link to this heading">¶</a></h4>
+<p>For linear models, <span class="math notranslate nohighlight">\(f(X) = \theta^{\top}X + b\)</span>. Across the linear module, the coefficient vector <span class="math notranslate nohighlight">\(\theta = (\theta_1,\ldots, \theta_p)\)</span> is stored as <code class="docutils literal notranslate"><span class="pre">theta</span></code> and the intercept <span class="math notranslate nohighlight">\(b\)</span> as <code class="docutils literal notranslate"><span class="pre">b</span></code>. Set <code class="docutils literal notranslate"><span class="pre">model_type</span></code> to the name in parentheses for one of the following losses.</p>
+<p>Classification, where <span class="math notranslate nohighlight">\(Y \in \{-1, 1\}\)</span>:</p>
 <ul class="simple">
-<li><p>SVM (Hinge) Loss (<code class="docutils literal notranslate"><span class="pre">svm</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = \max\{1 - Y f(X), 0\}.\)</span></p></li>
-<li><p>Logistic Loss (<code class="docutils literal notranslate"><span class="pre">logistic</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = \log(1 + \exp(-Y f(X))).\)</span></p></li>
+<li><p>SVM (hinge) loss (<code class="docutils literal notranslate"><span class="pre">svm</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = \max\{1 - Y f(X), 0\}\)</span>.</p></li>
+<li><p>Logistic loss (<code class="docutils literal notranslate"><span class="pre">logistic</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = \log(1 + \exp(-Y f(X)))\)</span>.</p></li>
 </ul>
-<p>Note that in classification tasks, <span class="math notranslate nohighlight">\(Y \in \{-1, 1\}\)</span>.</p>
 <p>Regression:</p>
 <ul class="simple">
-<li><p>Least Absolute Deviation (<code class="docutils literal notranslate"><span class="pre">lad</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = |Y - f(X)|\)</span>.</p></li>
-<li><p>Ordinary Least Squares (<code class="docutils literal notranslate"><span class="pre">ols</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = (Y - f(X))^2\)</span>.</p></li>
+<li><p>Least absolute deviation (<code class="docutils literal notranslate"><span class="pre">lad</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = |Y - f(X)|\)</span>.</p></li>
+<li><p>Ordinary least squares (<code class="docutils literal notranslate"><span class="pre">ols</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = (Y - f(X))^2\)</span>.</p></li>
 </ul>
-<p>Above, we designate the <code class="docutils literal notranslate"><span class="pre">model_type</span></code> as the names in parentheses.</p>
-<p>Across the linear module, we designate the vector <span class="math notranslate nohighlight">\(\theta = (\theta_1,\ldots, \theta_p)\)</span> as <code class="docutils literal notranslate"><span class="pre">theta</span></code> and <span class="math notranslate nohighlight">\(b\)</span> as <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
-<p>Besides this, we support other loss types.</p>
-<p>Solvers support: The built-in solvers in <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> (where we set <code class="docutils literal notranslate"><span class="pre">Mosek</span></code> during our test).</p>
-<p>We support DRO methods including:</p>
+<p>The linear models use built-in <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> solvers; our tests use <code class="docutils literal notranslate"><span class="pre">MOSEK</span></code>.</p>
+</section>
+<section id="kernel-setup">
+<h4>Kernel Setup<a class="headerlink" href="#kernel-setup" title="Link to this heading">¶</a></h4>
+<p>Kernelized distributionally robust regression and classification are configured through <code class="docutils literal notranslate"><span class="pre">.update_kernel()</span></code> and support the same four loss types. The predictor becomes <span class="math notranslate nohighlight">\(f(X) = \sum_{i \in [N]}\alpha_i K(x, x_i)\)</span>, where <span class="math notranslate nohighlight">\(K(\cdot,\cdot)\)</span> is the kernel and <span class="math notranslate nohighlight">\(\{\alpha_i\}_{i \in [N]}\)</span> are fitted parameters.</p>
+<p>The kernel interface follows scikit-learn:</p>
 <ul class="simple">
-<li><p>WDRO: (Basic) Wasserstein DRO, Satisificing Wasserstein DRO;</p></li>
-<li><p>Standard <span class="math notranslate nohighlight">\(f\)</span>-DRO: KL-DRO, <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, TV-DRO;</p></li>
-<li><p>Generalized <span class="math notranslate nohighlight">\(f\)</span>-DRO: CVaR-DRO, Marginal DRO (CVaR), Conditional DRO (CVaR);</p></li>
-<li><p>MMD-DRO;</p></li>
-<li><p>Bayesian-based DRO: Bayesian-PDRO, PDRO;</p></li>
-<li><p>Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metric</span></code>: <code class="docutils literal notranslate"><span class="pre">additive_chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">linear</span></code>, <code class="docutils literal notranslate"><span class="pre">poly</span></code>, <code class="docutils literal notranslate"><span class="pre">polynomial</span></code>, or <code class="docutils literal notranslate"><span class="pre">rbf</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code>: a positive gamma value, <code class="docutils literal notranslate"><span class="pre">scale</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_components</span></code>: <code class="docutils literal notranslate"><span class="pre">None</span></code> for exact fitting, or an integer for a Nystroem approximation when <span class="math notranslate nohighlight">\(n\)</span> is large.</p></li>
 </ul>
 </section>
-<section id="exact-or-approximate-fitting-kernel">
-<h3>Exact or Approximate Fitting: Kernel<a class="headerlink" href="#exact-or-approximate-fitting-kernel" title="Link to this heading">¶</a></h3>
-<p>We allow kernelized distributionally robust regression or classification via <code class="docutils literal notranslate"><span class="pre">.update_kernel()</span></code>. More specifically, we allow all of the four types of losses (<code class="docutils literal notranslate"><span class="pre">svm</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic</span></code>, <code class="docutils literal notranslate"><span class="pre">lad</span></code>, <code class="docutils literal notranslate"><span class="pre">ols</span></code>). More specifically, in each case above, we replace <span class="math notranslate nohighlight">\(f(X) = \theta^{\top}X + b\)</span> with <span class="math notranslate nohighlight">\(f(X) = \sum_{i \in [N]}\alpha_i K(x, x_i)\)</span> where <span class="math notranslate nohighlight">\(K(\cdot,\cdot)\)</span> is the kernel and <span class="math notranslate nohighlight">\(\{\alpha\}_{i \in [N]}\)</span> are the parameters to be determined in the optimization problem.</p>
-<p>We mimic the standard scikit-learn kernel interface with the following hyperparameters:</p>
+<section id="supported-dro-methods">
+<h4>Supported DRO Methods<a class="headerlink" href="#supported-dro-methods" title="Link to this heading">¶</a></h4>
 <ul class="simple">
-<li><p>metric: standard kernel metrics when calculating kernel between instances in a feature array, including <code class="docutils literal notranslate"><span class="pre">additive_chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">linear</span></code>, <code class="docutils literal notranslate"><span class="pre">poly</span></code>, <code class="docutils literal notranslate"><span class="pre">polynomial</span></code>, <code class="docutils literal notranslate"><span class="pre">rbf</span></code>;</p></li>
-<li><p>kernel_gamma:  Parameter gamma of the pairwise kernel specified by metric. It should be positive, or <code class="docutils literal notranslate"><span class="pre">scale</span></code>, <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p></li>
-<li><p>n_components: Exact fitting – <code class="docutils literal notranslate"><span class="pre">None</span></code>; Approximate fitting – int, which denotes the reduced number of data points to construct the kernel mapping in Nystroem approximation (recommend to use when <span class="math notranslate nohighlight">\(n\)</span> is large).</p></li>
+<li><p>WDRO: basic Wasserstein DRO and satisficing Wasserstein DRO.</p></li>
+<li><p>Standard <span class="math notranslate nohighlight">\(f\)</span>-DRO: KL-DRO, <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, and TV-DRO.</p></li>
+<li><p>Generalized <span class="math notranslate nohighlight">\(f\)</span>-DRO: CVaR-DRO, Marginal DRO (CVaR), and Conditional DRO (CVaR).</p></li>
+<li><p>MMD-DRO.</p></li>
+<li><p>Bayesian-based DRO: Bayesian-PDRO and PDRO.</p></li>
+<li><p>Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, and Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).</p></li>
 </ul>
 </section>
-<section id="approximate-fitting-neural-network">
-<h3>Approximate Fitting: Neural Network<a class="headerlink" href="#approximate-fitting-neural-network" title="Link to this heading">¶</a></h3>
-<p>Given the complexity of neural networks, many of the explicit optimization algorithms are not applicable. And we implement four DRO methods in an “approximate” way, including:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO;</p></li>
-<li><p>CVaR-DRO;</p></li>
-<li><p>Wasserstein DRO: we approximate it via adversarial training;</p></li>
-<li><p>Holistic Robust DRO.</p></li>
-</ul>
-<p>Furthermore, the model architectures supported in <code class="docutils literal notranslate"><span class="pre">dro</span></code> include:</p>
-<ul class="simple">
-<li><p>Linear Models;</p></li>
-<li><p>Vanilla MLP;</p></li>
-<li><p>AlexNet;</p></li>
-<li><p>ResNet18.</p></li>
-</ul>
-<p>And the users could also use their own model architecture (please refer to the <code class="docutils literal notranslate"><span class="pre">update</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code>).</p>
 </section>
-<section id="approximate-fitting-tree-based-ensemble-dro">
-<h3>Approximate Fitting: Tree-based Ensemble DRO<a class="headerlink" href="#approximate-fitting-tree-based-ensemble-dro" title="Link to this heading">¶</a></h3>
-<p>Due to the popular use of tree-based ensemble models in many applciations, we implement two DRO methods in an “approximate” way as a preliminary setting, including:</p>
-<ul class="simple">
-<li><p>KL-DRO</p></li>
-<li><p>CVaR-DRO</p></li>
-<li><p>Chi2-DRO</p></li>
-</ul>
-<p>The current model architectures of <span class="math notranslate nohighlight">\(f(X)\)</span> supported in <code class="docutils literal notranslate"><span class="pre">dro</span></code> include:</p>
-<ul class="simple">
-<li><p>LightGBM</p></li>
-<li><p>XGBoost</p></li>
-</ul>
+<section id="neural-network-models-approximate-fitting">
+<h3>Neural Network Models (Approximate Fitting)<a class="headerlink" href="#neural-network-models-approximate-fitting" title="Link to this heading">¶</a></h3>
+<p>The neural module implements <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO through adversarial training, and Holistic Robust DRO. Supported architectures are linear models, vanilla MLP, AlexNet, and ResNet18. Users can also supply their own architecture through the <code class="docutils literal notranslate"><span class="pre">update</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code>.</p>
 </section>
-<section id="evaluation">
-<h3>Evaluation<a class="headerlink" href="#evaluation" title="Link to this heading">¶</a></h3>
-<p>In some of linear DRO models, we provide additional interfaces for understanding the worst-case model performance (refer to the <code class="docutils literal notranslate"><span class="pre">worst_distribution</span></code> function in each derivative DRO) and evaluating the true model performance in terms of the true MSE estimated from the fitted data (refer to <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code>).</p>
+<section id="tree-based-ensemble-models-approximate-fitting">
+<h3>Tree-based Ensemble Models (Approximate Fitting)<a class="headerlink" href="#tree-based-ensemble-models-approximate-fitting" title="Link to this heading">¶</a></h3>
+<p>The tree module supports KL-DRO, CVaR-DRO, and <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO with LightGBM and XGBoost.</p>
+</section>
+<section id="evaluation-and-diagnostics">
+<h3>Evaluation and Diagnostics<a class="headerlink" href="#evaluation-and-diagnostics" title="Link to this heading">¶</a></h3>
+<p>Some linear DRO models provide <code class="docutils literal notranslate"><span class="pre">worst_distribution</span></code> to inspect worst-case model performance. The <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code> estimates true model performance from fitted data.</p>
 </section>
 </section>
 <section id="reference">
@@ -451,11 +430,15 @@ preprint arXiv:2411.02549, 2024.</p></li>
 <li><a class="reference internal" href="#data-module">Data Module</a></li>
 <li><a class="reference internal" href="#synthetic-data-generation">Synthetic Data Generation</a></li>
 <li><a class="reference internal" href="#model-module">Model Module</a><ul>
-<li><a class="reference internal" href="#exact-fitting-linear">Exact Fitting: Linear</a></li>
-<li><a class="reference internal" href="#exact-or-approximate-fitting-kernel">Exact or Approximate Fitting: Kernel</a></li>
-<li><a class="reference internal" href="#approximate-fitting-neural-network">Approximate Fitting: Neural Network</a></li>
-<li><a class="reference internal" href="#approximate-fitting-tree-based-ensemble-dro">Approximate Fitting: Tree-based Ensemble DRO</a></li>
-<li><a class="reference internal" href="#evaluation">Evaluation</a></li>
+<li><a class="reference internal" href="#linear-and-kernel-models">Linear and Kernel Models</a><ul>
+<li><a class="reference internal" href="#model-and-loss-setup">Model and Loss Setup</a></li>
+<li><a class="reference internal" href="#kernel-setup">Kernel Setup</a></li>
+<li><a class="reference internal" href="#supported-dro-methods">Supported DRO Methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#neural-network-models-approximate-fitting">Neural Network Models (Approximate Fitting)</a></li>
+<li><a class="reference internal" href="#tree-based-ensemble-models-approximate-fitting">Tree-based Ensemble Models (Approximate Fitting)</a></li>
+<li><a class="reference internal" href="#evaluation-and-diagnostics">Evaluation and Diagnostics</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#reference">Reference</a></li>

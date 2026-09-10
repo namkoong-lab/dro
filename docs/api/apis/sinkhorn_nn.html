@@ -323,20 +323,20 @@ per iteration for further variance reduction</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – <p>Output dimension:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – <p>Output dimension:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
 <li><p>Regression: Automatically set to 1</p></li>
 </ul>
 </p></li>
-<li><p><strong>task_type</strong> (<em>str</em>) – <p>Learning task type. Supported:</p>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
 </ul>
 </p></li>
-<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'linear'</span></code></p></li>
@@ -344,28 +344,28 @@ per iteration for further variance reduction</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'alexnet'</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>reg_param</strong> (<em>float</em>) – Entropic regularization strength
+<li><p><strong>reg_param</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Entropic regularization strength
 <span class="math notranslate nohighlight">\(\varepsilon &gt; 0\)</span> controlling transport smoothness.
 Must be &gt; 0. Defaults to 1e-3.</p></li>
-<li><p><strong>lambda_param</strong> (<em>float</em>) – Loss scaling factor <span class="math notranslate nohighlight">\(\lambda &gt; 0\)</span>
+<li><p><strong>lambda_param</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Loss scaling factor <span class="math notranslate nohighlight">\(\lambda &gt; 0\)</span>
 balancing Wasserstein distance and loss.
 Must be &gt; 0. Defaults to 1e2.</p></li>
-<li><p><strong>k_sample_max</strong> (<em>int</em>) – Maximum level for Monte Carlo / MLMC sampling.
+<li><p><strong>k_sample_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum level for Monte Carlo / MLMC sampling.
 The number of noise samples is <span class="math notranslate nohighlight">\(2^{k\_sample\_max}\)</span>.
 Higher values improve accuracy but increase computation.
 Defaults to 5.</p></li>
-<li><p><strong>optimization_type</strong> (<em>str</em>) – <p>Stochastic optimization algorithm. Supported:</p>
+<li><p><strong>optimization_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Stochastic optimization algorithm. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'SG'</span></code>: Standard Stochastic Gradient (baseline)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'MLMC'</span></code>: Multilevel Monte Carlo acceleration</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'RTMLMC'</span></code>: Randomized Truncated MLMC</p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If reg_param ≤ 0</p></li>
 <li><p>If lambda_param ≤ 0</p></li>
 <li><p>If k_sample_max &lt; 1</p></li>
@@ -380,7 +380,7 @@ Defaults to 5.</p></li>
 <span class="gp">... </span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">reg_param</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lambda_param</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">optimization_type</span><span class="o">=</span><span class="s1">'SG'</span>
+<span class="gp">... </span>    <span class="n">optimization_type</span><span class="o">=</span><span class="s1">&#39;SG&#39;</span>
 <span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
@@ -390,7 +390,7 @@ Defaults to 5.</p></li>
 <dd><p>Update hyperparameters for Sinkhorn NN DRO.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – <p>Dictionary containing parameter updates. Valid keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – <p>Dictionary containing parameter updates. Valid keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">'reg'</span></code>: Entropic regularization strength (ε &gt; 0)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lambda'</span></code>: Loss scaling factor (λ &gt; 0)</p></li>
@@ -406,18 +406,18 @@ Defaults to 5.</p></li>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If any parameter value violates constraints.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If any parameter value violates constraints.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">'reg'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">'lambda'</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">'k_sample_max'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">'optimization_type'</span><span class="p">:</span> <span class="s1">'MLMC'</span>
+<span class="gp">... </span>    <span class="s1">&#39;reg&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;lambda&#39;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;k_sample_max&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;optimization_type&#39;</span><span class="p">:</span> <span class="s1">&#39;MLMC&#39;</span>
 <span class="gp">... </span><span class="p">})</span>
 </pre></div>
 </div>

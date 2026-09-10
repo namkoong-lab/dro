@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Personalization &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -256,6 +256,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
@@ -282,10 +283,10 @@
   <section class="tex2jax_ignore mathjax_ignore" id="personalization">
 <h1>Personalization<a class="headerlink" href="#personalization" title="Link to this heading">¶</a></h1>
 <p>In general, when rewritting the function for a new class, one way is to apply the following protocol code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
-<span class="k">def</span> <span class="nf">_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MethodType</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">xxx</span>
-<span class="k">def</span> <span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="n">xxx</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">XXDRO</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
@@ -297,18 +298,50 @@
 <section id="linear-exact-dro-methods">
 <h2>1. Linear (Exact) DRO Methods<a class="headerlink" href="#linear-exact-dro-methods" title="Link to this heading">¶</a></h2>
 <p>In DRO models that are solved exactly, for each particular DRO type, we change <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> in each class.</p>
+<p>As a general high-level example, consider a convex piecewise-affine loss of the
+prediction residual</p>
+<div class="math notranslate nohighlight">
+\[
+z = \theta^\top x + b - y, \qquad
+L(z) = \max_{j=1,\ldots,J}\{a_j z + c_j\}.
+\]</div>
+<p>The arrays of slopes <code class="docutils literal notranslate"><span class="pre">a</span></code> and offsets <code class="docutils literal notranslate"><span class="pre">c</span></code> specify the loss. This family is
+broader than a single newsvendor loss: absolute, pinball, and
+epsilon-insensitive losses are all special cases. The
+<a class="reference internal" href="../api/notebooks/personalize_loss_tutorial.html"><span class="doc">personalized-loss notebook</span></a>
+implements this parameterization for both <span class="math notranslate nohighlight">\(f\)</span>-DRO and Wasserstein DRO.</p>
 <section id="f-dro">
 <h3><span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#f-dro" title="Link to this heading">¶</a></h3>
-<p>In KLDRO, Chi2DRO, CVaRDRO, TVDRO (and corresponding BayesianDRO), we only need to rewrite <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code>.</p>
+<p>In KLDRO, Chi2DRO, CVaRDRO, TVDRO (and corresponding BayesianDRO), the
+ambiguity set reweights the per-sample losses. Therefore, implementing the
+piecewise-affine example only requires overriding <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code>.</p>
 </section>
 <section id="wasserstein-dro">
 <h3>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h3>
-<p>To adjust Wasserstein DRO, besides modifying the <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> (and <code class="docutils literal notranslate"><span class="pre">_loss</span></code>) functions, we also need to modify the <code class="docutils literal notranslate"><span class="pre">_penalization</span></code> function to adjust the regularization component, where the regularization component denotes the additional part besides the empirical objective in the Wasserstein DRO objective after the problem reformulation.</p>
+<p>For Wasserstein DRO, also override <code class="docutils literal notranslate"><span class="pre">_penalization</span></code> so that it matches the
+Lipschitz modulus of the personalized loss. For the loss above and transport
+cost</p>
+<div class="math notranslate nohighlight">
+\[
+\lVert A(x-x')\rVert_p + \kappa |y-y'|,
+\]</div>
+<p>the notebook uses</p>
+<div class="math notranslate nohighlight">
+\[
+\max_j |a_j|\,
+\max\left\{\lVert A^{-1}\theta\rVert_q,\;1/\kappa\right\},
+\qquad 1/p+1/q=1,
+\]</div>
+<p>with the second term omitted when labels cannot move
+(<code class="docutils literal notranslate"><span class="pre">kappa='inf'</span></code>). This follows the tractable piecewise-affine regression
+formulation in Theorem 4 of
+<a class="reference external" href="https://jmlr.org/papers/v20/17-633.html">Regularization via Mass Transportation</a>.</p>
 </section>
 <section id="remark">
 <h3>Remark<a class="headerlink" href="#remark" title="Link to this heading">¶</a></h3>
 <p>We remark that for more complicated losses, e.g., losses with a mixture of distances, we have not implemented the personalize loss yet.</p>
-<p>Note that we have not implemented the personanlized constraint module yet <span class="math notranslate nohighlight">\((e.g., for \)</span>\theta$). Stay tuned for that.</p>
+<p>Note that we have not implemented the personalized constraint module yet <span class="math notranslate nohighlight">\((e.g., for \)</span>\theta$). Stay tuned for that.</p>
 </section>
 </section>
 <section id="nn-based-dro-methods">
@@ -316,11 +349,21 @@
 <section id="personalized-loss">
 <h3>2.1 Personalized Loss<a class="headerlink" href="#personalized-loss" title="Link to this heading">¶</a></h3>
 <p>For <code class="docutils literal notranslate"><span class="pre">f-DRO</span></code> and <code class="docutils literal notranslate"><span class="pre">WDRO</span></code> methods, our package supports personalized loss functions.</p>
+<p>For example, a decision-aware regression model can use the unbalanced L1 loss</p>
+<div class="math notranslate nohighlight">
+\[
+c_{\mathrm{under}}(y-\hat y)^+
++ c_{\mathrm{over}}(\hat y-y)^+,
+\]</div>
+<p>where the two coefficients encode the different downstream costs of
+under-predicting and over-predicting. The final section of the personalized-loss
+notebook shows how to use this per-sample loss in both the neural <span class="math notranslate nohighlight">\(f\)</span>-DRO and
+neural Wasserstein hooks.</p>
 <section id="id1">
 <h4><span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
-<p>If the user would like to integrate his/her own loss functions, please</p>
+<p>To integrate a custom loss function:</p>
 <ol class="arabic simple">
-<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">fdro.utils.py</span></code>), and re-write the <code class="docutils literal notranslate"><span class="pre">self._compute_individual_loss()</span></code> function to user-specified forms.</p></li>
+<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">fdro_utils.py</span></code>), and re-write the <code class="docutils literal notranslate"><span class="pre">self._compute_individual_loss()</span></code> function to user-specified forms.</p></li>
 <li><p>Create a new <code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code> or <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">fdro_nn.py</span></code>), and re-write the <code class="docutils literal notranslate"><span class="pre">self._criterion()</span></code> function with the newly-modified <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> instance above.</p></li>
 </ol>
 </section>
@@ -340,7 +383,9 @@
 </section>
 <section id="tree-based-dro-methods">
 <h2>3. Tree-Based DRO Methods<a class="headerlink" href="#tree-based-dro-methods" title="Link to this heading">¶</a></h2>
-<p>For tree-based DRO methods, users could simply rewrite the <code class="docutils literal notranslate"><span class="pre">self.loss()</span></code> function to change loss functions. To change  the DRO type, one need to adjust <code class="docutils literal notranslate"><span class="pre">self._kl_dro_loss()</span></code> (or  <code class="docutils literal notranslate"><span class="pre">self._cvar_dro_loss()</span></code>) if their base model is <code class="docutils literal notranslate"><span class="pre">KLDRO_XX</span></code> (or <code class="docutils literal notranslate"><span class="pre">CVaRDRO_XX</span></code>) respectively.</p>
+<p>For tree-based DRO methods, users can rewrite the <code class="docutils literal notranslate"><span class="pre">self.loss()</span></code> function to change loss functions. To change the DRO type, adjust <code class="docutils literal notranslate"><span class="pre">self._kl_dro_loss()</span></code> (or <code class="docutils literal notranslate"><span class="pre">self._cvar_dro_loss()</span></code>) if the base model is <code class="docutils literal notranslate"><span class="pre">KLDRO_XX</span></code> (or <code class="docutils literal notranslate"><span class="pre">CVaRDRO_XX</span></code>), respectively.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/personalize_loss_tutorial.html"><span class="doc">personalized-loss notebook</span></a>
+for end-to-end linear and neural customization examples.</p>
 </section>
 </section>
 

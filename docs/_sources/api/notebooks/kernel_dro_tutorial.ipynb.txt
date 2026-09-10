@@ -5,7 +5,48 @@
    "metadata": {},
    "source": [
     "# Kernel Distributionally Robust Optimization\n",
-    "This is not MMD-DRO. Instead, we still define DRO ambiguity sets through standard DRO models, while the model class is set beyond the kernel feature. "
+    "Kernels enter this package in two different ways. In MMD-DRO, a kernel defines the distance between the empirical distribution and distributions in the ambiguity set. Other examples below use kernels to construct a nonlinear prediction model while retaining a standard DRO ambiguity set."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Choosing an ambiguity-set kernel for MMD-DRO\n",
+    "\n",
+    "`MMD_DRO` uses the RBF kernel by default. RBF and Laplacian kernels are characteristic, so their MMD distinguishes probability distributions under standard conditions. The polynomial kernel emphasizes interactions up to a selected degree, while the linear kernel compares first moments only.\n",
+    "\n",
+    "For RBF and Laplacian kernels, leaving `kernel_gamma=None` selects a robust median-distance scale. For a polynomial kernel, the automatic default is `gamma = 1 / p`, where `p` is the dimension of the joint sample `(X, y)`; the default degree is 2 and the default offset is 1.0. Small degrees such as 2 or 3 are usually the most stable starting points. Standardize continuous variables before comparing kernels, particularly when using a polynomial kernel."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from dro.linear_model.mmd_dro import MMD_DRO\n",
+    "from dro.data.dataloader_classification import classification_basic\n",
+    "\n",
+    "feature_dim = 2\n",
+    "X_mmd, y_mmd = classification_basic(\n",
+    "    d=feature_dim, num_samples=100, radius=3, visualize=False\n",
+    ")\n",
+    "\n",
+    "# Omitting kernel selects the default RBF kernel and median heuristic.\n",
+    "rbf_mmd = MMD_DRO(input_dim=feature_dim, model_type='svm')\n",
+    "\n",
+    "# An inhomogeneous quadratic polynomial kernel. gamma=None gives 1 / (d + 1).\n",
+    "polynomial_mmd = MMD_DRO(\n",
+    "    input_dim=feature_dim,\n",
+    "    model_type='svm',\n",
+    "    kernel='polynomial',\n",
+    "    kernel_gamma=None,\n",
+    "    kernel_degree=2,\n",
+    "    kernel_coef0=1.0,\n",
+    ")\n",
+    "polynomial_mmd.update({'eta': 0.1, 'sampling_method': 'hull'})\n",
+    "mmd_params = polynomial_mmd.fit(X_mmd, y_mmd)"
    ]
   },
   {
@@ -67,21 +108,6 @@
    "execution_count": 5,
    "metadata": {},
    "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/Users/jiashuo/anaconda3/envs/llm-ot/lib/python3.10/site-packages/cvxpy/expressions/expression.py:674: UserWarning: \n",
-      "This use of ``*`` has resulted in matrix multiplication.\n",
-      "Using ``*`` for matrix multiplication has been deprecated since CVXPY 1.1.\n",
-      "    Use ``*`` for matrix-scalar and vector-scalar multiplication.\n",
-      "    Use ``@`` for matrix-matrix and matrix-vector multiplication.\n",
-      "    Use ``multiply`` for elementwise multiplication.\n",
-      "This code path has been hit 2 times so far.\n",
-      "\n",
-      "  warnings.warn(msg, UserWarning)\n"
-     ]
-    },
     {
      "data": {
       "text/plain": [

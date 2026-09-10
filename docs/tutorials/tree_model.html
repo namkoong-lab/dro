@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Tree-DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -254,6 +254,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
@@ -281,6 +282,8 @@
 <h1>Tree-DRO<a class="headerlink" href="#tree-dro" title="Link to this heading">¶</a></h1>
 <p>Besides linear models and neural networks, <code class="docutils literal notranslate"><span class="pre">dro</span></code> package also integrates tree-based ensemble models as backbone models for DRO, including XGBoost and LightGBM.</p>
 <p>Given the non-convexity of the optimization of tree-ensemble models, we only implement Chi2-DRO, KL-DRO and CVaR-DRO in an approximate way. Specifically, we directly apply the DRO-kind loss functions to XGBoost and LightGBM.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/tree_dro_tutorial.html"><span class="doc">tree DRO notebook</span></a> for
+end-to-end XGBoost and LightGBM examples.</p>
 </section>
 
 

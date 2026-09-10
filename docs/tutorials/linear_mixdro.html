@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>DRO with a mixture of distance metrics &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -256,6 +256,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
@@ -347,7 +348,7 @@ c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot \|\hat z - z\|^p +\theta_2\cdot
 <p>In Outlier-Robust Wassersteuin DRO (OR-WDRO) [4], <span class="math notranslate nohighlight">\(\mathcal{P}(W_p^{\eta};\epsilon) = \{Q: W_p^{\eta}(Q, \hat P)\leq \epsilon\}\)</span>, where:</p>
 <div class="math notranslate nohighlight">
 \[
-W_p^{\eta}(P, Q) = \inf_{Q' \in \mathcal{P}(R^d), \|Q - Q'\|_{TV}\leq \eta} W_p(P, Q'), 
+W_p^{\eta}(P, Q) = \inf_{Q' \in \mathcal{P}(R^d), \|Q - Q'\|_{TV}\leq \eta} W_p(P, Q'),
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(p\)</span> is the <span class="math notranslate nohighlight">\(p\)</span>-Wasserstein distance and <span class="math notranslate nohighlight">\(\eta \in [0, 0.5)\)</span> denotes the corruption ratio.</p>
 <section id="id3">
@@ -357,6 +358,8 @@ W_p^{\eta}(P, Q) = \inf_{Q' \in \mathcal{P}(R^d), \|Q - Q'\|_{TV}\leq \eta} W_p(
 <li><p><span class="math notranslate nohighlight">\(\eta\)</span>: Contamination level <span class="math notranslate nohighlight">\([0, 0.5)\)</span>.</p></li>
 </ul>
 <p>We only consider SVM (for classification) and LAD (for regression) based on the convex reformulation of Theorem 2 in [4]. Note that the model also requires the input of <span class="math notranslate nohighlight">\(\sigma\)</span>, which we take <span class="math notranslate nohighlight">\(\sigma = \sqrt{d_x}\)</span> as default.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html"><span class="doc">mixed-distance DRO notebook</span></a>
+for end-to-end Sinkhorn, MOT, OR-WDRO, and Holistic DRO examples.</p>
 </section>
 </section>
 <section id="reference">

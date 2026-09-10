@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Wasserstein DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Tree-Ensembles DRO Methods" href="../tree_dro.html" />
-    <link rel="prev" title="Holistic Robust DRO" href="hrdro_nn.html" /> 
+    <link rel="prev" title="Sinkhorn DRO" href="sinkhorn_nn.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -262,6 +262,7 @@
 <li class="toctree-l3"><a class="reference internal" href="base_nn.html">NN DRO Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fdro_nn.html">f-Divergence DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hrdro_nn.html">Holistic Robust DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sinkhorn_nn.html">Sinkhorn DRO</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Wasserstein DRO</a></li>
 </ul>
 </li>
@@ -290,14 +291,14 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Output dimension:
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Output dimension:
 - Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)
 - Regression: Automatically set to 1</p></li>
-<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Learning task type. Supported:
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Learning task type. Supported:
 - <code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss
 - <code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -305,20 +306,20 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.7)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Dual parameter (parameter of the L2-penalty during adversarial training) <span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span> controlling distributional robustness.
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Dual parameter (parameter of the L2-penalty during adversarial training) <span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span> controlling distributional robustness.
 Larger values increase model conservativeness. Defaults to 0.1.</p></li>
-<li><p><strong>adversarial_steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of PGD attack iterations <span class="math notranslate nohighlight">\(T_{adv} \geq 1\)</span>.
+<li><p><strong>adversarial_steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of PGD attack iterations <span class="math notranslate nohighlight">\(T_{adv} \geq 1\)</span>.
 Defaults to 10.</p></li>
-<li><p><strong>adversarial_step_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – PGD step size <span class="math notranslate nohighlight">\(\eta_{adv} &gt; 0\)</span>.
+<li><p><strong>adversarial_step_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – PGD step size <span class="math notranslate nohighlight">\(\eta_{adv} &gt; 0\)</span>.
 Defaults to 0.02.</p></li>
-<li><p><strong>adversarial_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Adversarial perturbation norm type. Options:</p>
+<li><p><strong>adversarial_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Adversarial perturbation norm type. Options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'l2'</span></code>: <span class="math notranslate nohighlight">\(\ell_2\)</span>-ball constraint</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'l-inf'</span></code>: <span class="math notranslate nohighlight">\(\ell_\infty\)</span>-ball constraint</p></li>
 </ul>
 </p></li>
-<li><p><strong>adversarial_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Adversarial example generation method. Options:</p>
+<li><p><strong>adversarial_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Adversarial example generation method. Options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'PGD'</span></code>: Projected Gradient Descent (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'FGSM'</span></code>: Fast Gradient Sign Method</p></li>
@@ -327,7 +328,7 @@ Defaults to 0.02.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If epsilon &lt; 0</p></li>
 <li><p>If adversarial_steps &lt; 1</p></li>
 <li><p>If adversarial_step_size ≤ 0</p></li>
@@ -382,8 +383,8 @@ Defaults to 0.02.</p></li>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="hrdro_nn.html">
-                    <span class="icon">&lt;</span><span>Holistic Robust DRO</span></a>
+                <a href="sinkhorn_nn.html">
+                    <span class="icon">&lt;</span><span>Sinkhorn DRO</span></a>
                 
             </div>
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Wasserstein DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
@@ -306,7 +306,7 @@
 <li><p><span class="math notranslate nohighlight">\(\Sigma\)</span>: cost matrix, (a PSD Matrix);</p></li>
 <li><p><span class="math notranslate nohighlight">\(\kappa\)</span>;</p></li>
 <li><p><span class="math notranslate nohighlight">\(p\)</span>;</p></li>
-<li><p>square (notation depending on the model type), where square = 2 for ‘svm’, ‘logistic’, ‘lad’; square = 1 for ‘ols’.</p></li>
+<li><p>square (notation depending on the model type), where square = 1 for ‘svm’, ‘logistic’, ‘lad’; square = 2 for ‘ols’.</p></li>
 </ul>
 </div></blockquote>
 <p>Reference:</p>
@@ -316,8 +316,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimension of feature space. Must satisfy :math:`      ext{input_dim} geq 1`</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimension of feature space. Must satisfy :math:`      ext{input_dim} geq 1`</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
@@ -325,18 +325,18 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>.
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>.
 Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> for pre-centered data. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Convex optimization solver. Valid options:</p>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Convex optimization solver. Valid options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (commercial, recommended)</p></li>
 </ul>
 </p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
 <li><p>If unsupported solver is selected</p></li>
 </ul>
@@ -366,7 +366,7 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 <dd><p>Update Wasserstein-DRO model parameters dynamically.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with keys:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cost_matrix'</span></code>: Mahalanobis metric matrix <span class="math notranslate nohighlight">\(\Sigma^{-1} \succ 0\)</span></p>
 <blockquote>
@@ -384,14 +384,14 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul>
 <li><p>If cost_matrix is not positive definite</p></li>
 <li><p>If eps &lt; 0</p></li>
 <li><p>If p &lt; 1 and p ≠ ‘inf’</p></li>
 <li><p>If kappa &lt; 0 and kappa ≠ ‘inf’</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – <ul>
 <li><p>If cost_matrix is not numpy array</p></li>
 <li><p>If numeric parameters are not float/int</p></li>
 </ul>
@@ -399,7 +399,7 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <dl>
@@ -424,15 +424,15 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
 Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
-<li><p><strong>Y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
+<li><p><strong>Y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
 <ul>
 <li><p>Classification: ±1 labels</p></li>
 <li><p>Regression: Continuous values</p></li>
 </ul>
 </p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -444,7 +444,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
 </dd>
 </dl>
 <p>.raises: WassersteinDROError: If the optimization problem fails to solve.</p>
@@ -457,15 +457,15 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Input feature matrix. Shape: (n_samples, n_features)
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Input feature matrix. Shape: (n_samples, n_features)
 Must satisfy <code class="docutils literal notranslate"><span class="pre">n_features</span> <span class="pre">==</span> <span class="pre">input_dim</span></code></p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – <p>Target vector. Shape: (n_samples,)</p>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – <p>Target vector. Shape: (n_samples,)</p>
 <ul>
 <li><p>Classification: binary labels (-1/1)</p></li>
 <li><p>Regression: continuous values</p></li>
 </ul>
 </p></li>
-<li><p><strong>compute_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Computation methodology. Options:</p>
+<li><p><strong>compute_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Computation methodology. Options:</p>
 <ul>
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">'asymp'</span></code>: Asymptotic approximation (faster, less accurate)</dt><dd><p><em>Supported models</em>: <code class="docutils literal notranslate"><span class="pre">['svm',</span> <span class="pre">'logistic',</span> <span class="pre">'lad']</span></code></p>
@@ -475,7 +475,7 @@ Must satisfy <code class="docutils literal notranslate"><span class="pre">n_feat
 <li><p><code class="docutils literal notranslate"><span class="pre">'exact'</span></code>: Exact dual solution (slower, precise)</p></li>
 </ul>
 </p></li>
-<li><p><strong>gamma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Regularization parameter for asymptotic method. 
+<li><p><strong>gamma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Regularization parameter for asymptotic method. 
 Must satisfy <span class="math notranslate nohighlight">\(\gamma &gt; 0\)</span> when <code class="docutils literal notranslate"><span class="pre">compute_type='asymp'</span></code>.
 Defaults to 0.</p></li>
 </ul>
@@ -489,17 +489,17 @@ Defaults to 0.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">compute_type='asymp'</span></code> with <code class="docutils literal notranslate"><span class="pre">model_type='ols'</span></code></p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">compute_type='asymp'</span></code> and <code class="docutils literal notranslate"><span class="pre">kappa</span> <span class="pre">==</span> <span class="pre">'inf'</span></code></p></li>
 <li><p>If gamma ≤ 0 when required</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – <ul>
 <li><p>If input dimensions mismatch</p></li>
 </ul>
 </p></li>
@@ -543,8 +543,8 @@ Defaults to 0.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Feature space dimension. Must satisfy <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Feature space dimension. Must satisfy <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code></p></li>
@@ -552,18 +552,18 @@ Defaults to 0.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn intercept <span class="math notranslate nohighlight">\(b\)</span>.
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept <span class="math notranslate nohighlight">\(b\)</span>.
 Disable for standardized data. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Convex optimization solver. Options:</p>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Convex optimization solver. Options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (commercial, recommended)</p></li>
 </ul>
 </p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
 <li><p>If invalid solver selected</p></li>
 </ul>
@@ -593,10 +593,10 @@ Disable for standardized data. Defaults to True.</p></li>
 <dd><p>Update model parameters based on configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – The model configuration</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The model configuration</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -608,12 +608,12 @@ Disable for standardized data. Defaults to True.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input covariates</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input labels</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input covariates</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input labels</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>

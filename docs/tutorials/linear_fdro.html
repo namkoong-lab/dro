@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>f-divergence DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <script src="../_static/documentation_options.js?v=d5a15cff"></script>
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Wasserstein DRO" href="linear_wdro.html" />
-    <link rel="prev" title="Linear Models" href="linear.html" /> 
+    <link rel="prev" title="Group DRO for Linear Models" href="linear_groupdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -256,6 +256,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
@@ -315,6 +316,8 @@
 <span class="math notranslate nohighlight">\(\mathcal{P}(\alpha) = \{Q_0: P_X = \alpha Q_0 + (1-\alpha) Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{X}\}\)</span>, we obtain the marginal-CVaR model. Specifically, we follow the formulation of (27) in [7] to fit the model.</p>
 <p>If we consider the shift in the conditional distribution <span class="math notranslate nohighlight">\(Y|X\)</span>,
 <span class="math notranslate nohighlight">\(\mathcal{P}(\alpha) = \{Q_0: P_{Y|X} = \alpha Q_0 + (1-\alpha)Q_1, \text{for some}~\alpha \geq \alpha_0~\text{and distribution}~Q_1~\text{and}~\mathcal{Y}\}\)</span>, we obtain the conditional-CVaR model. Specifically, we follow the formulation of Theorem 2 in [8] to fit the model where approximating <span class="math notranslate nohighlight">\(\alpha(x) = \theta^{\top}x\)</span>.</p>
+<p>See the <a class="reference internal" href="../api/notebooks/f_dro_tutorial.html"><span class="doc">f-divergence DRO notebook</span></a>
+for end-to-end standard and partial-distribution-shift examples.</p>
 </section>
 <section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
@@ -370,8 +373,8 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="linear.html">
-                    <span class="icon">&lt;</span><span>Linear Models</span></a>
+                <a href="linear_groupdro.html">
+                    <span class="icon">&lt;</span><span>Group DRO for Linear Models</span></a>
                 
             </div>
 

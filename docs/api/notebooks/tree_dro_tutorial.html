@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>DRO on Tree-Ensemble Models &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
@@ -262,10 +262,12 @@
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO with Linear and Neural Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Sinkhorn DRO with Neural Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">DRO on Tree-Ensemble Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel Distributionally Robust Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalized Loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalized Losses</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -282,40 +284,82 @@
             
   <section id="DRO-on-Tree-Ensemble-Models">
 <h1>DRO on Tree-Ensemble Models<a class="headerlink" href="#DRO-on-Tree-Ensemble-Models" title="Link to this heading">¶</a></h1>
+<p>This tutorial fits distributionally robust tree ensembles with XGBoost and LightGBM. The examples use the same binary classification data and booster settings so that the KL-DRO and CVaR-DRO setup is easy to compare.</p>
+<p>Each example follows the same sequence: choose a DRO class and its robustness parameter, provide the tree-booster configuration with <code class="docutils literal notranslate"><span class="pre">update</span></code>, call <code class="docutils literal notranslate"><span class="pre">fit</span></code>, and then inspect both predictive accuracy and the fitted robust objective.</p>
+<section id="Setup">
+<h2>Setup<a class="headerlink" href="#Setup" title="Link to this heading">¶</a></h2>
+<p>Import the two robust objectives for each supported boosting backend.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_classification</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.tree_model.xgb</span><span class="w"> </span><span class="kn">import</span> <span class="n">KLDRO_XGB</span><span class="p">,</span> <span class="n">CVaRDRO_XGB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.tree_model.lgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">KLDRO_LGBM</span><span class="p">,</span> <span class="n">CVaRDRO_LGBM</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Dataset">
+<h2>Dataset<a class="headerlink" href="#Dataset" title="Link to this heading">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span>
-<span class="kn">from</span> <span class="nn">dro.tree_model.xgb</span> <span class="kn">import</span> <span class="n">KLDRO_XGB</span><span class="p">,</span> <span class="n">CVaRDRO_XGB</span>
-<span class="kn">from</span> <span class="nn">dro.tree_model.lgbm</span> <span class="kn">import</span> <span class="n">KLDRO_LGBM</span><span class="p">,</span> <span class="n">CVaRDRO_LGBM</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">n_informative</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">n_redundant</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</section>
+<section id="Objective-and-booster-configuration">
+<h2>Objective and booster configuration<a class="headerlink" href="#Objective-and-booster-configuration" title="Link to this heading">¶</a></h2>
+<p>There are two separate parts of the model setup:</p>
+<ol class="arabic">
+<li><p><strong>Robust objective:</strong> the class selects KL-DRO or CVaR-DRO, while <code class="docutils literal notranslate"><span class="pre">eps</span></code> controls that objective. For fitted sample losses <span class="math notranslate nohighlight">\(\ell_1, \ldots, \ell_n\)</span>, the reported KL objective is</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{\varepsilon} \log\left(\frac{1}{n}\sum_{i=1}^n \exp(\varepsilon \ell_i)\right),\]</div>
+<p>and the reported CVaR objective is</p>
+<div class="math notranslate nohighlight">
+\[t + \frac{1}{1-\varepsilon}\frac{1}{n}\sum_{i=1}^n(\ell_i-t)_+,\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> is the empirical <code class="docutils literal notranslate"><span class="pre">eps</span></code> quantile of the fitted losses.</p>
+</li>
+<li><p><strong>Booster configuration:</strong> the dictionary passed to <code class="docutils literal notranslate"><span class="pre">update</span></code> controls tree construction. Here, <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> limits tree depth, <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> scales each boosting step, and the required <code class="docutils literal notranslate"><span class="pre">num_boost_round</span></code> sets the number of boosting iterations. The DRO wrapper supplies the custom training objective during <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+</ol>
+<p>Before fitting, <code class="docutils literal notranslate"><span class="pre">model.robust_obj</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>. After fitting, it contains the robust empirical objective evaluated on the training data. It is a training diagnostic rather than a test-set metric; compare it only when the data, loss, and DRO formulation are held fixed.</p>
+</section>
+<section id="XGBoost">
+<h2>XGBoost<a class="headerlink" href="#XGBoost" title="Link to this heading">¶</a></h2>
+<section id="KL-DRO">
+<h3>KL-DRO<a class="headerlink" href="#KL-DRO" title="Link to this heading">¶</a></h3>
+<p>Instantiating <code class="docutils literal notranslate"><span class="pre">KLDRO_XGB</span></code> selects the KL-robust objective. The <code class="docutils literal notranslate"><span class="pre">eps</span></code> argument belongs to the DRO formulation, whereas <code class="docutils literal notranslate"><span class="pre">xgb_config</span></code> contains the ordinary boosting parameters.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
-        <span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">n_informative</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">n_redundant</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
-    <span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kl_xgb</span> <span class="o">=</span> <span class="n">KLDRO_XGB</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<span class="n">xgb_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;num_boost_round&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">kl_xgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">xgb_config</span><span class="p">)</span>
+<span class="n">kl_xgb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
-<span class="c1"># create model instance</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">KLDRO_XGB</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;max_depth&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;num_boost_round&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span>
-<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">predict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">((</span><span class="n">predict</span><span class="o">==</span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">kl_xgb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test accuracy: </span><span class="si">{</span><span class="p">(</span><span class="n">predictions</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Robust training objective: </span><span class="si">{</span><span class="n">kl_xgb</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -324,30 +368,30 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.945
+Test accuracy: 0.945
+Robust training objective: 0.130190
 </pre></div></div>
 </div>
+</section>
+<section id="CVaR-DRO">
+<h3>CVaR-DRO<a class="headerlink" href="#CVaR-DRO" title="Link to this heading">¶</a></h3>
+<p>Switching to <code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB</span></code> changes the robust objective without changing the fitting workflow. Here, <code class="docutils literal notranslate"><span class="pre">eps=0.1</span></code> sets the CVaR quantile level used to emphasize observations with larger fitted losses.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
-        <span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">n_informative</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">n_redundant</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
-    <span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cvar_xgb</span> <span class="o">=</span> <span class="n">CVaRDRO_XGB</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">xgb_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;num_boost_round&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">cvar_xgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">xgb_config</span><span class="p">)</span>
+<span class="n">cvar_xgb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
-<span class="c1"># create model instance</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">CVaRDRO_XGB</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;max_depth&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;num_boost_round&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span>
-<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">predict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">((</span><span class="n">predict</span><span class="o">==</span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cvar_xgb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test accuracy: </span><span class="si">{</span><span class="p">(</span><span class="n">predictions</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Robust training objective: </span><span class="si">{</span><span class="n">cvar_xgb</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -356,30 +400,33 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.935
+Test accuracy: 0.930
+Robust training objective: 0.137117
 </pre></div></div>
 </div>
+</section>
+</section>
+<section id="LightGBM">
+<h2>LightGBM<a class="headerlink" href="#LightGBM" title="Link to this heading">¶</a></h2>
+<p>The LightGBM wrappers use the same separation between the DRO constructor and the booster configuration. The following examples keep the configuration aligned with the XGBoost examples.</p>
+<section id="id1">
+<h3>KL-DRO<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
-        <span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">n_informative</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">n_redundant</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
-    <span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kl_lgbm</span> <span class="o">=</span> <span class="n">KLDRO_LGBM</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">lgbm_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;num_boost_round&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">kl_lgbm</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">lgbm_config</span><span class="p">)</span>
+<span class="n">kl_lgbm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
-<span class="c1"># create model instance</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">CVaRDRO_LGBM</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;max_depth&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;num_boost_round&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span>
-<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">predict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">((</span><span class="n">predict</span><span class="o">==</span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">kl_lgbm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test accuracy: </span><span class="si">{</span><span class="p">(</span><span class="n">predictions</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Robust training objective: </span><span class="si">{</span><span class="n">kl_lgbm</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -388,31 +435,30 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[LightGBM] [Info] Using self-defined objective function
-0.95
+Test accuracy: 0.930
+Robust training objective: 0.139228
 </pre></div></div>
 </div>
+</section>
+<section id="id2">
+<h3>CVaR-DRO<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>As above, the class and <code class="docutils literal notranslate"><span class="pre">eps</span></code> define the robust objective; the configuration continues to describe only how the ensemble is built.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
-        <span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">n_informative</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">n_redundant</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
-    <span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cvar_lgbm</span> <span class="o">=</span> <span class="n">CVaRDRO_LGBM</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">lgbm_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;num_boost_round&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">cvar_lgbm</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">lgbm_config</span><span class="p">)</span>
+<span class="n">cvar_lgbm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
-<span class="c1"># create model instance</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">KLDRO_LGBM</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;max_depth&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;num_boost_round&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span>
-<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">predict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">((</span><span class="n">predict</span><span class="o">==</span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cvar_lgbm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test accuracy: </span><span class="si">{</span><span class="p">(</span><span class="n">predictions</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Robust training objective: </span><span class="si">{</span><span class="n">cvar_lgbm</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -421,10 +467,12 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[LightGBM] [Info] Using self-defined objective function
-0.94
+Test accuracy: 0.910
+Robust training objective: 0.157335
 </pre></div></div>
 </div>
+</section>
+</section>
 </section>
 
 
@@ -432,6 +480,35 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">DRO on Tree-Ensemble Models</a><ul>
+<li><a class="reference internal" href="#Setup">Setup</a></li>
+<li><a class="reference internal" href="#Dataset">Dataset</a></li>
+<li><a class="reference internal" href="#Objective-and-booster-configuration">Objective and booster configuration</a></li>
+<li><a class="reference internal" href="#XGBoost">XGBoost</a><ul>
+<li><a class="reference internal" href="#KL-DRO">KL-DRO</a></li>
+<li><a class="reference internal" href="#CVaR-DRO">CVaR-DRO</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#LightGBM">LightGBM</a><ul>
+<li><a class="reference internal" href="#id1">KL-DRO</a></li>
+<li><a class="reference internal" href="#id2">CVaR-DRO</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Chi-square DRO &#8212; dro 0.3.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
@@ -302,9 +302,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Dimensionality of the input feature space. 
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimensionality of the input feature space. 
 Must match the number of columns in the training data.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
@@ -312,17 +312,17 @@ Must match the number of columns in the training data.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to learn an intercept/bias term. 
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn an intercept/bias term. 
 If False, assumes data is already centered. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Convex optimization solver. 
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Convex optimization solver. 
 Recommended solvers: 
 - <code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (requires license)
 Defaults to ‘MOSEK’.</p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If <cite>model_type</cite> is not in [‘svm’, ‘logistic’, ‘ols’, ‘lad’]</p></li>
 <li><p>If <cite>input_dim</cite> ≤ 0</p></li>
 </ul>
@@ -343,7 +343,7 @@ Defaults to ‘MOSEK’.</p></li>
 Changes will affect subsequent operations (e.g., re-fitting the model).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing configuration updates. Supported keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing configuration updates. Supported keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: Robustness parameter controlling the size of the chi-squared ambiguity set (must be ≥ 0)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">solver</span></code>: Optimization solver to use (must be installed)</p></li>
@@ -390,9 +390,9 @@ objective and constraints are built dynamically based on input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Training feature matrix. Must have shape <cite>(n_samples, n_features)</cite>,
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Training feature matrix. Must have shape <cite>(n_samples, n_features)</cite>,
 where <cite>n_features</cite> should match the <cite>input_dim</cite> specified during initialization.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Target values. For classification tasks, expected to be binary (±1 labels).
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Target values. For classification tasks, expected to be binary (±1 labels).
 Shape must be <cite>(n_samples,)</cite>.</p></li>
 </ul>
 </dd>
@@ -405,7 +405,7 @@ Shape must be <cite>(n_samples,)</cite>.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -414,7 +414,7 @@ Shape must be <cite>(n_samples,)</cite>.</p></li>
 <li><p>If the problem is infeasible due to invalid hyperparameters</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul>
 <li><p>If <cite>X</cite> and <cite>y</cite> have inconsistent sample sizes (<cite>X.shape[0] != y.shape[0]</cite>)</p></li>
 <li><p>If <cite>X</cite> has incorrect feature dimension (<cite>X.shape[1] != input_dim</cite>)</p></li>
 </ul>
@@ -458,9 +458,9 @@ characterizes the adversarial data distribution the model is robust against.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Feature matrix of shape <cite>(n_samples, n_features)</cite>. 
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Feature matrix of shape <cite>(n_samples, n_features)</cite>. 
 Must match the model’s <cite>input_dim</cite> (n_features).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a>) – Target vector of shape <cite>(n_samples,)</cite>. For regression tasks, continuous values 
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Target vector of shape <cite>(n_samples,)</cite>. For regression tasks, continuous values 
 are expected; for classification, ±1 labels.</p></li>
 </ul>
 </dd>
@@ -473,7 +473,7 @@ are expected; for classification, ±1 labels.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -482,7 +482,7 @@ are expected; for classification, ±1 labels.</p></li>
 <li><p>If the solution is infeasible or returns null weights</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul>
 <li><p>If <cite>X</cite> and <cite>y</cite> have inconsistent sample sizes</p></li>
 <li><p>If <cite>X</cite> feature dimension ≠ <cite>input_dim</cite></p></li>
 </ul>
