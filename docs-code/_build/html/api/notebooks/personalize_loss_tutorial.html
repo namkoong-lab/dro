@@ -284,7 +284,7 @@
             
   <section id="Personalized-Losses">
 <h1>Personalized Losses<a class="headerlink" href="#Personalized-Losses" title="Link to this heading">¶</a></h1>
-<p>This notebook retains the original newsvendor loss as the running example, while expressing it through a reusable convex piecewise-affine interface. We use the same loss with exact <span class="math notranslate nohighlight">\(f\)</span>-DRO and Wasserstein DRO models, then carry its asymmetric decision costs into the neural approximation classes.</p>
+<p>In this notebook, we personalize the loss as a convex piecewise-affine loss. We use the same loss with exact <span class="math notranslate nohighlight">\(f\)</span>-DRO and Wasserstein DRO models, then carry its asymmetric decision costs into the neural approximation classes.</p>
 <section id="A-general-convex-piecewise-affine-loss">
 <h2>A general convex piecewise-affine loss<a class="headerlink" href="#A-general-convex-piecewise-affine-loss" title="Link to this heading">¶</a></h2>
 <p>Let <span class="math notranslate nohighlight">\(t=\theta^\top x+b\)</span> be the prediction and <span class="math notranslate nohighlight">\(z=t-y\)</span> its residual. We parameterize the loss as</p>
@@ -293,7 +293,7 @@
 <p>A maximum of affine pieces is convex. Changing the arrays of slopes <span class="math notranslate nohighlight">\(a_j\)</span> and offsets <span class="math notranslate nohighlight">\(c_j\)</span> creates many losses without rewriting the DRO formulation. LAD, pinball loss, and epsilon-insensitive loss are special cases.</p>
 <section id="Original-newsvendor-loss">
 <h3>Original newsvendor loss<a class="headerlink" href="#Original-newsvendor-loss" title="Link to this heading">¶</a></h3>
-<p>We retain the original asymmetric newsvendor loss</p>
+<p>This loss covers a lot of operational examples. For example, the original asymmetric newsvendor loss</p>
 <div class="math notranslate nohighlight">
 \[L(z)=3(-z)^+ + z^+=\max\{-3z,z\},\]</div>
 <p>where under-prediction costs three times as much as over-prediction. Thus its piecewise-affine slopes are <code class="docutils literal notranslate"><span class="pre">[-3,</span> <span class="pre">1]</span></code> and both offsets are zero. The helper functions below remain general: substitute any finite slope and offset arrays to define another convex piecewise-affine loss.</p>
@@ -553,7 +553,7 @@
 </pre></div>
 </div>
 </div>
-<p>The final smoke check verifies the expected shapes and differentiability. During training, call <code class="docutils literal notranslate"><span class="pre">fdro_nn.fit(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">wdro_nn.fit(...)</span></code> normally after binding the hooks. For positive-epsilon Wasserstein regression, use an adversarial generator compatible with continuous targets; the package’s built-in <code class="docutils literal notranslate"><span class="pre">torchattacks</span></code> path is primarily designed for classification.</p>
+<p>During training, we call <code class="docutils literal notranslate"><span class="pre">fdro_nn.fit(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">wdro_nn.fit(...)</span></code> normally after binding the hooks. For positive-epsilon Wasserstein regression, we use an adversarial generator compatible with continuous targets; the package’s built-in <code class="docutils literal notranslate"><span class="pre">torchattacks</span></code> path is primarily designed for classification.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
