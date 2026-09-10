@@ -15,6 +15,8 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/apis/hrdro_nn.html" />
@@ -278,8 +280,118 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="holistic-robust-dro">
-<h1>Holistic Robust DRO<a class="headerlink" href="#holistic-robust-dro" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.neural_model.hrdro_nn">
+<span id="holistic-robust-dro"></span><h1>Holistic Robust DRO<a class="headerlink" href="#module-dro.neural_model.hrdro_nn" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.neural_model.hrdro_nn.HRNNDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.hrdro_nn.</span></span><span class="sig-name descname"><span class="pre">HRNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_approach</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.hrdro_nn.HRNNDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.neural_model.base_nn.BaseNNDRO" title="dro.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
+<p>Holistic Robust DRO.</p>
+<p>Initialize Holistic Robust DRO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – <p>Output dimension:</p>
+<ul>
+<li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
+<li><p>Regression: Automatically set to 1</p></li>
+</ul>
+</p></li>
+<li><p><strong>task_type</strong> (<em>str</em>) – <p>Learning task type. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
+</ul>
+</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resnet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Robustness regularization coefficient <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span>,
+controls model conservativeness. Defaults to 0.1.</p></li>
+<li><p><strong>r</strong> (<em>float</em>) – Statistical error radius <span class="math notranslate nohighlight">\(r &gt; 0\)</span> for distribution shift,
+defaults to 0.01.</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em>) – Contamination ratio <span class="math notranslate nohighlight">\(\epsilon \in [0,1)\)</span>,
+proportion of adversarial samples. Defaults to 0.1.</p></li>
+<li><p><strong>learning_approach</strong> (<em>str</em>) – <p>Robust optimization method. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;HR&quot;</span></code>: Huberian Robust optimization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;HD&quot;</span></code>: Hybrid DRO (default)</p></li>
+</ul>
+</p></li>
+<li><p><strong>adversarial_params</strong> (<em>dict</em>) – Adversarial training configuration:
+Defaults to <code class="docutils literal notranslate"><span class="pre">{&quot;steps&quot;:7,</span> <span class="pre">&quot;step_size&quot;:0.03,</span> <span class="pre">&quot;norm&quot;:&quot;l-inf&quot;,</span> <span class="pre">&quot;method&quot;:&quot;PGD&quot;}</span></code></p></li>
+<li><p><strong>train_batch_size</strong> (<em>int</em>) – Training batch size <span class="math notranslate nohighlight">\(B \geq 1\)</span>,
+defaults to 64.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<li><p>If alpha ≤ 0</p></li>
+<li><p>If r ≤ 0</p></li>
+<li><p>If ε ∉ [0,1)</p></li>
+<li><p>If invalid learning_approach</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<dl>
+<dt>Example (CIFAR-10)::</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">adv_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;steps&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;norm&quot;</span><span class="p">:</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="s2">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;PGD&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">HRNNDRO</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">3072</span><span class="p">,</span> 
+<span class="gp">... </span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">adversarial_params</span><span class="o">=</span><span class="n">adv_params</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.neural_model.hrdro_nn.HRNNDRO.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.hrdro_nn.HRNNDRO.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Enhanced training loop with adversarial training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>X</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p></li>
+<li><p><strong>train_ratio</strong> (<em>float</em>)</p></li>
+<li><p><strong>lr</strong> (<em>float</em>)</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>)</p></li>
+<li><p><strong>epochs</strong> (<em>int</em>)</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.neural_model.hrdro_nn.HRNNDRO.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.hrdro_nn.HRNNDRO.predict" title="Link to this definition">¶</a></dt>
+<dd><p>Adversarial-robust prediction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>X</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -287,6 +399,27 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Holistic Robust DRO</a><ul>
+<li><a class="reference internal" href="#dro.neural_model.hrdro_nn.HRNNDRO"><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.neural_model.hrdro_nn.HRNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.neural_model.hrdro_nn.HRNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.predict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

@@ -290,6 +290,16 @@ class CVaRDRO(BaseLinearDRO):
         """
 
         self.fit(X,y)
+
+        # At alpha = 1, CVaR is the empirical mean and its risk envelope
+        # contains only the empirical distribution.  Return it exactly rather
+        # than relying on the non-unique fitted threshold to select all points.
+        if self.alpha == 1:
+            sample_size = X.shape[0]
+            return {
+                'sample_pts': [X, y],
+                'weight': np.full(sample_size, 1.0 / sample_size),
+            }
         
         # Calculate per-sample loss with the current theta
         per_loss = self._loss(X, y)

@@ -90,6 +90,22 @@ class TestTVDROModel(unittest.TestCase):
         params = model.fit(self.valid_X, self.valid_y_reg)
         self.assertTrue(np.isfinite(params['theta']).all())
 
+    def test_zero_epsilon_worst_distribution(self):
+        """A zero-radius ambiguity set returns the empirical distribution."""
+        model = TVDRO(input_dim=5, eps=0.0, model_type='ols')
+        dist_info = model.worst_distribution(self.valid_X, self.valid_y_reg)
+
+        sample_X, sample_y = dist_info['sample_pts']
+        weights = dist_info['weight']
+
+        np.testing.assert_array_equal(sample_X, self.valid_X)
+        np.testing.assert_array_equal(sample_y, self.valid_y_reg)
+        np.testing.assert_allclose(
+            weights,
+            np.full(self.valid_X.shape[0], 1.0 / self.valid_X.shape[0]),
+        )
+        self.assertTrue(np.isclose(weights.sum(), 1.0))
+
     def test_lad_regression_fit(self):
         """Test LAD regression model fitting."""
         model = TVDRO(input_dim=5, model_type='lad')

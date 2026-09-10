@@ -410,6 +410,16 @@ class ORWDRO(BaseLinearDRO):
         """
         
         n, d = X.shape
+
+        # With neither transport nor outlier ambiguity, OR-WDRO reduces to the
+        # empirical distribution.  Collapse the two auxiliary components per
+        # sample into their known aggregate probability of 1 / n.
+        if self.eps == 0 and self.eta == 0:
+            return {
+                'sample_pts': [X, y],
+                'weight': np.full(n, 1.0 / n),
+            }
+
         J = 2
         # Variables
         q = [[cp.Variable(nonneg = True) for _ in range(J)] for _ in range(n)]        # q_{ij}

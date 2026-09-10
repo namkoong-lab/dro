@@ -264,21 +264,6 @@
       "marginal [-1.1801401031360952, 2.3632113317955987]\n",
       "conditional {'theta': [-1.2843606942632635, 3.5303014542999374], 'b': array(-0.64246721)}\n"
      ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/Users/jiashuo/anaconda3/envs/llm-ot/lib/python3.10/site-packages/cvxpy/expressions/expression.py:674: UserWarning: \n",
-      "This use of ``*`` has resulted in matrix multiplication.\n",
-      "Using ``*`` for matrix multiplication has been deprecated since CVXPY 1.1.\n",
-      "    Use ``*`` for matrix-scalar and vector-scalar multiplication.\n",
-      "    Use ``@`` for matrix-matrix and matrix-vector multiplication.\n",
-      "    Use ``multiply`` for elementwise multiplication.\n",
-      "This code path has been hit 4 times so far.\n",
-      "\n",
-      "  warnings.warn(msg, UserWarning)\n"
-     ]
     }
    ],
    "source": [

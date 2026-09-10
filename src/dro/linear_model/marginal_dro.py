@@ -283,7 +283,12 @@ class MarginalCVaRDRO(BaseLinearDRO):
                 B_colsum >= 0
             ]
 
-            trace_term = cp.sum(dist.data * (B_rowsum[dist.row] + B_colsum[dist.col])/2)
+            trace_term = cp.sum(
+                cp.multiply(
+                    dist.data,
+                    (B_rowsum[dist.row] + B_colsum[dist.col]) / 2,
+                )
+            )
             cost = (
                 cp.sum(s)/(self.alpha * sample_size) +
                 self.L ** (self.p-1) * trace_term/(sample_size ** 2) +

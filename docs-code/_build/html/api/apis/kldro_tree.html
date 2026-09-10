@@ -275,8 +275,431 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="xgboost">
-<h1>XGBoost<a class="headerlink" href="#xgboost" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.tree_model.xgb">
+<span id="xgboost"></span><h1>XGBoost<a class="headerlink" href="#module-dro.tree_model.xgb" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.KLDRO_XGB">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.tree_model.xgb.</span></span><span class="sig-name descname"><span class="pre">KLDRO_XGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.KLDRO_XGB" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>XGBoost model with KL-Divergence Distributionally Robust Optimization (DRO)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – KL divergence constraint parameter (ε &gt; 0, default: 0.1)</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – Task type (‘classification’ or ‘regression’, default: classification)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If invalid parameters are provided</p></li>
+<li><p><strong>TypeError</strong> – If inputs have incorrect types</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires XGBoost configuration via <a class="reference internal" href="#dro.tree_model.xgb.KLDRO_XGB.update" title="dro.tree_model.xgb.KLDRO_XGB.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robust_obj</strong> – Fitted robust empirical objective, or <code class="docutils literal notranslate"><span class="pre">None</span></code> before
+fitting.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>)</p></li>
+<li><p><strong>kind</strong> (<em>Literal</em><em>[</em><em>'classification'</em><em>, </em><em>'regression'</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Initialize KL-DRO XGBoost model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – Robustness parameter (must be &gt; 0)</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – Task type specification</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – For eps &lt;= 0 or invalid task type</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.KLDRO_XGB.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.KLDRO_XGB.update" title="Link to this definition">¶</a></dt>
+<dd><p>Update XGBoost training configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – XGBoost parameters dictionary</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – If missing ‘num_boost_round’ parameter</p></li>
+<li><p><strong>TypeError</strong> – For non-dictionary input</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.KLDRO_XGB.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.KLDRO_XGB.loss" title="Link to this definition">¶</a></dt>
+<dd><p>Compute base loss values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preds</strong> (<em>numpy.ndarray</em>) – Model predictions (n_samples,)</p></li>
+<li><p><strong>labels</strong> (<em>numpy.ndarray</em>) – True labels (n_samples,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loss values array (n_samples,)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – For unsupported task types</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.KLDRO_XGB.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.KLDRO_XGB.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Train KL-DRO XGBoost model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Feature matrix (n_samples, n_features)</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Target values (n_samples,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – For invalid input shapes</p></li>
+<li><p><strong>RuntimeError</strong> – For configuration or training errors</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.KLDRO_XGB.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.KLDRO_XGB.predict" title="Link to this definition">¶</a></dt>
+<dd><p>Generate predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) – Input features (n_samples, n_features)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model predictions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFittedError</strong> – If model is untrained</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.KLDRO_XGB.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.KLDRO_XGB.score" title="Link to this definition">¶</a></dt>
+<dd><p>Testing function</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.Chi2DRO_XGB">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.tree_model.xgb.</span></span><span class="sig-name descname"><span class="pre">Chi2DRO_XGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.Chi2DRO_XGB" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>XGBoost model with Chi2-Divergence Distributionally Robust Optimization (DRO)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – Chi2 divergence constraint parameter (ε &gt; 0, default: 0.1)</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – Task type (‘classification’ or ‘regression’, default: classification)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If invalid parameters are provided</p></li>
+<li><p><strong>TypeError</strong> – If inputs have incorrect types</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires XGBoost configuration via <a class="reference internal" href="#dro.tree_model.xgb.Chi2DRO_XGB.update" title="dro.tree_model.xgb.Chi2DRO_XGB.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robust_obj</strong> – Fitted robust empirical objective, or <code class="docutils literal notranslate"><span class="pre">None</span></code> before
+fitting.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>)</p></li>
+<li><p><strong>kind</strong> (<em>Literal</em><em>[</em><em>'classification'</em><em>, </em><em>'regression'</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Initialize Chi2-DRO XGBoost model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – Robustness parameter (must be &gt; 0)</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – Task type specification</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – For eps &lt;= 0 or invalid task type</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.Chi2DRO_XGB.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.Chi2DRO_XGB.update" title="Link to this definition">¶</a></dt>
+<dd><p>Update XGBoost training configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – XGBoost parameters dictionary</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – If missing ‘num_boost_round’ parameter</p></li>
+<li><p><strong>TypeError</strong> – For non-dictionary input</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.Chi2DRO_XGB.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.Chi2DRO_XGB.loss" title="Link to this definition">¶</a></dt>
+<dd><p>Compute base loss values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preds</strong> (<em>numpy.ndarray</em>) – Model predictions (n_samples,)</p></li>
+<li><p><strong>labels</strong> (<em>numpy.ndarray</em>) – True labels (n_samples,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loss values array (n_samples,)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – For unsupported task types</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.Chi2DRO_XGB.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.Chi2DRO_XGB.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Train KL-DRO XGBoost model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Feature matrix (n_samples, n_features)</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Target values (n_samples,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – For invalid input shapes</p></li>
+<li><p><strong>RuntimeError</strong> – For configuration or training errors</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.Chi2DRO_XGB.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.Chi2DRO_XGB.predict" title="Link to this definition">¶</a></dt>
+<dd><p>Generate predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) – Input features (n_samples, n_features)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model predictions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFittedError</strong> – If model is untrained</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.Chi2DRO_XGB.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.Chi2DRO_XGB.score" title="Link to this definition">¶</a></dt>
+<dd><p>Testing function</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.CVaRDRO_XGB">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.tree_model.xgb.</span></span><span class="sig-name descname"><span class="pre">CVaRDRO_XGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.CVaRDRO_XGB" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>XGBoost model with Conditional Value-at-Risk (CVaR) Distributionally Robust Optimization (DRO)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – constraint parameter (1 &gt; ε &gt; 0, default: 0.2)</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – Task type (‘classification’ or ‘regression’, default: classification)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If invalid parameters are provided</p></li>
+<li><p><strong>TypeError</strong> – If inputs have incorrect types</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires XGBoost configuration via <a class="reference internal" href="#dro.tree_model.xgb.CVaRDRO_XGB.update" title="dro.tree_model.xgb.CVaRDRO_XGB.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> before training</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robust_obj</strong> – Fitted robust empirical objective, or <code class="docutils literal notranslate"><span class="pre">None</span></code> before
+fitting.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>)</p></li>
+<li><p><strong>kind</strong> (<em>Literal</em><em>[</em><em>'classification'</em><em>, </em><em>'regression'</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Initialize CVaR-DRO XGBoost model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – Robustness parameter (must be &gt; 0)</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – Task type specification</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – For eps &lt;= 0 or eps &gt;= 1 or invalid task type</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.CVaRDRO_XGB.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.CVaRDRO_XGB.update" title="Link to this definition">¶</a></dt>
+<dd><p>Update XGBoost training configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – XGBoost parameters dictionary</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – If missing ‘num_boost_round’ parameter</p></li>
+<li><p><strong>TypeError</strong> – For non-dictionary input</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.CVaRDRO_XGB.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.CVaRDRO_XGB.loss" title="Link to this definition">¶</a></dt>
+<dd><p>Compute base loss values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preds</strong> (<em>numpy.ndarray</em>) – Model predictions (n_samples,)</p></li>
+<li><p><strong>labels</strong> (<em>numpy.ndarray</em>) – True labels (n_samples,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loss values array (n_samples,)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – For unsupported task types</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.CVaRDRO_XGB.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.CVaRDRO_XGB.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Train CVaR-DRO XGBoost model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Feature matrix (n_samples, n_features)</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Target values (n_samples,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – For invalid input shapes</p></li>
+<li><p><strong>RuntimeError</strong> – For configuration or training errors</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.CVaRDRO_XGB.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.CVaRDRO_XGB.predict" title="Link to this definition">¶</a></dt>
+<dd><p>Generate predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) – Input features (n_samples, n_features)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model predictions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFittedError</strong> – If model is untrained</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.tree_model.xgb.CVaRDRO_XGB.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.xgb.CVaRDRO_XGB.score" title="Link to this definition">¶</a></dt>
+<dd><p>Testing function</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -284,6 +707,46 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">XGBoost</a><ul>
+<li><a class="reference internal" href="#dro.tree_model.xgb.KLDRO_XGB"><code class="docutils literal notranslate"><span class="pre">KLDRO_XGB</span></code></a><ul>
+<li><a class="reference internal" href="#dro.tree_model.xgb.KLDRO_XGB.update"><code class="docutils literal notranslate"><span class="pre">KLDRO_XGB.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.KLDRO_XGB.loss"><code class="docutils literal notranslate"><span class="pre">KLDRO_XGB.loss()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.KLDRO_XGB.fit"><code class="docutils literal notranslate"><span class="pre">KLDRO_XGB.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.KLDRO_XGB.predict"><code class="docutils literal notranslate"><span class="pre">KLDRO_XGB.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.KLDRO_XGB.score"><code class="docutils literal notranslate"><span class="pre">KLDRO_XGB.score()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.Chi2DRO_XGB"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB</span></code></a><ul>
+<li><a class="reference internal" href="#dro.tree_model.xgb.Chi2DRO_XGB.update"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.Chi2DRO_XGB.loss"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB.loss()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.Chi2DRO_XGB.fit"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.Chi2DRO_XGB.predict"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.Chi2DRO_XGB.score"><code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB.score()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.CVaRDRO_XGB"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB</span></code></a><ul>
+<li><a class="reference internal" href="#dro.tree_model.xgb.CVaRDRO_XGB.update"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.CVaRDRO_XGB.loss"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB.loss()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.CVaRDRO_XGB.fit"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB.fit()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.CVaRDRO_XGB.predict"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB.predict()</span></code></a></li>
+<li><a class="reference internal" href="#dro.tree_model.xgb.CVaRDRO_XGB.score"><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB.score()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

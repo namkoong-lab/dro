@@ -113,8 +113,13 @@ class TestKLDROModel(unittest.TestCase):
         """Test ERM equivalence when epsilon is zero."""
         model = KLDRO(input_dim=5, eps=0.0)
         dist_info = model.worst_distribution(self.valid_X, self.valid_y)
-        weights = dist_info['weight']
-        assert np.std(weights) <= 1e-3
+
+        np.testing.assert_array_equal(dist_info['sample_pts'][0], self.valid_X)
+        np.testing.assert_array_equal(dist_info['sample_pts'][1], self.valid_y)
+        np.testing.assert_allclose(
+            dist_info['weight'],
+            np.full(self.valid_X.shape[0], 1.0 / self.valid_X.shape[0]),
+        )
 
     def test_no_intercept_model(self):
         """Test model fitting without intercept term."""

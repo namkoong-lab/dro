@@ -430,18 +430,32 @@ class WassersteinDRO(BaseLinearDRO):
 
         """
 
-        if self.model_type == 'ols' and compute_type == 'asymp':
-            warnings.warn("OLS does not support the corresponding computation method.")
-        elif self.kappa == 'inf' and compute_type == 'asymp' and self.model_type in ['svm', 'logistic']:
-            raise WassersteinDROError("The corresponding computation method do not support kappa = infty!")
-        
+        if compute_type not in {'asymp', 'exact'}:
+            raise WassersteinDROError("We do not support the computation type. The computation type can only be 'asymp' or 'exact'.")
         if not isinstance(gamma, (float, int)) or gamma < 0:
             raise WassersteinDROError("Worst-case parameter 'gamma' must be a non-negative float.")
+
+        if self.eps != 0:
+            if self.model_type == 'ols' and compute_type == 'asymp':
+                warnings.warn("OLS does not support the corresponding computation method.")
+            elif self.kappa == 'inf' and compute_type == 'asymp' and self.model_type in ['svm', 'logistic']:
+                raise WassersteinDROError("The corresponding computation method do not support kappa = infty!")
         
         sample_size, __ = X.shape
 
 
         self.fit(X, y)
+
+        # A zero-radius Wasserstein ball contains only the empirical
+        # distribution.  This also avoids zero-radius degeneracies in the
+        # asymptotic formulas, including the 0 / 0 perturbation in the LAD
+        # branch when gamma is zero.
+        if self.eps == 0:
+            return {
+                'sample_pts': [X, y],
+                'weight': np.full(sample_size, 1.0 / sample_size),
+            }
+
         if self.p == 1:
             dual_norm = np.inf
         elif self.p != 'inf':

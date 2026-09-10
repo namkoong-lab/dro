@@ -19,6 +19,7 @@ src/dro/linear_model/bayesian_dro.py
 src/dro/linear_model/chi2_dro.py
 src/dro/linear_model/conditional_dro.py
 src/dro/linear_model/cvar_dro.py
+src/dro/linear_model/group_dro.py
 src/dro/linear_model/hr_dro.py
 src/dro/linear_model/kl_dro.py
 src/dro/linear_model/marginal_dro.py
@@ -32,6 +33,7 @@ src/dro/neural_model/__init__.py
 src/dro/neural_model/base_nn.py
 src/dro/neural_model/fdro_nn.py
 src/dro/neural_model/fdro_utils.py
+src/dro/neural_model/groupdro_nn.py
 src/dro/neural_model/hrdro_nn.py
 src/dro/neural_model/sinkhorn_nn.py
 src/dro/neural_model/wdro_nn.py
@@ -41,6 +43,7 @@ src/dro/tree_model/xgb.py
 tests/test_bayesian.py
 tests/test_conditional.py
 tests/test_config.py
+tests/test_groupdro.py
 tests/test_lgbm.py
 tests/test_linear_chi2dro.py
 tests/test_linear_cvar.py
@@ -57,5 +60,6 @@ tests/test_nn_fdro.py
 tests/test_nn_hrdro.py
 tests/test_nn_sinkhorn.py
 tests/test_nn_wdro.py
+tests/test_robust_obj.py
 tests/test_robust_util.py
 tests/test_xgb.py

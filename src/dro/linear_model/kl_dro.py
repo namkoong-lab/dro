@@ -310,6 +310,17 @@ class KLDRO(BaseLinearDRO):
             >>> dist["weight]
         """
         self.fit(X, y)  # Fit model to obtain theta and dual variable
+
+        # At zero KL radius, the empirical distribution is the only feasible
+        # distribution.  The exponential-tilting formula is numerically
+        # degenerate in this case because its optimal dual variable diverges.
+        if self.eps == 0:
+            sample_size = X.shape[0]
+            return {
+                'sample_pts': [X, y],
+                'weight': np.full(sample_size, 1.0 / sample_size),
+            }
+
         # Calculate the loss with current theta
         per_loss = self._loss(X, y)
         

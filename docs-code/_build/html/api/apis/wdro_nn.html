@@ -15,6 +15,8 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/apis/wdro_nn.html" />
@@ -278,8 +280,77 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="wasserstein-dro">
-<h1>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.neural_model.wdro_nn">
+<span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.neural_model.wdro_nn" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.neural_model.wdro_nn.WNNDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.wdro_nn.</span></span><span class="sig-name descname"><span class="pre">WNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PGD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.wdro_nn.WNNDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.neural_model.base_nn.BaseNNDRO" title="dro.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
+<p>Wasserstein Neural DRO with Adversarial Robustness.</p>
+<p>Initialize Wasserstein DRO model with adversarial training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – Output dimension:
+- Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)
+- Regression: Automatically set to 1</p></li>
+<li><p><strong>task_type</strong> (<em>str</em>) – Learning task type. Supported:
+- <code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss
+- <code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resnet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em>) – Dual parameter (parameter of the L2-penalty during adversarial training) <span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span> controlling distributional robustness.
+Larger values increase model conservativeness. Defaults to 0.1.</p></li>
+<li><p><strong>adversarial_steps</strong> (<em>int</em>) – Number of PGD attack iterations <span class="math notranslate nohighlight">\(T_{adv} \geq 1\)</span>.
+Defaults to 10.</p></li>
+<li><p><strong>adversarial_step_size</strong> (<em>float</em>) – PGD step size <span class="math notranslate nohighlight">\(\eta_{adv} &gt; 0\)</span>.
+Defaults to 0.02.</p></li>
+<li><p><strong>adversarial_norm</strong> (<em>str</em>) – <p>Adversarial perturbation norm type. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'l2'</span></code>: <span class="math notranslate nohighlight">\(\ell_2\)</span>-ball constraint</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'l-inf'</span></code>: <span class="math notranslate nohighlight">\(\ell_\infty\)</span>-ball constraint</p></li>
+</ul>
+</p></li>
+<li><p><strong>adversarial_method</strong> (<em>str</em>) – <p>Adversarial example generation method. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'PGD'</span></code>: Projected Gradient Descent (default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'FGSM'</span></code>: Fast Gradient Sign Method</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<li><p>If epsilon &lt; 0</p></li>
+<li><p>If adversarial_steps &lt; 1</p></li>
+<li><p>If adversarial_step_size ≤ 0</p></li>
+<li><p>If invalid norm/method type</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<dl>
+<dt>Example (MNIST)::</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">784</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">adversarial_norm</span><span class="o">=</span><span class="s2">&quot;l-inf&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">7</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -287,6 +358,23 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Wasserstein DRO</a><ul>
+<li><a class="reference internal" href="#dro.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

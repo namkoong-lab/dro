@@ -17,16 +17,52 @@ if we want to modify the ``self._cvx_loss`` and ``_loss`` functions in the model
 ## 1. Linear (Exact) DRO Methods
 In DRO models that are solved exactly, for each particular DRO type, we change ``_loss`` and ``_cvx_loss`` in each class.
 
+As a general high-level example, consider a convex piecewise-affine loss of the
+prediction residual
+
+$$
+z = \theta^\top x + b - y, \qquad
+L(z) = \max_{j=1,\ldots,J}\{a_j z + c_j\}.
+$$
+
+The arrays of slopes ``a`` and offsets ``c`` specify the loss. This family is
+broader than a single newsvendor loss: absolute, pinball, and
+epsilon-insensitive losses are all special cases. The
+{doc}`personalized-loss notebook <../api/notebooks/personalize_loss_tutorial>`
+implements this parameterization for both $f$-DRO and Wasserstein DRO.
+
 ### $f$-DRO
-In KLDRO, Chi2DRO, CVaRDRO, TVDRO (and corresponding BayesianDRO), we only need to rewrite ``_loss`` and ``_cvx_loss``.
+In KLDRO, Chi2DRO, CVaRDRO, TVDRO (and corresponding BayesianDRO), the
+ambiguity set reweights the per-sample losses. Therefore, implementing the
+piecewise-affine example only requires overriding ``_loss`` and
+``_cvx_loss``.
 
 ### Wasserstein DRO
-To adjust Wasserstein DRO, besides modifying the `_cvx_loss` (and ``_loss``) functions, we also need to modify the `_penalization` function to adjust the regularization component, where the regularization component denotes the additional part besides the empirical objective in the Wasserstein DRO objective after the problem reformulation.
+For Wasserstein DRO, also override ``_penalization`` so that it matches the
+Lipschitz modulus of the personalized loss. For the loss above and transport
+cost
+
+$$
+\lVert A(x-x')\rVert_p + \kappa |y-y'|,
+$$
+
+the notebook uses
+
+$$
+\max_j |a_j|\,
+\max\left\{\lVert A^{-1}\theta\rVert_q,\;1/\kappa\right\},
+\qquad 1/p+1/q=1,
+$$
+
+with the second term omitted when labels cannot move
+(``kappa='inf'``). This follows the tractable piecewise-affine regression
+formulation in Theorem 4 of
+[Regularization via Mass Transportation](https://jmlr.org/papers/v20/17-633.html).
 
 ### Remark
 We remark that for more complicated losses, e.g., losses with a mixture of distances, we have not implemented the personalize loss yet.
 
-Note that we have not implemented the personanlized constraint module yet $(e.g., for $\theta$). Stay tuned for that.
+Note that we have not implemented the personalized constraint module yet $(e.g., for $\theta$). Stay tuned for that.
 
 
 ## 2. NN-Based DRO Methods
@@ -35,14 +71,28 @@ Note that we have not implemented the personanlized constraint module yet $(e.g.
 
 For `f-DRO` and `WDRO` methods, our package supports personalized loss functions.
 
+For example, a decision-aware regression model can use the unbalanced L1 loss
+
+$$
+c_{\mathrm{under}}(y-\hat y)^+
++ c_{\mathrm{over}}(\hat y-y)^+,
+$$
+
+where the two coefficients encode the different downstream costs of
+under-predicting and over-predicting. The final section of the personalized-loss
+notebook shows how to use this per-sample loss in both the neural $f$-DRO and
+neural Wasserstein hooks.
+
 #### $f$-DRO
-If the user would like to integrate his/her own loss functions, please
-1. Create a new `RobustLoss` instance (from `fdro.utils.py`), and re-write the `self._compute_individual_loss()` function to user-specified forms.
+To integrate a custom loss function:
+
+1. Create a new `RobustLoss` instance (from `fdro_utils.py`), and re-write the `self._compute_individual_loss()` function to user-specified forms.
 2. Create a new `Chi2NNDRO` or `CVaRNNDRO` instance (from `fdro_nn.py`), and re-write the `self._criterion()` function with the newly-modified `RobustLoss` instance above.
 
 
 #### WDRO
 When personalizing the loss function for WDRO, please:
+
 1. Create a new `WNNDRO` instance (from `wdro_nn.py`).
 2. Re-write the `self._loss()` function.
 
@@ -53,7 +103,7 @@ Users could pass their own model via `self.update()` function. Note that the per
 
 ## 3. Tree-Based DRO Methods
 
-For tree-based DRO methods, users could simply rewrite the `self.loss()` function to change loss functions. To change  the DRO type, one need to adjust ``self._kl_dro_loss()`` (or  ``self._cvar_dro_loss()``) if their base model is ``KLDRO_XX`` (or ``CVaRDRO_XX``) respectively.
+For tree-based DRO methods, users can rewrite the `self.loss()` function to change loss functions. To change the DRO type, adjust ``self._kl_dro_loss()`` (or ``self._cvar_dro_loss()``) if the base model is ``KLDRO_XX`` (or ``CVaRDRO_XX``), respectively.
 
 See the {doc}`personalized-loss notebook <../api/notebooks/personalize_loss_tutorial>`
 for end-to-end linear and neural customization examples.

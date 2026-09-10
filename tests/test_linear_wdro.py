@@ -166,6 +166,23 @@ class TestWassersteinDRO:
         if len(dist['weight']) > 0:
             assert np.isclose(sum(dist['weight']), 1.0, atol=1e-3)
 
+    @pytest.mark.parametrize("compute_type", ['asymp', 'exact'])
+    @pytest.mark.parametrize("model_type", ['svm', 'lad'])
+    def test_zero_epsilon_worst_distribution(self, compute_type, model_type):
+        """A zero Wasserstein radius returns the empirical distribution."""
+        rng = np.random.default_rng(42)
+        X = rng.normal(size=(30, 5))
+        y = rng.normal(size=30)
+        if model_type == 'svm':
+            y = np.where(y >= 0, 1, -1)
+
+        model = WassersteinDRO(input_dim=X.shape[1], model_type=model_type)
+        dist = model.worst_distribution(X, y, compute_type=compute_type)
+
+        np.testing.assert_array_equal(dist['sample_pts'][0], X)
+        np.testing.assert_array_equal(dist['sample_pts'][1], y)
+        np.testing.assert_allclose(dist['weight'], np.full(X.shape[0], 1.0 / X.shape[0]))
+
 # --------------------------
 # WassersteinDROsatisficing Tests  
 # --------------------------

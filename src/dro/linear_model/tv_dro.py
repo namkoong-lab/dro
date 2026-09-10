@@ -206,6 +206,18 @@ class TVDRO(BaseLinearDRO):
         .raises: TVDROError: If the worst-case distribution calculation fails.
         """
         self.fit(X,y)
+
+        # A zero-radius TV ambiguity set contains only the empirical
+        # distribution.  Handling it explicitly also avoids relying on the
+        # non-unique threshold returned by the CVXPY formulation, which can
+        # otherwise select no tail samples and leave only a zero-weight point.
+        if self.eps == 0:
+            sample_size = X.shape[0]
+            return {
+                'sample_pts': [X, y],
+                'weight': np.full(sample_size, 1.0 / sample_size),
+            }
+
         # Calculate the per-sample loss with current theta
         per_loss = self._loss(X, y)
 

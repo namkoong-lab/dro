@@ -15,6 +15,8 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/apis/sinkhorn_nn.html" />
@@ -278,8 +280,151 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="sinkhorn-dro">
-<h1>Sinkhorn DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h1>
+  <section id="module-dro.neural_model.sinkhorn_nn">
+<span id="sinkhorn-dro"></span><h1>Sinkhorn DRO<a class="headerlink" href="#module-dro.neural_model.sinkhorn_nn" title="Link to this heading">¶</a></h1>
+<dl class="py exception">
+<dt class="sig sig-object py" id="dro.neural_model.sinkhorn_nn.SinkhornNNDROError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.sinkhorn_nn.</span></span><span class="sig-name descname"><span class="pre">SinkhornNNDROError</span></span><a class="headerlink" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDROError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DROError</span></code></p>
+<p>Exception class for errors in Sinkhorn NN DRO model.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dro.neural_model.sinkhorn_nn.SinkhornNNDRO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.sinkhorn_nn.</span></span><span class="sig-name descname"><span class="pre">SinkhornNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_sample_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimization_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDRO" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.neural_model.base_nn.BaseNNDRO" title="dro.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
+<p>Sinkhorn Distributionally Robust Optimization with Neural Networks.</p>
+<p>Implements the Sinkhorn DRO objective for deep learning models:</p>
+<div class="math notranslate nohighlight">
+\[\min_{\theta} \sup_{Q \in \mathcal{B}_{\epsilon,\varepsilon}(P)}
+\mathbb{E}_Q[\ell(f_\theta(X), y)]\]</div>
+<p>where the ambiguity set <span class="math notranslate nohighlight">\(\mathcal{B}_{\epsilon,\varepsilon}(P)\)</span> is
+defined using the entropic-regularized (Sinkhorn) Wasserstein distance.</p>
+<p>The Sinkhorn DRO loss for a mini-batch is computed as:</p>
+<div class="math notranslate nohighlight">
+\[\hat{R}(\theta) = \lambda \varepsilon \cdot
+\frac{1}{N} \sum_{i=1}^{N} \log \left(
+\frac{1}{m} \sum_{j=1}^{m} \exp\left(
+\frac{\ell(f_\theta(x_i + \sigma_j), y_i)}{\lambda \varepsilon}
+\right)\right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma_j \sim \mathcal{N}(0, \varepsilon I)\)</span> are Gaussian
+perturbations.</p>
+<p>Three stochastic optimization methods are supported:</p>
+<ul class="simple">
+<li><p><strong>SG</strong> (Stochastic Gradient): Uses a fixed number of Monte Carlo samples
+<span class="math notranslate nohighlight">\(m = 2^{K_{max}}\)</span></p></li>
+<li><p><strong>MLMC</strong> (Multilevel Monte Carlo): Uses a hierarchy of sample levels for
+variance reduction</p></li>
+<li><p><strong>RTMLMC</strong> (Randomized Truncated MLMC): Randomly selects a single level
+per iteration for further variance reduction</p></li>
+</ul>
+<p>Reference: <a class="reference external" href="https://arxiv.org/abs/2109.11926">Sinkhorn Distributionally Robust Optimization</a></p>
+<p>Initialize Sinkhorn DRO neural model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – <p>Output dimension:</p>
+<ul>
+<li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
+<li><p>Regression: Automatically set to 1</p></li>
+</ul>
+</p></li>
+<li><p><strong>task_type</strong> (<em>str</em>) – <p>Learning task type. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
+</ul>
+</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'linear'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'resnet'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'alexnet'</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>reg_param</strong> (<em>float</em>) – Entropic regularization strength
+<span class="math notranslate nohighlight">\(\varepsilon &gt; 0\)</span> controlling transport smoothness.
+Must be &gt; 0. Defaults to 1e-3.</p></li>
+<li><p><strong>lambda_param</strong> (<em>float</em>) – Loss scaling factor <span class="math notranslate nohighlight">\(\lambda &gt; 0\)</span>
+balancing Wasserstein distance and loss.
+Must be &gt; 0. Defaults to 1e2.</p></li>
+<li><p><strong>k_sample_max</strong> (<em>int</em>) – Maximum level for Monte Carlo / MLMC sampling.
+The number of noise samples is <span class="math notranslate nohighlight">\(2^{k\_sample\_max}\)</span>.
+Higher values improve accuracy but increase computation.
+Defaults to 5.</p></li>
+<li><p><strong>optimization_type</strong> (<em>str</em>) – <p>Stochastic optimization algorithm. Supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'SG'</span></code>: Standard Stochastic Gradient (baseline)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'MLMC'</span></code>: Multilevel Monte Carlo acceleration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'RTMLMC'</span></code>: Randomized Truncated MLMC</p></li>
+</ul>
+</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<li><p>If reg_param ≤ 0</p></li>
+<li><p>If lambda_param ≤ 0</p></li>
+<li><p>If k_sample_max &lt; 1</p></li>
+<li><p>If optimization_type not in {‘SG’, ‘MLMC’, ‘RTMLMC’}</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">784</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">reg_param</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">lambda_param</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">optimization_type</span><span class="o">=</span><span class="s1">&#39;SG&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.neural_model.sinkhorn_nn.SinkhornNNDRO.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDRO.update" title="Link to this definition">¶</a></dt>
+<dd><p>Update hyperparameters for Sinkhorn NN DRO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – <p>Dictionary containing parameter updates. Valid keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'reg'</span></code>: Entropic regularization strength (ε &gt; 0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'lambda'</span></code>: Loss scaling factor (λ &gt; 0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'k_sample_max'</span></code>: Maximum MLMC sampling level (int ≥ 1)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'optimization_type'</span></code>: Optimization algorithm (‘SG’, ‘MLMC’, ‘RTMLMC’)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'lr'</span></code>: Learning rate</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'batch_size'</span></code>: Training batch size</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'train_epochs'</span></code>: Number of training epochs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'layer_num'</span></code>: Number of MLP layers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'hidden_size'</span></code>: Hidden layer size for MLP</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'dropout_ratio'</span></code>: Dropout rate for MLP</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If any parameter value violates constraints.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;reg&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;lambda&#39;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;k_sample_max&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;optimization_type&#39;</span><span class="p">:</span> <span class="s1">&#39;MLMC&#39;</span>
+<span class="gp">... </span><span class="p">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -287,6 +432,27 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Sinkhorn DRO</a><ul>
+<li><a class="reference internal" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDROError"><code class="docutils literal notranslate"><span class="pre">SinkhornNNDROError</span></code></a></li>
+<li><a class="reference internal" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDRO"><code class="docutils literal notranslate"><span class="pre">SinkhornNNDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDRO.update"><code class="docutils literal notranslate"><span class="pre">SinkhornNNDRO.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

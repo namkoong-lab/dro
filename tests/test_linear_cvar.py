@@ -143,6 +143,18 @@ def test_worst_distribution_properties():
         assert np.allclose(weights.sum(), 1.0, atol=1e-6)
         assert np.all(weights >= -1e-8)  # Allow small numerical errors
 
+
+def test_alpha_one_worst_distribution():
+    """At alpha one, CVaR returns the empirical distribution."""
+    X, y = make_regression(n_samples=50, n_features=5, random_state=42)
+    model = CVaRDRO(input_dim=X.shape[1], model_type='ols', alpha=1.0)
+
+    dist = model.worst_distribution(X, y)
+
+    np.testing.assert_array_equal(dist['sample_pts'][0], X)
+    np.testing.assert_array_equal(dist['sample_pts'][1], y)
+    np.testing.assert_allclose(dist['weight'], np.full(X.shape[0], 1.0 / X.shape[0]))
+
 # --------------------------
 # Solver Compatibility Tests
 # --------------------------

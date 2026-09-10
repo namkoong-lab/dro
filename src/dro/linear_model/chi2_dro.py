@@ -260,6 +260,15 @@ class Chi2DRO(BaseLinearDRO):
         self.fit(X, y)
 
         sample_size, _ = X.shape
+
+        # With a zero divergence radius, the ambiguity set contains only the
+        # empirical distribution.  Return it exactly instead of depending on
+        # solver tolerances in the auxiliary probability optimization.
+        if self.eps == 0:
+            return {
+                'sample_pts': [X, y],
+                'weight': np.full(sample_size, 1.0 / sample_size),
+            }
         
         per_loss = self._loss(X, y)
         prob = cp.Variable(sample_size, nonneg=True)
