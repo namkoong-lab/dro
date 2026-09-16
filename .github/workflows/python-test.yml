@@ -35,12 +35,19 @@ jobs:
         echo "PATH=$PATH:/home/runner/mosek" >> $GITHUB_ENV
     
         
-    - name: Run tests
+    - name: Run tests and collect coverage
       run: |
-        pytest --cov=dro tests/ --cov-report=xml 
+        python -m pytest tests \
+          --cov=src/dro \
+          --cov-report=term-missing \
+          --cov-report=xml:coverage.xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        disable_search: true
+        fail_ci_if_error: true
+        verbose: true
         
