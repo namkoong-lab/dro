@@ -272,6 +272,9 @@ def test_dmatrix_handling():
 @pytest.mark.benchmark
 def test_training_performance(benchmark):
     """Benchmark training performance"""
+    if not benchmark.enabled:
+        pytest.skip("Benchmarks require a serial pytest run")
+
     X, y = make_classification(n_samples=100, random_state=42)
     model = KLDRO_XGB()
     model.update({"num_boost_round": 5, "max_depth": 4})

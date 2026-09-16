@@ -351,10 +351,26 @@ def test_lipschitz_norm_for_ols():
 def test_satisficing_lad_constraints(model_type):
     """Test constraint formulation for LAD satisficing model"""
     if model_type in {"lad", "ols"}:
-        X, y = make_regression(n_samples=50, n_features=10)
+        X, y = make_regression(
+            n_samples=50,
+            n_features=10,
+            random_state=42,
+        )
     else:
-        X, y = make_classification(n_samples=50, n_features=10)
+        X, y = make_classification(
+            n_samples=50,
+            n_features=10,
+            random_state=42,
+        )
         y = np.sign(y-0.5)
+        if model_type == 'logistic':
+            # A full RBF basis separates any distinct finite training set. For
+            # unregularized logistic loss that drives the oracle target toward
+            # zero without a finite minimizer, which makes this solver-focused
+            # test numerically unstable. Conflicting duplicate observations
+            # retain the full-RBF path while giving the loss a positive floor.
+            X[1] = X[0]
+            y[0], y[1] = -1, 1
 
     model = WassersteinDROsatisficing(
         input_dim=10,
@@ -369,10 +385,10 @@ def test_satisficing_lad_constraints(model_type):
     params = model.fit(X, y)
     assert 'theta' in params  # Verify solution exists
     model.update_kernel({'metric': 'rbf', 'kernel_gamma': 1})
-    print('=========')
     params = model.fit(X, y)
-    print(model.kernel)
-    print('========')
+    # Nystroem samples basis components from NumPy's global RNG. Keep this
+    # solver test reproducible across local and xdist runs.
+    np.random.seed(1)
     model.update_kernel({'metric': 'rbf', 'kernel_gamma': 'scale', 'n_components': 5})
     params = model.fit(X, y)
     assert 'theta' in params  # Verify solution exists

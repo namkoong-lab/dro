@@ -209,22 +209,31 @@ def test_fit_with_zero_eps(model_type, dataset):
         assert 'b' in params
 
 
-@pytest.mark.parametrize("model_type,expected_loss", [
-    ('svm', 'maximum'),
-    ('logistic', 'logistic'),
-    ('ols', 'power'),
-    ('lad', 'abs')
-])
-def test_cvx_loss_types(model_type, expected_loss):
-    """Verify correct loss expressions are generated"""
+@pytest.mark.parametrize("model_type", ['svm', 'logistic', 'ols', 'lad'])
+def test_cvx_loss_types(model_type):
+    """Verify each model type produces the expected elementwise loss."""
     model = BayesianDRO(input_dim=3, model_type=model_type)
     X = cp.Parameter((10, 3))
     y = cp.Parameter(10)
     theta = cp.Variable(3)
     b = cp.Variable()
-    
+
     loss_expr = model._cvx_loss(X, y, theta, b)
-    assert expected_loss in str(loss_expr)
+
+    X.value = np.arange(30, dtype=float).reshape(10, 3) / 10
+    y.value = np.where(np.arange(10) % 2 == 0, -1.0, 1.0)
+    theta.value = np.array([0.2, -0.1, 0.3])
+    b.value = 0.05
+
+    prediction = X.value @ theta.value + b.value
+    expected = {
+        'svm': np.maximum(1 - y.value * prediction, 0),
+        'logistic': np.logaddexp(0, -y.value * prediction),
+        'ols': np.square(y.value - prediction),
+        'lad': np.abs(y.value - prediction),
+    }[model_type]
+
+    np.testing.assert_allclose(loss_expr.value, expected)
 
 
 def test_solver_error_propagation():

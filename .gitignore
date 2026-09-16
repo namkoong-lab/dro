@@ -4,3 +4,6 @@ __pycache__
 .coverage
 .coveragerc
 .coverage.MacBook-Air*
+JMLR_DRO_tex
+.pptx-build
+.codex-finalizer

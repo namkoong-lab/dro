@@ -8,9 +8,9 @@ import os
 sys.path.insert(0, os.path.abspath('../src'))
 
 project = 'dro'
-copyright = '2025, DRO developers'
+copyright = '2026, DRO developers'
 author = 'DRO developers'
-release = '0.3.3'
+release = '0.4.1'
 
 # html_static_path = ['../docs']
 html_baseurl = 'https://namkoong-lab.github.io/dro/' 
