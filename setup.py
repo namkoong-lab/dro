@@ -6,7 +6,7 @@ md_path = os.path.join(here, 'src/README.md')
 
 setup(
     name='dro',
-    version='0.3.3',    
+    version='0.4.1',    
     license='MIT License',
     description='A package of distributionally robust optimization (DRO) methods. Implemented via cvxpy and PyTorch',
     long_description=open(md_path, encoding='utf-8').read(),
