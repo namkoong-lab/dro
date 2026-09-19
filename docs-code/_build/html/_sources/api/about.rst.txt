@@ -16,7 +16,7 @@ Without specified, our DRO model is to solve the following optimization problem:
 
 where :math:`U` is the so-called ambiguity set and typically of the form :math:`U = \{P: d(P, \hat P_n) \leq \epsilon\}` and :math:`\hat P_n := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}` is the empirical distribution of training samples :math:`\{(X_i, Y_i)\}_{i = 1}^n`. And :math:`\epsilon` is the hyperparameter.
 
-As for the latest ``v0.2.2`` version, `dro` supports:
+As for the current release, `dro` supports:
 
 (1) Synthetic data generation
 -------------------------------

@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wasserstein DRO &#8212; dro 0.3.3 documentation</title>
+    <title>Wasserstein DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../_static/documentation_options.js?v=ff822928"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -284,27 +284,47 @@
 <h1>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h1>
 <p>In Wasserstein DRO,
 <span class="math notranslate nohighlight">\(\mathcal{P}(d, \epsilon) = \{Q: W(Q, \hat P)\leq \epsilon\}\)</span>.</p>
-<p>Specifically, Wasserstein distance is defined as follows:
-For <span class="math notranslate nohighlight">\(Z_1 = (X_1, Y_1), Z_2 = (X_2, Y_2)\)</span>,</p>
+<p>Specifically, Wasserstein distance is defined as follows. For
+<span class="math notranslate nohighlight">\(Z_1 = (X_1, Y_1)\)</span> and <span class="math notranslate nohighlight">\(Z_2 = (X_2, Y_2)\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[
 W(P_1, P_2) = \inf_{\pi \sim (P_1, P_2)}\mathbb{E}_{\pi}[d(Z_1, Z_2)],
 \]</div>
-<p>where for <code class="docutils literal notranslate"><span class="pre">lad</span></code>, <code class="docutils literal notranslate"><span class="pre">svm</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic</span></code>, the inner distance is captured by the norm: <span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|.\)</span>
-For <code class="docutils literal notranslate"><span class="pre">ols</span></code>, the inner distance is captured by the norm square:
-<span class="math notranslate nohighlight">\(d((X_1, Y_1), (X_2, Y_2)) = \|(X_1 - X_2, Y_1 - Y_2)\|^2\)</span>.</p>
-<p>No matter in each case, the norm is defined on the product space <span class="math notranslate nohighlight">\(\mathcal{X} \times \mathbb{R}\)</span> by:</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">lad</span></code>, the ground cost is</p>
 <div class="math notranslate nohighlight">
 \[
-\|(x, y)\| = \|x\|_{\Sigma, p} + \kappa |y|.
+d((x,y),(x',y'))=\|x-x'\|_{\Sigma,p}+\kappa|y-y'|.
 \]</div>
-<p>Here <span class="math notranslate nohighlight">\(\|x\|_{\Sigma, p} = \|\Sigma^{1/2}x\|_p\)</span>. Furthermore, we can show that the dual norm <span class="math notranslate nohighlight">\(\|(\cdot, \cdot)\|_*\)</span> is given by:</p>
+<p>LAD requires <span class="math notranslate nohighlight">\(\kappa&gt;0\)</span> (or <span class="math notranslate nohighlight">\(\kappa=\infty\)</span>); at <span class="math notranslate nohighlight">\(\kappa=0\)</span>, continuous
+target changes are free and the robust absolute loss is unbounded.</p>
+<p>For binary classification with <code class="docutils literal notranslate"><span class="pre">svm</span></code> or <code class="docutils literal notranslate"><span class="pre">logistic</span></code>, the label space is
+discrete and the implementation uses</p>
 <div class="math notranslate nohighlight">
 \[
-\|(u,v)\|_* = \max\{\|u\|_{\Sigma, q}, \frac{v}{\kappa}\}
+d((x,y),(x',y'))=\|x-x'\|_{\Sigma,p}
+    +\kappa\mathbf{1}_{\{y\ne y'\}}.
 \]</div>
-<p>with <span class="math notranslate nohighlight">\(\frac{1}{p} + \frac{1}{q} = 1\)</span>.</p>
-<p>The norm is defined by the parameter tuple <span class="math notranslate nohighlight">\((\Sigma, p, \kappa)\)</span>,</p>
+<p>Thus a label flip costs <span class="math notranslate nohighlight">\(\kappa\)</span>, independent of whether labels are encoded as
+<span class="math notranslate nohighlight">\(-1\)</span> and <span class="math notranslate nohighlight">\(1\)</span>. The <code class="docutils literal notranslate"><span class="pre">svm</span></code> and <code class="docutils literal notranslate"><span class="pre">logistic</span></code> models use this same ground cost;
+they differ in their loss functions (hinge versus logistic), not in their
+transport distances. Setting <span class="math notranslate nohighlight">\(\kappa=\infty\)</span> forbids label changes. For
+<code class="docutils literal notranslate"><span class="pre">ols</span></code>, changes in <span class="math notranslate nohighlight">\(Y\)</span> are prohibited and the ground cost is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+d((x,y),(x',y'))=
+\begin{cases}
+\|x-x'\|_{\Sigma,p}^2,&amp;y=y',\\
++\infty,&amp;y\ne y'.
+\end{cases}
+\end{split}\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\|x\|_{\Sigma,p}=\|\Sigma^{1/2}x\|_p\)</span>. For the continuous product norm
+used by <code class="docutils literal notranslate"><span class="pre">lad</span></code>, the dual norm is</p>
+<div class="math notranslate nohighlight">
+\[
+\|(u,v)\|_* = \max\left\{\|u\|_{\Sigma^{-1},q},
+    \frac{|v|}{\kappa}\right\},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(1/p+1/q=1\)</span>.</p>
 <section id="standard-version">
 <h2>Standard Version<a class="headerlink" href="#standard-version" title="Link to this heading">¶</a></h2>
 <section id="hyperparameter">
@@ -319,9 +339,156 @@ For <code class="docutils literal notranslate"><span class="pre">ols</span></cod
 <p>For loss functions in LAD, Logistic, and SVM models, [2] provide to reformulate the problem.</p>
 </section>
 <section id="worst-case-distribution">
-<h3>Worst case Distribution<a class="headerlink" href="#worst-case-distribution" title="Link to this heading">¶</a></h3>
-<p>When we set <code class="docutils literal notranslate"><span class="pre">compute_type</span> <span class="pre">==</span> <span class="pre">asymp</span></code>, [2] provides asymptotic worst-case distribution for linear regression and classification (Theorems 9 and 20), where we take <span class="math notranslate nohighlight">\(\gamma \in (0, 1]\)</span> as the hyperparameter to tune in each case.</p>
-<p><code class="docutils literal notranslate"><span class="pre">compute_type</span> <span class="pre">==</span> <span class="pre">exact</span></code> is depreciated right now.</p>
+<h3>Worst-case distribution<a class="headerlink" href="#worst-case-distribution" title="Link to this heading">¶</a></h3>
+<section id="ols-an-exact-worst-case-distribution">
+<h4>OLS: an exact worst-case distribution<a class="headerlink" href="#ols-an-exact-worst-case-distribution" title="Link to this heading">¶</a></h4>
+<p>The OLS construction follows the quadratic-loss, quadratic-transport
+reformulation in [1, 5]. Let <span class="math notranslate nohighlight">\(q\)</span> be conjugate to <span class="math notranslate nohighlight">\(p\)</span>, and define the fitted
+residuals, empirical root mean squared error, and dual slope by</p>
+<div class="math notranslate nohighlight">
+\[
+r_i=\theta^\top x_i+b-y_i,\qquad
+R=\left(\frac1n\sum_{i=1}^n r_i^2\right)^{1/2},\qquad
+L=\|\Sigma^{-1/2}\theta\|_q.
+\]</div>
+<p>The worst-case expected squared loss is</p>
+<div class="math notranslate nohighlight">
+\[
+\sup_{Q:W(Q,\widehat P_n)\leq\epsilon}
+\mathbb E_Q[(\theta^\top X+b-Y)^2]
+=\left(R+\sqrt{\epsilon}\,L\right)^2.
+\]</div>
+<p>To see both the upper bound and how it is attained, choose a dual-norm
+maximizing direction <span class="math notranslate nohighlight">\(v\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+\|\Sigma^{1/2}v\|_p=1,
+\qquad \theta^\top v=L.
+\]</div>
+<p>For any feasible feature displacement <span class="math notranslate nohighlight">\(\Delta X\)</span>, Minkowski’s and Hölder’s
+inequalities give</p>
+<div class="math notranslate nohighlight">
+\[
+\sqrt{\mathbb E[(r+\theta^\top\Delta X)^2]}
+\leq R+L\sqrt{\mathbb E[\|\Sigma^{1/2}\Delta X\|_p^2]}
+\leq R+\sqrt{\epsilon}\,L.
+\]</div>
+<p>When <span class="math notranslate nohighlight">\(R&gt;0\)</span>, equality is attained by keeping the uniform weights and targets
+unchanged and transporting each feature vector to</p>
+<div class="math notranslate nohighlight">
+\[
+x_i^\star=x_i+\frac{\sqrt{\epsilon}}{R}r_i v,
+\qquad
+Q^\star=\frac1n\sum_{i=1}^n\delta_{(x_i^\star,y_i)}.
+\]</div>
+<p>Indeed,</p>
+<div class="math notranslate nohighlight">
+\[
+\frac1n\sum_i\|\Sigma^{1/2}(x_i^\star-x_i)\|_p^2=\epsilon
+\]</div>
+<p>and the new residuals are
+<span class="math notranslate nohighlight">\(r_i(1+\sqrt{\epsilon}L/R)\)</span>, which gives expected loss
+<span class="math notranslate nohighlight">\((R+\sqrt{\epsilon}L)^2\)</span>. If <span class="math notranslate nohighlight">\(R=0&lt;L\)</span>, every atom can instead be shifted by
+<span class="math notranslate nohighlight">\(\sqrt{\epsilon}v\)</span>. If <span class="math notranslate nohighlight">\(L=0\)</span> or <span class="math notranslate nohighlight">\(\epsilon=0\)</span>, the empirical distribution is
+already worst-case. Thus OLS recovery is exact and needs no <span class="math notranslate nohighlight">\(\gamma\)</span> or
+escaping atom.</p>
+<p>The OLS <code class="docutils literal notranslate"><span class="pre">fit</span></code> method stores the robust RMSE <span class="math notranslate nohighlight">\(R+\sqrt{\epsilon}L\)</span> in
+<code class="docutils literal notranslate"><span class="pre">robust_obj</span></code>. Because <code class="docutils literal notranslate"><span class="pre">worst_distribution</span></code> evaluates squared residuals,
+its OLS <code class="docutils literal notranslate"><span class="pre">expected_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">target_objective</span></code> are expressed in MSE units
+and are certified against <code class="docutils literal notranslate"><span class="pre">robust_obj**2</span></code>. Call the exact recovery without
+asymptotic options:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wc</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="svm-logistic-and-lad-asymptotic-recovery">
+<h4>SVM, logistic, and LAD: asymptotic recovery<a class="headerlink" href="#svm-logistic-and-lad-asymptotic-recovery" title="Link to this heading">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">worst_distribution</span></code> implements the asymptotic constructions in Theorems 9
+and 20 of [2] for linear <code class="docutils literal notranslate"><span class="pre">lad</span></code>, <code class="docutils literal notranslate"><span class="pre">svm</span></code>, and <code class="docutils literal notranslate"><span class="pre">logistic</span></code> models. These
+constructions form a family <span class="math notranslate nohighlight">\(Q_\gamma\)</span>; they do not in general produce an
+attained worst-case distribution. A strictly positive <span class="math notranslate nohighlight">\(\gamma\)</span> materializes a
+finite distribution, and its expected loss approaches the optimized WDRO value
+as <span class="math notranslate nohighlight">\(\gamma\downarrow0\)</span>. At the same time, some mass vanishes and its destination
+moves to infinity. Consequently, <span class="math notranslate nohighlight">\(\gamma=0\)</span> denotes a limiting objective in the
+theory and is not a valid finite-distribution parameter.</p>
+<p>For positive Wasserstein radius, <code class="docutils literal notranslate"><span class="pre">gamma=None</span></code> chooses a valid positive
+starting value automatically. A user-supplied starting value must satisfy</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(0&lt;\gamma\leq\min\{\epsilon,1\}\)</span> for <code class="docutils literal notranslate"><span class="pre">svm</span></code> and <code class="docutils literal notranslate"><span class="pre">logistic</span></code> with finite
+<span class="math notranslate nohighlight">\(\kappa\)</span>;</p></li>
+<li><p><span class="math notranslate nohighlight">\(0&lt;\gamma\leq1\)</span> for <code class="docutils literal notranslate"><span class="pre">svm</span></code> and <code class="docutils literal notranslate"><span class="pre">logistic</span></code> with <span class="math notranslate nohighlight">\(\kappa=\infty\)</span>, and for
+<code class="docutils literal notranslate"><span class="pre">lad</span></code>.</p></li>
+</ul>
+<p>The automatic starting value is one tenth of the applicable upper bound.</p>
+<p>A smaller <span class="math notranslate nohighlight">\(\gamma\)</span> usually reduces the optimality gap, but also places an atom
+farther away and can make the computation less numerically stable. For
+<span class="math notranslate nohighlight">\(\epsilon=0\)</span>, the method returns the empirical distribution exactly and no
+asymptotic construction is needed. These controls are passed together in the
+<code class="docutils literal notranslate"><span class="pre">asymptotic_options</span></code> dictionary. The certification loop reduces the starting
+value by <code class="docutils literal notranslate"><span class="pre">gamma_decay</span></code> for at most <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> attempts. The objective checks
+use <code class="docutils literal notranslate"><span class="pre">objective_atol</span></code> and <code class="docutils literal notranslate"><span class="pre">objective_rtol</span></code>; transport feasibility uses
+<code class="docutils literal notranslate"><span class="pre">feasibility_tol</span></code>.</p>
+<p>For classification, the escaping atom is moved in a label-aware recession
+direction: the direction must increase the asymptotic loss, not merely the
+linear score. For hinge and logistic loss it solves
+<span class="math notranslate nohighlight">\(\max_{\|d\|_{\Sigma,p}\leq1}-y_a\theta^\top d\)</span>, where <span class="math notranslate nohighlight">\((x_a,y_a)\)</span> is the
+empirical anchor. Under Euclidean feature cost this direction is proportional
+to <span class="math notranslate nohighlight">\(-y_a\theta\)</span>. This distinction is essential because moving in the same
+feature direction for both labels lowers the loss for one of the two classes.</p>
+<p>The returned candidate is certified before it is exposed as an approximation
+to a worst-case distribution. Every generated atom retains the index of the
+empirical sample from which its mass was moved. These source indices specify an
+explicit coupling with cost</p>
+<div class="math notranslate nohighlight">
+\[
+C(Q_\gamma)=\sum_j q_j\,
+    d\!\left(z_j,\widehat z_{\operatorname{source}(j)}\right).
+\]</div>
+<p>The implementation requires both</p>
+<div class="math notranslate nohighlight">
+\[
+C(Q_\gamma)\leq\epsilon+\text{feasibility tolerance}
+\]</div>
+<p>and agreement, within <code class="docutils literal notranslate"><span class="pre">objective_atol</span></code> and <code class="docutils literal notranslate"><span class="pre">objective_rtol</span></code>, between the
+candidate’s expected loss and the optimized WDRO objective. If either check
+fails, the method tries a smaller positive <span class="math notranslate nohighlight">\(\gamma\)</span>. It raises an error rather
+than returning an uncertified candidate if no attempt succeeds.</p>
+<p>The returned dictionary contains <code class="docutils literal notranslate"><span class="pre">sample_pts</span></code> and <code class="docutils literal notranslate"><span class="pre">weight</span></code> together with
+the following audit metadata:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">source_index</span></code>: empirical source of every returned atom;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gamma_used</span></code> and <code class="docutils literal notranslate"><span class="pre">kappa_used</span></code>: effective construction parameters;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expected_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">target_objective</span></code>: the two certified objective
+values;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimality_gap</span></code> and <code class="docutils literal notranslate"><span class="pre">transport_cost</span></code>: the objective and feasibility
+diagnostics;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">certified</span></code> and <code class="docutils literal notranslate"><span class="pre">asymptotic</span></code>: whether the checks passed and whether the
+construction represents an asymptotic sequence.</p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wc</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">asymptotic_options</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;objective_atol&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span>
+        <span class="s2">&quot;objective_rtol&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span>
+        <span class="s2">&quot;feasibility_tol&quot;</span><span class="p">:</span> <span class="mf">1e-7</span><span class="p">,</span>
+        <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s2">&quot;gamma_decay&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Finite <span class="math notranslate nohighlight">\(\kappa\)</span> permits classification-label flips at cost <span class="math notranslate nohighlight">\(\kappa\)</span> per unit of
+transported mass. With <span class="math notranslate nohighlight">\(\kappa=\infty\)</span>, labels remain fixed and the implementation
+uses a label-preserving recession construction; it does not approximate
+<span class="math notranslate nohighlight">\(\infty\)</span> with an arbitrary large finite number.</p>
+<p>This recovery method assumes a linear kernel, unbounded feature support, and
+one of the supported convex Lipschitz losses. More generally, the asymptotic
+construction also requires the loss’s recession growth to attain its Lipschitz
+slope, as explained in [4]. OLS uses the separate exact construction above.</p>
+</section>
 </section>
 </section>
 <section id="robust-satisficing-version">
@@ -355,6 +522,8 @@ for end-to-end classification, regression, and robust-satisficing examples.</p>
 <li><p>[1] Blanchet, Jose, et al. “Data-driven optimal transport cost selection for distributionally robust optimization.” 2019 winter simulation conference (WSC). IEEE, 2019.</p></li>
 <li><p>[2] Shafieezadeh-Abadeh, Soroosh, Daniel Kuhn, and Peyman Mohajerin Esfahani. “Regularization via mass transportation.” Journal of Machine Learning Research 20.103 (2019): 1-68.</p></li>
 <li><p>[3] Long, Daniel Zhuoyu, Melvyn Sim, and Minglong Zhou. “Robust satisficing.” Operations Research 71.1 (2023): 61-82.</p></li>
+<li><p>[4] Shafiee, Soroosh, Liviu Aolaritei, Florian Dörfler, and Daniel Kuhn. “Nash equilibria, regularization, and computation in optimal transport-based distributionally robust optimization.” <em>Operations Research</em> 74.3 (2026): 1689–1709.</p></li>
+<li><p>[5] Blanchet, Jose, Yang Kang, and Karthyek Murthy. “Robust Wasserstein profile inference and applications to machine learning.” <em>Journal of Applied Probability</em> 56.3 (2019): 830–857.</p></li>
 </ul>
 </section>
 </section>
@@ -376,7 +545,11 @@ for end-to-end classification, regression, and robust-satisficing examples.</p>
 <li><a class="reference internal" href="#">Wasserstein DRO</a><ul>
 <li><a class="reference internal" href="#standard-version">Standard Version</a><ul>
 <li><a class="reference internal" href="#hyperparameter">Hyperparameter</a></li>
-<li><a class="reference internal" href="#worst-case-distribution">Worst case Distribution</a></li>
+<li><a class="reference internal" href="#worst-case-distribution">Worst-case distribution</a><ul>
+<li><a class="reference internal" href="#ols-an-exact-worst-case-distribution">OLS: an exact worst-case distribution</a></li>
+<li><a class="reference internal" href="#svm-logistic-and-lad-asymptotic-recovery">SVM, logistic, and LAD: asymptotic recovery</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#robust-satisficing-version">Robust Satisficing Version</a><ul>
@@ -413,7 +586,7 @@ for end-to-end classification, regression, and robust-satisficing examples.</p>
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2025, DRO developers.
+    &#169; Copyright 2026, DRO developers.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 

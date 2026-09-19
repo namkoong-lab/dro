@@ -3,8 +3,7 @@ import numpy as np
 import math
 import cvxpy as cp
 from scipy.linalg import sqrtm
-from typing import Dict, Any
-import warnings
+from typing import Dict, Any, Optional, Tuple
 from sklearn.metrics.pairwise import pairwise_kernels
 from sklearn.kernel_approximation import Nystroem
 
@@ -20,20 +19,34 @@ class WassersteinDRO(BaseLinearDRO):
     
     This model minimizes a Wasserstein-robust loss function for both regression and classification.
 
-    The Wasserstein distance is defined as the minimum probability coupling of two distributions for the distance metric:
+    The Wasserstein distance is defined as the minimum probability coupling of
+    two distributions. For LAD regression, the ground cost is
 
     .. math::
-        d((X_1, Y_1), (X_2, Y_2)) = (\|\Sigma^{1/2} (X_1 - X_2)\|_p)^{square} + \kappa |Y_1 - Y_2|,
+        d((X_1, Y_1), (X_2, Y_2))
+        = \|\Sigma^{1/2} (X_1 - X_2)\|_p + \kappa |Y_1 - Y_2|.
+
+    For OLS regression, target changes are prohibited and the feature cost is
+    quadratic:
+
+    .. math::
+        d((X_1, Y_1), (X_2, Y_2))
+        = \begin{cases}
+        \|\Sigma^{1/2} (X_1 - X_2)\|_p^2, & Y_1=Y_2,\\
+        +\infty, & Y_1\ne Y_2.
+        \end{cases}
+
+    For binary classification, the label term is instead
+    :math:`\kappa\mathbf{1}_{\{Y_1\ne Y_2\}}`, so a label flip costs
+    exactly :math:`\kappa`.
 
     where parameters are:
 
-        - :math:`\Sigma`: cost matrix, (a PSD Matrix);
+        - :math:`\Sigma`: symmetric positive-definite cost matrix;
 
         - :math:`\kappa`;
 
         - :math:`p`;
-
-        - square (notation depending on the model type), where square = 1 for 'svm', 'logistic', 'lad'; square = 2 for 'ols'.
 
     Reference:
 
@@ -107,7 +120,7 @@ class WassersteinDRO(BaseLinearDRO):
         
         :param config: Configuration dictionary with keys:
 
-            - ``'cost_matrix'``: Mahalanobis metric matrix :math:`\Sigma^{-1} \succ 0`
+            - ``'cost_matrix'``: Mahalanobis metric matrix :math:`\Sigma \succ 0`
 
                 - Shape: (input_dim, input_dim)
 
@@ -117,7 +130,10 @@ class WassersteinDRO(BaseLinearDRO):
 
             - ``'p'``: Wasserstein order :math:`p \geq 1` or ``'inf'``
 
-            - ``'kappa'``: Y-ambiguity radius :math:`\kappa \geq 0` or ``'inf'``
+            - ``'kappa'``: Y-ambiguity radius :math:`\kappa \geq 0` or ``'inf'``.
+              LAD requires :math:`\kappa > 0` because free target transport
+              makes the robust absolute loss unbounded. OLS requires
+              ``'inf'`` because its reformulation keeps targets fixed.
 
         :type config: dict[str, Any]
 
@@ -155,7 +171,12 @@ class WassersteinDRO(BaseLinearDRO):
                 raise TypeError("cost_matrix must be numpy.ndarray")
             if self.kernel == 'linear' and cost_matrix.shape != (self.input_dim, self.input_dim):
                 raise ValueError(f"cost_matrix must have shape ({self.input_dim}, {self.input_dim})")
-            if not np.all(np.linalg.eigvals(cost_matrix) > 0):
+            if not np.all(np.isfinite(cost_matrix)):
+                raise ValueError("cost_matrix must contain only finite values")
+            if not np.allclose(cost_matrix, cost_matrix.T, rtol=1e-10, atol=1e-12):
+                raise ValueError("cost_matrix must be symmetric")
+            cost_matrix = 0.5 * (cost_matrix + cost_matrix.T)
+            if not np.all(np.linalg.eigvalsh(cost_matrix) > 0):
                 raise ValueError("cost_matrix must be positive definite")
             
             self.cost_matrix = cost_matrix
@@ -163,24 +184,40 @@ class WassersteinDRO(BaseLinearDRO):
 
         if 'eps' in config:
             eps = config['eps']
-            if not isinstance(eps, (float, int)):
+            if isinstance(eps, bool) or not isinstance(eps, (float, int)):
                 raise TypeError("eps must be numeric")
-            if eps < 0:
-                raise ValueError(f"eps must be ≥ 0, got {eps}")
+            if not np.isfinite(eps) or eps < 0:
+                raise ValueError(f"eps must be finite and ≥ 0, got {eps}")
             self.eps = float(eps)
 
         if 'p' in config:
             p = config['p']
-            if p != 'inf' and (not isinstance(p, (float, int)) or p < 1):
+            if isinstance(p, (float, int)) and not isinstance(p, bool) and np.isinf(p):
+                p = 'inf'
+            if p != 'inf' and (
+                isinstance(p, bool)
+                or not isinstance(p, (float, int))
+                or not np.isfinite(p)
+                or p < 1
+            ):
                 raise ValueError(f"p must be ≥1 or 'inf', got {p}")
             self.p = float(p) if p != 'inf' else 'inf'
 
         if 'kappa' in config:
             kappa = config['kappa']
-            if kappa != 'inf' and (not isinstance(kappa, (float, int)) or kappa < 0):
+            if isinstance(kappa, (float, int)) and not isinstance(kappa, bool) and np.isinf(kappa):
+                kappa = 'inf'
+            if kappa != 'inf' and (
+                isinstance(kappa, bool)
+                or not isinstance(kappa, (float, int))
+                or not np.isfinite(kappa)
+                or kappa < 0
+            ):
                 raise ValueError(f"kappa must be ≥0 or 'inf', got {kappa}")
+            if self.model_type == 'lad' and kappa != 'inf' and kappa == 0:
+                raise ValueError("kappa must be strictly positive for LAD models")
             if kappa != 'inf' and self.model_type == 'ols':
-                warnings.warn("Y-ambiguity is disabled for OLS models", UserWarning)
+                raise ValueError("kappa must be 'inf' for OLS models")
             self.kappa = float(kappa) if kappa != 'inf' else 'inf'
      
     def _penalization(self, theta: cp.Expression) -> float:
@@ -196,8 +233,15 @@ class WassersteinDRO(BaseLinearDRO):
         """
         if self.kernel != 'linear':
             if self.n_components is not None:
-                nystrom = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
-                Phi_X = nystrom.fit_transform(self.support_vectors_)
+                if not hasattr(self, 'nystroem_transformer'):
+                    raise WassersteinDROError(
+                        "The Nyström feature map must be fitted before computing "
+                        "the kernel penalty."
+                    )
+                # Use exactly the feature map fitted in ``fit``. Refitting a
+                # separate randomized Nyström map here would regularize a
+                # different set of coordinates from those used by the loss.
+                Phi_X = self.nystroem_transformer.transform(self.support_vectors_)
                 theta_K = sqrtm(Phi_X.T @ Phi_X) @ theta
             else:
                 theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
@@ -240,7 +284,9 @@ class WassersteinDRO(BaseLinearDRO):
 
         :returns: Dictionary containing trained parameters:
         
-            - ``theta``: Weight vector of shape `(n_features,)`
+            - ``theta``: Weight vector. Its length is ``n_features`` for a
+              linear kernel, ``n_samples`` for a full nonlinear kernel, and
+              ``n_components`` for a Nyström approximation.
             
             - ``b``
             
@@ -261,18 +307,33 @@ class WassersteinDRO(BaseLinearDRO):
 
         if self.kernel != 'linear':
             self.support_vectors_ = X
-            if not isinstance(self.kernel_gamma, float):
+            if not isinstance(self.kernel_gamma, (float, int)):
                 self.kernel_gamma = 1 / (self.input_dim * np.var(X))
             if self.n_components is None:
                 theta = cp.Variable(sample_size)
+                design_matrix = pairwise_kernels(
+                    X,
+                    self.support_vectors_,
+                    metric=self.kernel,
+                    gamma=self.kernel_gamma,
+                )
                 self.cost_matrix = np.eye(sample_size)
                 self.cost_inv_transform = np.eye(sample_size)
             else:
                 theta = cp.Variable(self.n_components)
+                # Fit the approximation once and retain it for training,
+                # regularization, and all subsequent predictions.
+                self.nystroem_transformer = Nystroem(
+                    kernel=self.kernel,
+                    gamma=self.kernel_gamma,
+                    n_components=self.n_components,
+                )
+                design_matrix = self.nystroem_transformer.fit_transform(X)
                 self.cost_matrix = np.eye(self.n_components)
                 self.cost_inv_transform = np.eye(self.n_components)
         else:
             theta = cp.Variable(self.input_dim)
+            design_matrix = X
         if self.fit_intercept == True:
             b = cp.Variable()
         else:
@@ -282,17 +343,39 @@ class WassersteinDRO(BaseLinearDRO):
         lamb_da = cp.Variable()
         cons = [lamb_da >= self._penalization(theta)]
         if self.model_type == 'ols':
-            final_loss = cp.norm(X @ theta + b - y) / math.sqrt(sample_size) + math.sqrt(self.eps) * lamb_da
+            # Kernel OLS is linear in the kernel feature coordinates.  Using
+            # raw X here is dimensionally wrong when theta is indexed by the
+            # training samples (full kernel) or Nyström components.
+            residual = design_matrix @ theta + b - y
+            final_loss = (
+                cp.norm(residual) / math.sqrt(sample_size)
+                + math.sqrt(self.eps) * lamb_da
+            )
 
         else:
             if self.model_type in ['svm', 'logistic']:
                 s = cp.Variable(sample_size)
-                cons += [s >= self._cvx_loss(X, y, theta, b)]
+                cons += [
+                    s >= self._cvx_loss(
+                        X, y, theta, b, design_matrix=design_matrix
+                    )
+                ]
                 if self.kappa != 'inf':
-                    cons += [s >= self._cvx_loss(X, -y, theta, b) - lamb_da * self.kappa]
+                    cons += [
+                        s >= self._cvx_loss(
+                            X, -y, theta, b, design_matrix=design_matrix
+                        ) - lamb_da * self.kappa
+                    ]
                 final_loss = cp.sum(s) / sample_size + self.eps * lamb_da
             else:
-                final_loss = cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size + self.eps * lamb_da
+                final_loss = (
+                    cp.sum(
+                        self._cvx_loss(
+                            X, y, theta, b, design_matrix=design_matrix
+                        )
+                    ) / sample_size
+                    + self.eps * lamb_da
+                )
 
         problem = cp.Problem(cp.Minimize(final_loss), cons)
         try:
@@ -331,19 +414,41 @@ class WassersteinDRO(BaseLinearDRO):
         """
         if X_1.shape[-1] != X_2.shape[-1]:
             raise WassersteinDROError(f"two input feature dimensions are different.")
-        # if Y_1 != Y_2 and self.kappa != 'inf':
-        #     warnings.warn("Despite labels are different, we do not count their difference since we do not allow change in Y.")
-
         component_X = cp.norm(sqrtm(self.cost_matrix) @ (X_1 - X_2), self.p)
         if self.model_type == 'ols':
             component_X = component_X ** 2
 
-        if self.kappa != 'inf':
-            component_Y = self.kappa * cp.abs(Y_1 - Y_2)
-
+        if self.model_type in {'svm', 'logistic'}:
+            # Binary classification uses the indicator flip cost from the
+            # model reformulation, not kappa * |1 - (-1)| = 2 * kappa.
+            if isinstance(Y_1, cp.Expression):
+                if not Y_1.is_constant() or Y_1.value is None:
+                    raise WassersteinDROError(
+                        "Classification label costs require fixed labels."
+                    )
+                y_1_value = float(np.asarray(Y_1.value).item())
+            else:
+                y_1_value = float(Y_1)
+            label_changed = not np.isclose(y_1_value, float(Y_2))
+            if self._is_infinite_kappa() and label_changed:
+                raise WassersteinDROError(
+                    "Label changes are prohibited when kappa is infinite."
+                )
+            component_Y = 0 if self._is_infinite_kappa() else self.kappa * float(label_changed)
         else:
-            # change of Y is not allowed
-            component_Y = 0
+            if self._is_infinite_kappa():
+                if isinstance(Y_1, cp.Expression) and not Y_1.is_constant():
+                    raise WassersteinDROError(
+                        "Target changes are prohibited when kappa is infinite."
+                    )
+                y_1_value = float(np.asarray(Y_1.value).item()) if isinstance(Y_1, cp.Expression) else float(Y_1)
+                if not np.isclose(y_1_value, float(Y_2)):
+                    raise WassersteinDROError(
+                        "Target changes are prohibited when kappa is infinite."
+                    )
+                component_Y = 0
+            else:
+                component_Y = self.kappa * cp.abs(Y_1 - Y_2)
         return component_X + component_Y
         
 
@@ -359,102 +464,453 @@ class WassersteinDRO(BaseLinearDRO):
             return 1
         else:
             return np.inf
-    
-    def worst_distribution(self, X: np.ndarray, y: np.ndarray, 
-                      compute_type: str = 'asymp', gamma: float = 0) -> Dict[str, Any]:
-        """Compute worst-case distribution under Wasserstein ambiguity set.
 
-        :param X: Input feature matrix. Shape: (n_samples, n_features)
-            Must satisfy ``n_features == input_dim``
-        :type X: numpy.ndarray
+    def _is_infinite_kappa(self) -> bool:
+        """Return whether output/label transportation is prohibited."""
+        return self.kappa == 'inf' or (
+            isinstance(self.kappa, (float, int)) and np.isinf(self.kappa)
+        )
 
-        :param y: Target vector. Shape: (n_samples,)
+    def _feature_transport_cost(self, displacement: np.ndarray) -> float:
+        """Evaluate the feature part of the configured ground cost."""
+        transformed = sqrtm(self.cost_matrix) @ np.asarray(displacement, dtype=float)
+        transformed = np.asarray(np.real_if_close(transformed), dtype=float)
+        order = np.inf if self.p == 'inf' else self.p
+        value = float(np.linalg.norm(transformed, ord=order))
+        return value ** 2 if self.model_type == 'ols' else value
 
-            - Classification: binary labels (-1/1)
+    def _feature_dual_direction(self) -> Tuple[np.ndarray, float]:
+        r"""Return a unit-cost feature direction attaining the dual norm.
 
-            - Regression: continuous values
+        If :math:`A=\Sigma^{1/2}`, this returns ``direction`` and ``slope``
+        satisfying
 
-        :type y: numpy.ndarray
-
-        :param compute_type: Computation methodology. Options:
-
-            - ``'asymp'``: Asymptotic approximation (faster, less accurate)
-                *Supported models*: ``['svm', 'logistic', 'lad']``
-
-            - ``'exact'``: Exact dual solution (slower, precise)
-
-        :type compute_type: str
-        :param gamma: Regularization parameter for asymptotic method. 
-            Must satisfy :math:`\gamma > 0` when ``compute_type='asymp'``.
-            Defaults to 0.
-        :type gamma: float
-
-        :return: Dictionary containing:
-
-            - ``'sample_pts'``: Worst-case sample locations. Shape: (m, n_features)
-
-            - ``'weights'``: Probability weights. Shape: (m,) with :math:`\sum w_i = 1`
-
-        :rtype: dict[str, Any]
-
-        :raises ValueError:
-
-            - If ``compute_type='asymp'`` with ``model_type='ols'``
-
-            - If ``compute_type='asymp'`` and ``kappa == 'inf'``
-
-            - If gamma ≤ 0 when required
-
-        :raises TypeError:
-
-            - If input dimensions mismatch
-        
-        
-        Example:
-            >>> X, y = np.random.randn(100, 3), np.random.randint(0,2,100)
-            >>> model = WassersteinDRO(model_type='svm', input_dim=3)
-            >>> wc_dist = model.worst_distribution(X, y, 'asymp', gamma=0.1)
-            >>> wc_dist['weights'].sum()  # Approximately 1.0
-        
-        .. note::
-            - Asymptotic method ignores curvature regularization (κ=infty)
-            - Exact method requires ``solver='MOSEK'`` for conic constraints
-
-        Reference of Worst-case Distribution:
-
-        [1] SVM / Logistic / LAD: Theorem 20 (ii) in https://jmlr.org/papers/volume20/17-633/17-633.pdf, where eta is the theta in eq(27) and gamma = 0 in that equation.
-
-        [2] In all cases, we use a reduced dual case (e.g., Remark 5.2 of https://arxiv.org/pdf/2308.05414) to compute their worst-case distribution.
-
-        [3] General Worst-case Distributions can be found in: https://pubsonline.informs.org/doi/abs/10.1287/moor.2022.1275, where norm_theta is lambda* here.
-
+        .. math::
+            \|A\,\mathrm{direction}\|_p=1,\qquad
+            \theta^\top\mathrm{direction}
+            =\|A^{-\top}\theta\|_q=\mathrm{slope}.
         """
+        theta = np.asarray(self.theta, dtype=float).reshape(-1)
+        if not np.any(theta):
+            return np.zeros(self.input_dim), 0.0
 
-        if compute_type not in {'asymp', 'exact'}:
-            raise WassersteinDROError("We do not support the computation type. The computation type can only be 'asymp' or 'exact'.")
-        if not isinstance(gamma, (float, int)) or gamma < 0:
-            raise WassersteinDROError("Worst-case parameter 'gamma' must be a non-negative float.")
+        if not np.allclose(
+            self.cost_matrix, self.cost_matrix.T, rtol=1e-10, atol=1e-12
+        ):
+            raise WassersteinDROError(
+                "Worst-distribution recovery requires a symmetric cost_matrix."
+            )
+        transform = np.asarray(
+            np.real_if_close(sqrtm(self.cost_matrix)), dtype=float
+        )
+        dual_coordinates = np.linalg.solve(transform.T, theta)
+        max_coordinate = float(np.max(np.abs(dual_coordinates)))
+        if max_coordinate == 0:
+            return np.zeros(self.input_dim), 0.0
 
-        if self.eps != 0:
-            if self.model_type == 'ols' and compute_type == 'asymp':
-                warnings.warn("OLS does not support the corresponding computation method.")
-            elif self.kappa == 'inf' and compute_type == 'asymp' and self.model_type in ['svm', 'logistic']:
-                raise WassersteinDROError("The corresponding computation method do not support kappa = infty!")
-        
-        sample_size, __ = X.shape
+        if self.p == 1:
+            transformed_direction = np.zeros_like(dual_coordinates)
+            index = int(np.argmax(np.abs(dual_coordinates)))
+            transformed_direction[index] = np.sign(dual_coordinates[index])
+        elif self.p == 'inf':
+            transformed_direction = np.sign(dual_coordinates)
+        else:
+            q = float(self.p) / (float(self.p) - 1.0)
+            scaled = np.abs(dual_coordinates) / max_coordinate
+            power_sum = float(np.sum(scaled ** q))
+            transformed_direction = (
+                np.sign(dual_coordinates)
+                * scaled ** (q - 1.0)
+                / power_sum ** ((q - 1.0) / q)
+            )
 
+        direction = np.linalg.solve(transform, transformed_direction)
+        order = np.inf if self.p == 'inf' else self.p
+        direction_norm = float(np.linalg.norm(transform @ direction, ord=order))
+        if direction_norm == 0:
+            return np.zeros(self.input_dim), 0.0
+        direction = np.asarray(direction / direction_norm, dtype=float)
+        slope = float(theta @ direction)
+        if slope < 0 and abs(slope) <= 1e-12:
+            slope = 0.0
+        if slope < 0:
+            direction = -direction
+            slope = -slope
+        return direction, slope
+
+    def _ground_transport_cost(
+        self,
+        target_x: np.ndarray,
+        target_y: float,
+        source_x: np.ndarray,
+        source_y: float,
+    ) -> float:
+        """Evaluate the ground cost used by fitting and certification."""
+        feature_cost = self._feature_transport_cost(target_x - source_x)
+        if self.model_type in {'svm', 'logistic'}:
+            label_changed = not np.isclose(target_y, source_y)
+            if label_changed and self._is_infinite_kappa():
+                return np.inf
+            label_cost = 0.0 if not label_changed else float(self.kappa)
+        else:
+            target_change = abs(float(target_y) - float(source_y))
+            if target_change > 0 and self._is_infinite_kappa():
+                return np.inf
+            label_cost = 0.0 if self._is_infinite_kappa() else float(self.kappa) * target_change
+        return feature_cost + label_cost
+
+    def _solve_problem(self, problem: cp.Problem, purpose: str) -> None:
+        """Solve an auxiliary recovery problem and validate its status."""
+        try:
+            problem.solve(solver=self.solver)
+        except cp.error.SolverError as exc:
+            raise WassersteinDROError(
+                f"Optimization failed while {purpose} using {self.solver}."
+            ) from exc
+        if problem.status not in {cp.OPTIMAL, cp.OPTIMAL_INACCURATE}:
+            raise WassersteinDROError(
+                f"Optimization failed while {purpose}; solver status was {problem.status}."
+            )
+
+    def _classification_recession_direction(self, anchor_label: float) -> np.ndarray:
+        """Return a unit-cost direction that increases hinge/logistic loss."""
+        if np.linalg.norm(self.theta) == 0:
+            return np.zeros(self.input_dim)
+        direction_var = cp.Variable(self.input_dim)
+        constraints = [
+            cp.norm(sqrtm(self.cost_matrix) @ direction_var, self.p) <= 1
+        ]
+        problem = cp.Problem(cp.Maximize(direction_var @ self.theta), constraints)
+        self._solve_problem(problem, "computing the recession direction")
+        if direction_var.value is None:
+            raise WassersteinDROError("The recession-direction problem returned no solution.")
+
+        # Hinge and logistic losses grow when the signed margin tends to
+        # -infinity.  The anchor label is therefore essential here.
+        direction = -float(anchor_label) * np.asarray(direction_var.value, dtype=float)
+        direction_cost = self._feature_transport_cost(direction)
+        if direction_cost <= np.finfo(float).eps:
+            return np.zeros(self.input_dim)
+        return direction / direction_cost
+
+    def _lad_recession_direction(
+        self, tail_sign: float
+    ) -> Tuple[np.ndarray, float]:
+        """Return a unit-cost joint direction that increases absolute loss."""
+        direction_x = cp.Variable(self.input_dim)
+        if self._is_infinite_kappa():
+            direction_y = 0.0
+            constraints = [
+                cp.norm(sqrtm(self.cost_matrix) @ direction_x, self.p) <= 1
+            ]
+        else:
+            direction_y = cp.Variable()
+            constraints = [
+                cp.norm(sqrtm(self.cost_matrix) @ direction_x, self.p)
+                + self.kappa * cp.abs(direction_y)
+                <= 1
+            ]
+        problem = cp.Problem(
+            cp.Maximize(self.theta @ direction_x - direction_y), constraints
+        )
+        self._solve_problem(problem, "computing the LAD recession direction")
+        if direction_x.value is None:
+            raise WassersteinDROError("The LAD recession-direction problem returned no solution.")
+        x_value = float(tail_sign) * np.asarray(direction_x.value, dtype=float)
+        raw_y = 0.0 if self._is_infinite_kappa() else float(direction_y.value)
+        y_value = float(tail_sign) * raw_y
+        direction_cost = self._feature_transport_cost(x_value)
+        if not self._is_infinite_kappa():
+            direction_cost += float(self.kappa) * abs(y_value)
+        if direction_cost <= np.finfo(float).eps:
+            return np.zeros(self.input_dim), 0.0
+        return x_value / direction_cost, y_value / direction_cost
+
+    def _certify_distribution(
+        self,
+        X: np.ndarray,
+        y: np.ndarray,
+        candidate_X: np.ndarray,
+        candidate_y: np.ndarray,
+        weight: np.ndarray,
+        source_index: np.ndarray,
+        gamma_used: Optional[float],
+        objective_atol: float,
+        objective_rtol: float,
+        feasibility_tol: float,
+        asymptotic: bool,
+    ) -> Dict[str, Any]:
+        """Compute feasibility and objective certificates for a candidate."""
+        candidate_X = np.asarray(candidate_X, dtype=float)
+        candidate_y = np.asarray(candidate_y, dtype=float)
+        weight = np.asarray(weight, dtype=float)
+        source_index = np.asarray(source_index, dtype=int)
+
+        atom_count = weight.shape[0]
+        if candidate_X.shape[0] != atom_count or candidate_y.shape[0] != atom_count:
+            raise WassersteinDROError("Candidate atoms and weights have inconsistent sizes.")
+        if source_index.shape != (atom_count,):
+            raise WassersteinDROError("Each candidate atom must retain one source index.")
+        if np.any(source_index < 0) or np.any(source_index >= X.shape[0]):
+            raise WassersteinDROError("Candidate distribution contains an invalid source index.")
+        if not (
+            np.all(np.isfinite(candidate_X))
+            and np.all(np.isfinite(candidate_y))
+            and np.all(np.isfinite(weight))
+        ):
+            raise WassersteinDROError("Candidate distribution contains non-finite values.")
+        if np.min(weight) < -feasibility_tol:
+            raise WassersteinDROError("Candidate distribution contains a negative weight.")
+        weight = np.maximum(weight, 0.0)
+
+        weight_sum_error = abs(float(np.sum(weight)) - 1.0)
+        source_mass = np.bincount(
+            source_index, weights=weight, minlength=X.shape[0]
+        )
+        source_marginal_error = float(
+            np.max(np.abs(source_mass - 1.0 / X.shape[0]))
+        )
+        transport_cost = 0.0
+        for atom_x, atom_y, atom_weight, source in zip(
+            candidate_X, candidate_y, weight, source_index
+        ):
+            if atom_weight == 0:
+                continue
+            atom_cost = self._ground_transport_cost(
+                atom_x, atom_y, X[source], y[source]
+            )
+            transport_cost += float(atom_weight) * atom_cost
+
+        losses = np.asarray(self._loss(candidate_X, candidate_y), dtype=float)
+        if not np.all(np.isfinite(losses)):
+            raise WassersteinDROError(
+                "Candidate expected loss is non-finite."
+            )
+        expected_loss = float(np.dot(weight, losses))
+        # ``fit`` minimizes the square root of the robust MSE for OLS because
+        # it has the same minimizer and a simpler conic representation.  The
+        # atom losses evaluated above are squared residuals, so the comparison
+        # must be made in squared-loss units.
+        target_objective = float(self.robust_obj)
+        if self.model_type == 'ols':
+            target_objective = target_objective ** 2
+        optimality_gap = target_objective - expected_loss
+        objective_tol = objective_atol + objective_rtol * max(
+            1.0, abs(target_objective)
+        )
+        certified = bool(
+            weight_sum_error <= feasibility_tol
+            and source_marginal_error <= feasibility_tol
+            and transport_cost <= self.eps + feasibility_tol
+            and abs(optimality_gap) <= objective_tol
+        )
+        return {
+            'sample_pts': [candidate_X, candidate_y],
+            'weight': weight,
+            'source_index': source_index,
+            'gamma_used': gamma_used,
+            'expected_loss': expected_loss,
+            'target_objective': target_objective,
+            'optimality_gap': optimality_gap,
+            'transport_cost': float(transport_cost),
+            'source_marginal_error': source_marginal_error,
+            'certified': certified,
+            'asymptotic': bool(asymptotic),
+            'kappa_used': self.kappa,
+        }
+
+    def _ols_worst_distribution(
+        self,
+        X: np.ndarray,
+        y: np.ndarray,
+    ) -> Dict[str, Any]:
+        """Construct and certify the exact OLS worst-case distribution."""
+        if not self._is_infinite_kappa():
+            raise WassersteinDROError(
+                "OLS worst-distribution recovery requires kappa='inf'."
+            )
+
+        sample_size = X.shape[0]
+        residual = X @ self.theta + self.b - y
+        residual_norm = float(np.linalg.norm(residual) / math.sqrt(sample_size))
+        direction, slope = self._feature_dual_direction()
+
+        if self.eps == 0 or slope == 0:
+            candidate_X = X.copy()
+        elif residual_norm == 0:
+            candidate_X = X + math.sqrt(self.eps) * direction
+        else:
+            displacement_scale = math.sqrt(self.eps) * residual / residual_norm
+            candidate_X = X + displacement_scale[:, None] * direction[None, :]
+
+        result = self._certify_distribution(
+            X=X,
+            y=y,
+            candidate_X=candidate_X,
+            candidate_y=y.copy(),
+            weight=np.full(sample_size, 1.0 / sample_size),
+            source_index=np.arange(sample_size),
+            gamma_used=None,
+            objective_atol=1e-5,
+            objective_rtol=1e-5,
+            feasibility_tol=1e-7,
+            asymptotic=False,
+        )
+        if not result['certified']:
+            raise WassersteinDROError(
+                "Could not certify the exact OLS worst-case distribution: "
+                f"objective_gap={result['optimality_gap']:.6g}, "
+                f"transport_cost={result['transport_cost']:.6g}, "
+                f"eps={self.eps:.6g}."
+            )
+        return result
+
+    def worst_distribution(
+        self,
+        X: np.ndarray,
+        y: np.ndarray,
+        *,
+        asymptotic_options: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        r"""Construct and certify a worst-case distribution.
+
+        OLS uses an exact, finite, label-preserving construction. Linear SVM,
+        logistic, and LAD use an asymptotic construction whose numerical
+        controls are grouped in ``asymptotic_options``.
+
+        :param X: Training features with shape ``(n_samples, input_dim)``.
+        :param y: Binary ``-1/+1`` labels or continuous regression targets.
+        :param asymptotic_options: Options used only by SVM, logistic, and LAD:
+            ``gamma``, ``objective_atol``, ``objective_rtol``,
+            ``feasibility_tol``, ``max_iter``, and ``gamma_decay``. Omit this
+            dictionary for OLS.
+
+        :returns: The atoms and weights together with ``source_index``,
+            ``expected_loss``, ``target_objective``, ``optimality_gap``,
+            ``transport_cost``, ``gamma_used``, and ``certified`` metadata.
+
+        .. note::
+            For OLS, ``target_objective`` is the robust expected squared loss
+            and therefore equals ``robust_obj**2``. For the other models, a
+            positive-radius result is a certified finite member of an
+            asymptotically optimal sequence.
+
+        References:
+            Blanchet, Kang, and Murthy (2019),
+            Shafieezadeh-Abadeh et al. (2019),
+            Shafiee et al. (2026).
+        """
+        if self.kernel != 'linear':
+            raise WassersteinDROError(
+                "Worst-distribution recovery currently requires kernel='linear'."
+            )
+        if asymptotic_options is not None and not isinstance(
+            asymptotic_options, dict
+        ):
+            raise WassersteinDROError("asymptotic_options must be a dictionary or None.")
+
+        X = np.asarray(X, dtype=float)
+        y = np.asarray(y, dtype=float)
+
+        if self.model_type == 'ols':
+            if asymptotic_options:
+                raise WassersteinDROError(
+                    "asymptotic_options do not apply to exact OLS recovery."
+                )
+            if not self._is_infinite_kappa():
+                raise WassersteinDROError(
+                    "OLS worst-distribution recovery requires kappa='inf'."
+                )
+            self.fit(X, y)
+            return self._ols_worst_distribution(X, y)
+
+        asymptotic_defaults = {
+            'gamma': None,
+            'objective_atol': 1e-5,
+            'objective_rtol': 1e-5,
+            'feasibility_tol': 1e-7,
+            'max_iter': 20,
+            'gamma_decay': 0.5,
+        }
+        supplied_options = {} if asymptotic_options is None else asymptotic_options
+        unknown_options = set(supplied_options) - set(asymptotic_defaults)
+        if unknown_options:
+            names = ", ".join(sorted(unknown_options))
+            raise WassersteinDROError(f"Unknown asymptotic option(s): {names}.")
+        options = {**asymptotic_defaults, **supplied_options}
+        gamma = options['gamma']
+        objective_atol = options['objective_atol']
+        objective_rtol = options['objective_rtol']
+        feasibility_tol = options['feasibility_tol']
+        max_iter = options['max_iter']
+        gamma_decay = options['gamma_decay']
+
+        for name, value in {
+            'objective_atol': objective_atol,
+            'objective_rtol': objective_rtol,
+            'feasibility_tol': feasibility_tol,
+        }.items():
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (float, int))
+                or not np.isfinite(value)
+                or value < 0
+            ):
+                raise WassersteinDROError(
+                    f"{name} must be a finite non-negative number."
+                )
+        if isinstance(max_iter, bool) or not isinstance(max_iter, int) or max_iter < 1:
+            raise WassersteinDROError("max_iter must be a positive integer.")
+        if not isinstance(gamma_decay, (float, int)) or not 0 < gamma_decay < 1:
+            raise WassersteinDROError("gamma_decay must lie strictly between 0 and 1.")
+        if gamma is not None and (
+            isinstance(gamma, bool)
+            or not isinstance(gamma, (float, int))
+            or not np.isfinite(gamma)
+        ):
+            raise WassersteinDROError("gamma must be a finite number or None.")
+
+        gamma_upper: Optional[float] = None
+        if self.eps > 0:
+            if gamma is not None and gamma <= 0:
+                raise WassersteinDROError(
+                    "gamma must be strictly positive when eps is positive."
+                )
+            if self.model_type in {'svm', 'logistic'} and not self._is_infinite_kappa():
+                gamma_upper = min(self.eps, 1.0)
+            else:
+                gamma_upper = 1.0
+            if gamma is not None and gamma > gamma_upper:
+                raise WassersteinDROError(
+                    f"gamma must not exceed {gamma_upper:g} for this configuration."
+                )
 
         self.fit(X, y)
+        sample_size = X.shape[0]
 
-        # A zero-radius Wasserstein ball contains only the empirical
-        # distribution.  This also avoids zero-radius degeneracies in the
-        # asymptotic formulas, including the 0 / 0 perturbation in the LAD
-        # branch when gamma is zero.
         if self.eps == 0:
-            return {
-                'sample_pts': [X, y],
-                'weight': np.full(sample_size, 1.0 / sample_size),
-            }
+            empirical = self._certify_distribution(
+                X=X,
+                y=y,
+                candidate_X=X.copy(),
+                candidate_y=y.copy(),
+                weight=np.full(sample_size, 1.0 / sample_size),
+                source_index=np.arange(sample_size),
+                gamma_used=None,
+                objective_atol=objective_atol,
+                objective_rtol=objective_rtol,
+                feasibility_tol=feasibility_tol,
+                asymptotic=False,
+            )
+            if not empirical['certified']:
+                raise WassersteinDROError(
+                    "The empirical distribution does not agree with the optimized "
+                    "zero-radius objective. Check kappa and solver tolerances."
+                )
+            return empirical
+
+        assert gamma_upper is not None
+        gamma_value = float(gamma) if gamma is not None else 0.1 * gamma_upper
 
         if self.p == 1:
             dual_norm = np.inf
@@ -462,128 +918,147 @@ class WassersteinDRO(BaseLinearDRO):
             dual_norm = 1 / (1 - 1 / self.p)
         else:
             dual_norm = 1
-        norm_theta = np.linalg.norm(self.cost_inv_transform @ self.theta, ord = dual_norm)
+        norm_theta = float(
+            np.linalg.norm(self.cost_inv_transform @ self.theta, ord=dual_norm)
+        )
 
-        if compute_type == 'exact':
-            if self.model_type == 'ols':
-                # dual_norm_parameter = np.linalg.norm(self.cost_inv_transform @ self.theta, dual_norm) ** 2
-                # new_X = np.zeros((sample_size, self.input_dim))
-                # for i in range(sample_size):
-                #     var_x = cp.Variable(self.input_dim)
-                #     var_y = cp.Variable()
-                #     # TODO: modify or remove
-                #     obj = (y[i] - self.theta @ var_x - self.b) ** 2 - dual_norm_parameter * self._distance_compute(var_x, X[i], var_y, y[i])
-                #     problem = cp.Problem(cp.Maximize(obj))
-                #     problem.solve(solver = self.solver)
-                #     new_X[i] = var_x.value
-                # return {'sample_pts': [new_X, y], 'weight': np.ones(sample_size) / sample_size}
-                raise WassersteinDROError("exact does not work for ols")
+        # With fixed labels and a feature-insensitive classifier, the empirical
+        # distribution already attains the robust value.
+        if (
+            self.model_type in {'svm', 'logistic'}
+            and self._is_infinite_kappa()
+            and norm_theta <= np.finfo(float).eps
+        ):
+            empirical = self._certify_distribution(
+                X, y, X.copy(), y.copy(),
+                np.full(sample_size, 1.0 / sample_size),
+                np.arange(sample_size), None,
+                objective_atol, objective_rtol, feasibility_tol, False,
+            )
+            if empirical['certified']:
+                return empirical
 
-            else: # linear classification or regression with Lipschitz norm
-                # we denote the following case when we do not change Y.
-                new_X = np.zeros((sample_size, self.input_dim))
-                new_y = np.zeros(sample_size)
-                if self.model_type == 'svm':
-                    for i in range(sample_size):
-                        var_x = cp.Variable(self.input_dim)
-                        var_y = cp.Variable()
-                        # TODO: modify or remove, does not work.
-                        obj = 1 - y[i] * (var_x @ self.theta + self.b) - norm_theta * self._distance_compute(var_x, X[i], var_y, y[i])
-                        problem = cp.Problem(cp.Maximize(obj))
-                        problem.solve(solver = self.solver)
-                        
-                        if 1 - y[i] * (var_x.value @ self.theta + self.b) < 0:
-                            new_X[i] = X[i]
-                            new_y[i] = y[i]
-                        else:
-                            new_X[i] = var_x.value
-                            new_y[i] = var_y.value if var_y.value is not None else y[i]
-                            # print('test', var_x.value, X[i])
-                    return {'sample_pts': [new_X, new_y], 'weight': np.ones(sample_size) / sample_size}
+        last_result: Optional[Dict[str, Any]] = None
+        for _ in range(max_iter):
+            if self.model_type in {'svm', 'logistic'}:
+                losses = self._loss(X, y)
+                anchor = int(np.argmax(losses))
+                direction = self._classification_recession_direction(y[anchor])
 
-                # elif self.model_type in ['lad','logistic']:
-                #     for i in range(sample_size):
-                #         var_x = cp.Variable(self.input_dim)
-                #         var_y = cp.Variable()
-                #         # TODO: modify or remove, does not work.
-                #         obj = self._cvx_loss(var_x, y[i], self.theta, self.b) - norm_theta * self._distance_compute(var_x, X[i], var_y, y[i])
-                #         problem = cp.Problem(cp.Maximize(obj))
-                #         problem.solve(solver = self.solver)
-                #         new_X[i] = var_x.value
-                #         new_y[i] = var_y.value if var_y.value is not None else y[i]
-                #     return {'sample_pts': [new_X, new_y], 'weight': np.ones(sample_size) / sample_size}
-                
+                if self._is_infinite_kappa():
+                    moved_mass = gamma_value / sample_size
+                    weight = np.full(sample_size + 1, 1.0 / sample_size)
+                    weight[anchor] -= moved_mass
+                    weight[-1] = moved_mass
+                    far_x = X[anchor] + (self.eps / moved_mass) * direction
+                    candidate_X = np.vstack((X, far_x))
+                    candidate_y = np.hstack((y, y[anchor]))
+                    source_index = np.hstack((np.arange(sample_size), anchor))
                 else:
-                    raise WassersteinDROError(f"{self.model_type} not supported!")
-      
-        elif compute_type == 'asymp':
-            # in the following cases, we take gamma = 1 / sample_size since we want the asymptotic with respect to n
-            if self.model_type in ['svm', 'logistic']:
-            # Theorem 20 in https://jmlr.org/papers/volume20/17-633/17-633.pdf, where eta refers to theta in their equation, and eta_gamma refers to eta(\gamma)
-                gamma = min(min(gamma, self.eps), 1)
-                #min(min(1 / math.sqrt(sample_size), self.eps), 1)
-                eta = cp.Variable(nonneg = True)
-                alpha = cp.Variable(sample_size, nonneg = True)
+                    eta = cp.Variable(nonneg=True)
+                    alpha = cp.Variable(sample_size, nonneg=True)
+                    same_loss = self._loss(X, y)
+                    flipped_loss = self._loss(X, -y)
+                    objective = (
+                        self._lipschitz_norm() * eta * norm_theta
+                        + cp.sum(cp.multiply(1 - alpha, same_loss)) / sample_size
+                        + cp.sum(cp.multiply(alpha, flipped_loss)) / sample_size
+                    )
+                    constraints = [
+                        alpha <= 1,
+                        eta + self.kappa * cp.sum(alpha) / sample_size
+                        == self.eps - gamma_value,
+                    ]
+                    problem = cp.Problem(cp.Maximize(objective), constraints)
+                    self._solve_problem(
+                        problem, "constructing the finite-kappa adversary"
+                    )
+                    if eta.value is None or alpha.value is None:
+                        raise WassersteinDROError(
+                            "The finite-kappa adversary problem returned no solution."
+                        )
+                    eta_value = max(0.0, float(eta.value))
+                    alpha_value = np.clip(
+                        np.asarray(alpha.value, dtype=float), 0.0, 1.0
+                    )
+                    denominator = (
+                        eta_value + float(self.kappa) - self.eps
+                        + gamma_value + 1.0
+                    )
+                    if denominator <= 0:
+                        raise WassersteinDROError(
+                            "The asymptotic mass formula has a non-positive denominator."
+                        )
+                    eta_gamma = gamma_value / denominator
+                    if eta_gamma < -feasibility_tol or eta_gamma > 1 + feasibility_tol:
+                        raise WassersteinDROError(
+                            "The asymptotic construction produced an invalid mass."
+                        )
+                    eta_gamma = float(np.clip(eta_gamma, 0.0, 1.0))
 
-                # svm / logistic L = 1
-                dual_loss = self._lipschitz_norm() * eta * norm_theta + cp.sum(cp.multiply(1 - alpha, self._loss(X, y))) / sample_size + cp.sum(cp.multiply(alpha, self._loss(X, -y))) / sample_size
-                cons = [alpha <= 1, eta + self.kappa * cp.sum(alpha) / sample_size == self.eps - gamma]
-                problem = cp.Problem(cp.Maximize(dual_loss), cons)
-                problem.solve(solver = self.solver)
-                eta_gamma = gamma / (eta.value + self.kappa - self.eps + gamma + 1)
-                weight = np.concatenate(((1 - alpha.value) / sample_size, alpha.value / sample_size))
-                weight = np.hstack((weight, eta_gamma / sample_size))
-                weight[0] = weight[0] * (1 - eta_gamma)
-                weight[sample_size] = weight[sample_size] * (1 - eta_gamma)
-                # print(alpha.value, eta_gamma, eta.value)
-                # solve the following perturbation problem
-                X_star = cp.Variable(self.input_dim)
-                cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) <= 1]
-                problem = cp.Problem(cp.Maximize(X_star @ self.theta), cons)
-                problem.solve(solver = self.solver)
-                if eta_gamma != 0:
-                    new_X = X[0] + X_star.value * sample_size * eta.value / eta_gamma
-                else:
-                    new_X = X[0]
-                new_y = y[0]
-
-                X = np.concatenate((X, X))
-                X = np.vstack((X, new_X))
-                y = np.concatenate((y, -y))
-                y = np.hstack((y, new_y))
-                return {'sample_pts': [X, y], 'weight': weight}
-
-            elif self.model_type == 'lad':
-            # Theorem 9 in https://jmlr.org/papers/volume20/17-633/17-633.pdf
-                gamma = gamma
-                weight = np.zeros(sample_size + 1)
-                weight[1:-1] = np.ones(sample_size - 1) / sample_size
-                weight[0] = (1 - gamma) / sample_size
-                weight[-1] = gamma / sample_size
-                # solve the following perturbation problem
-                X_star = cp.Variable(self.input_dim)
-                if self.kappa not in [np.inf, 'inf']:
-                    y_star = cp.Variable()
-                    cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) + self.kappa * cp.abs(y_star) <= 1]
-                else:
-                    y_star = 0
-                    cons = [cp.norm(sqrtm(self.cost_matrix) @ X_star, self.p) <= 1]
-                dual_loss = self.theta @ X_star - y_star
-                problem = cp.Problem(cp.Maximize(dual_loss), cons)
-                problem.solve(solver = self.solver)
-                new_X = X[0] + self.eps * sample_size / gamma * X_star.value
-                if self.kappa not in [np.inf, 'inf']:
-                    new_y = y[0] + self.eps * sample_size / gamma * y_star.value
-                else:
-                    new_y = y[0]
-                worst_X = np.vstack((X, new_X))
-                worst_y = np.hstack((y, new_y))
-                return {'sample_pts': [worst_X, worst_y], 'weight': weight}
-
+                    unchanged_weight = (1 - alpha_value) / sample_size
+                    flipped_weight = alpha_value / sample_size
+                    unchanged_weight[anchor] *= 1 - eta_gamma
+                    flipped_weight[anchor] *= 1 - eta_gamma
+                    far_weight = eta_gamma / sample_size
+                    if eta_value > 0 and far_weight > 0:
+                        far_x = X[anchor] + (
+                            eta_value / far_weight
+                        ) * direction
+                    else:
+                        far_x = X[anchor].copy()
+                    candidate_X = np.vstack((X, X, far_x))
+                    candidate_y = np.hstack((y, -y, y[anchor]))
+                    weight = np.hstack(
+                        (unchanged_weight, flipped_weight, far_weight)
+                    )
+                    source_index = np.hstack(
+                        (np.arange(sample_size), np.arange(sample_size), anchor)
+                    )
             else:
-                raise WassersteinDROError(f"We do not support {self.model_type} for asypm!")
-        else:
-            raise WassersteinDROError("We do not support the computation type. The computation type can only be 'asymp' or 'exact'.")
+                residual = X @ self.theta + self.b - y
+                anchor = int(np.argmax(np.abs(residual)))
+                tail_sign = 1.0 if residual[anchor] >= 0 else -1.0
+                direction_x, direction_y = self._lad_recession_direction(tail_sign)
+                moved_mass = gamma_value / sample_size
+                weight = np.full(sample_size + 1, 1.0 / sample_size)
+                weight[anchor] -= moved_mass
+                weight[-1] = moved_mass
+                scale = self.eps / moved_mass
+                far_x = X[anchor] + scale * direction_x
+                far_y = y[anchor] + scale * direction_y
+                candidate_X = np.vstack((X, far_x))
+                candidate_y = np.hstack((y, far_y))
+                source_index = np.hstack((np.arange(sample_size), anchor))
+
+            last_result = self._certify_distribution(
+                X=X,
+                y=y,
+                candidate_X=candidate_X,
+                candidate_y=candidate_y,
+                weight=weight,
+                source_index=source_index,
+                gamma_used=gamma_value,
+                objective_atol=objective_atol,
+                objective_rtol=objective_rtol,
+                feasibility_tol=feasibility_tol,
+                asymptotic=True,
+            )
+            if last_result['certified']:
+                return last_result
+            gamma_value *= float(gamma_decay)
+            if gamma_value <= np.finfo(float).tiny:
+                break
+
+        if last_result is None:
+            raise WassersteinDROError("No adversarial distribution candidate was constructed.")
+        raise WassersteinDROError(
+            "Could not certify an asymptotically worst-case distribution after "
+            f"{max_iter} attempts: objective_gap={last_result['optimality_gap']:.6g}, "
+            f"transport_cost={last_result['transport_cost']:.6g}, eps={self.eps:.6g}. "
+            "Increase the objective tolerances or max_iter, or use a larger "
+            "starting gamma if the escaping atom became numerically unstable."
+        )
 
 
 class WassersteinDROSatisificingError(Exception):

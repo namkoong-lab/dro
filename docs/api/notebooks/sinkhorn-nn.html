@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Sinkhorn DRO with Neural Networks &#8212; dro 0.3.3 documentation</title>
+    <title>NN Sinkhorn DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
-    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../../_static/documentation_options.js?v=ff822928"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -23,8 +23,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/sinkhorn-nn.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Bayesian DRO" href="param_dro.html" />
-    <link rel="prev" title="Group DRO with Linear and Neural Models" href="groupdro_tutorial.html" /> 
+    <link rel="next" title="Other NN DRO" href="neural_dro_tutorial.html" />
+    <link rel="prev" title="Group DRO (Linear and NN)" href="groupdro_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -155,7 +155,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -256,18 +256,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO with Linear and Neural Models</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Sinkhorn DRO with Neural Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">NN Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other NN DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">DRO on Tree-Ensemble Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel Distributionally Robust Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalized Losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">DRO on Personalized Losses</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -282,8 +279,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="Sinkhorn-DRO-with-Neural-Networks">
-<h1>Sinkhorn DRO with Neural Networks<a class="headerlink" href="#Sinkhorn-DRO-with-Neural-Networks" title="Link to this heading">¶</a></h1>
+  <section id="NN-Sinkhorn-DRO">
+<h1>NN Sinkhorn DRO<a class="headerlink" href="#NN-Sinkhorn-DRO" title="Link to this heading">¶</a></h1>
 <p>This notebook demonstrates how to use <code class="docutils literal notranslate"><span class="pre">SinkhornNNDRO</span></code> for distributionally robust optimization with neural network models.</p>
 <p>Sinkhorn DRO uses the entropic-regularized Wasserstein distance to define the ambiguity set. The key idea is to add Gaussian perturbations to input features and aggregate per-sample losses via logsumexp, yielding a smooth surrogate of the worst-case expected loss:</p>
 <div class="math notranslate nohighlight">
@@ -296,10 +293,10 @@
 </ul>
 <p><strong>Reference</strong>: <a class="reference external" href="https://arxiv.org/abs/2109.11926">Sinkhorn Distributionally Robust Optimization</a></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_classification</span><span class="p">,</span> <span class="n">make_regression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.sinkhorn_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">SinkhornNNDRO</span>
@@ -309,11 +306,11 @@
 <section id="Classification-Example">
 <h2>Classification Example<a class="headerlink" href="#Classification-Example" title="Link to this heading">¶</a></h2>
 <p>We first demonstrate Sinkhorn NN DRO on a binary classification task using all three optimization methods.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate classification data</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate classification data</span>
 <span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
     <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
@@ -322,13 +319,21 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Classification data: X=(500, 10), y=(500,), classes=[0 1]
+</pre></div></div>
+</div>
 <section id="SG-(Stochastic-Gradient)-Optimization">
 <h3>SG (Stochastic Gradient) Optimization<a class="headerlink" href="#SG-(Stochastic-Gradient)-Optimization" title="Link to this heading">¶</a></h3>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># SG optimization (default)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># SG optimization (default)</span>
 <span class="n">model_sg</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -340,20 +345,29 @@
     <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">metrics_sg</span> <span class="o">=</span> <span class="n">model_sg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">metrics_sg</span> <span class="o">=</span> <span class="n">model_sg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">SG Results: acc=</span><span class="si">{</span><span class="n">metrics_sg</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, f1=</span><span class="si">{</span><span class="n">metrics_sg</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+SG Results: acc=0.7900, f1=0.7900
+</pre></div></div>
 </div>
 </section>
 <section id="MLMC-(Multilevel-Monte-Carlo)-Optimization">
 <h3>MLMC (Multilevel Monte Carlo) Optimization<a class="headerlink" href="#MLMC-(Multilevel-Monte-Carlo)-Optimization" title="Link to this heading">¶</a></h3>
 <p>MLMC uses a hierarchy of sample levels for variance reduction while maintaining the same expected gradient.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_mlmc</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_mlmc</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
@@ -364,20 +378,29 @@
     <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;MLMC&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">metrics_mlmc</span> <span class="o">=</span> <span class="n">model_mlmc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">metrics_mlmc</span> <span class="o">=</span> <span class="n">model_mlmc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MLMC Results: acc=</span><span class="si">{</span><span class="n">metrics_mlmc</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, f1=</span><span class="si">{</span><span class="n">metrics_mlmc</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+MLMC Results: acc=0.8500, f1=0.8474
+</pre></div></div>
 </div>
 </section>
 <section id="RTMLMC-(Randomized-Truncated-MLMC)-Optimization">
 <h3>RTMLMC (Randomized Truncated MLMC) Optimization<a class="headerlink" href="#RTMLMC-(Randomized-Truncated-MLMC)-Optimization" title="Link to this heading">¶</a></h3>
 <p>RTMLMC randomly selects a single level per iteration from a truncated geometric distribution, scaling the loss by inverse selection probability. This further reduces per-iteration cost.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_rtmlmc</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_rtmlmc</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
@@ -388,19 +411,28 @@
     <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;RTMLMC&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">metrics_rtmlmc</span> <span class="o">=</span> <span class="n">model_rtmlmc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">metrics_rtmlmc</span> <span class="o">=</span> <span class="n">model_rtmlmc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">RTMLMC Results: acc=</span><span class="si">{</span><span class="n">metrics_rtmlmc</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, f1=</span><span class="si">{</span><span class="n">metrics_rtmlmc</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+RTMLMC Results: acc=0.7000, f1=0.6995
+</pre></div></div>
+</div>
 </section>
 <section id="Compare-Optimization-Methods">
 <h3>Compare Optimization Methods<a class="headerlink" href="#Compare-Optimization-Methods" title="Link to this heading">¶</a></h3>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Method&#39;</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Accuracy&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;F1&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;SG&#39;</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">metrics_sg</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;10.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">metrics_sg</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;10.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -410,16 +442,30 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+==================================================
+Method       Accuracy         F1
+--------------------------------------------------
+SG             0.7900     0.7900
+MLMC           0.8500     0.8474
+RTMLMC         0.7000     0.6995
+==================================================
+</pre></div></div>
+</div>
 </section>
 </section>
 <section id="Regression-Example">
 <h2>Regression Example<a class="headerlink" href="#Regression-Example" title="Link to this heading">¶</a></h2>
 <p>Sinkhorn NN DRO also supports regression tasks by setting <code class="docutils literal notranslate"><span class="pre">task_type=&quot;regression&quot;</span></code>.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate regression data</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate regression data</span>
 <span class="n">X_reg</span><span class="p">,</span> <span class="n">y_reg</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span>
     <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
@@ -437,20 +483,30 @@
     <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">metrics_reg</span> <span class="o">=</span> <span class="n">model_reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_reg</span><span class="p">,</span> <span class="n">y_reg</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">metrics_reg</span> <span class="o">=</span> <span class="n">model_reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_reg</span><span class="p">,</span> <span class="n">y_reg</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Regression MSE: </span><span class="si">{</span><span class="n">metrics_reg</span><span class="p">[</span><span class="s1">&#39;mse&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Regression data: X=(500, 10), y=(500,)
+
+Regression MSE: 21209.4897
+</pre></div></div>
 </div>
 </section>
 <section id="Dynamic-Hyperparameter-Tuning">
 <h2>Dynamic Hyperparameter Tuning<a class="headerlink" href="#Dynamic-Hyperparameter-Tuning" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">update()</span></code> method allows changing Sinkhorn DRO hyperparameters on-the-fly without re-initializing the model.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">reg_param</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">lambda_param</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
     <span class="n">k_sample_max</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span>
@@ -473,15 +529,25 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Updated: reg_param=0.05, lambda_param=50.0
+         k_sample_max=4, optimization_type=MLMC
+Metrics: {&#39;acc&#39;: np.float64(0.75), &#39;f1&#39;: 0.7194478734148805}
+</pre></div></div>
+</div>
 </section>
 <section id="Using-a-Custom-Model">
 <h2>Using a Custom Model<a class="headerlink" href="#Using-a-Custom-Model" title="Link to this heading">¶</a></h2>
 <p>You can plug in your own PyTorch model via <code class="docutils literal notranslate"><span class="pre">update_user_mode()</span></code>, which is inherited from <code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code>.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
 
 <span class="c1"># Define a custom 3-layer network</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -511,20 +577,29 @@
     <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">metrics_custom</span> <span class="o">=</span> <span class="n">model_custom</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">metrics_custom</span> <span class="o">=</span> <span class="n">model_custom</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cls</span><span class="p">,</span> <span class="n">y_cls</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Custom Model: acc=</span><span class="si">{</span><span class="n">metrics_custom</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, f1=</span><span class="si">{</span><span class="n">metrics_custom</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Custom Model: acc=0.9100, f1=0.9093
+</pre></div></div>
 </div>
 </section>
 <section id="Effect-of-Regularization-Strength">
 <h2>Effect of Regularization Strength<a class="headerlink" href="#Effect-of-Regularization-Strength" title="Link to this heading">¶</a></h2>
 <p>The entropic regularization parameter <span class="math notranslate nohighlight">\(\varepsilon\)</span> (<code class="docutils literal notranslate"><span class="pre">reg_param</span></code>) controls the smoothness of the Sinkhorn distance. Larger <span class="math notranslate nohighlight">\(\varepsilon\)</span> → smoother transport plan → more regularized (closer to ERM); smaller <span class="math notranslate nohighlight">\(\varepsilon\)</span> → closer to true Wasserstein DRO.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reg_values</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_values</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;reg_param&#39;</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Accuracy&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;F1&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">35</span><span class="p">)</span>
@@ -541,15 +616,28 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+reg_param      Accuracy         F1
+-----------------------------------
+0.001            0.7600     0.7585
+0.01             0.7400     0.7292
+0.1              0.7700     0.7694
+1.0              0.7500     0.7480
+</pre></div></div>
+</div>
 </section>
 <section id="Multi-class-Classification">
 <h2>Multi-class Classification<a class="headerlink" href="#Multi-class-Classification" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">SinkhornNNDRO</span></code> naturally extends to multi-class problems.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 5-class classification</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 5-class classification</span>
 <span class="n">X_multi</span><span class="p">,</span> <span class="n">y_multi</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
     <span class="n">n_samples</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">n_classes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_clusters_per_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
@@ -566,7 +654,7 @@
     <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">metrics_multi</span> <span class="o">=</span> <span class="n">model_multi</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_multi</span><span class="p">,</span> <span class="n">y_multi</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">metrics_multi</span> <span class="o">=</span> <span class="n">model_multi</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_multi</span><span class="p">,</span> <span class="n">y_multi</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Multi-class (5): acc=</span><span class="si">{</span><span class="n">metrics_multi</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, f1=</span><span class="si">{</span><span class="n">metrics_multi</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># Prediction</span>
@@ -575,6 +663,17 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True labels:        </span><span class="si">{</span><span class="n">y_multi</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Multi-class (5): acc=0.7125, f1=0.7090
+Sample predictions: [0 1 2 3 4 2 0 0 2 3]
+True labels:        [0 1 2 3 0 2 0 0 2 3]
+</pre></div></div>
 </div>
 </section>
 </section>
@@ -593,7 +692,7 @@
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Sinkhorn DRO with Neural Networks</a><ul>
+<li><a class="reference internal" href="#">NN Sinkhorn DRO</a><ul>
 <li><a class="reference internal" href="#Classification-Example">Classification Example</a><ul>
 <li><a class="reference internal" href="#SG-(Stochastic-Gradient)-Optimization">SG (Stochastic Gradient) Optimization</a></li>
 <li><a class="reference internal" href="#MLMC-(Multilevel-Monte-Carlo)-Optimization">MLMC (Multilevel Monte Carlo) Optimization</a></li>
@@ -621,13 +720,13 @@
             <div class="left">
                 
                 <a href="groupdro_tutorial.html">
-                    <span class="icon">&lt;</span><span>Group DRO with Linear and Neural Models</span></a>
+                    <span class="icon">&lt;</span><span>Group DRO (Linear and NN)</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="param_dro.html"><span>Bayesian DRO</span><span class="icon">&gt;</span></a>
+                    <a href="neural_dro_tutorial.html"><span>Other NN DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -635,7 +734,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2025, DRO developers.
+    &#169; Copyright 2026, DRO developers.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 

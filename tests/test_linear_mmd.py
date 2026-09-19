@@ -1,7 +1,8 @@
 import unittest
 import numpy as np
+import cvxpy as cp
 from src.dro.linear_model.mmd_dro import MMD_DRO, MMDDROError
-from src.dro.linear_model.base import ParameterError
+from src.dro.linear_model.base import DataValidationError, ParameterError
 
 class TestMMDDROModel(unittest.TestCase):
     """Unit tests for MMD-DRO model implementation."""
@@ -103,6 +104,23 @@ class TestMMDDROModel(unittest.TestCase):
         self.assertEqual(self.default_model.kernel_coef0, 1.5)
         self.assertEqual(self.default_model.n_components, 20)
 
+    def test_update_kernel_rejects_conflicting_or_unknown_options(self):
+        """Reject ambiguous aliases and malformed kernel configuration."""
+        with self.assertRaisesRegex(TypeError, "must be a string"):
+            MMD_DRO(input_dim=2, kernel=object())
+
+        invalid_configs = (
+            ({'unknown': 1}, "Unrecognized kernel parameter"),
+            ({'metric': 'rbf', 'kernel': 'linear'}, "same kernel"),
+            ({'degree': 2, 'kernel_degree': 3}, "same value"),
+            ({'coef0': 0.0, 'kernel_coef0': 1.0}, "same value"),
+            ({'n_components': 0}, "positive integer"),
+        )
+        for config, message in invalid_configs:
+            with self.subTest(config=config):
+                with self.assertRaisesRegex(ValueError, message):
+                    self.default_model.update_kernel(config)
+
     def test_kernel_matrix_choices(self):
         """Test formulas and positive semidefiniteness of all MMD kernels."""
         zeta = np.array([
@@ -130,6 +148,89 @@ class TestMMDDROModel(unittest.TestCase):
             gram = model._kernel_matrix(zeta)
             np.testing.assert_allclose(gram, gram.T)
             self.assertGreaterEqual(np.linalg.eigvalsh(gram).min(), -1e-10)
+
+    def test_degenerate_kernel_helpers(self):
+        """Exercise safe fallbacks for singular kernels and zero distances."""
+        singular_kernel = np.ones((2, 2))
+        factor = self.default_model._matrix_decomp(singular_kernel)
+        np.testing.assert_allclose(
+            factor @ factor.T,
+            singular_kernel,
+            atol=1e-10,
+        )
+
+        self.assertEqual(
+            self.default_model._positive_median(np.zeros((2, 2))),
+            1.0,
+        )
+        X = np.array([[0.0, 0.0], [1.0, 0.0]])
+        self.assertEqual(
+            self.default_model._medium_heuristic(X, X),
+            self.default_model._median_heuristic(X, X),
+        )
+
+    def test_load_predict_loss_and_evaluate(self):
+        """Test the public parameter-loading and evaluation interfaces."""
+        X = np.array([
+            [1.0, 0.0],
+            [0.0, 1.0],
+            [-1.0, 0.0],
+            [0.0, -1.0],
+        ])
+        theta = np.array([0.4, -0.2])
+        b = 0.1
+        scores = X @ theta + b
+        classification_y = np.array([1.0, -1.0, 1.0, -1.0])
+        regression_y = np.array([0.3, -0.4, 0.1, 0.7])
+
+        cases = (
+            ('svm', classification_y, np.maximum(1 - classification_y * scores, 0)),
+            (
+                'logistic',
+                classification_y,
+                np.logaddexp(0, -classification_y * scores),
+            ),
+            ('ols', regression_y, (regression_y - scores) ** 2),
+            ('lad', regression_y, np.abs(regression_y - scores)),
+        )
+        for model_type, y, expected_loss in cases:
+            with self.subTest(model_type=model_type):
+                model = MMD_DRO(input_dim=2, model_type=model_type)
+                model.load({'theta': theta, 'b': b})
+                np.testing.assert_allclose(model._loss(X, y), expected_loss)
+                self.assertTrue(np.isfinite(model.evaluate(X, y)))
+
+                predictions = model.predict(X)
+                if model_type in {'ols', 'lad'}:
+                    np.testing.assert_allclose(predictions, scores)
+                else:
+                    threshold = 0 if model_type == 'svm' else 0.5
+                    np.testing.assert_array_equal(
+                        predictions,
+                        np.where(scores >= threshold, 1, -1),
+                    )
+
+        model = MMD_DRO(input_dim=2)
+        with self.assertRaisesRegex(ParameterError, "must contain 'theta'"):
+            model.load({'b': 0.0})
+        with self.assertRaisesRegex(DataValidationError, "Theta must have shape"):
+            model.load({'theta': [1.0]})
+        with self.assertRaisesRegex(DataValidationError, "Expected input"):
+            model.predict(np.ones((3, 1)))
+
+    def test_cvx_svm_loss(self):
+        """Verify the non-accelerated SVM loss expression directly."""
+        X = np.array([[1.0, 0.0], [0.0, 1.0]])
+        y = np.array([1.0, -1.0])
+        theta = cp.Variable(2)
+        b = cp.Variable()
+        theta.value = np.array([0.4, -0.2])
+        b.value = 0.1
+
+        model = MMD_DRO(input_dim=2, model_type='svm')
+        loss = model._cvx_loss(cp.Constant(X), cp.Constant(y), theta, b)
+        expected = np.maximum(1 - y * (X @ theta.value + b.value), 0)
+        np.testing.assert_allclose(loss.value, expected)
 
     def test_invalid_eta_update(self):
         """Test parameter update with non-positive eta."""
@@ -175,6 +276,13 @@ class TestMMDDROModel(unittest.TestCase):
         """Test fitting with inconsistent feature dimensions."""
         with self.assertRaises(ValueError) as context:
             self.default_model.fit(np.random.randn(100, 3), self.valid_y)
+
+    def test_fit_rejects_invalid_array_rank(self):
+        """Require a feature matrix and a one-dimensional target vector."""
+        with self.assertRaisesRegex(ValueError, "X must be 2D"):
+            self.default_model.fit(np.ones(4), np.ones(4))
+        with self.assertRaisesRegex(ValueError, "y must be 1D"):
+            self.default_model.fit(np.ones((4, 5)), np.ones((4, 1)))
         
     def test_hull_sampling_behavior(self):
         """Test model fitting with hull sampling method."""

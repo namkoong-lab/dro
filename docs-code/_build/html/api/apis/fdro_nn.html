@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>f-Divergence DRO &#8212; dro 0.4.1 documentation</title>
+    <title>f-Divergence DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=c87aa342"></script>
+    <script src="../../_static/documentation_options.js?v=ff822928"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -22,7 +22,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/apis/fdro_nn.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Holistic Robust DRO" href="hrdro_nn.html" />
+    <link rel="next" title="Group DRO" href="groupdro_nn.html" />
     <link rel="prev" title="NN DRO Base Class" href="base_nn.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.1 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -261,6 +261,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../nn_dro.html">Neural Network DRO Methods</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="base_nn.html">NN DRO Base Class</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">f-Divergence DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="groupdro_nn.html">Group DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hrdro_nn.html">Holistic Robust DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sinkhorn_nn.html">Sinkhorn DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wdro_nn.html">Wasserstein DRO</a></li>
@@ -291,20 +292,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – <p>Output dimension:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – <p>Output dimension:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
 <li><p>Regression: Automatically set to 1</p></li>
 </ul>
 </p></li>
-<li><p><strong>task_type</strong> (<em>str</em>) – <p>Learning task type. Supported:</p>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
 </ul>
 </p></li>
-<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -312,14 +313,14 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>size</strong> (<em>float</em>) – Chi-square divergence radius <span class="math notranslate nohighlight">\(\rho \geq 0\)</span> controlling distributional robustness. Larger values increase conservativeness. Defaults to 0.1.</p></li>
-<li><p><strong>reg</strong> (<em>float</em>) – Regularization coefficient. Defaults to 0.1.</p></li>
-<li><p><strong>max_iter</strong> (<em>int</em>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Chi-square divergence radius <span class="math notranslate nohighlight">\(\rho \geq 0\)</span> controlling distributional robustness. Larger values increase conservativeness. Defaults to 0.1.</p></li>
+<li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
+<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If size &lt; 0</p></li>
 <li><p>If reg ≤ 0</p></li>
 <li><p>If max_iter &lt; 1</p></li>
@@ -342,20 +343,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – <p>Output dimension:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – <p>Output dimension:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
 <li><p>Regression: Automatically set to 1</p></li>
 </ul>
 </p></li>
-<li><p><strong>task_type</strong> (<em>str</em>) – <p>Learning task type. Supported:</p>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
 </ul>
 </p></li>
-<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -363,14 +364,14 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>size</strong> (<em>float</em>) – CVaR ratio <span class="math notranslate nohighlight">\(1 \geq \rho \geq 0\)</span> controlling distributional robustness. Smaller values increase conservativeness. Defaults to 0.1.</p></li>
-<li><p><strong>reg</strong> (<em>float</em>) – Regularization coefficient. Defaults to 0.1.</p></li>
-<li><p><strong>max_iter</strong> (<em>int</em>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – CVaR ratio <span class="math notranslate nohighlight">\(1 \geq \rho \geq 0\)</span> controlling distributional robustness. Smaller values increase conservativeness. Defaults to 0.1.</p></li>
+<li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
+<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If size &lt; 0</p></li>
 <li><p>If reg ≤ 0</p></li>
 <li><p>If max_iter &lt; 1</p></li>
@@ -431,7 +432,7 @@
 
             <div class="right">
                 
-                    <a href="hrdro_nn.html"><span>Holistic Robust DRO</span><span class="icon">&gt;</span></a>
+                    <a href="groupdro_nn.html"><span>Group DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

@@ -21,7 +21,7 @@ We follow [1] to implement these two $f$-DROs. Our code is largely based on http
 
 [1] Large-Scale Methods for Distributionally Robust Optimization. Daniel Levy, Yair Carmon, John Duchi, and Aaron Sidford. NeurIPS 2020.
 
-See the {doc}`general NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
+See the {doc}`Other NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
 for companion neural $f$-DRO material.
 
 
@@ -37,7 +37,7 @@ For WDRO on neural networks, the main challenge is the perturbation. In our pack
 
 [2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi. ICLR 2018.
 
-See the {doc}`general NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
+See the {doc}`Other NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
 for companion neural Wasserstein DRO material.
 
 
@@ -52,7 +52,7 @@ We follow [3], and our code is largely based on https://github.com/RyanLucas3/HR
 
 [3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.
 
-See the {doc}`general NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
+See the {doc}`Other NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
 for companion Holistic Robust DRO material.
 
 

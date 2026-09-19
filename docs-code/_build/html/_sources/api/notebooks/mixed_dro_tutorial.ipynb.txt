@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# DRO with Mixed Distances"
+    "# Linear DRO with Hybrid Distances"
    ]
   },
   {

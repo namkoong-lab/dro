@@ -51,7 +51,7 @@ class TestNeuralDROModels(unittest.TestCase):
         with self.assertRaises(ValueError):
             model_class(input_dim=5, num_classes=3, max_iter=0)
 
-    def test_chi2nndro_classification(self):
+    def test_chi2nndro_regularized_classification(self):
         """Test Chi2NNDRO for multi-class classification."""
         model = Chi2NNDRO(
             input_dim=5,
@@ -65,7 +65,7 @@ class TestNeuralDROModels(unittest.TestCase):
         self._validate_model_interface(model)
 
 
-    def test_chi2nndro_classification(self):
+    def test_chi2nndro_unregularized_classification(self):
         """Test Chi2NNDRO for multi-class classification."""
         model = Chi2NNDRO(
             input_dim=5,
@@ -110,6 +110,37 @@ class TestNeuralDROModels(unittest.TestCase):
         """Test CVaR size parameter validation."""
         with self.assertRaises(ValueError):
             CVaRNNDRO(input_dim=10, num_classes=3, size=1.1)
+
+    def test_cvarnndro_parameter_validation(self):
+        """Test CVaRNNDRO regularization and iteration validation."""
+        self._test_invalid_parameters(CVaRNNDRO)
+
+    def test_update_rebuilds_fdro_models(self):
+        """Both f-DRO variants apply training and robust-loss settings."""
+        config = {
+            "lr": 0.02,
+            "batch_size": 8,
+            "train_epochs": 3,
+            "layer_num": 3,
+            "hidden_size": 7,
+            "dropout_ratio": 0.2,
+            "size": 0.4,
+            "reg": 0.3,
+        }
+
+        for model_class in (Chi2NNDRO, CVaRNNDRO):
+            model = model_class(input_dim=5, num_classes=3)
+            original_model = model.model
+            model.update(config)
+
+            self.assertEqual(model.lr, config["lr"])
+            self.assertEqual(model.batch_size, config["batch_size"])
+            self.assertEqual(model.train_epochs, config["train_epochs"])
+            self.assertEqual(model.layer_num, config["layer_num"])
+            self.assertEqual(model.size, config["size"])
+            self.assertEqual(model.reg, config["reg"])
+            self.assertIsNot(model.model, original_model)
+            self.assertEqual(model.model(torch.zeros(2, 5)).shape, (2, 3))
 
     def test_cvarnndro_regression(self):
         """Test CVaRNNDRO for regression tasks."""

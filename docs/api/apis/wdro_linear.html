@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wasserstein DRO &#8212; dro 0.3.3 documentation</title>
+    <title>Wasserstein DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../../_static/documentation_options.js?v=ff822928"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -261,6 +261,7 @@
 <li class="toctree-l3"><a class="reference internal" href="base_linear.html">Linear DRO Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chi2dro_linear.html">Chi-square DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cvardro_linear.html">CVaR DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="groupdro_linear.html">Group DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL-DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tvdro.html">TV DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mmddro.html">MMD DRO</a></li>
@@ -297,16 +298,28 @@
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Wasserstein Distributionally Robust Optimization (WDRO) model</p>
 <p>This model minimizes a Wasserstein-robust loss function for both regression and classification.</p>
-<p>The Wasserstein distance is defined as the minimum probability coupling of two distributions for the distance metric:</p>
+<p>The Wasserstein distance is defined as the minimum probability coupling of
+two distributions. For LAD regression, the ground cost is</p>
 <div class="math notranslate nohighlight">
-\[d((X_1, Y_1), (X_2, Y_2)) = (\|\Sigma^{1/2} (X_1 - X_2)\|_p)^{square} + \kappa |Y_1 - Y_2|,\]</div>
+\[d((X_1, Y_1), (X_2, Y_2))
+= \|\Sigma^{1/2} (X_1 - X_2)\|_p + \kappa |Y_1 - Y_2|.\]</div>
+<p>For OLS regression, target changes are prohibited and the feature cost is
+quadratic:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}d((X_1, Y_1), (X_2, Y_2))
+= \begin{cases}
+\|\Sigma^{1/2} (X_1 - X_2)\|_p^2, &amp; Y_1=Y_2,\\
++\infty, &amp; Y_1\ne Y_2.
+\end{cases}\end{split}\]</div>
+<p>For binary classification, the label term is instead
+<span class="math notranslate nohighlight">\(\kappa\mathbf{1}_{\{Y_1\ne Y_2\}}\)</span>, so a label flip costs
+exactly <span class="math notranslate nohighlight">\(\kappa\)</span>.</p>
 <p>where parameters are:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\Sigma\)</span>: cost matrix, (a PSD Matrix);</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma\)</span>: symmetric positive-definite cost matrix;</p></li>
 <li><p><span class="math notranslate nohighlight">\(\kappa\)</span>;</p></li>
 <li><p><span class="math notranslate nohighlight">\(p\)</span>;</p></li>
-<li><p>square (notation depending on the model type), where square = 1 for ‘svm’, ‘logistic’, ‘lad’; square = 2 for ‘ols’.</p></li>
 </ul>
 </div></blockquote>
 <p>Reference:</p>
@@ -316,8 +329,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimension of feature space. Must satisfy :math:`      ext{input_dim} geq 1`</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimension of feature space. Must satisfy :math:`      ext{input_dim} geq 1`</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
@@ -325,18 +338,18 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>.
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>.
 Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> for pre-centered data. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Convex optimization solver. Valid options:</p>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Convex optimization solver. Valid options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (commercial, recommended)</p></li>
 </ul>
 </p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
 <li><p>If unsupported solver is selected</p></li>
 </ul>
@@ -366,9 +379,9 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 <dd><p>Update Wasserstein-DRO model parameters dynamically.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with keys:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">'cost_matrix'</span></code>: Mahalanobis metric matrix <span class="math notranslate nohighlight">\(\Sigma^{-1} \succ 0\)</span></p>
+<li><p><code class="docutils literal notranslate"><span class="pre">'cost_matrix'</span></code>: Mahalanobis metric matrix <span class="math notranslate nohighlight">\(\Sigma \succ 0\)</span></p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Shape: (input_dim, input_dim)</p></li>
@@ -378,20 +391,23 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'eps'</span></code>: Wasserstein radius <span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'p'</span></code>: Wasserstein order <span class="math notranslate nohighlight">\(p \geq 1\)</span> or <code class="docutils literal notranslate"><span class="pre">'inf'</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'kappa'</span></code>: Y-ambiguity radius <span class="math notranslate nohighlight">\(\kappa \geq 0\)</span> or <code class="docutils literal notranslate"><span class="pre">'inf'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'kappa'</span></code>: Y-ambiguity radius <span class="math notranslate nohighlight">\(\kappa \geq 0\)</span> or <code class="docutils literal notranslate"><span class="pre">'inf'</span></code>.
+LAD requires <span class="math notranslate nohighlight">\(\kappa &gt; 0\)</span> because free target transport
+makes the robust absolute loss unbounded. OLS requires
+<code class="docutils literal notranslate"><span class="pre">'inf'</span></code> because its reformulation keeps targets fixed.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul>
 <li><p>If cost_matrix is not positive definite</p></li>
 <li><p>If eps &lt; 0</p></li>
 <li><p>If p &lt; 1 and p ≠ ‘inf’</p></li>
 <li><p>If kappa &lt; 0 and kappa ≠ ‘inf’</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – <ul>
 <li><p>If cost_matrix is not numpy array</p></li>
 <li><p>If numeric parameters are not float/int</p></li>
 </ul>
@@ -399,7 +415,7 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <dl>
@@ -438,13 +454,15 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Dictionary containing trained parameters:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code>: Weight vector of shape <cite>(n_features,)</cite></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code>: Weight vector. Its length is <code class="docutils literal notranslate"><span class="pre">n_features</span></code> for a
+linear kernel, <code class="docutils literal notranslate"><span class="pre">n_samples</span></code> for a full nonlinear kernel, and
+<code class="docutils literal notranslate"><span class="pre">n_components</span></code> for a Nyström approximation.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">b</span></code></p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
 </dd>
 </dl>
 <p>.raises: WassersteinDROError: If the optimization problem fails to solve.</p>
@@ -452,80 +470,44 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution">
-<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'asymp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution" title="Link to this definition">¶</a></dt>
-<dd><p>Compute worst-case distribution under Wasserstein ambiguity set.</p>
+<span class="sig-name descname"><span class="pre">worst_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asymptotic_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDRO.worst_distribution" title="Link to this definition">¶</a></dt>
+<dd><p>Construct and certify a worst-case distribution.</p>
+<p>OLS uses an exact, finite, label-preserving construction. Linear SVM,
+logistic, and LAD use an asymptotic construction whose numerical
+controls are grouped in <code class="docutils literal notranslate"><span class="pre">asymptotic_options</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Input feature matrix. Shape: (n_samples, n_features)
-Must satisfy <code class="docutils literal notranslate"><span class="pre">n_features</span> <span class="pre">==</span> <span class="pre">input_dim</span></code></p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – <p>Target vector. Shape: (n_samples,)</p>
-<ul>
-<li><p>Classification: binary labels (-1/1)</p></li>
-<li><p>Regression: continuous values</p></li>
-</ul>
-</p></li>
-<li><p><strong>compute_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Computation methodology. Options:</p>
-<ul>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'asymp'</span></code>: Asymptotic approximation (faster, less accurate)</dt><dd><p><em>Supported models</em>: <code class="docutils literal notranslate"><span class="pre">['svm',</span> <span class="pre">'logistic',</span> <span class="pre">'lad']</span></code></p>
-</dd>
-</dl>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'exact'</span></code>: Exact dual solution (slower, precise)</p></li>
-</ul>
-</p></li>
-<li><p><strong>gamma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Regularization parameter for asymptotic method. 
-Must satisfy <span class="math notranslate nohighlight">\(\gamma &gt; 0\)</span> when <code class="docutils literal notranslate"><span class="pre">compute_type='asymp'</span></code>.
-Defaults to 0.</p></li>
+<li><p><strong>X</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Training features with shape <code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">input_dim)</span></code>.</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Binary <code class="docutils literal notranslate"><span class="pre">-1/+1</span></code> labels or continuous regression targets.</p></li>
+<li><p><strong>asymptotic_options</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span>) – Options used only by SVM, logistic, and LAD:
+<code class="docutils literal notranslate"><span class="pre">gamma</span></code>, <code class="docutils literal notranslate"><span class="pre">objective_atol</span></code>, <code class="docutils literal notranslate"><span class="pre">objective_rtol</span></code>,
+<code class="docutils literal notranslate"><span class="pre">feasibility_tol</span></code>, <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>, and <code class="docutils literal notranslate"><span class="pre">gamma_decay</span></code>. Omit this
+dictionary for OLS.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Dictionary containing:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">'sample_pts'</span></code>: Worst-case sample locations. Shape: (m, n_features)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'weights'</span></code>: Probability weights. Shape: (m,) with <span class="math notranslate nohighlight">\(\sum w_i = 1\)</span></p></li>
-</ul>
-</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">compute_type='asymp'</span></code> with <code class="docutils literal notranslate"><span class="pre">model_type='ols'</span></code></p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">compute_type='asymp'</span></code> and <code class="docutils literal notranslate"><span class="pre">kappa</span> <span class="pre">==</span> <span class="pre">'inf'</span></code></p></li>
-<li><p>If gamma ≤ 0 when required</p></li>
-</ul>
-</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – <ul>
-<li><p>If input dimensions mismatch</p></li>
-</ul>
-</p></li>
-</ul>
-</dd>
-</dl>
-<dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wc_dist</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;asymp&#39;</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wc_dist</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># Approximately 1.0</span>
-</pre></div>
-</div>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The atoms and weights together with <code class="docutils literal notranslate"><span class="pre">source_index</span></code>,
+<code class="docutils literal notranslate"><span class="pre">expected_loss</span></code>, <code class="docutils literal notranslate"><span class="pre">target_objective</span></code>, <code class="docutils literal notranslate"><span class="pre">optimality_gap</span></code>,
+<code class="docutils literal notranslate"><span class="pre">transport_cost</span></code>, <code class="docutils literal notranslate"><span class="pre">gamma_used</span></code>, and <code class="docutils literal notranslate"><span class="pre">certified</span></code> metadata.</p>
 </dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Asymptotic method ignores curvature regularization (κ=infty)</p></li>
-<li><p>Exact method requires <code class="docutils literal notranslate"><span class="pre">solver='MOSEK'</span></code> for conic constraints</p></li>
-</ul>
+<p>For OLS, <code class="docutils literal notranslate"><span class="pre">target_objective</span></code> is the robust expected squared loss
+and therefore equals <code class="docutils literal notranslate"><span class="pre">robust_obj**2</span></code>. For the other models, a
+positive-radius result is a certified finite member of an
+asymptotically optimal sequence.</p>
 </div>
-<p>Reference of Worst-case Distribution:</p>
-<p>[1] SVM / Logistic / LAD: Theorem 20 (ii) in <a class="reference external" href="https://jmlr.org/papers/volume20/17-633/17-633.pdf">https://jmlr.org/papers/volume20/17-633/17-633.pdf</a>, where eta is the theta in eq(27) and gamma = 0 in that equation.</p>
-<p>[2] In all cases, we use a reduced dual case (e.g., Remark 5.2 of <a class="reference external" href="https://arxiv.org/pdf/2308.05414">https://arxiv.org/pdf/2308.05414</a>) to compute their worst-case distribution.</p>
-<p>[3] General Worst-case Distributions can be found in: <a class="reference external" href="https://pubsonline.informs.org/doi/abs/10.1287/moor.2022.1275">https://pubsonline.informs.org/doi/abs/10.1287/moor.2022.1275</a>, where norm_theta is lambda* here.</p>
+<dl class="simple">
+<dt>References:</dt><dd><p>Blanchet, Kang, and Murthy (2019),
+Shafieezadeh-Abadeh et al. (2019),
+Shafiee et al. (2026).</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -543,8 +525,8 @@ Defaults to 0.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Feature space dimension. Must satisfy <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Feature space dimension. Must satisfy <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code></p></li>
@@ -552,18 +534,18 @@ Defaults to 0.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept <span class="math notranslate nohighlight">\(b\)</span>.
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept <span class="math notranslate nohighlight">\(b\)</span>.
 Disable for standardized data. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Convex optimization solver. Options:</p>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Convex optimization solver. Options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (commercial, recommended)</p></li>
 </ul>
 </p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
 <li><p>If invalid solver selected</p></li>
 </ul>
@@ -593,10 +575,10 @@ Disable for standardized data. Defaults to True.</p></li>
 <dd><p>Update model parameters based on configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The model configuration</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The model configuration</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -613,7 +595,7 @@ Disable for standardized data. Defaults to True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -697,7 +679,7 @@ Disable for standardized data. Defaults to True.</p></li>
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2025, DRO developers.
+    &#169; Copyright 2026, DRO developers.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 

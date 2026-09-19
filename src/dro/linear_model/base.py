@@ -267,8 +267,11 @@ class BaseLinearDRO:
             inner_product = K @ self.theta
         if self.model_type == 'svm':
             return np.maximum(1 - y * (inner_product + self.b), 0)
-        elif self.model_type in 'logistic':
-            return np.log(1 + np.exp(-np.multiply(y, inner_product + self.b)))
+        elif self.model_type == 'logistic':
+            # Escaping atoms in asymptotic Wasserstein constructions can have
+            # very large margins. logaddexp evaluates log(1 + exp(-margin))
+            # without overflowing.
+            return np.logaddexp(0, -np.multiply(y, inner_product + self.b))
         elif self.model_type == 'ols':
             return (y - inner_product - self.b) ** 2
         elif self.model_type == 'lad':
@@ -277,7 +280,14 @@ class BaseLinearDRO:
             raise NotImplementedError("Loss function not implemented for the specified model_type value.")
 
 
-    def _cvx_loss(self, X: cp.Expression, y: cp.Expression, theta: cp.Expression, b: cp.Expression) -> cp.Expression:
+    def _cvx_loss(
+        self,
+        X: cp.Expression,
+        y: cp.Expression,
+        theta: cp.Expression,
+        b: cp.Expression,
+        design_matrix: Optional[np.ndarray] = None,
+    ) -> cp.Expression:
         """Construct the convex loss expression for optimization using CVXPY.
         
         :param X: Feature matrix expression of shape (n_samples, n_features)
@@ -288,6 +298,10 @@ class BaseLinearDRO:
         :type theta: :py:class:`cvxpy.expressions.expression.Expression`
         :param b: Intercept term scalar expression
         :type b: :py:class:`cvxpy.expressions.expression.Expression`
+        :param design_matrix: Optional precomputed linear or kernel design
+            matrix. When supplied, it must use the same feature coordinates as
+            ``theta`` and is used without fitting another kernel transformer.
+        :type design_matrix: Optional[numpy.ndarray]
 
         :returns: Loss expression for the optimization problem
         :rtype: :py:class:`cvxpy.expressions.expression.Expression`
@@ -297,7 +311,9 @@ class BaseLinearDRO:
 
         """
         assert X.shape[-1] == self.input_dim, "Mismatch between feature and input dimension."
-        if self.kernel == 'linear':
+        if design_matrix is not None:
+            inner_product = design_matrix @ theta
+        elif self.kernel == 'linear':
             inner_product = X @ theta
         else:
             if self.n_components is None:

@@ -7,3 +7,6 @@ __pycache__
 JMLR_DRO_tex
 .pptx-build
 .codex-finalizer
+*.egg-info/
+build/
+dist/

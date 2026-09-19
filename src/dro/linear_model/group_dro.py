@@ -43,7 +43,8 @@ class GroupDRO(BaseLinearDRO):
     :type fit_intercept: bool
     :param solver: Installed CVXPY solver used for optimization.
     :type solver: str
-    :param kernel: Kernel accepted by :class:`BaseLinearDRO`.
+    :param kernel: Kernel accepted by
+        :class:`~dro.linear_model.base.BaseLinearDRO`.
     :type kernel: str
 
     :ivar group_values_: Sorted group categories observed by the latest call

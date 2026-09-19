@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>DRO with Mixed Distances &#8212; dro 0.4.1 documentation</title>
+    <title>Linear DRO with Hybrid Distances &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
-    <script src="../../_static/documentation_options.js?v=c87aa342"></script>
+    <script src="../../_static/documentation_options.js?v=ff822928"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -23,8 +23,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/mixed_dro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="NN DRO" href="neural_dro_tutorial.html" />
-    <link rel="prev" title="Wasserstein DRO" href="WassersteinDRO_tutorial.html" /> 
+    <link rel="next" title="Kernel DRO" href="kernel_dro_tutorial.html" />
+    <link rel="prev" title="Linear Wasserstein DRO" href="WassersteinDRO_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -155,7 +155,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.1 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -256,18 +256,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Classification-Task">Classification Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DRO with Mixed Distances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO with Linear and Neural Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Sinkhorn DRO with Neural Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">NN Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other NN DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">DRO on Tree-Ensemble Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel Distributionally Robust Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalized Losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">DRO on Personalized Losses</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -282,8 +279,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="DRO-with-Mixed-Distances">
-<h1>DRO with Mixed Distances<a class="headerlink" href="#DRO-with-Mixed-Distances" title="Link to this heading">¶</a></h1>
+  <section id="Linear-DRO-with-Hybrid-Distances">
+<h1>Linear DRO with Hybrid Distances<a class="headerlink" href="#Linear-DRO-with-Hybrid-Distances" title="Link to this heading">¶</a></h1>
 <p>In this part, we provide some examples for DRO models with mixed distances, where we exemplify with Sinkhorn DRO, MOT DRO and Outlier-Robust WDRO.</p>
 <section id="Sinkhorn-DRO">
 <h2>Sinkhorn DRO<a class="headerlink" href="#Sinkhorn-DRO" title="Link to this heading">¶</a></h2>
@@ -423,7 +420,7 @@ optimal
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">DRO with Mixed Distances</a><ul>
+<li><a class="reference internal" href="#">Linear DRO with Hybrid Distances</a><ul>
 <li><a class="reference internal" href="#Sinkhorn-DRO">Sinkhorn DRO</a></li>
 <li><a class="reference internal" href="#MOT-DRO">MOT-DRO</a></li>
 <li><a class="reference internal" href="#OR-WDRO-+-HR-DRO">OR-WDRO + HR-DRO</a></li>
@@ -442,13 +439,13 @@ optimal
             <div class="left">
                 
                 <a href="WassersteinDRO_tutorial.html">
-                    <span class="icon">&lt;</span><span>Wasserstein DRO</span></a>
+                    <span class="icon">&lt;</span><span>Linear Wasserstein DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="neural_dro_tutorial.html"><span>NN DRO</span><span class="icon">&gt;</span></a>
+                    <a href="kernel_dro_tutorial.html"><span>Kernel DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

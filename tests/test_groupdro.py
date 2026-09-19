@@ -87,12 +87,56 @@ def test_linear_groupdro_validates_group_feature(cvxpy_solver):
     """Invalid indices, categories, and classification labels fail clearly."""
     with pytest.raises(LinearParameterError, match="group_idx"):
         GroupDRO(2, group_idx=2, solver=cvxpy_solver)
+    with pytest.raises(LinearParameterError, match="integer"):
+        GroupDRO(2, group_idx=True, solver=cvxpy_solver)
 
     model = GroupDRO(2, group_idx=1, solver=cvxpy_solver)
     with pytest.raises(LinearDataError, match="finite"):
         model.fit(np.array([[0.0, 0.0], [1.0, np.nan]]), np.array([-1, 1]))
     with pytest.raises(LinearDataError, match=r"\{-1, \+1\}"):
         model.fit(np.array([[0.0, 0.0], [1.0, 1.0]]), np.array([0, 1]))
+
+
+def test_linear_groupdro_validates_training_shapes(cvxpy_solver):
+    """Malformed arrays fail before an optimization problem is constructed."""
+    model = GroupDRO(2, group_idx=1, solver=cvxpy_solver)
+    valid_X = np.array([[0.0, 0.0], [1.0, 1.0]])
+    valid_y = np.array([-1.0, 1.0])
+
+    invalid_inputs = [
+        ([['not-a-number', 0.0]], [-1.0], "numeric"),
+        (np.array([0.0, 1.0]), valid_y, "two-dimensional"),
+        (np.ones((2, 3)), valid_y, "Expected input with 2 features"),
+        (valid_X, np.ones((2, 2)), "one-dimensional"),
+        (valid_X, np.array([-1.0]), "same number of samples"),
+        (np.empty((0, 2)), np.empty(0), "at least one sample"),
+    ]
+    for X, y, message in invalid_inputs:
+        with pytest.raises(LinearDataError, match=message):
+            model._validate_training_data(X, y)
+
+    X, y, groups, group_values = model._validate_training_data(
+        valid_X,
+        valid_y.reshape(-1, 1),
+    )
+    assert X.shape == (2, 2)
+    assert y.shape == (2,)
+    np.testing.assert_array_equal(groups, [0.0, 1.0])
+    np.testing.assert_array_equal(group_values, [0.0, 1.0])
+
+
+def test_linear_groupdro_rejects_constant_nonlinear_kernel_data(cvxpy_solver):
+    """Automatic kernel scaling requires nonconstant training features."""
+    model = GroupDRO(
+        2,
+        group_idx=1,
+        model_type="ols",
+        solver=cvxpy_solver,
+    )
+    model.update_kernel({"metric": "rbf", "kernel_gamma": "scale"})
+
+    with pytest.raises(LinearDataError, match="positive variance"):
+        model.fit(np.ones((3, 2)), np.arange(3, dtype=float))
 
 
 def test_neural_groupdro_moves_weight_to_high_loss_group():
@@ -191,8 +235,12 @@ def test_neural_groupdro_validates_configuration_and_data():
     """Neural Group DRO rejects invalid optimization and group definitions."""
     with pytest.raises(NeuralParameterError, match="group_idx"):
         GroupNNDRO(2, 2, group_idx=-1)
+    with pytest.raises(NeuralParameterError, match="integer"):
+        GroupNNDRO(2, 2, group_idx=True)
     with pytest.raises(NeuralParameterError, match="step_size"):
         GroupNNDRO(2, 2, group_idx=1, step_size=0)
+    with pytest.raises(NeuralParameterError, match="positive number"):
+        GroupNNDRO(2, 2, group_idx=1, step_size="fast")
     with pytest.raises(NeuralParameterError, match="tabular feature"):
         GroupNNDRO(2, 2, group_idx=1, model_type="resnet")
 
@@ -215,3 +263,77 @@ def test_neural_groupdro_validates_configuration_and_data():
             epochs=1,
             verbose=False,
         )
+
+
+def test_neural_groupdro_validates_array_shapes_and_values():
+    """Neural Group DRO reports malformed feature and target arrays clearly."""
+    model = GroupNNDRO(2, 2, group_idx=1, model_type="linear")
+    valid_X = np.array([[0.0, 0.0], [1.0, 1.0]])
+    valid_y = np.array([0, 1])
+    invalid_inputs = [
+        (torch.ones(2), torch.tensor([0, 1]), "two-dimensional"),
+        (torch.ones((2, 3)), torch.tensor([0, 1]), "Expected input with 2 features"),
+        (
+            torch.tensor([[0.0, 0.0], [1.0, float("inf")]]),
+            torch.tensor([0, 1]),
+            "finite",
+        ),
+        ([['not-a-number', 0.0]], [0], "numeric"),
+        (np.array([0.0, 1.0]), valid_y, "two-dimensional"),
+        (np.ones((2, 3)), valid_y, "Expected input with 2 features"),
+        (np.empty((0, 2)), np.empty(0), "at least one sample"),
+        (valid_X, ['not-a-number', 1], "numeric"),
+        (valid_X, np.ones((2, 2)), "one-dimensional"),
+        (valid_X, np.array([0]), "same number of samples"),
+        (valid_X, np.array([0.0, np.nan]), "finite"),
+    ]
+
+    for X, y, message in invalid_inputs:
+        with pytest.raises(NeuralDataError, match=message):
+            model.fit(X, y, epochs=1, verbose=False)
+
+
+def test_neural_groupdro_accepts_tensor_inputs_and_column_targets():
+    """Tensor features and column-vector targets use the common fit path."""
+    X = torch.tensor(
+        [
+            [-2.0, 0.0],
+            [-1.0, 0.0],
+            [1.0, 0.0],
+            [2.0, 0.0],
+            [-2.0, 1.0],
+            [-1.0, 1.0],
+            [1.0, 1.0],
+            [2.0, 1.0],
+        ]
+    )
+    y = torch.tensor([[0], [0], [1], [1], [0], [0], [1], [1]])
+    model = GroupNNDRO(2, 2, group_idx=1, model_type="linear")
+
+    metrics = model.fit(
+        X,
+        y,
+        train_ratio=0.75,
+        batch_size=4,
+        epochs=1,
+        verbose=False,
+    )
+
+    assert set(metrics) == {"acc", "f1"}
+    assert model.group_values_.tolist() == [0.0, 1.0]
+
+
+def test_neural_groupdro_rejects_uninitialized_and_unknown_groups():
+    """The group loss cannot run before or outside fitted group categories."""
+    model = GroupNNDRO(2, 2, group_idx=1, model_type="linear")
+    outputs = torch.zeros((2, 2))
+    labels = torch.tensor([0, 1])
+
+    with pytest.raises(NeuralDataError, match="initialized by fit"):
+        model._criterion(outputs, labels)
+
+    model._group_values_tensor = torch.tensor([0.0])
+    model.adv_probs = torch.tensor([1.0])
+    model.current_inputs = torch.tensor([[0.0, 0.0], [0.0, 1.0]])
+    with pytest.raises(NeuralDataError, match="not initialized"):
+        model._criterion(outputs, labels)

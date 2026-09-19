@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Sinkhorn DRO &#8212; dro 0.4.1 documentation</title>
+    <title>Sinkhorn DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=c87aa342"></script>
+    <script src="../../_static/documentation_options.js?v=ff822928"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.1 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -261,6 +261,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../nn_dro.html">Neural Network DRO Methods</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="base_nn.html">NN DRO Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fdro_nn.html">f-Divergence DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="groupdro_nn.html">Group DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hrdro_nn.html">Holistic Robust DRO</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Sinkhorn DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wdro_nn.html">Wasserstein DRO</a></li>
@@ -323,20 +324,20 @@ per iteration for further variance reduction</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – <p>Output dimension:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – <p>Output dimension:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
 <li><p>Regression: Automatically set to 1</p></li>
 </ul>
 </p></li>
-<li><p><strong>task_type</strong> (<em>str</em>) – <p>Learning task type. Supported:</p>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
 </ul>
 </p></li>
-<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'linear'</span></code></p></li>
@@ -344,28 +345,28 @@ per iteration for further variance reduction</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'alexnet'</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>reg_param</strong> (<em>float</em>) – Entropic regularization strength
+<li><p><strong>reg_param</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Entropic regularization strength
 <span class="math notranslate nohighlight">\(\varepsilon &gt; 0\)</span> controlling transport smoothness.
 Must be &gt; 0. Defaults to 1e-3.</p></li>
-<li><p><strong>lambda_param</strong> (<em>float</em>) – Loss scaling factor <span class="math notranslate nohighlight">\(\lambda &gt; 0\)</span>
+<li><p><strong>lambda_param</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Loss scaling factor <span class="math notranslate nohighlight">\(\lambda &gt; 0\)</span>
 balancing Wasserstein distance and loss.
 Must be &gt; 0. Defaults to 1e2.</p></li>
-<li><p><strong>k_sample_max</strong> (<em>int</em>) – Maximum level for Monte Carlo / MLMC sampling.
+<li><p><strong>k_sample_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum level for Monte Carlo / MLMC sampling.
 The number of noise samples is <span class="math notranslate nohighlight">\(2^{k\_sample\_max}\)</span>.
 Higher values improve accuracy but increase computation.
 Defaults to 5.</p></li>
-<li><p><strong>optimization_type</strong> (<em>str</em>) – <p>Stochastic optimization algorithm. Supported:</p>
+<li><p><strong>optimization_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Stochastic optimization algorithm. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'SG'</span></code>: Standard Stochastic Gradient (baseline)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'MLMC'</span></code>: Multilevel Monte Carlo acceleration</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'RTMLMC'</span></code>: Randomized Truncated MLMC</p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If reg_param ≤ 0</p></li>
 <li><p>If lambda_param ≤ 0</p></li>
 <li><p>If k_sample_max &lt; 1</p></li>
@@ -390,7 +391,7 @@ Defaults to 5.</p></li>
 <dd><p>Update hyperparameters for Sinkhorn NN DRO.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – <p>Dictionary containing parameter updates. Valid keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – <p>Dictionary containing parameter updates. Valid keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">'reg'</span></code>: Entropic regularization strength (ε &gt; 0)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lambda'</span></code>: Loss scaling factor (λ &gt; 0)</p></li>
@@ -406,10 +407,10 @@ Defaults to 5.</p></li>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If any parameter value violates constraints.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If any parameter value violates constraints.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <p>Example:</p>

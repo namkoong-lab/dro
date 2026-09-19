@@ -5,8 +5,9 @@ Neural Network DRO Methods
    :maxdepth: 1
    :caption: Neural Network DRO Methods
 
-   ./apis/base_nn 
+   ./apis/base_nn
    ./apis/fdro_nn
-   ./apis/hrdro_nn 
+   ./apis/groupdro_nn
+   ./apis/hrdro_nn
    ./apis/sinkhorn_nn
-   ./apis/wdro_nn 
+   ./apis/wdro_nn

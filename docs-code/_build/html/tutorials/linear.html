@@ -5,16 +5,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Linear Models &#8212; dro 0.4.1 documentation</title>
+    <title>Linear Models &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <script src="../_static/documentation_options.js?v=c87aa342"></script>
+    <script src="../_static/documentation_options.js?v=ff822928"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear.html" />
@@ -152,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">dro 0.4.1 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -281,18 +283,65 @@
   <section class="tex2jax_ignore mathjax_ignore" id="linear-models">
 <h1>Linear Models<a class="headerlink" href="#linear-models" title="Link to this heading">¶</a></h1>
 <p>These optimization problems are solved exactly (or approximately, e.g., kernel) through solvers.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/f_dro_tutorial.html"><span class="doc">f-divergence DRO notebook</span></a> for
-standard and partial-shift linear examples.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html"><span class="doc">Wasserstein DRO notebook</span></a>
-for linear classification, regression, and robust-satisficing examples.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/groupdro_tutorial.html"><span class="doc">Group DRO notebook</span></a> for an
+<p>Each method below links to its conceptual guide and literature references, its
+estimator API documentation (where available), and a runnable notebook.</p>
+<section id="f-divergence-dro">
+<h2><span class="math notranslate nohighlight">\(f\)</span>-divergence DRO<a class="headerlink" href="#f-divergence-dro" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference internal" href="linear_fdro.html"><span class="doc">$f$-divergence DRO guide and references</span></a> for the
+standard and partial-shift formulations. Estimator references are available for
+<a class="reference internal" href="../api/apis/kldro_linear.html"><span class="doc">KL-DRO</span></a>,
+<a class="reference internal" href="../api/apis/chi2dro_linear.html"><span class="doc">chi-square DRO</span></a>,
+<a class="reference internal" href="../api/apis/cvardro_linear.html"><span class="doc">CVaR-DRO</span></a>,
+<a class="reference internal" href="../api/apis/tvdro.html"><span class="doc">TV-DRO</span></a>,
+<a class="reference internal" href="../api/apis/conditionaldro.html"><span class="doc">conditional CVaR-DRO</span></a>, and
+<a class="reference internal" href="../api/apis/marginaldro.html"><span class="doc">marginal DRO</span></a>. See the
+<a class="reference internal" href="../api/notebooks/f_dro_tutorial.html"><span class="doc">$f$-divergence DRO notebook</span></a> for
+runnable standard and partial-shift linear examples.</p>
+</section>
+<section id="wasserstein-dro">
+<h2>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference internal" href="linear_wdro.html"><span class="doc">Wasserstein DRO guide and references</span></a> for the
+standard and robust-satisficing formulations, the
+<a class="reference internal" href="../api/apis/wdro_linear.html"><span class="doc">Wasserstein DRO API reference</span></a> for estimator
+details, and the
+<a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html"><span class="doc">Wasserstein DRO notebook</span></a> for
+linear classification, regression, and robust-satisficing examples.</p>
+</section>
+<section id="group-dro">
+<h2>Group DRO<a class="headerlink" href="#group-dro" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference internal" href="linear_groupdro.html"><span class="doc">Group DRO guide and references</span></a> for the
+formulation, supported losses, and implementation details. The
+<a class="reference internal" href="../api/notebooks/groupdro_tutorial.html"><span class="doc">Group DRO notebook</span></a> provides an
 end-to-end linear and neural example.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/kernel_dro_tutorial.html"><span class="doc">kernel DRO notebook</span></a> for
-an MMD-DRO example and ambiguity-set kernel selection guidance.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/param_dro.html"><span class="doc">Bayesian DRO notebook</span></a> for
-frequentist and Bayesian parametric examples.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html"><span class="doc">mixed-distance DRO notebook</span></a>
-for Sinkhorn, MOT, OR-WDRO, and Holistic DRO examples.</p>
+</section>
+<section id="mmd-dro">
+<h2>MMD-DRO<a class="headerlink" href="#mmd-dro" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference internal" href="linear_mmddro.html"><span class="doc">MMD-DRO guide and references</span></a> for the formulation
+and kernel guidance, the <a class="reference internal" href="../api/apis/mmddro.html"><span class="doc">MMD-DRO API reference</span></a> for
+estimator details, and the
+<a class="reference internal" href="../api/notebooks/kernel_dro_tutorial.html"><span class="doc">kernel DRO notebook</span></a> for a runnable
+example and ambiguity-set kernel selection guidance.</p>
+</section>
+<section id="bayesian-parametric-dro">
+<h2>Bayesian (Parametric) DRO<a class="headerlink" href="#bayesian-parametric-dro" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference internal" href="linear_pdro.html"><span class="doc">Bayesian DRO guide and references</span></a> for the
+frequentist and Bayesian formulations, the
+<a class="reference internal" href="../api/apis/bayesian_dro.html"><span class="doc">Bayesian DRO API reference</span></a> for estimator
+details, and the <a class="reference internal" href="../api/notebooks/param_dro.html"><span class="doc">Bayesian DRO notebook</span></a> for
+runnable frequentist and Bayesian parametric examples.</p>
+</section>
+<section id="mixed-distance-dro">
+<h2>Mixed-distance DRO<a class="headerlink" href="#mixed-distance-dro" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference internal" href="linear_mixdro.html"><span class="doc">mixed-distance DRO guide and references</span></a> for the
+Sinkhorn, MOT, outlier-robust Wasserstein, and Holistic DRO formulations.
+Estimator references are available for
+<a class="reference internal" href="../api/apis/sinkhorn_dro.html"><span class="doc">Sinkhorn DRO</span></a>,
+<a class="reference internal" href="../api/apis/motdro.html"><span class="doc">MOT DRO</span></a>,
+<a class="reference internal" href="../api/apis/or_wdro.html"><span class="doc">outlier-robust Wasserstein DRO</span></a>, and
+<a class="reference internal" href="../api/apis/hrdro.html"><span class="doc">Holistic Robust DRO</span></a>. See the
+<a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html"><span class="doc">mixed-distance DRO notebook</span></a> for
+runnable examples of all four methods.</p>
+</section>
 </section>
 
 
@@ -300,6 +349,28 @@ for Sinkhorn, MOT, OR-WDRO, and Holistic DRO examples.</p>
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Linear Models</a><ul>
+<li><a class="reference internal" href="#f-divergence-dro"><span class="math notranslate nohighlight">\(f\)</span>-divergence DRO</a></li>
+<li><a class="reference internal" href="#wasserstein-dro">Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#group-dro">Group DRO</a></li>
+<li><a class="reference internal" href="#mmd-dro">MMD-DRO</a></li>
+<li><a class="reference internal" href="#bayesian-parametric-dro">Bayesian (Parametric) DRO</a></li>
+<li><a class="reference internal" href="#mixed-distance-dro">Mixed-distance DRO</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

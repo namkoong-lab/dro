@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wasserstein DRO &#8212; dro 0.3.3 documentation</title>
+    <title>Linear Wasserstein DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
-    <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../../_static/documentation_options.js?v=ff822928"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -23,8 +23,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/WassersteinDRO_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="DRO with Mixed Distances" href="mixed_dro_tutorial.html" />
-    <link rel="prev" title="f-Divergence DRO" href="f_dro_tutorial.html" /> 
+    <link rel="next" title="Linear DRO with Hybrid Distances" href="mixed_dro_tutorial.html" />
+    <link rel="prev" title="Linear f-Divergence DRO" href="f_dro_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -155,7 +155,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.3.3 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -256,18 +256,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">f-Divergence DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Classification-Task">Classification Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Regression-Task">Regression Task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">DRO with Mixed Distances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO with Linear and Neural Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Sinkhorn DRO with Neural Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">NN Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other NN DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">DRO on Tree-Ensemble Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel Distributionally Robust Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalized Losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">DRO on Personalized Losses</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -282,8 +279,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="Wasserstein-DRO">
-<h1>Wasserstein DRO<a class="headerlink" href="#Wasserstein-DRO" title="Link to this heading">¶</a></h1>
+  <section id="Linear-Wasserstein-DRO">
+<h1>Linear Wasserstein DRO<a class="headerlink" href="#Linear-Wasserstein-DRO" title="Link to this heading">¶</a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
@@ -292,11 +289,10 @@
 </pre></div>
 </div>
 </div>
-</section>
 <section id="Classification-Task">
-<h1>Classification Task<a class="headerlink" href="#Classification-Task" title="Link to this heading">¶</a></h1>
+<h2>Classification Task<a class="headerlink" href="#Classification-Task" title="Link to this heading">¶</a></h2>
 <section id="Load-Data">
-<h2>Load Data<a class="headerlink" href="#Load-Data" title="Link to this heading">¶</a></h2>
+<h3>Load Data<a class="headerlink" href="#Load-Data" title="Link to this heading">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -319,7 +315,7 @@
 </div>
 </section>
 <section id="Model-Fit">
-<h2>Model Fit<a class="headerlink" href="#Model-Fit" title="Link to this heading">¶</a></h2>
+<h3>Model Fit<a class="headerlink" href="#Model-Fit" title="Link to this heading">¶</a></h3>
 <p>Recall <span class="math notranslate nohighlight">\(X\)</span> being the feature and <span class="math notranslate nohighlight">\(Y\)</span> being the outcome, we allow both <span class="math notranslate nohighlight">\(Y = \theta^{\top}X\)</span> and <span class="math notranslate nohighlight">\(Y = \theta^{\top}X + b\)</span> by setting <code class="docutils literal notranslate"><span class="pre">fit_intercept</span></code> (default = True).</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -342,15 +338,15 @@
 </div>
 </section>
 <section id="Worst-case-Distribution-and-Visualization">
-<h2>Worst-case Distribution and Visualization<a class="headerlink" href="#Worst-case-Distribution-and-Visualization" title="Link to this heading">¶</a></h2>
-<p>For SVM / Logistic / LAD, we provide two different worst-case distribution computations, 1 stands for asymptotic approximation, 2 stands for the exact calculation while requiring solving n optimization problems.</p>
+<h3>Worst-case Distribution and Visualization<a class="headerlink" href="#Worst-case-Distribution-and-Visualization" title="Link to this heading">¶</a></h3>
+<p>For SVM, logistic regression, and LAD, <code class="docutils literal notranslate"><span class="pre">worst_distribution</span></code> returns a certified finite member of the asymptotically optimal family. Configure it through <code class="docutils literal notranslate"><span class="pre">asymptotic_options</span></code>. OLS uses a separate exact, target-preserving construction.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model1</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 
-<span class="n">worst_case_log</span> <span class="o">=</span> <span class="n">clf_model1</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;asymp&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">worst_case_log</span> <span class="o">=</span> <span class="n">clf_model1</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">asymptotic_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">})</span>
 <span class="n">draw_classification</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">100</span><span class="p">:],</span> <span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">100</span><span class="p">:],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">][</span><span class="mi">100</span><span class="p">:],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;worst-case&#39;</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
 <br/></pre></div>
@@ -370,6 +366,7 @@
 <img alt="../../_images/api_notebooks_WassersteinDRO_tutorial_8_1.png" src="../../_images/api_notebooks_WassersteinDRO_tutorial_8_1.png" />
 </div>
 </div>
+</section>
 </section>
 <section id="Robust-Satisificng-version-of-Wasserstein-DRO">
 <h2>Robust Satisificng version of Wasserstein DRO<a class="headerlink" href="#Robust-Satisificng-version-of-Wasserstein-DRO" title="Link to this heading">¶</a></h2>
@@ -409,7 +406,7 @@
 <span class="n">clf_model1</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="s1">&#39;inf&#39;</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
 <span class="n">clf_model1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="n">worst_case_log</span> <span class="o">=</span> <span class="n">clf_model1</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;asymp&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">worst_case_log</span> <span class="o">=</span> <span class="n">clf_model1</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">asymptotic_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 
 <span class="n">draw_classification</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;worst-case&#39;</span><span class="p">)</span>
@@ -431,9 +428,8 @@
 </div>
 </div>
 </section>
-</section>
 <section id="Regression-Task">
-<h1>Regression Task<a class="headerlink" href="#Regression-Task" title="Link to this heading">¶</a></h1>
+<h2>Regression Task<a class="headerlink" href="#Regression-Task" title="Link to this heading">¶</a></h2>
 <p>We can construct similar models for Wasserstein DRO regression models, including <code class="docutils literal notranslate"><span class="pre">lad</span></code> and <code class="docutils literal notranslate"><span class="pre">ols</span></code> loss.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
@@ -476,7 +472,7 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;cost_matrix&#39;</span><span class="p">:</span> <span class="n">costM</span><span class="p">,</span> <span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="s1">&#39;inf&#39;</span><span class="p">})</span>
-<span class="n">worst_case_log</span> <span class="o">=</span> <span class="n">reg_model</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;asymp&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">worst_case_log</span> <span class="o">=</span> <span class="n">reg_model</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">asymptotic_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">})</span>
 <span class="n">worst_case_log</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -490,6 +486,7 @@
 array([ 0.97511973, -0.67716171, -0.01224677, -0.89725437,  0.07580456])
 </pre></div></div>
 </div>
+</section>
 </section>
 
 
@@ -506,15 +503,17 @@ array([ 0.97511973, -0.67716171, -0.01224677, -0.89725437,  0.07580456])
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#">Linear Wasserstein DRO</a><ul>
 <li><a class="reference internal" href="#Classification-Task">Classification Task</a><ul>
 <li><a class="reference internal" href="#Load-Data">Load Data</a></li>
 <li><a class="reference internal" href="#Model-Fit">Model Fit</a></li>
 <li><a class="reference internal" href="#Worst-case-Distribution-and-Visualization">Worst-case Distribution and Visualization</a></li>
-<li><a class="reference internal" href="#Robust-Satisificng-version-of-Wasserstein-DRO">Robust Satisificng version of Wasserstein DRO</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#Robust-Satisificng-version-of-Wasserstein-DRO">Robust Satisificng version of Wasserstein DRO</a></li>
 <li><a class="reference internal" href="#Regression-Task">Regression Task</a></li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -528,13 +527,13 @@ array([ 0.97511973, -0.67716171, -0.01224677, -0.89725437,  0.07580456])
             <div class="left">
                 
                 <a href="f_dro_tutorial.html">
-                    <span class="icon">&lt;</span><span>f-Divergence DRO</span></a>
+                    <span class="icon">&lt;</span><span>Linear f-Divergence DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="mixed_dro_tutorial.html"><span>DRO with Mixed Distances</span><span class="icon">&gt;</span></a>
+                    <a href="mixed_dro_tutorial.html"><span>Linear DRO with Hybrid Distances</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -542,7 +541,7 @@ array([ 0.97511973, -0.67716171, -0.01224677, -0.89725437,  0.07580456])
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2025, DRO developers.
+    &#169; Copyright 2026, DRO developers.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 
