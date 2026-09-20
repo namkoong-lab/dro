@@ -48,7 +48,7 @@ class SinkhornLinearDRO(BaseLinearDRO):
                 k_sample_max: int = 5,
                 device: str = "cpu"):
         
-        """Initialize Sinkhorn Distributionally Robust Optimization model.
+        r"""Initialize Sinkhorn Distributionally Robust Optimization model.
 
         :param input_dim: Dimension of input feature space (d)
         :type input_dim: int
@@ -368,6 +368,46 @@ class SinkhornLinearDRO(BaseLinearDRO):
         residual_matrix = residuals.view(m, -1)
         return torch.mean(torch.logsumexp(residual_matrix, dim=0)-math.log(m)) * lambda_reg
 
+    def _compute_mlmc_correction(
+        self,
+        predictions: torch.Tensor,
+        targets: torch.Tensor,
+        m: int,
+        lambda_reg: float,
+    ) -> torch.Tensor:
+        r"""Compute the antithetic MLMC loss correction at one level.
+
+        For level zero this is the ordinary one-sample Sinkhorn loss.  At
+        higher levels it is the fine estimator minus the average of the two
+        half-sample estimators.  Backpropagating this quantity gives the
+        gradient correction :math:`G_\ell` defined in Section 4.1.1 of
+        Wang, Gao, and Xie, "Sinkhorn Distributionally Robust Optimization"
+        (arXiv v5).  Their Equation (17) probability-weights this correction.
+        """
+        fine_loss = self._compute_loss(predictions, targets, m, lambda_reg)
+        if m == 1:
+            return fine_loss
+
+        samples_per_level = predictions.shape[0] // m
+        half_m = m // 2
+        split = half_m * samples_per_level
+        first_half = self._compute_loss(
+            predictions[:split], targets[:split], half_m, lambda_reg
+        )
+        second_half = self._compute_loss(
+            predictions[split:], targets[split:], half_m, lambda_reg
+        )
+        return fine_loss - 0.5 * (first_half + second_half)
+
+    @staticmethod
+    def _check_finite_update(loss: torch.Tensor, optimizer_name: str) -> None:
+        """Reject a numerically divergent stochastic-gradient update."""
+        if not torch.isfinite(loss).item():
+            raise SinkhornDROError(
+                f"{optimizer_name} produced a non-finite loss; reduce "
+                "learning_rate or increase lambda_param * reg_param."
+            )
+
     def _estimate_robust_objective(self, dataloader: DataLoader) -> float:
         """Estimate the fitted Sinkhorn objective on the training sample."""
         self.model.eval()
@@ -392,7 +432,13 @@ class SinkhornLinearDRO(BaseLinearDRO):
                 objective_sum += batch_objective.item() * len(data)
                 sample_count += len(data)
 
-        return float(objective_sum / sample_count)
+        objective = float(objective_sum / sample_count)
+        if not math.isfinite(objective):
+            raise SinkhornDROError(
+                "The fitted Sinkhorn objective is non-finite; reduce "
+                "learning_rate or increase lambda_param * reg_param."
+            )
+        return objective
 
     def _sg_optimizer(self, dataloader: DataLoader) -> None:
         """Stochastic Gradient optimization."""
@@ -413,6 +459,7 @@ class SinkhornLinearDRO(BaseLinearDRO):
                 optimizer.zero_grad()
                 predictions = self.model(noisy_data)
                 loss = self._compute_loss(predictions, repeated_target, m, lambda_reg)
+                self._check_finite_update(loss, "SG")
                 loss.backward()
                 optimizer.step()
 
@@ -441,22 +488,14 @@ class SinkhornLinearDRO(BaseLinearDRO):
                     noisy_data = expanded_data + noise.view(-1, data.shape[1]) * math.sqrt(self.reg_param)
                     repeated_target = sub_target.repeat(m, 1)
 
-                    # Loss computation
+                    # The corrections telescope in expectation to the finest
+                    # Monte Carlo approximation.
                     predictions = self.model(noisy_data)
-                    residuals = (predictions - repeated_target) ** 2 / lambda_reg
-                    residual_matrix = residuals.view(m, subset_size)
+                    loss_total += self._compute_mlmc_correction(
+                        predictions, repeated_target, m, lambda_reg
+                    )
 
-                    if k == 0:
-                        loss = torch.mean(torch.logsumexp(residual_matrix, dim=0)) * lambda_reg
-                    else:
-                        # Multilevel correction
-                        half_m = m // 2
-                        loss_high = torch.logsumexp(residual_matrix[:half_m], dim=0)
-                        loss_low = torch.logsumexp(residual_matrix[half_m:], dim=0)
-                        loss = (loss_high.mean() - 0.5 * loss_low.mean()) * lambda_reg
-
-                    loss_total += loss
-
+                self._check_finite_update(loss_total, "MLMC")
                 loss_total.backward()
                 optimizer.step()
 
@@ -483,8 +522,15 @@ class SinkhornLinearDRO(BaseLinearDRO):
                 noisy_data = expanded_data + noise.view(-1, data.shape[1]) * math.sqrt(self.reg_param)
                 repeated_target = target.repeat(m, 1)
 
-                # Loss computation with probability weighting
+                # Equation (17) in Wang, Gao, and Xie (arXiv v5):
+                # probability-weight the MLMC correction, not the complete
+                # level loss. Using the complete loss here creates a
+                # high-variance, biased update and can overflow.
                 predictions = self.model(noisy_data)
-                loss = self._compute_loss(predictions, repeated_target, m, lambda_reg)
-                (loss / level_probs[k]).backward()
+                correction = self._compute_mlmc_correction(
+                    predictions, repeated_target, m, lambda_reg
+                )
+                weighted_correction = correction / level_probs[k]
+                self._check_finite_update(weighted_correction, "RTMLMC")
+                weighted_correction.backward()
                 optimizer.step()

@@ -1,13 +1,20 @@
 import pytest
 import numpy as np
+import torch
 from sklearn.datasets import make_classification, make_regression
 from src.dro.linear_model.sinkhorn_dro import SinkhornLinearDRO, SinkhornDROError 
 from src.dro.linear_model.base import ParameterError
-import torch 
 
 # --------------------------
 # Test Fixtures
 # --------------------------
+
+@pytest.fixture(autouse=True)
+def deterministic_random_state():
+    """Keep stochastic optimizer tests reproducible and order-independent."""
+    np.random.seed(42)
+    torch.manual_seed(42)
+
 
 @pytest.fixture(params=['classification', 'regression'])
 def dataset(request):
@@ -22,15 +29,20 @@ def dataset(request):
             n_informative=3,
             random_state=42
         )
-        y = (y > 0).astype(float)  # Convert to 0/1 labels
+        # Keep classification labels one-dimensional so the training test
+        # selects SVM, and use the {-1, +1} labels required by that model.
+        y = 2 * y - 1
+        model_type = 'svm'
     else:
         X, y = make_regression(
             n_samples=n_samples,
             n_features=n_features,
             random_state=42
         )
+        y = y.reshape(-1, 1)
+        model_type = 'ols'
         
-    return X, y.reshape(-1, 1)
+    return X, y, model_type
 
 # --------------------------
 # Initialization Tests
@@ -79,7 +91,7 @@ def test_config_update_mechanism():
 
 def test_predict_interface(dataset):
     """Validate prediction input/output contracts"""
-    X, y = dataset
+    X, y, _ = dataset
     model = SinkhornLinearDRO(input_dim=X.shape[1], model_type='ols')
     
     # Valid case
@@ -123,10 +135,10 @@ def test_classification_scoring():
 @pytest.mark.parametrize("optim_type", ['SG', 'MLMC', 'RTMLMC'])
 def test_training_workflow(dataset, optim_type):
     """Validate end-to-end training workflow"""
-    X, y = dataset
+    X, y, model_type = dataset
     model = SinkhornLinearDRO(
         input_dim=X.shape[1],
-        model_type='ols' if y.ndim > 1 else 'svm',
+        model_type=model_type,
         max_iter=10,
         learning_rate=0.1
     )
@@ -138,6 +150,48 @@ def test_training_workflow(dataset, optim_type):
     assert np.isfinite(model.robust_obj)
     if model.fit_intercept:
         assert 'bias' in params
+
+
+def test_mlmc_correction_matches_antithetic_definition():
+    """The level correction uses the fine estimate and both shared halves."""
+    model = SinkhornLinearDRO(input_dim=1, model_type='ols')
+    predictions = torch.tensor(
+        [[0.2], [0.4], [0.7], [0.1], [0.5], [0.9], [0.3], [0.8]]
+    )
+    targets = torch.zeros_like(predictions)
+    m = 4
+    lambda_reg = model.lambda_param * model.reg_param
+
+    actual = model._compute_mlmc_correction(
+        predictions, targets, m, lambda_reg
+    )
+    split = predictions.shape[0] // 2
+    expected = model._compute_loss(predictions, targets, m, lambda_reg) - 0.5 * (
+        model._compute_loss(
+            predictions[:split], targets[:split], m // 2, lambda_reg
+        )
+        + model._compute_loss(
+            predictions[split:], targets[split:], m // 2, lambda_reg
+        )
+    )
+
+    assert torch.allclose(actual, expected)
+
+
+def test_nonfinite_robust_objective_is_rejected(monkeypatch):
+    """A divergent fit must not expose ``inf`` as a valid robust objective."""
+    model = SinkhornLinearDRO(input_dim=1, model_type='ols')
+    dataloader = model._create_dataloader(
+        np.zeros((2, 1)), np.zeros((2, 1))
+    )
+    monkeypatch.setattr(
+        model,
+        "_compute_loss",
+        lambda *args, **kwargs: torch.tensor(float("inf")),
+    )
+
+    with pytest.raises(SinkhornDROError, match="non-finite"):
+        model._estimate_robust_objective(dataloader)
 
 @pytest.mark.parametrize("optim_type", ['SG', 'MLMC', 'RTMLMC'])
 def test_training_workflow2(optim_type):
