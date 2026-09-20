@@ -343,7 +343,7 @@ Defaults to 2.</p></li>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MarginalCVaRDRO</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
-<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;lad&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">'lad'</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">L</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">p</span><span class="o">=</span><span class="mi">1</span>
@@ -411,8 +411,8 @@ Supported values: 1 (EMD), 2 (Quadratic)</p>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MarginalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">control_name</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">,</span>      
-<span class="gp">... </span>    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.95</span>  
+<span class="gp">... </span>    <span class="s2">"L"</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">,</span>      
+<span class="gp">... </span>    <span class="s2">"alpha"</span><span class="p">:</span> <span class="mf">0.95</span>  
 <span class="gp">... </span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># 15.0</span>
 </pre></div>
@@ -482,8 +482,8 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sol</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (3,)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>      <span class="c1"># (2, 2)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (3,)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s2">"B"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>      <span class="c1"># (2, 2)</span>
 </pre></div>
 </div>
 </dd>

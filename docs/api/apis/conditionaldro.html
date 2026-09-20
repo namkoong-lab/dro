@@ -326,9 +326,9 @@ See class-level documentation for recommended options. Defaults to ‘MOSEK’.<
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">ConditionalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">ConditionalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'logistic'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_type</span><span class="p">)</span>
-<span class="go">&#39;logistic&#39;</span>
+<span class="go">'logistic'</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
 <span class="go">1.0</span>
 </pre></div>
@@ -372,13 +372,13 @@ Changes affect subsequent optimization but require manual re-fitting.</p>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">ConditionalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;control_name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>  <span class="c1"># Protect 1st and 3rd features</span>
-<span class="gp">... </span>    <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.95</span>
+<span class="gp">... </span>    <span class="s1">'control_name'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>  <span class="c1"># Protect 1st and 3rd features</span>
+<span class="gp">... </span>    <span class="s1">'alpha'</span><span class="p">:</span> <span class="mf">0.95</span>
 <span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;control_name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">]})</span>  <span class="c1"># Invalid index for input_dim=5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'control_name'</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">]})</span>  <span class="c1"># Invalid index for input_dim=5</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">    </span><span class="o">...</span>
-<span class="gr">ConditionalCVaRDROError</span>: <span class="n">All indices in &#39;control_name&#39; must be in [0, input_dim - 1]</span>
+<span class="gr">ConditionalCVaRDROError</span>: <span class="n">All indices in 'control_name' must be in [0, input_dim - 1]</span>
 </pre></div>
 </div>
 </dd>
@@ -455,9 +455,9 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">5</span><span class="p">,)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="s2">&quot;b&quot;</span> <span class="ow">in</span> <span class="n">params</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CVaR threshold: </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;cvar_threshold&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">params</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">5</span><span class="p">,)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="s2">"b"</span> <span class="ow">in</span> <span class="n">params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"CVaR threshold: </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">'cvar_threshold'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd>

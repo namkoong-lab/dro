@@ -361,7 +361,7 @@ or negative values for parameters like <code class="docutils literal notranslate
 </ul>
 </div>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;eps&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;distance_type&quot;</span><span class="p">:</span> <span class="s2">&quot;chi2&quot;</span><span class="p">,</span> <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="s2">&quot;MOSEK&quot;</span><span class="p">})</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"eps"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"distance_type"</span><span class="p">:</span> <span class="s2">"chi2"</span><span class="p">,</span> <span class="s2">"solver"</span><span class="p">:</span> <span class="s2">"MOSEK"</span><span class="p">})</span>
 </pre></div>
 </div>
 </dd>
@@ -462,8 +462,8 @@ where K = <cite>posterior_param_num</cite>, eps = <cite>self.eps</cite></p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">])</span>  <span class="c1"># e.g., [0.5, -1.2, ..., 0.8]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">])</span>      <span class="c1"># e.g., 0.3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">])</span>  <span class="c1"># e.g., [0.5, -1.2, ..., 0.8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"b"</span><span class="p">])</span>      <span class="c1"># e.g., 0.3</span>
 </pre></div>
 </div>
 </dd>

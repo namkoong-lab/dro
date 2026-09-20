@@ -357,12 +357,12 @@ for companion Holistic Robust DRO material.</p>
 <span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
     <span class="n">reg_param</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">lambda_param</span><span class="o">=</span><span class="mf">1e2</span><span class="p">,</span>
     <span class="n">k_sample_max</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span>
+    <span class="n">optimization_type</span><span class="o">=</span><span class="s2">"SG"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
@@ -378,10 +378,10 @@ for companion Holistic Robust DRO material.</p>
 <p>For faster initial experiments, reduce <code class="docutils literal notranslate"><span class="pre">k_sample_max</span></code> (for example, to <code class="docutils literal notranslate"><span class="pre">3</span></code>) and increase it for the final run after selecting the other hyperparameters. The <code class="docutils literal notranslate"><span class="pre">lr</span></code>, <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, <code class="docutils literal notranslate"><span class="pre">epochs</span></code>, and <code class="docutils literal notranslate"><span class="pre">train_ratio</span></code> training settings are passed to <code class="docutils literal notranslate"><span class="pre">fit()</span></code>, rather than to the constructor.</p>
 <p>An existing Sinkhorn model can be reconfigured with <code class="docutils literal notranslate"><span class="pre">update()</span></code>. Note that the update keys are <code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">lambda</span></code>, whereas the corresponding constructor arguments are <code class="docutils literal notranslate"><span class="pre">reg_param</span></code> and <code class="docutils literal notranslate"><span class="pre">lambda_param</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="s2">&quot;reg&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span>
-    <span class="s2">&quot;lambda&quot;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
-    <span class="s2">&quot;k_sample_max&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-    <span class="s2">&quot;optimization_type&quot;</span><span class="p">:</span> <span class="s2">&quot;MLMC&quot;</span><span class="p">,</span>
+    <span class="s2">"reg"</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span>
+    <span class="s2">"lambda"</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
+    <span class="s2">"k_sample_max"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">"optimization_type"</span><span class="p">:</span> <span class="s2">"MLMC"</span><span class="p">,</span>
 <span class="p">})</span>
 </pre></div>
 </div>
@@ -445,8 +445,8 @@ the other neural DRO estimators.</p>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">group_idx</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
     <span class="n">step_size</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -464,7 +464,7 @@ the other neural DRO estimators.</p>
 contains the final adversarial probabilities in the same order.
 <code class="docutils literal notranslate"><span class="pre">batch_group_losses_</span></code> contains the most recently observed mini-batch loss for
 each group. Both <code class="docutils literal notranslate"><span class="pre">group_idx</span></code> and <code class="docutils literal notranslate"><span class="pre">step_size</span></code> can be changed before refitting:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;group_idx&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;step_size&quot;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">})</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"group_idx"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"step_size"</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>Regularization and early stopping are especially important for

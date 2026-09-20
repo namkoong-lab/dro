@@ -115,6 +115,9 @@ As for the current release, `dro` supports:
    * - :file:`dro.src.linear_dro.or_wasserstein_dro`
      - ``ORWDRO``
      - Outlier-Robust Wasserstein DRO
+   * - :file:`dro.linear_model.group_dro`
+     - ``GroupDRO``
+     - Linear Group DRO minimizing the worst empirical group loss
 
 (3) NN DRO models
 -----------------
@@ -138,6 +141,12 @@ As for the current release, `dro` supports:
    * - :file:`dro.src.neural_model.hrdro_nn`
      - ``HRNNDRO``
      - Holistic Robust NN DRO
+   * - :file:`dro.neural_model.sinkhorn_nn`
+     - ``SinkhornNNDRO``
+     - Sinkhorn DRO for neural networks
+   * - :file:`dro.neural_model.groupdro_nn`
+     - ``GroupNNDRO``
+     - Neural Group DRO with adversarial group reweighting
 
 
 

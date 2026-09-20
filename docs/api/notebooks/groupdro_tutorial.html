@@ -319,8 +319,8 @@
 <span class="n">group_idx</span> <span class="o">=</span> <span class="mi">2</span>
 
 <span class="n">unique_groups</span><span class="p">,</span> <span class="n">group_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X shape:&quot;</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;group counts:&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="p">):</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_groups</span><span class="p">,</span> <span class="n">group_counts</span><span class="p">)})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"X shape:"</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"group counts:"</span><span class="p">,</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="p">):</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_groups</span><span class="p">,</span> <span class="n">group_counts</span><span class="p">)})</span>
 </pre></div>
 </div>
 </div>
@@ -354,25 +354,25 @@ group counts: {0: 120, 1: 40}
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solver</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
-    <span class="p">(</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;CLARABEL&quot;</span><span class="p">,</span> <span class="s2">&quot;ECOS&quot;</span><span class="p">,</span> <span class="s2">&quot;SCS&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">cp</span><span class="o">.</span><span class="n">installed_solvers</span><span class="p">()),</span>
+    <span class="p">(</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"CLARABEL"</span><span class="p">,</span> <span class="s2">"ECOS"</span><span class="p">,</span> <span class="s2">"SCS"</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">cp</span><span class="o">.</span><span class="n">installed_solvers</span><span class="p">()),</span>
     <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="k">if</span> <span class="n">solver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Install CLARABEL, ECOS, or SCS to run the linear example.&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Install CLARABEL, ECOS, or SCS to run the linear example."</span><span class="p">)</span>
 
 <span class="n">linear_groupdro</span> <span class="o">=</span> <span class="n">GroupDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">group_idx</span><span class="o">=</span><span class="n">group_idx</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;svm&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"svm"</span><span class="p">,</span>
     <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">linear_result</span> <span class="o">=</span> <span class="n">linear_groupdro</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_linear</span><span class="p">)</span>
 <span class="n">linear_predictions</span> <span class="o">=</span> <span class="n">linear_groupdro</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;solver:&quot;</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;robust loss:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">linear_result</span><span class="p">[</span><span class="s2">&quot;robust_loss&quot;</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;group losses:&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">linear_result</span><span class="p">[</span><span class="s2">&quot;group_values&quot;</span><span class="p">],</span> <span class="n">linear_result</span><span class="p">[</span><span class="s2">&quot;group_losses&quot;</span><span class="p">])))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;accuracy by group:&quot;</span><span class="p">,</span> <span class="n">accuracy_by_group</span><span class="p">(</span><span class="n">linear_predictions</span><span class="p">,</span> <span class="n">y_linear</span><span class="p">,</span> <span class="n">groups</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"solver:"</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"robust loss:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">linear_result</span><span class="p">[</span><span class="s2">"robust_loss"</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"group losses:"</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">linear_result</span><span class="p">[</span><span class="s2">"group_values"</span><span class="p">],</span> <span class="n">linear_result</span><span class="p">[</span><span class="s2">"group_losses"</span><span class="p">])))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"accuracy by group:"</span><span class="p">,</span> <span class="n">accuracy_by_group</span><span class="p">(</span><span class="n">linear_predictions</span><span class="p">,</span> <span class="n">y_linear</span><span class="p">,</span> <span class="n">groups</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -393,7 +393,7 @@ accuracy by group: {0: 0.8583333333333333, 1: 0.875}
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">linear_accuracy</span><span class="p">,</span> <span class="n">linear_f1</span> <span class="o">=</span> <span class="n">linear_groupdro</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_linear</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">({</span><span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="n">linear_accuracy</span><span class="p">,</span> <span class="s2">&quot;macro_f1&quot;</span><span class="p">:</span> <span class="n">linear_f1</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">({</span><span class="s2">"accuracy"</span><span class="p">:</span> <span class="n">linear_accuracy</span><span class="p">,</span> <span class="s2">"macro_f1"</span><span class="p">:</span> <span class="n">linear_f1</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -420,8 +420,8 @@ accuracy by group: {0: 0.8583333333333333, 1: 0.875}
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">group_idx</span><span class="o">=</span><span class="n">group_idx</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
     <span class="n">step_size</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">neural_metrics</span> <span class="o">=</span> <span class="n">neural_groupdro</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
@@ -435,10 +435,10 @@ accuracy by group: {0: 0.8583333333333333, 1: 0.875}
 <span class="p">)</span>
 <span class="n">neural_predictions</span> <span class="o">=</span> <span class="n">neural_groupdro</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;validation metrics:&quot;</span><span class="p">,</span> <span class="n">neural_metrics</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;group values:&quot;</span><span class="p">,</span> <span class="n">neural_groupdro</span><span class="o">.</span><span class="n">group_values_</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;adversarial weights:&quot;</span><span class="p">,</span> <span class="n">neural_groupdro</span><span class="o">.</span><span class="n">group_weights_</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;accuracy by group:&quot;</span><span class="p">,</span> <span class="n">accuracy_by_group</span><span class="p">(</span><span class="n">neural_predictions</span><span class="p">,</span> <span class="n">y_neural</span><span class="p">,</span> <span class="n">groups</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"validation metrics:"</span><span class="p">,</span> <span class="n">neural_metrics</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"group values:"</span><span class="p">,</span> <span class="n">neural_groupdro</span><span class="o">.</span><span class="n">group_values_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"adversarial weights:"</span><span class="p">,</span> <span class="n">neural_groupdro</span><span class="o">.</span><span class="n">group_weights_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"accuracy by group:"</span><span class="p">,</span> <span class="n">accuracy_by_group</span><span class="p">(</span><span class="n">neural_predictions</span><span class="p">,</span> <span class="n">y_neural</span><span class="p">,</span> <span class="n">groups</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>

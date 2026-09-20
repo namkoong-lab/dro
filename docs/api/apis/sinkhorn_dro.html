@@ -340,11 +340,11 @@ Supported: <code class="docutils literal notranslate"><span class="pre">'cpu'</s
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">reg_param</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lambda_param</span><span class="o">=</span><span class="mf">50.0</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># &#39;cpu&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># 'cpu'</span>
 </pre></div>
 </div>
 </dd>
@@ -379,9 +379,9 @@ Supported: <code class="docutils literal notranslate"><span class="pre">'cpu'</s
 </dl>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;reg&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;lambda&#39;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;k_sample_max&#39;</span><span class="p">:</span> <span class="mi">3</span>
+<span class="gp">... </span>    <span class="s1">'reg'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'lambda'</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'k_sample_max'</span><span class="p">:</span> <span class="mi">3</span>
 <span class="gp">... </span><span class="p">})</span>  <span class="c1"># Explicit type conversion handled internally</span>
 </pre></div>
 </div>
@@ -470,13 +470,13 @@ Must match model’s expected input dimension</p></li>
 <dl>
 <dt>Example:    </dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Regression</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_reg</span><span class="p">,</span> <span class="n">y_reg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;ols&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s1">'ols'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mse</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_reg</span><span class="p">,</span> <span class="n">y_reg</span><span class="p">)</span>  <span class="c1"># e.g. 0.153</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Classification  </span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_clf</span><span class="p">,</span> <span class="n">y_clf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">acc</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_clf</span><span class="p">,</span> <span class="n">y_clf</span><span class="p">)</span>  <span class="c1"># e.g. (0.92, 0.89)</span>
 </pre></div>
 </div>
@@ -536,9 +536,9 @@ Should match model’s input dimension (n_features == input_dim)</p></li>
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="s1">&#39;MLMC&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">])</span>  <span class="c1"># [-0.12, 1.45, ...]</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SinkhornDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="s1">'MLMC'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'weights'</span><span class="p">])</span>  <span class="c1"># [-0.12, 1.45, ...]</span>
 </pre></div>
 </div>
 </dd>

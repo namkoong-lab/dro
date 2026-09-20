@@ -359,8 +359,8 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;MOSEK&#39;</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">solver</span><span class="o">=</span><span class="s1">'MOSEK'</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">cost_matrix</span><span class="o">.</span><span class="n">shape</span>  <span class="c1"># (5, 5)</span>
 </pre></div>
@@ -421,9 +421,9 @@ makes the robust absolute loss unbounded. OLS requires
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_config</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">... </span>    <span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;cost_matrix&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'p'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'cost_matrix'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="gp">... </span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_config</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">p</span>  <span class="c1"># 2.0</span>
@@ -561,8 +561,8 @@ Disable for standardized data. Defaults to True.</p></li>
 </dd>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDROsatisficing</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;ECOS&#39;</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">solver</span><span class="o">=</span><span class="s1">'ECOS'</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">cost_matrix</span><span class="o">.</span><span class="n">shape</span>  <span class="c1"># (5, 5)</span>
 </pre></div>

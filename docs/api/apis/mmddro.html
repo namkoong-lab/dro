@@ -344,8 +344,8 @@ kernel. Defaults to 1.0.</p></li>
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">sampling_method</span> <span class="o">=</span> <span class="s1">&#39;hull&#39;</span> 
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'rbf'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">sampling_method</span> <span class="o">=</span> <span class="s1">'hull'</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="mf">0.5</span>  
 </pre></div>
 </div>
@@ -437,12 +437,12 @@ data-driven default.</p>
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>              
-<span class="gp">... </span>    <span class="s1">&#39;sampling_method&#39;</span><span class="p">:</span> <span class="s1">&#39;hull&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="s1">&#39;polynomial&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;kernel_degree&#39;</span><span class="p">:</span> <span class="mi">2</span>
+<span class="gp">... </span>    <span class="s1">'eta'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>              
+<span class="gp">... </span>    <span class="s1">'sampling_method'</span><span class="p">:</span> <span class="s1">'hull'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'kernel'</span><span class="p">:</span> <span class="s1">'polynomial'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'kernel_degree'</span><span class="p">:</span> <span class="mi">2</span>
 <span class="gp">... </span><span class="p">})</span>
 </pre></div>
 </div>

@@ -2,7 +2,7 @@ from setuptools import setup,find_packages
 import os 
 
 here = os.path.abspath(os.path.dirname(__file__))
-md_path = os.path.join(here, 'src/README.md')
+md_path = os.path.join(here, 'README.md')
 
 setup(
     name='dro',

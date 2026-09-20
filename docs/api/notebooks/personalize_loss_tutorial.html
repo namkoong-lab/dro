@@ -355,11 +355,11 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fdro_model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span>
-    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;lad&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;CLARABEL&#39;</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'lad'</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">'CLARABEL'</span>
 <span class="p">)</span>
 <span class="n">fdro_model</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_loss</span><span class="p">,</span> <span class="n">fdro_model</span><span class="p">)</span>
 <span class="n">fdro_model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_cvx_loss</span><span class="p">,</span> <span class="n">fdro_model</span><span class="p">)</span>
-<span class="n">fdro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">})</span>
+<span class="n">fdro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">})</span>
 
 <span class="n">fdro_parameters</span> <span class="o">=</span> <span class="n">fdro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">fdro_parameters</span>
@@ -390,14 +390,14 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">newsvendor_penalization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">!=</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">!=</span> <span class="s1">'linear'</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="s1">&#39;This tutorial penalty is written for a linear feature map.&#39;</span>
+            <span class="s1">'This tutorial penalty is written for a linear feature map.'</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">dual_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="s1">'inf'</span><span class="p">:</span>
         <span class="n">dual_norm</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">dual_norm</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
@@ -407,7 +407,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cost_inv_transform</span> <span class="o">@</span> <span class="n">theta</span><span class="p">,</span>
         <span class="n">dual_norm</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">==</span> <span class="s1">&#39;inf&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa</span> <span class="o">==</span> <span class="s1">'inf'</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">residual_lipschitz</span> <span class="o">*</span> <span class="n">feature_term</span>
     <span class="k">return</span> <span class="n">residual_lipschitz</span> <span class="o">*</span> <span class="n">cp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
         <span class="n">feature_term</span><span class="p">,</span>
@@ -421,12 +421,12 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wdro_model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span>
-    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;lad&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;CLARABEL&#39;</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'lad'</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">'CLARABEL'</span>
 <span class="p">)</span>
 <span class="n">wdro_model</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_loss</span><span class="p">,</span> <span class="n">wdro_model</span><span class="p">)</span>
 <span class="n">wdro_model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_cvx_loss</span><span class="p">,</span> <span class="n">wdro_model</span><span class="p">)</span>
 <span class="n">wdro_model</span><span class="o">.</span><span class="n">_penalization</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">newsvendor_penalization</span><span class="p">,</span> <span class="n">wdro_model</span><span class="p">)</span>
-<span class="n">wdro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="s1">&#39;inf&#39;</span><span class="p">})</span>
+<span class="n">wdro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s1">'p'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'kappa'</span><span class="p">:</span> <span class="s1">'inf'</span><span class="p">})</span>
 
 <span class="n">wdro_parameters</span> <span class="o">=</span> <span class="n">wdro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">wdro_parameters</span>
@@ -499,7 +499,7 @@
 <span class="n">decision_robust_loss</span> <span class="o">=</span> <span class="n">DecisionAwareRobustLoss</span><span class="p">(</span>
     <span class="n">underage_cost</span><span class="o">=</span><span class="n">UNDERAGE_COST</span><span class="p">,</span>
     <span class="n">overage_cost</span><span class="o">=</span><span class="n">OVERAGE_COST</span><span class="p">,</span>
-    <span class="n">geometry</span><span class="o">=</span><span class="s1">&#39;chi-square&#39;</span><span class="p">,</span>
+    <span class="n">geometry</span><span class="o">=</span><span class="s1">'chi-square'</span><span class="p">,</span>
     <span class="n">size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
 <span class="p">)</span>
@@ -507,11 +507,11 @@
 <span class="n">fdro_nn</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">'regression'</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span>
     <span class="n">size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">),</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
 <span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">decision_aware_fdro_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
@@ -532,10 +532,10 @@
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wdro_nn</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">'regression'</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span>
     <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">),</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
 <span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">decision_aware_wdro_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
@@ -563,9 +563,9 @@
 <span class="n">combined_check</span> <span class="o">=</span> <span class="n">fdro_objective</span> <span class="o">+</span> <span class="n">wdro_individual_losses</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="n">combined_check</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;f-DRO robust objective:&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">fdro_objective</span><span class="o">.</span><span class="n">detach</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WDRO individual losses:&#39;</span><span class="p">,</span> <span class="n">wdro_individual_losses</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;gradient shape:&#39;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">batch_predictions</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'f-DRO robust objective:'</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">fdro_objective</span><span class="o">.</span><span class="n">detach</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'WDRO individual losses:'</span><span class="p">,</span> <span class="n">wdro_individual_losses</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'gradient shape:'</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">batch_predictions</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>

@@ -325,7 +325,7 @@
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">HR_DRO_LR</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
-<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;logistic&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">'logistic'</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">r</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
 <span class="gp">... </span>    <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">epsilon_prime</span><span class="o">=</span><span class="mf">0.8</span>
@@ -374,8 +374,8 @@ Changes require manual re-fitting to take effect.</p>
 </div></blockquote>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">HR_DRO_LR</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">&quot;epsilon&quot;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">})</span>  <span class="c1"># Valid update</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">})</span>  <span class="c1"># Invalid alpha</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"r"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">"epsilon"</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">})</span>  <span class="c1"># Valid update</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"alpha"</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">})</span>  <span class="c1"># Invalid alpha</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">    </span><span class="o">...</span>
 <span class="gr">ValueError</span>: <span class="n">alpha must be in (0, 1], got 1.5</span>
@@ -457,8 +457,8 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>  <span class="c1"># Binary labels</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (3,)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dual_vars&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>  <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (3,)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">"dual_vars"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>  <span class="c1"># True</span>
 </pre></div>
 </div>
 </dd>

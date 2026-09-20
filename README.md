@@ -223,6 +223,11 @@ The models listed below are solved by exact solvers from ``cvxpy``.
     <td class="tg-0lax">ORWDRO</td>
     <td class="tg-0lax">Outlier-Robust Wasserstein DRO</td>
   </tr>
+  <tr>
+    <td class="tg-0lax">dro.linear_model.group_dro</td>
+    <td class="tg-0lax">GroupDRO</td>
+    <td class="tg-0lax">Linear Group DRO minimizing the worst empirical group loss</td>
+  </tr>
 </tbody></table>
 
 
@@ -258,6 +263,16 @@ The models listed below are solved by gradient descent (``Pytorch``).
     <td class="tg-0lax">dro.neural_model.hrdro_nn</td>
     <td class="tg-0lax">HRNNDRO</td>
     <td class="tg-0lax">Holistic Robust NN DRO</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">dro.neural_model.sinkhorn_nn</td>
+    <td class="tg-0lax">SinkhornNNDRO</td>
+    <td class="tg-0lax">Sinkhorn DRO for neural networks</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">dro.neural_model.groupdro_nn</td>
+    <td class="tg-0lax">GroupNNDRO</td>
+    <td class="tg-0lax">Neural Group DRO with adversarial group reweighting</td>
   </tr>
 </tbody>
 </table>
@@ -332,4 +347,3 @@ ps: our logo is generated via GPT:)
 [2] Certifying Some Distributional Robustness with Principled Adversarial Training. ICLR 2018.
 
 [3] Distributionally Robust Optimization with Data Geometry. NeurIPS 2022.
-
