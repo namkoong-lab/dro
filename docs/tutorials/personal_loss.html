@@ -295,9 +295,10 @@
 </pre></div>
 </div>
 <p>if we want to modify the <code class="docutils literal notranslate"><span class="pre">self._cvx_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_loss</span></code> functions in the model class.</p>
-<section id="linear-exact-dro-methods">
-<h2>1. Linear (Exact) DRO Methods<a class="headerlink" href="#linear-exact-dro-methods" title="Link to this heading">¶</a></h2>
-<p>In DRO models that are solved exactly, for each particular DRO type, we change <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> in each class.</p>
+<section id="linear-convex-dro-methods">
+<h2>1. Linear (Convex) DRO Methods<a class="headerlink" href="#linear-convex-dro-methods" title="Link to this heading">¶</a></h2>
+<p>For linear DRO models formulated in CVXPY, customize both <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> for the chosen loss function.</p>
 <p>As a general high-level example, consider a convex piecewise-affine loss of the
 prediction residual</p>
 <div class="math notranslate nohighlight">
@@ -347,38 +348,97 @@ formulation in Theorem 4 of
 <section id="nn-based-dro-methods">
 <h2>2. NN-Based DRO Methods<a class="headerlink" href="#nn-based-dro-methods" title="Link to this heading">¶</a></h2>
 <section id="personalized-loss">
-<h3>2.1 Personalized Loss<a class="headerlink" href="#personalized-loss" title="Link to this heading">¶</a></h3>
-<p>For <code class="docutils literal notranslate"><span class="pre">f-DRO</span></code> and <code class="docutils literal notranslate"><span class="pre">WDRO</span></code> methods, our package supports personalized loss functions.</p>
+<h3>2.1 Personalized loss<a class="headerlink" href="#personalized-loss" title="Link to this heading">¶</a></h3>
 <p>For example, a decision-aware regression model can use the unbalanced L1 loss</p>
 <div class="math notranslate nohighlight">
 \[
 c_{\mathrm{under}}(y-\hat y)^+
 + c_{\mathrm{over}}(\hat y-y)^+,
 \]</div>
-<p>where the two coefficients encode the different downstream costs of
-under-predicting and over-predicting. The final section of the personalized-loss
-notebook shows how to use this per-sample loss in both the neural <span class="math notranslate nohighlight">\(f\)</span>-DRO and
-neural Wasserstein hooks.</p>
-<section id="id1">
-<h4><span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
-<p>To integrate a custom loss function:</p>
-<ol class="arabic simple">
-<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">fdro_utils.py</span></code>), and re-write the <code class="docutils literal notranslate"><span class="pre">self._compute_individual_loss()</span></code> function to user-specified forms.</p></li>
-<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code> or <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">fdro_nn.py</span></code>), and re-write the <code class="docutils literal notranslate"><span class="pre">self._criterion()</span></code> function with the newly-modified <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> instance above.</p></li>
-</ol>
+<p>where the coefficients encode the different costs of under-predicting and
+over-predicting. The <a class="reference internal" href="../api/notebooks/personalize_loss_tutorial.html"><span class="doc">personalized-loss notebook</span></a>
+shows the corresponding per-sample loss for neural <span class="math notranslate nohighlight">\(f\)</span>-DRO and Wasserstein DRO.</p>
+<section id="neural-f-dro">
+<h4>Neural <span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#neural-f-dro" title="Link to this heading">¶</a></h4>
+<p>For <code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code> and <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code>, subclass <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> from <code class="docutils literal notranslate"><span class="pre">fdro_utils.py</span></code> and
+override <code class="docutils literal notranslate"><span class="pre">_compute_individual_loss()</span></code> to return one loss per sample. Bind an
+instance to the model by overriding <code class="docutils literal notranslate"><span class="pre">_criterion(outputs,</span> <span class="pre">labels)</span></code>; it must
+return the scalar robust objective. The notebook demonstrates this for both
+chi-squared and CVaR geometry.</p>
 </section>
-<section id="wdro">
-<h4>WDRO<a class="headerlink" href="#wdro" title="Link to this heading">¶</a></h4>
-<p>When personalizing the loss function for WDRO, please:</p>
-<ol class="arabic simple">
-<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">wdro_nn.py</span></code>).</p></li>
-<li><p>Re-write the <code class="docutils literal notranslate"><span class="pre">self._loss()</span></code> function.</p></li>
-</ol>
+<section id="neural-wasserstein-dro">
+<h4>Neural Wasserstein DRO<a class="headerlink" href="#neural-wasserstein-dro" title="Link to this heading">¶</a></h4>
+<p>For <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code>, override <code class="docutils literal notranslate"><span class="pre">_loss(outputs,</span> <span class="pre">labels)</span></code> to return one loss per sample.
+With <code class="docutils literal notranslate"><span class="pre">robust_objective='transport_penalty'</span></code>, the model uses this loss in both
+the inner perturbation search and the outer training objective. With
+<code class="docutils literal notranslate"><span class="pre">robust_objective='norm_ball'</span></code> and positive <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>, Torchattacks generates
+perturbations using its classification cross-entropy loss; <code class="docutils literal notranslate"><span class="pre">_loss</span></code> changes the
+outer objective but does not change that attack objective. A custom norm-ball
+inner loss requires a matching custom attack. The Torchattacks path also
+expects classification labels, so use the transport-penalty path for the
+notebook’s continuous regression targets when perturbations are enabled.</p>
+</section>
+<section id="hr-dro">
+<h4>HR-DRO<a class="headerlink" href="#hr-dro" title="Link to this heading">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code> currently computes cross-entropy or MSE inside <code class="docutils literal notranslate"><span class="pre">_criterion</span></code> and
+uses Torchattacks when <code class="docutils literal notranslate"><span class="pre">epsilon</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>. Replacing that loss requires a matching
+change to the per-sample losses passed to its CVXPY weight problem and, if the
+attack objective should change, a custom attack. Its training controls below
+do not change the loss or attack objective.</p>
 </section>
 </section>
 <section id="personalized-model-architecture">
-<h3>2.2 Personalized Model Architecture<a class="headerlink" href="#personalized-model-architecture" title="Link to this heading">¶</a></h3>
-<p>Users could pass their own model via <code class="docutils literal notranslate"><span class="pre">self.update()</span></code> function. Note that the personalized model must be written via <code class="docutils literal notranslate"><span class="pre">PyTorch</span></code> and is a sub-class of <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>.</p>
+<h3>2.2 Personalized model architecture<a class="headerlink" href="#personalized-model-architecture" title="Link to this heading">¶</a></h3>
+<p>Pass a custom <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> through <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> before fitting.
+For HR-DRO and WNNDRO norm-ball mode, this also binds the adversarial attack to
+the replacement network.
+The <code class="docutils literal notranslate"><span class="pre">update(config)</span></code> methods of neural <span class="math notranslate nohighlight">\(f\)</span>-DRO rebuild a preset network; they
+are not the custom-network interface. Create a PyTorch optimizer only <strong>after</strong>
+the final network has been installed, so it references that network’s
+parameters.</p>
+</section>
+<section id="data-loaders-optimizers-and-schedulers">
+<h3>2.3 Data loaders, optimizers, and schedulers<a class="headerlink" href="#data-loaders-optimizers-and-schedulers" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code>, <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code>, <code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code>, and <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> accept these optional controls
+through <code class="docutils literal notranslate"><span class="pre">fit(...)</span></code>. Supply both <code class="docutils literal notranslate"><span class="pre">train_loader</span></code> and <code class="docutils literal notranslate"><span class="pre">val_loader</span></code> as loaders of
+<code class="docutils literal notranslate"><span class="pre">(inputs,</span> <span class="pre">labels)</span></code> batches, and omit <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> on this path. Pass a PyTorch
+optimizer built from <code class="docutils literal notranslate"><span class="pre">model.model.parameters()</span></code>; a scheduler also requires an
+explicit optimizer. <code class="docutils literal notranslate"><span class="pre">scheduler_step='epoch'</span></code> steps it after each epoch, while
+<code class="docutils literal notranslate"><span class="pre">scheduler_step='batch'</span></code> steps it after each training batch. Without external
+loaders, <code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y,</span> <span class="pre">...)</span></code> retains the existing internal split and Adam default.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.fdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chi2NNDRO</span>
+
+<span class="c1"># X_train/X_val are float tensors; y_train/y_val are long class labels.</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">custom_network</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">custom_network</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">train_loader</span><span class="o">=</span><span class="n">train_loader</span><span class="p">,</span>
+    <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+    <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span>
+    <span class="n">scheduler_step</span><span class="o">=</span><span class="s1">'epoch'</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The same fitting arguments apply to <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code> and <code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code> instances.
+For HR-DRO, set <code class="docutils literal notranslate"><span class="pre">train_batch_size</span></code> to the loader’s usual batch size when
+constructing the model. A shorter final batch is handled by rebuilding its
+CVXPY problem for that batch size. Torchattacks clips adversarial inputs to
+<code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>, so prepare inputs accordingly when <code class="docutils literal notranslate"><span class="pre">epsilon</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>. The notebook
+includes complete chi-squared, CVaR, and HR-DRO fitting examples.</p>
 </section>
 </section>
 <section id="tree-based-dro-methods">
@@ -404,19 +464,21 @@ for end-to-end linear and neural customization examples.</p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Personalization</a><ul>
-<li><a class="reference internal" href="#linear-exact-dro-methods">1. Linear (Exact) DRO Methods</a><ul>
+<li><a class="reference internal" href="#linear-convex-dro-methods">1. Linear (Convex) DRO Methods</a><ul>
 <li><a class="reference internal" href="#f-dro"><span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
 <li><a class="reference internal" href="#wasserstein-dro">Wasserstein DRO</a></li>
 <li><a class="reference internal" href="#remark">Remark</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#nn-based-dro-methods">2. NN-Based DRO Methods</a><ul>
-<li><a class="reference internal" href="#personalized-loss">2.1 Personalized Loss</a><ul>
-<li><a class="reference internal" href="#id1"><span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
-<li><a class="reference internal" href="#wdro">WDRO</a></li>
+<li><a class="reference internal" href="#personalized-loss">2.1 Personalized loss</a><ul>
+<li><a class="reference internal" href="#neural-f-dro">Neural <span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
+<li><a class="reference internal" href="#neural-wasserstein-dro">Neural Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#hr-dro">HR-DRO</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#personalized-model-architecture">2.2 Personalized Model Architecture</a></li>
+<li><a class="reference internal" href="#personalized-model-architecture">2.2 Personalized model architecture</a></li>
+<li><a class="reference internal" href="#data-loaders-optimizers-and-schedulers">2.3 Data loaders, optimizers, and schedulers</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#tree-based-dro-methods">3. Tree-Based DRO Methods</a></li>

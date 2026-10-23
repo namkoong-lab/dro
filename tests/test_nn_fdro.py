@@ -26,16 +26,16 @@ class TestNeuralDROModels(unittest.TestCase):
         self.assertIsInstance(model.robust_obj, float)
         self.assertTrue(np.isfinite(model.robust_obj))
 
-        # Test prediction shape
-        preds = model.predict(self.X_cls[:5])
+        # Test predictions for the task being exercised.
+        inputs = self.X_cls[:5] if is_classification else self.X_reg[:5]
+        preds = model.predict(inputs)
         if is_classification:
             self.assertEqual(preds.shape, (5,))
+            score = model.score(self.X_cls, self.y_cls)[0]
+            self.assertIsInstance(score, float)
         else:
             self.assertEqual(preds.shape, (5,))
-
-        # Test scoring
-        score = model.score(self.X_cls, self.y_cls)[0]
-        self.assertIsInstance(score, float)
+            self.assertTrue(np.issubdtype(preds.dtype, np.floating))
 
     def _test_invalid_parameters(self, model_class):
         """Test parameter validation for DRO models."""
@@ -93,6 +93,41 @@ class TestNeuralDROModels(unittest.TestCase):
     def test_chi2nndro_parameter_validation(self):
         """Test Chi2NNDRO parameter validation."""
         self._test_invalid_parameters(Chi2NNDRO)
+
+    def test_zero_radius_chi2_matches_erm_loss_and_gradient(self):
+        for task in ('classification', 'regression'):
+            for reg in (0.0, 0.2):
+                with self.subTest(task=task, reg=reg):
+                    model = Chi2NNDRO(
+                        input_dim=2, num_classes=2, task_type=task,
+                        model_type='linear', size=0.0, reg=reg,
+                    )
+                    if task == 'classification':
+                        outputs = torch.tensor([[1.0, -0.5], [0.2, 0.8], [-0.4, 0.1]], requires_grad=True)
+                        labels = torch.tensor([0, 0, 1])
+                        expected = torch.nn.functional.cross_entropy(outputs, labels)
+                    else:
+                        outputs = torch.tensor([[0.5], [2.0], [-0.3]], requires_grad=True)
+                        labels = torch.tensor([1.0, -0.5, 0.2])
+                        expected = torch.nn.functional.mse_loss(outputs.squeeze(), labels)
+                    actual = model._criterion(outputs, labels)
+                    torch.testing.assert_close(actual, expected)
+                    actual_grad = torch.autograd.grad(actual, outputs, retain_graph=True)[0]
+                    expected_grad = torch.autograd.grad(expected, outputs)[0]
+                    torch.testing.assert_close(actual_grad, expected_grad)
+
+    def test_zero_radius_chi2_training(self):
+        for task, X, y in (
+            ('classification', self.X_cls, self.y_cls),
+            ('regression', self.X_reg, self.y_reg),
+        ):
+            with self.subTest(task=task):
+                model = Chi2NNDRO(
+                    input_dim=5, num_classes=3, task_type=task,
+                    model_type='linear', size=0.0,
+                )
+                model.fit(X[:16], y[:16], epochs=1)
+                self.assertTrue(np.isfinite(model.robust_obj))
 
     def test_cvarnndro_classification(self):
         """Test CVaRNNDRO for multi-class classification."""

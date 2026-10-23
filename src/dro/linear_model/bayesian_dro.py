@@ -17,13 +17,16 @@ class BayesianDRO(BaseLinearDRO):
     
     This model minimizes a Bayesian version for regression and other types of losses
 
+    With ``model_type='newsvendor'``, the prediction is ``X @ theta`` and
+    underage costs 3 per unit while overage costs 1 per unit.
+
     :ivar robust_obj: Robust empirical optimization objective from the most
         recent successful fit, or ``None`` before it is available.
 
     Reference: <https://epubs.siam.org/doi/10.1137/21M1465548>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', eps: float = 0.0, distance_type: str = 'KL'):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'CLARABEL', eps: float = 0.0, distance_type: str = 'KL'):
         """Initialize the Bayesian DRO model.
 
         :param input_dim: Dimensionality of the input features.
@@ -32,7 +35,7 @@ class BayesianDRO(BaseLinearDRO):
         :type model_type: str
         :param fit_intercept: Whether to fit an intercept term. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered). Defaults to True.
         :type fit_intercept: bool
-        :param solver: Optimization solver. Supported solvers: 'MOSEK'.
+        :param solver: Installed CVXPY solver. Defaults to 'CLARABEL'.
         :type solver: str
         :param eps: Robustness parameter for KL-divergence ambiguity set. A higher value increases robustness. Defaults to 0.0 (non-robust).
         :type eps: float
@@ -71,7 +74,7 @@ class BayesianDRO(BaseLinearDRO):
 
             - ``eps``: Robustness parameter (non-negative float)
 
-            - ``solver``: Optimization solver (e.g., 'MOSEK', 'SCS')
+            - ``solver``: Optimization solver (e.g., 'CLARABEL', 'SCS')
 
             - ``distance_type``: Distance metric ('KL' or 'chi2')
 
@@ -94,7 +97,7 @@ class BayesianDRO(BaseLinearDRO):
             - For safety, avoid modifying ``input_dim`` or ``model_type`` after initialization.
 
         Example:
-            >>> model.update({"eps": 0.5, "distance_type": "chi2", "solver": "MOSEK"})
+            >>> model.update({"eps": 0.5, "distance_type": "chi2", "solver": "CLARABEL"})
         """
         if 'distance_type' in config.keys():
             distance_type = config['distance_type']
@@ -316,7 +319,9 @@ class BayesianDRO(BaseLinearDRO):
 
     def _cvx_loss(self, X: cp.Expression, y: cp.Expression, theta: cp.Expression, b: cp.Expression) -> cp.Expression:
         """
-        Augment the CVXPY loss expression for the BayesianDRO model
+        Augment the CVXPY loss expression for the BayesianDRO model.
+
+        Newsvendor loss charges 3 per unit of underage and 1 per unit of overage.
         """
         if self.model_type == 'svm':
             return cp.pos(1 - cp.multiply(y, X @ theta + b))
@@ -327,8 +332,7 @@ class BayesianDRO(BaseLinearDRO):
         elif self.model_type == 'lad':
             return cp.abs(y - X @ theta - b)
         elif self.model_type == 'newsvendor':
-            return 1 * cp.pos(y - X @ theta) + cp.pos(X @ theta - y)
+            return 3 * cp.pos(y - X @ theta) + cp.pos(X @ theta - y)
         else:
             raise NotImplementedError("CVXPY loss not implemented for the specified model_type value.")
-
 

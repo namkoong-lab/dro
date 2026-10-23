@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Linear DRO with Hybrid Distances &#8212; dro 0.4.2 documentation</title>
+    <title>Hybrid-distance DRO for linear models &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -258,7 +258,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Hybrid-distance DRO for Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">NN Sinkhorn DRO</a></li>
@@ -279,9 +279,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="Linear-DRO-with-Hybrid-Distances">
-<h1>Linear DRO with Hybrid Distances<a class="headerlink" href="#Linear-DRO-with-Hybrid-Distances" title="Link to this heading">¶</a></h1>
-<p>In this part, we provide some examples for DRO models with mixed distances, where we exemplify with Sinkhorn DRO, MOT DRO and Outlier-Robust WDRO.</p>
+  <section id="Hybrid-distance-DRO-for-linear-models">
+<h1>Hybrid-distance DRO for linear models<a class="headerlink" href="#Hybrid-distance-DRO-for-linear-models" title="Link to this heading">¶</a></h1>
+<p>This notebook gives linear-model examples of Hybrid-distance DRO: Sinkhorn DRO, MOT-DRO, Outlier-Robust WDRO, and Holistic Robust DRO.</p>
 <section id="Sinkhorn-DRO">
 <h2>Sinkhorn DRO<a class="headerlink" href="#Sinkhorn-DRO" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
@@ -296,15 +296,15 @@
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="c1"># Model training</span>
-<span class="n">dro_model</span> <span class="o">=</span> <span class="n">SinkhornLinearDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">k_sample_max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">reg_param</span><span class="o">=</span><span class="mf">.001</span><span class="p">,</span> <span class="n">lambda_param</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;lad&#39;</span><span class="p">)</span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">dro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">optimization_type</span><span class="o">=</span><span class="s2">&quot;SG&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sinkhorn DRO Parameters:&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">dro_model</span> <span class="o">=</span> <span class="n">SinkhornLinearDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">k_sample_max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">reg_param</span><span class="o">=</span><span class="mf">.001</span><span class="p">,</span> <span class="n">lambda_param</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'lad'</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">dro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">optimization_type</span><span class="o">=</span><span class="s2">"SG"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sinkhorn DRO Parameters:"</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dro_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 
 <span class="c1"># Baseline comparison</span>
 <span class="n">lr_model</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">()</span>
 <span class="n">lr_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sklearn Coefficients:&quot;</span><span class="p">,</span> <span class="n">lr_model</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sklearn Coefficients:"</span><span class="p">,</span> <span class="n">lr_model</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">lr_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -326,6 +326,7 @@ Sklearn Coefficients: [33.63648075 32.05820144 29.38822328 75.17312611  7.162637
 <section id="MOT-DRO">
 <h2>MOT-DRO<a class="headerlink" href="#MOT-DRO" title="Link to this heading">¶</a></h2>
 <p>Based on Theorem 5.2, the current MOT-DRO does not support OLS (not satisfying Assumption 5.1) and does not allow when the uncertainties in Y also change.</p>
+<p><code class="docutils literal notranslate"><span class="pre">eps</span></code> sets the OT ambiguity radius. The feature norm <code class="docutils literal notranslate"><span class="pre">p</span></code> accepts <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, or <code class="docutils literal notranslate"><span class="pre">'inf'</span></code>; <code class="docutils literal notranslate"><span class="pre">square</span></code> independently selects transport exponent <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code>. The example uses squared Euclidean feature transport (<code class="docutils literal notranslate"><span class="pre">p=2,</span> <span class="pre">square=2</span></code>) and keeps targets fixed.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -335,20 +336,12 @@ Sklearn Coefficients: [33.63648075 32.05820144 29.38822328 75.17312611  7.162637
 <span class="c1"># Data generation</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.mot_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
-<span class="n">mot_dro_model</span> <span class="o">=</span> <span class="n">MOTDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;lad&#39;</span><span class="p">,</span> <span class="n">fit_intercept</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">mot_dro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;square&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.mot_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">MOTDRO</span>
+<span class="n">mot_dro_model</span> <span class="o">=</span> <span class="n">MOTDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'lad'</span><span class="p">,</span> <span class="n">fit_intercept</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">mot_dro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'p'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'square'</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 <span class="n">mot_dro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-optimal
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -356,17 +349,17 @@ optimal
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;theta&#39;: [76.21548985345878,
-  53.29365202998623,
-  5.247024494762593,
-  52.46410461035137,
-  71.74006738420996,
-  1.214010364770905,
-  63.72428598909404,
-  14.06587595353978,
-  2.997652104182758,
-  44.93666589113934],
- &#39;b&#39;: array(1.29102914)}
+{&#39;theta&#39;: [76.21457174414209,
+  53.29326621232062,
+  5.2469449389300955,
+  52.46352965500506,
+  71.73948099284381,
+  1.2142872834616918,
+  63.723358742618025,
+  14.065127722489464,
+  2.9976925582270986,
+  44.93590563802071],
+ &#39;b&#39;: array(1.29106352)}
 </pre></div></div>
 </div>
 </section>
@@ -398,7 +391,7 @@ optimal
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.hr_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">HR_DRO_LR</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">HR_DRO_LR</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">epsilon</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">epsilon_prime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">HR_DRO_LR</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'svm'</span><span class="p">,</span> <span class="n">epsilon</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">epsilon_prime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">)</span>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <br/></pre></div>
 </div>
@@ -420,7 +413,7 @@ optimal
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Linear DRO with Hybrid Distances</a><ul>
+<li><a class="reference internal" href="#">Hybrid-distance DRO for linear models</a><ul>
 <li><a class="reference internal" href="#Sinkhorn-DRO">Sinkhorn DRO</a></li>
 <li><a class="reference internal" href="#MOT-DRO">MOT-DRO</a></li>
 <li><a class="reference internal" href="#OR-WDRO-+-HR-DRO">OR-WDRO + HR-DRO</a></li>

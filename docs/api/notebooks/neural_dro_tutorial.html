@@ -285,11 +285,11 @@
 <section id="Shared-setup">
 <h2>Shared setup<a class="headerlink" href="#Shared-setup" title="Link to this heading">¶</a></h2>
 <p>The Wasserstein and Holistic Robust estimators create bounded adversarial perturbations, so the synthetic features are scaled to the interval <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>. Set <code class="docutils literal notranslate"><span class="pre">verbose=False</span></code> to keep progress-bar output out of the generated documentation.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_classification</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinMaxScaler</span>
@@ -322,15 +322,23 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X shape: (200, 10); class counts: [139  61]
+</pre></div></div>
+</div>
 </section>
 <section id="Chi-square-neural-DRO">
 <h2>Chi-square neural DRO<a class="headerlink" href="#Chi-square-neural-DRO" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">size</span></code> controls the uncertainty-set radius and <code class="docutils literal notranslate"><span class="pre">reg</span></code> controls regularization of the sample weights. Training uses the standard neural <code class="docutils literal notranslate"><span class="pre">fit()</span></code> interface.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">chi2_model</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -345,15 +353,23 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Chi-square DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.14893617021276595}
+</pre></div></div>
+</div>
 </section>
 <section id="CVaR-neural-DRO">
 <h2>CVaR neural DRO<a class="headerlink" href="#CVaR-neural-DRO" title="Link to this heading">¶</a></h2>
 <p>For <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code>, <code class="docutils literal notranslate"><span class="pre">size</span></code> is the CVaR fraction and must be between zero and one. The remaining training call is identical to the chi-square example.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">cvar_model</span> <span class="o">=</span> <span class="n">CVaRNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -368,15 +384,23 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CVaR-DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.14893617021276595}
+</pre></div></div>
+</div>
 </section>
 <section id="Wasserstein-neural-DRO">
 <h2>Wasserstein neural DRO<a class="headerlink" href="#Wasserstein-neural-DRO" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> exposes the perturbation radius, attack step count, step size, norm, and attack method in its constructor. This compact example uses three projected-gradient steps.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<p><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> exposes the perturbation radius, attack step count, step size, norm, and attack method in its constructor. This compact example uses three projected-gradient steps on tabular features in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>. Torchattacks clips adversarial inputs to that range.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">wasserstein_model</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -393,15 +417,23 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Wasserstein DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.14893617021276595}
+</pre></div></div>
+</div>
 </section>
 <section id="Holistic-Robust-neural-DRO">
 <h2>Holistic Robust neural DRO<a class="headerlink" href="#Holistic-Robust-neural-DRO" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code> combines its robustness settings with an adversarial-training configuration. <code class="docutils literal notranslate"><span class="pre">train_batch_size</span></code> is kept consistent with the batch size passed to <code class="docutils literal notranslate"><span class="pre">fit()</span></code>.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">holistic_model</span> <span class="o">=</span> <span class="n">HRNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -424,15 +456,23 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Holistic Robust DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.14893617021276595}
+</pre></div></div>
+</div>
 </section>
 <section id="Compare-the-returned-metrics">
 <h2>Compare the returned metrics<a class="headerlink" href="#Compare-the-returned-metrics" title="Link to this heading">¶</a></h2>
 <p>Every estimator returns the same validation-metric dictionary for this classification example, which makes downstream comparison straightforward.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"Chi-square DRO"</span><span class="p">:</span> <span class="n">chi2_metrics</span><span class="p">,</span>
     <span class="s2">"CVaR-DRO"</span><span class="p">:</span> <span class="n">cvar_metrics</span><span class="p">,</span>
     <span class="s2">"Wasserstein DRO"</span><span class="p">:</span> <span class="n">wasserstein_metrics</span><span class="p">,</span>
@@ -443,6 +483,58 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">method</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> accuracy=</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'acc'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, f1=</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'f1'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Chi-square DRO           accuracy=0.175, f1=0.149
+CVaR-DRO                 accuracy=0.175, f1=0.149
+Wasserstein DRO          accuracy=0.175, f1=0.149
+Holistic Robust DRO      accuracy=0.175, f1=0.149
+</pre></div></div>
+</div>
+<p>We also consider another toy example: ### Two-feature attack examples This small classification problem exercises the <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> attacks on a two-dimensional feature matrix: <span class="math notranslate nohighlight">\(\ell_2\)</span> PGD (Torchattacks <code class="docutils literal notranslate"><span class="pre">PGDL2</span></code>), <span class="math notranslate nohighlight">\(\ell_\infty\)</span> PGD, and <span class="math notranslate nohighlight">\(\ell_\infty\)</span> FGSM. FGSM is a single gradient-sign step of size <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>; <code class="docutils literal notranslate"><span class="pre">adversarial_steps</span></code> and <code class="docutils literal notranslate"><span class="pre">adversarial_step_size</span></code> apply to PGD. The features are in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>, as required by Torchattacks’ input clipping. The printed validation
+metrics are illustrative rather than a robustness guarantee.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">toy_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">toy_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span>
+    <span class="n">toy_rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+    <span class="n">toy_rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+<span class="p">))</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">toy_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">40</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">40</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="n">toy_fit_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fit_options</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s2">"L2 PGD"</span><span class="p">,</span> <span class="s2">"l2"</span><span class="p">,</span> <span class="s2">"PGD"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Linf PGD"</span><span class="p">,</span> <span class="s2">"l-inf"</span><span class="p">,</span> <span class="s2">"PGD"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Linf FGSM"</span><span class="p">,</span> <span class="s2">"l-inf"</span><span class="p">,</span> <span class="s2">"FGSM"</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">toy_model</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
+        <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span>
+        <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">adversarial_norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">adversarial_method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">adversarial_step_size</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">toy_metrics</span> <span class="o">=</span> <span class="n">toy_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">toy_X</span><span class="p">,</span> <span class="n">toy_y</span><span class="p">,</span> <span class="o">**</span><span class="n">toy_fit_options</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: robust training loss=</span><span class="si">{</span><span class="n">toy_model</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, "</span>
+          <span class="sa">f</span><span class="s2">"validation accuracy=</span><span class="si">{</span><span class="n">toy_metrics</span><span class="p">[</span><span class="s1">'acc'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+L2 PGD: robust training loss=0.440, validation accuracy=1.000
+Linf PGD: robust training loss=0.498, validation accuracy=1.000
+Linf FGSM: robust training loss=0.503, validation accuracy=1.000
+</pre></div></div>
 </div>
 </section>
 </section>

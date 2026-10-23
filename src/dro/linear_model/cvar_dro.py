@@ -17,7 +17,7 @@ class CVaRDRO(BaseLinearDRO):
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, 
-                 solver: str = 'MOSEK', kernel: str = 'linear', alpha: float = 1.0):
+                 solver: str = 'CLARABEL', kernel: str = 'linear', alpha: float = 1.0):
         """Initialize a CVaR-constrained DRO model.
 
         :param input_dim: Number of input features. Must match training data dimension.
@@ -36,11 +36,10 @@ class CVaRDRO(BaseLinearDRO):
         :param fit_intercept: Whether to learn an intercept term. Disable if data is pre-centered.
             Defaults to True.
         :type fit_intercept: bool
-        :param solver: Convex optimization solver. Recommended: 'MOSEK' (commercial).
-            Defaults to 'MOSEK'.
+        :param solver: Convex optimization solver. Defaults to 'CLARABEL'.
         :type solver: str
         :param alpha: Risk level controlling the CVaR conservativeness. Must satisfy 0 < alpha ≤ 1.
-            Defaults to 1.0 (equivalent to worst-case optimization).
+            Defaults to 1.0 (equivalent to empirical risk minimization).
         :type alpha: float
 
         :raises ValueError: 
@@ -85,7 +84,7 @@ class CVaRDRO(BaseLinearDRO):
 
         .. note::
 
-            - Decreasing ``alpha`` makes the model less conservative (focuses on average risk)
+            - Decreasing ``alpha`` focuses on a smaller upper tail and increases conservativeness
 
             - Requires manual re-fitting via :meth:`fit` after configuration changes
 
@@ -157,9 +156,9 @@ class CVaRDRO(BaseLinearDRO):
 
         .. note::
 
-            - Higher :math:`\\alpha` values require solving more conservative (pessimistic) scenarios
+            - Smaller :math:`\\alpha` values focus on more conservative (pessimistic) scenarios
 
-            - The ``threshold`` value represents the :math:`\\alpha`-quantile of the loss distribution
+            - The ``threshold`` value is an optimal upper-tail cutoff (a :math:`1-\\alpha` loss quantile, potentially non-unique)
 
             - Warm-starting not supported due to CVaR's non-smooth nature
 
@@ -205,7 +204,7 @@ class CVaRDRO(BaseLinearDRO):
             self.threshold_val = eta.value
 
         except cp.SolverError as e:
-            raise CVaRDROError("Optimization failed to solve using MOSEK.") from e
+            raise CVaRDROError(f"Optimization failed to solve using {self.solver}.") from e
 
         if self.theta is None or self.threshold_val is None:
             raise CVaRDROError("Optimization did not converge to a solution.")

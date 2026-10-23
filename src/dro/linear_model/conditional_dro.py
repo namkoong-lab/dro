@@ -22,7 +22,7 @@ class ConditionalCVaRDRO(BaseLinearDRO):
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', 
-                 fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
+                 fit_intercept: bool = True, solver: str = 'CLARABEL', kernel: str = 'linear'):
         """Initialize the linear DRO model.
 
         :param input_dim: Number of input features. Must be ≥ 1.
@@ -34,7 +34,7 @@ class ConditionalCVaRDRO(BaseLinearDRO):
             Set False for pre-centered data. Defaults to True.
         :type fit_intercept: bool
         :param solver: Optimization solver. 
-            See class-level documentation for recommended options. Defaults to 'MOSEK'.
+            See class-level documentation for recommended options. Defaults to 'CLARABEL'.
         :type solver: str
         :param kernel: the kernel type to be used in the optimization model, default = 'linear'
         :type kernel: str

@@ -15,6 +15,8 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/tree_model.html" />
@@ -280,10 +282,118 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="tree-dro">
 <h1>Tree-DRO<a class="headerlink" href="#tree-dro" title="Link to this heading">¶</a></h1>
-<p>Besides linear models and neural networks, <code class="docutils literal notranslate"><span class="pre">dro</span></code> package also integrates tree-based ensemble models as backbone models for DRO, including XGBoost and LightGBM.</p>
-<p>Given the non-convexity of the optimization of tree-ensemble models, we only implement Chi2-DRO, KL-DRO and CVaR-DRO in an approximate way. Specifically, we directly apply the DRO-kind loss functions to XGBoost and LightGBM.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">dro</span></code> package provides KL-DRO, <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, and CVaR-DRO wrappers for
+XGBoost and LightGBM. These methods fit tree ensembles with custom boosting
+gradients that place more emphasis on observations with large losses. Tree
+construction is non-convex, so fitting is approximate; <code class="docutils literal notranslate"><span class="pre">fit()</span></code> does not solve
+the distributionally robust objective to global optimality.</p>
+<section id="formulation">
+<h2>Formulation<a class="headerlink" href="#formulation" title="Link to this heading">¶</a></h2>
+<p>For binary classification, let <span class="math notranslate nohighlight">\(\ell_i(f)\)</span> be the log loss on training example
+<span class="math notranslate nohighlight">\(i\)</span>, and let <span class="math notranslate nohighlight">\(n\)</span> be the number of examples. The two boosting backends use the
+same three DRO formulations:</p>
+<section id="kl-dro">
+<h3>KL-DRO<a class="headerlink" href="#kl-dro" title="Link to this heading">¶</a></h3>
+<p>The implemented KL objective is the entropic risk</p>
+<div class="math notranslate nohighlight">
+\[
+R_{\mathrm{KL},\varepsilon}(f)
+=\frac{1}{\varepsilon}\log\left(
+  \frac{1}{n}\sum_{i=1}^{n}e^{\varepsilon\ell_i(f)}
+\right),\qquad \varepsilon&gt;0.
+\]</div>
+<p>During boosting, the loss of example <span class="math notranslate nohighlight">\(i\)</span> receives a weight proportional to
+<span class="math notranslate nohighlight">\(e^{\varepsilon\ell_i}\)</span>. Equivalently, this objective uses a KL <em>penalty</em> on
+adversarial sample weights; <code class="docutils literal notranslate"><span class="pre">eps</span></code> is an inverse temperature, not the radius of
+a hard KL-divergence ball. Larger <code class="docutils literal notranslate"><span class="pre">eps</span></code> concentrates more weight on high-loss
+examples. As <code class="docutils literal notranslate"><span class="pre">eps</span></code> approaches zero, the objective approaches mean log loss.</p>
+</section>
+<section id="chi-2-dro">
+<h3><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO<a class="headerlink" href="#chi-2-dro" title="Link to this heading">¶</a></h3>
+<p>This method uses a <span class="math notranslate nohighlight">\(\chi^2\)</span> ball around the uniform empirical probabilities:</p>
+<div class="math notranslate nohighlight">
+\[
+R_{\chi^2,\varepsilon}(f)
+=\max_{p\in\Delta_n}\sum_{i=1}^{n}p_i\ell_i(f)
+\quad\text{subject to}\quad
+n\sum_{i=1}^{n}\left(p_i-\frac{1}{n}\right)^2\leq\varepsilon,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta_n=\{p_i\geq0,\ \sum_i p_i=1\}\)</span>. The booster uses the resulting
+adversarial weights <span class="math notranslate nohighlight">\(np_i\)</span> to scale sample gradients. The implementation first
+computes a closed-form candidate and solves a constrained problem when that
+candidate has a negative weight. Larger <code class="docutils literal notranslate"><span class="pre">eps</span></code> permits a greater shift of
+probability toward high-loss examples.</p>
+</section>
+<section id="cvar-dro">
+<h3>CVaR-DRO<a class="headerlink" href="#cvar-dro" title="Link to this heading">¶</a></h3>
+<p>For CVaR, <code class="docutils literal notranslate"><span class="pre">eps</span></code> is a loss quantile level rather than a divergence radius. The
+reported empirical objective is</p>
+<div class="math notranslate nohighlight">
+\[
+R_{\mathrm{CVaR},\varepsilon}(f)
+=t+\frac{1}{n(1-\varepsilon)}
+  \sum_{i=1}^{n}\bigl(\ell_i(f)-t\bigr)_+,
+\qquad t=\operatorname{Quantile}_{\varepsilon}
+  (\ell_1(f),\ldots,\ell_n(f)).
+\]</div>
+<p>Increasing <code class="docutils literal notranslate"><span class="pre">eps</span></code> focuses the reported objective on a smaller upper tail of
+losses. During boosting, examples above the current quantile have their
+gradients and Hessians multiplied by <span class="math notranslate nohighlight">\(1/(1-\varepsilon)\)</span>; examples at or below
+it retain their ordinary gradients. This is a heuristic training rule, so the
+boosting updates are not exact derivatives of the displayed CVaR objective.</p>
+</section>
+</section>
+<section id="hyperparameters">
+<h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code> controls the selected DRO formulation. The default is <code class="docutils literal notranslate"><span class="pre">0.1</span></code> for KL
+and <span class="math notranslate nohighlight">\(\chi^2\)</span>, and <code class="docutils literal notranslate"><span class="pre">0.2</span></code> for CVaR. KL and <span class="math notranslate nohighlight">\(\chi^2\)</span> constructors require
+<code class="docutils literal notranslate"><span class="pre">eps</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>; CVaR requires <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">eps</span> <span class="pre">&lt;</span> <span class="pre">1</span></code>. Its meaning differs across the three
+formulations, so the same numerical value does not imply the same amount of
+robustness.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code> selects <code class="docutils literal notranslate"><span class="pre">&quot;classification&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;regression&quot;</span></code>; the default is
+<code class="docutils literal notranslate"><span class="pre">&quot;classification&quot;</span></code>. The custom boosting gradients currently apply a sigmoid
+to raw scores and use binary-classification gradients in both modes. Use
+<code class="docutils literal notranslate"><span class="pre">&quot;classification&quot;</span></code> with labels in <span class="math notranslate nohighlight">\(\{0,1\}\)</span> for the objectives described
+above. Although <code class="docutils literal notranslate"><span class="pre">&quot;regression&quot;</span></code> is accepted, its training updates do not
+implement the squared-loss DRO objective reported after fitting.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_boost_round</span></code> is a required key in the dictionary passed to <code class="docutils literal notranslate"><span class="pre">update()</span></code>.
+It sets the number of boosting iterations. Standard XGBoost or LightGBM
+options such as <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> and <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> go in the same dictionary;
+they control the tree booster, not the ambiguity set.</p></li>
+</ul>
+<p>Choose <code class="docutils literal notranslate"><span class="pre">eps</span></code> using held-out data and the performance measure relevant to the
+deployment setting. Tree depth, learning rate, and boosting rounds should be
+tuned as well: a larger robustness parameter cannot compensate for a poorly
+fitted or overfitted booster.</p>
+</section>
+<section id="fitting-and-diagnostics">
+<h2>Fitting and diagnostics<a class="headerlink" href="#fitting-and-diagnostics" title="Link to this heading">¶</a></h2>
+<p>Select a class for both the DRO formulation and the boosting backend, then
+call <code class="docutils literal notranslate"><span class="pre">update()</span></code> before <code class="docutils literal notranslate"><span class="pre">fit()</span></code>. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.tree_model.xgb</span><span class="w"> </span><span class="kn">import</span> <span class="n">KLDRO_XGB</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KLDRO_XGB</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="s2">"max_depth"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"learning_rate"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s2">"num_boost_round"</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">accuracy</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">robust_obj</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The corresponding class names are <code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB</span></code>, <code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB</span></code>,
+<code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM</span></code>, <code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM</span></code>, and <code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM</span></code>. <code class="docutils literal notranslate"><span class="pre">robust_obj</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>
+before fitting and is the selected robust objective evaluated on the training
+losses afterward. It is a training diagnostic, not a held-out performance
+estimate. <code class="docutils literal notranslate"><span class="pre">score()</span></code> returns accuracy and macro F1 for classification.</p>
 <p>See the <a class="reference internal" href="../api/notebooks/tree_dro_tutorial.html"><span class="doc">tree DRO notebook</span></a> for
 end-to-end XGBoost and LightGBM examples.</p>
+</section>
 </section>
 
 
@@ -291,6 +401,30 @@ end-to-end XGBoost and LightGBM examples.</p>
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Tree-DRO</a><ul>
+<li><a class="reference internal" href="#formulation">Formulation</a><ul>
+<li><a class="reference internal" href="#kl-dro">KL-DRO</a></li>
+<li><a class="reference internal" href="#chi-2-dro"><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO</a></li>
+<li><a class="reference internal" href="#cvar-dro">CVaR-DRO</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
+<li><a class="reference internal" href="#fitting-and-diagnostics">Fitting and diagnostics</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>

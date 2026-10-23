@@ -60,7 +60,7 @@ class GroupDRO(BaseLinearDRO):
         group_idx: int,
         model_type: str = "svm",
         fit_intercept: bool = True,
-        solver: str = "MOSEK",
+        solver: str = "CLARABEL",
         kernel: str = "linear",
     ):
         self._check_group_idx(group_idx, input_dim)

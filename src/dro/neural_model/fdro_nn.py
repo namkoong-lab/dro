@@ -1,5 +1,6 @@
 from .base_nn import device, MLP, BaseNNDRO
 from .fdro_utils import RobustLoss
+from ._certificates import chi2_radius, cvar_alpha
 import torch 
 import numpy as np 
 
@@ -53,7 +54,7 @@ class Chi2NNDRO(BaseNNDRO):
 
         :type device: torch.device
 
-        :param size: Chi-square divergence radius :math:`\rho \geq 0` controlling distributional robustness. Larger values increase conservativeness. Defaults to 0.1.
+        :param size: Chi-square divergence radius :math:`\rho \geq 0` controlling distributional robustness. Zero uses the mean empirical loss. Larger values increase conservativeness. Defaults to 0.1.
         
         :type size: float
 
@@ -109,6 +110,22 @@ class Chi2NNDRO(BaseNNDRO):
             max_iter=self.max_iter,
             is_regression=is_regression)
         return loss(outputs, labels)
+
+    def certify_radius(self, losses, candidate_weights, eta, *, epsilon=None):
+        r"""Certify a smaller empirical :math:`\chi^2` divergence radius.
+
+        ``losses`` are the final network's per-example losses on one complete
+        reference dataset. ``candidate_weights`` must be feasible at the
+        input radius, and ``eta`` is any finite scalar in the upper bound.
+        ``epsilon`` defaults to ``size``. The calculation uses unregularized
+        losses even when training used ``reg``. Returns ``None`` if the gap
+        is too large; otherwise returns a dictionary with ``epsilon_cert``,
+        the certified loss bound, the input upper bound, and their gap.
+        """
+        return chi2_radius(
+            self.size if epsilon is None else epsilon,
+            losses, candidate_weights, eta,
+        )
     
 class CVaRNNDRO(BaseNNDRO):
     def __init__(self, input_dim: int, num_classes: int, task_type: str = "classification", model_type: str = 'mlp', device: torch.device = device, size: float = 0.1, reg: float = 0.1, max_iter: int = 100):
@@ -206,6 +223,23 @@ class CVaRNNDRO(BaseNNDRO):
             max_iter=self.max_iter,
             is_regression=is_regression)
         return loss(outputs, labels)
+
+    def certify_radius(self, losses, candidate_weights, eta, *, alpha=None):
+        r"""Certify a smaller empirical CVaR ambiguity set.
+
+        ``losses`` are the final network's per-example losses on one complete
+        reference dataset. ``candidate_weights`` must be feasible at the
+        input tail fraction, and ``eta`` is any finite scalar in the upper
+        bound. ``alpha`` defaults to ``size``. The calculation uses
+        unregularized losses even when training used ``reg``. Returns
+        ``None`` if the gap is too large; otherwise returns a dictionary
+        with ``alpha_cert``, the certified loss bound, the input upper bound,
+        and their gap. Larger ``alpha_cert`` means a smaller ambiguity set.
+        """
+        return cvar_alpha(
+            self.size if alpha is None else alpha,
+            losses, candidate_weights, eta,
+        )
     
 # if __name__ == "__main__":
 #     # Example usage

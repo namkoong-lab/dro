@@ -47,7 +47,7 @@ class TestWassersteinDRO:
         model = WassersteinDRO(
             input_dim=5,
             model_type=model_type,
-            solver='MOSEK'
+            solver='CLARABEL'
         )
         
         # Validate default parameters
@@ -103,7 +103,7 @@ class TestWassersteinDRO:
         model = WassersteinDRO(
             input_dim=X.shape[1],
             model_type=model_type,
-            solver='MOSEK'
+            solver='CLARABEL'
         )
         model.update({'eps': 0.1, 'p': 2})
         
@@ -138,7 +138,7 @@ class TestWassersteinDRO:
         model = WassersteinDRO(
             input_dim=X.shape[1],
             model_type=model_type,
-            solver='MOSEK'
+            solver='CLARABEL'
         )
         model.update({'eps': 0.1, 'p': 2})
         model.update_kernel({'metric': 'rbf', 'kernel_gamma': 1})
@@ -195,7 +195,7 @@ class TestWassersteinSatisficing:
         model = WassersteinDROsatisficing(
             input_dim=X.shape[1],
             model_type='svm',
-            solver='MOSEK'
+            solver='CLARABEL'
         )
         model.update({'target_ratio': 1.2})
         
@@ -230,9 +230,11 @@ class TestWassersteinSatisficing:
 # Cross-Cutting Concerns
 # --------------------------
 
-@pytest.mark.parametrize("solver", ['MOSEK'])
+@pytest.mark.parametrize("solver", ['CLARABEL', 'SCS'])
 def test_solver_compatibility(dataset, solver):
-    """Validate solver interoperability"""
+    """The Wasserstein SVM formulation solves with either open-source solver."""
+    if solver not in cp.installed_solvers():
+        pytest.skip(f"{solver} is not installed")
     X, y = dataset
     y = np.sign(y-0.5)
     model = WassersteinDRO(
@@ -244,6 +246,26 @@ def test_solver_compatibility(dataset, solver):
     
     params = model.fit(X, y)
     assert params['theta'] is not None
+    assert np.isfinite(model.robust_obj)
+
+
+def test_clarabel_and_scs_agree_on_wasserstein_svm_objective():
+    """The two solvers find the same robust hinge-loss objective."""
+    if 'SCS' not in cp.installed_solvers():
+        pytest.skip("SCS is not installed")
+
+    X = np.array([[-2.0], [-1.0], [0.0], [1.0], [2.0], [3.0]])
+    y = np.array([-1, -1, 1, -1, 1, 1])
+    objectives = {}
+    for solver in ('CLARABEL', 'SCS'):
+        model = WassersteinDRO(input_dim=1, model_type='svm', solver=solver)
+        model.update({'eps': 0.2, 'p': 2})
+        model.fit(X, y)
+        objectives[solver] = model.robust_obj
+
+    assert objectives['CLARABEL'] == pytest.approx(
+        objectives['SCS'], rel=1e-4, abs=1e-4
+    )
 
 @pytest.mark.parametrize("p_value", [1, 2, 'inf'])
 def test_wasserstein_order_handling(p_value):
@@ -374,7 +396,7 @@ def test_penalization_lad_with_kappa(dataset):
     model = WassersteinDRO(
         input_dim=X.shape[1], 
         model_type='lad',
-        solver='MOSEK'
+        solver='CLARABEL'
     )
     model.update({
         'kappa': 1.0,
@@ -447,7 +469,7 @@ def test_satisficing_lad_constraints(model_type):
     model = WassersteinDROsatisficing(
         input_dim=10,
         model_type=model_type,
-        solver='MOSEK'
+        solver='CLARABEL'
     )
     model.update({
         'kappa': 0.5,
@@ -478,7 +500,7 @@ def test_satisficing_lad_constraints2(model_type):
     model = WassersteinDROsatisficing(
         input_dim=10,
         model_type=model_type,
-        solver='MOSEK',
+        solver='CLARABEL',
         kernel='linear'
     )
     model.update({
@@ -738,7 +760,7 @@ def test_asymptotic_method_gamma(model_type, gamma, kappa):
     model = WassersteinDRO(
         input_dim=10,
         model_type=model_type,
-        solver='MOSEK'
+        solver='CLARABEL'
     )
     model.update({'kappa': kappa, 'eps': 0.5})
     
@@ -769,7 +791,7 @@ def test_asymptotic_method_gamma(model_type, gamma, kappa):
 #     model = WassersteinDROsatisficing(
 #         input_dim=10,
 #         model_type='ols',
-#         solver='MOSEK'
+#         solver='CLARABEL'
 #     )
 #     model.update({'target_ratio': 1.5})
     
@@ -811,7 +833,7 @@ def test_asymptotic_gamma_must_be_positive_and_finite(gamma, monkeypatch):
         input_dim=1,
         model_type='svm',
         fit_intercept=False,
-        solver='MOSEK'
+        solver='CLARABEL'
     )
     model.update({'kappa': 'inf', 'eps': 0.5, 'p': 2})
 
@@ -844,7 +866,7 @@ def test_asymptotic_gamma_must_be_positive_and_finite(gamma, monkeypatch):
 ])
 def test_worst_distribution_certificate_parameter_validation(kwargs):
     """Certificate and refinement controls reject invalid ranges."""
-    model = WassersteinDRO(input_dim=1, model_type='svm', solver='MOSEK')
+    model = WassersteinDRO(input_dim=1, model_type='svm', solver='CLARABEL')
     with pytest.raises(WassersteinDROError):
         model.worst_distribution(
             np.array([[0.0]]),
@@ -856,7 +878,7 @@ def test_worst_distribution_certificate_parameter_validation(kwargs):
 @pytest.mark.parametrize("options", [1, 'gamma', [], {'unknown': 1}])
 def test_worst_distribution_rejects_invalid_asymptotic_options(options):
     """The grouped asymptotic configuration is type- and key-checked."""
-    model = WassersteinDRO(input_dim=1, model_type='svm', solver='MOSEK')
+    model = WassersteinDRO(input_dim=1, model_type='svm', solver='CLARABEL')
     with pytest.raises(WassersteinDROError, match='dictionary|Unknown'):
         model.worst_distribution(
             np.array([[0.0]]),
@@ -867,7 +889,7 @@ def test_worst_distribution_rejects_invalid_asymptotic_options(options):
 
 def test_worst_distribution_rejects_gamma_above_bound():
     """Finite-kappa classification reserves gamma from the radius budget."""
-    model = WassersteinDRO(input_dim=1, model_type='svm', solver='MOSEK')
+    model = WassersteinDRO(input_dim=1, model_type='svm', solver='CLARABEL')
     model.update({'eps': 0.2, 'kappa': 1.0})
     with pytest.raises(WassersteinDROError, match='must not exceed'):
         model.worst_distribution(
@@ -880,7 +902,7 @@ def test_worst_distribution_rejects_gamma_above_bound():
 def test_worst_distribution_rejects_nonlinear_kernel():
     """The input-space recovery formula is not valid for kernel parameters."""
     model = WassersteinDRO(
-        input_dim=1, model_type='svm', solver='MOSEK', kernel='rbf'
+        input_dim=1, model_type='svm', solver='CLARABEL', kernel='rbf'
     )
     with pytest.raises(WassersteinDROError, match="kernel='linear'"):
         model.worst_distribution(np.array([[0.0]]), np.array([1]))
@@ -896,7 +918,7 @@ def test_classification_recession_direction_and_certificate(monkeypatch):
         input_dim=1,
         model_type='svm',
         fit_intercept=False,
-        solver='MOSEK'
+        solver='CLARABEL'
     )
     model.update({'kappa': 'inf', 'eps': 0.5, 'p': 2})
 
@@ -973,7 +995,7 @@ def test_finite_kappa_label_flip_coupling_is_certified(monkeypatch):
         input_dim=1,
         model_type='svm',
         fit_intercept=False,
-        solver='MOSEK',
+        solver='CLARABEL',
     )
     model.update({'kappa': 1.0, 'eps': 0.5, 'p': 2})
 
@@ -1015,7 +1037,7 @@ def test_uncertified_worst_distribution_is_not_returned(monkeypatch):
         input_dim=1,
         model_type='svm',
         fit_intercept=False,
-        solver='MOSEK'
+        solver='CLARABEL'
     )
     model.update({'kappa': 'inf', 'eps': 0.5, 'p': 2})
 
@@ -1049,7 +1071,7 @@ def test_uncertified_worst_distribution_is_not_returned(monkeypatch):
 #     model = WassersteinDRO(
 #         input_dim=10,
 #         model_type='svm',
-#         solver='MOSEK'
+#         solver='CLARABEL'
 #     )
 #     model.update({'eps': 0.0})
 

@@ -123,13 +123,13 @@ def test_zero_epsilon_worst_distribution():
     np.testing.assert_allclose(dist['weight'], np.full(X.shape[0], 1.0 / X.shape[0]))
 
 
-def test_solver_fallback():
+def test_explicit_clarabel_solver():
     X, y = make_classification(n_samples=50, n_features=10)
     y = np.sign(y-0.5)
     
     model = Chi2DRO(
         input_dim=10,
-        solver='MOSEK',
+        solver='CLARABEL',
     )
     model.update({"eps":0.1})
     params = model.fit(X, y)
@@ -138,7 +138,7 @@ def test_solver_fallback():
 
 
 def test_extreme_epsilon():
-    X, y = make_classification(n_samples=100, n_features=5)
+    X, y = make_classification(n_samples=100, n_features=5, random_state=0)
     y = np.sign(y-0.5)
     
     model = Chi2DRO(input_dim=5)

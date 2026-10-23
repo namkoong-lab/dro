@@ -267,13 +267,28 @@
             
   <section id="installation-guide">
 <h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading">¶</a></h1>
-<section id="prepare-mosek-license">
-<h2>(1) Prepare <code class="docutils literal notranslate"><span class="pre">Mosek</span></code> license<a class="headerlink" href="#prepare-mosek-license" title="Link to this heading">¶</a></h2>
-<p>Our package is built upon <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> and <code class="docutils literal notranslate"><span class="pre">mosek</span></code> (optional), which needs the license file. The steps are as follows.</p>
-<p>If you want to use <code class="docutils literal notranslate"><span class="pre">mosek</span></code> as the solver, please:</p>
+<section id="install-dro-package">
+<h2>(1) Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package<a class="headerlink" href="#install-dro-package" title="Link to this heading">¶</a></h2>
+<p>To install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package, you can simply run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dro
+</pre></div>
+</div>
+<p>And it will install all required packages.</p>
+</section>
+<section id="solver-selection">
+<h2>(2) Solver selection<a class="headerlink" href="#solver-selection" title="Link to this heading">¶</a></h2>
+<p>The convex linear DRO models use <code class="docutils literal notranslate"><span class="pre">CLARABEL</span></code> through <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> by default. No commercial solver license is needed. You can select another installed solver when it supports the model’s formulation, either during initialization or before fitting:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.chi2_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chi2DRO</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">'SCS'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, assign <code class="docutils literal notranslate"><span class="pre">model.solver</span> <span class="pre">=</span> <span class="pre">'SCS'</span></code> before calling <code class="docutils literal notranslate"><span class="pre">fit()</span></code>.</p>
+<p>See the <a class="reference external" href="https://www.cvxpy.org/tutorial/solvers/index.html">CVXPY solver guide</a> for solver capabilities and options.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MOSEK</span></code> is optional. To use it, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">mosek</span></code>, obtain a license, and pass <code class="docutils literal notranslate"><span class="pre">solver='MOSEK'</span></code> to the model. To prepare the license:</p>
 <ul>
-<li><p>Request license at <a class="reference external" href="https://www.mosek.com/products/academic-licenses/">Official Website</a>, and then the license <code class="docutils literal notranslate"><span class="pre">mosek.lic</span></code> will be emailed to you.</p></li>
-<li><p>Put your license in your home directory as follows:</p>
+<li><p>Request a license from the <a class="reference external" href="https://www.mosek.com/products/academic-licenses/">MOSEK website</a>.</p></li>
+<li><p>Put the <code class="docutils literal notranslate"><span class="pre">mosek.lic</span></code> file in your home directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span>
 mkdir<span class="w"> </span>mosek
 mv<span class="w"> </span>/path_to_license/mosek.lic<span class="w"> </span>mosek/
@@ -281,27 +296,6 @@ mv<span class="w"> </span>/path_to_license/mosek.lic<span class="w"> </span>mose
 </div>
 </li>
 </ul>
-<p>Otherwise, you can set the solver among some open-source solvers such as <cite>ECOS</cite>, <cite>SCS</cite> in <cite>cvxpy</cite> (see “<a class="reference external" href="https://www.cvxpy.org/tutorial/solvers/index.html">https://www.cvxpy.org/tutorial/solvers/index.html</a>” for more details). In any given DRO model, this can be done during initialization:</p>
-<blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>XXDRO<span class="o">(</span>...,<span class="w"> </span><span class="nv">solver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'ECOS'</span><span class="o">)</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>by simply updating after initialization:</p>
-<blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>model.solver<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'ECOS'</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>These solvers can solve all the optimization problems implemented in the package as well.</p>
-</section>
-<section id="install-dro-package">
-<h2>(2) Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package<a class="headerlink" href="#install-dro-package" title="Link to this heading">¶</a></h2>
-<p>To install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package, you can simply run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dro
-</pre></div>
-</div>
-<p>And it will install all required packages.</p>
 </section>
 </section>
 
@@ -320,8 +314,8 @@ mv<span class="w"> </span>/path_to_license/mosek.lic<span class="w"> </span>mose
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Installation Guide</a><ul>
-<li><a class="reference internal" href="#prepare-mosek-license">(1) Prepare <code class="docutils literal notranslate"><span class="pre">Mosek</span></code> license</a></li>
-<li><a class="reference internal" href="#install-dro-package">(2) Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package</a></li>
+<li><a class="reference internal" href="#install-dro-package">(1) Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package</a></li>
+<li><a class="reference internal" href="#solver-selection">(2) Solver selection</a></li>
 </ul>
 </li>
 </ul>

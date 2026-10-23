@@ -13,7 +13,7 @@ class TestHRDROLinearRegression(unittest.TestCase):
             input_dim=5,
             model_type='svm',
             fit_intercept=True,
-            solver='MOSEK',
+            solver='CLARABEL',
             r=0.0,
             alpha=0.05,
             epsilon=0.5,

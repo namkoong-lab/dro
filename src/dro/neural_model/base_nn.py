@@ -4,7 +4,7 @@ import torch.nn as nn
 from tqdm import tqdm
 from torch.utils.data import DataLoader, TensorDataset, random_split
 from sklearn.metrics import f1_score
-from typing import Tuple, Union, Dict, List
+from typing import Optional, Union, Dict
 import torchvision.models as models
 
 # Device configuration
@@ -310,7 +310,7 @@ class BaseNNDRO:
         if self.task_type == "classification":
             return nn.CrossEntropyLoss()(outputs, labels)
         else:
-            return nn.MSELoss()(outputs, labels)
+            return nn.MSELoss()(outputs.reshape(-1), labels.reshape(-1))
 
     def update_user_mode(self, 
             input_dim: int, 
@@ -339,19 +339,27 @@ class BaseNNDRO:
         self.input_dim = input_dim
         self.num_classes = num_classes
         self.model = model 
+        self.model_type = "custom"  # Input shape is now the custom module's responsibility.
         self.task_type = task_type
         self.device = device
         self.model.to(self.device)
 
-    def fit(self, 
-        X: Union[np.ndarray, torch.Tensor], 
-        y: Union[np.ndarray, torch.Tensor], 
+    def fit(self,
+        X: Optional[Union[np.ndarray, torch.Tensor]] = None,
+        y: Optional[Union[np.ndarray, torch.Tensor]] = None,
         train_ratio: float = DEFAULT_TRAIN_RATIO,
         lr: float = 1e-3,
         batch_size: int = 32,
         epochs: int = 100,
-        verbose: bool = True) -> Dict[str, List[float]]:
-        """Train neural DRO model with Wasserstein robust optimization.
+        verbose: bool = True,
+        *,
+        train_loader: Optional[DataLoader] = None,
+        val_loader: Optional[DataLoader] = None,
+        optimizer: Optional[torch.optim.Optimizer] = None,
+        scheduler: Optional[object] = None,
+        scheduler_step: str = "epoch",
+    ) -> Dict[str, float]:
+        """Train a neural DRO model with arrays or user-supplied data loaders.
         
         :param X: Input feature matrix/tensor. Shape: 
 
@@ -359,7 +367,7 @@ class BaseNNDRO:
 
             - Supports both numpy arrays and torch tensors
 
-        :type X: Union[numpy.ndarray, torch.Tensor]
+        :type X: Union[numpy.ndarray, torch.Tensor], optional
 
         :param y: Target labels. Shape:
 
@@ -367,7 +375,7 @@ class BaseNNDRO:
 
             - Regression: :math:`(N,)` or :math:`(N, 1)`
 
-        :type y: Union[numpy.ndarray, torch.Tensor]
+        :type y: Union[numpy.ndarray, torch.Tensor], optional
         :param train_ratio: Train-validation split ratio :math:`\in (0,1)`, 
             defaults to 0.8
         :type train_ratio: float
@@ -382,22 +390,31 @@ class BaseNNDRO:
         :param verbose: Whether to print epoch-wise metrics, 
             defaults to True
         :type verbose: bool
+        :param train_loader: Caller-provided training loader. Supply together
+            with val_loader instead of X and y. Each batch must contain an
+            input tensor and a target tensor.
+        :type train_loader: torch.utils.data.DataLoader, optional
+        :param val_loader: Caller-provided validation loader.
+        :type val_loader: torch.utils.data.DataLoader, optional
+        :param optimizer: PyTorch optimizer built from the current model's
+            parameters. If omitted, Adam is constructed using lr.
+        :type optimizer: torch.optim.Optimizer, optional
+        :param scheduler: Learning-rate scheduler bound to optimizer. Requires
+            an explicit optimizer. ReduceLROnPlateau receives the mean
+            training loss after each epoch.
+        :param scheduler_step: Step the scheduler after each epoch (default)
+            or after each batch. ReduceLROnPlateau supports epoch only.
+        :type scheduler_step: str
 
-        :return: Dictionary containing:
-
-            - ``'acc, f1'``: for classification
-
-            - ``'mse'``: for regression
-
-        :rtype: Dict[str, List[float]]
+        :return: Validation metrics: acc and f1 for classification, or mse
+            for regression.
+        :rtype: Dict[str, float]
 
         :raises ValueError:
 
             - If input dimensions mismatch
 
             - If train_ratio ∉ (0,1)
-
-            - If batch_size > dataset size
 
             - If learning rate ≤ 0
 
@@ -406,66 +423,118 @@ class BaseNNDRO:
             >>> X, y = np.random.randn(1000, 64), np.random.randint(0,2,1000)
             >>> model = BaseNNDRO(input_dim=64, num_classes=2)
             >>> metrics = model.fit(X, y, lr=5e-4, epochs=50)
-            >>> plt.plot(metrics['val_accuracy'])
+            >>> print(metrics['acc'])
 
         Example (Regression)::
         
             >>> X = torch.randn(500, 8)
             >>> y = X @ torch.randn(8,1) + 0.1*torch.randn(500,1)
-            >>> model = BaseNNDRO(input_dim=8, task_type='regression')
+            >>> model = BaseNNDRO(input_dim=8, num_classes=1, task_type='regression')
             >>> model.fit(X, y.squeeze(), batch_size=64)
 
         """
-        # Convert and validate input data
-        if self.task_type == "classification":
-            num_labels = len(np.unique(y))
-            if num_labels > self.num_classes:
-                raise DataValidationError(f"input class number is larger than num_classes")
+        if epochs < 1:
+            raise ValueError("epochs must be at least 1")
+        if scheduler_step not in {"epoch", "batch"}:
+            raise ValueError("scheduler_step must be 'epoch' or 'batch'")
+        if (train_loader is None) != (val_loader is None):
+            raise ValueError("train_loader and val_loader must be supplied together")
 
-        X = self._convert_to_tensor(X)
-        if self.task_type == 'classification':
-            y = self._convert_to_tensor(y, dtype=torch.long)
-        else:
-            y = self._convert_to_tensor(y)
-        self._validate_input_shape(X)
+        if train_loader is None:
+            if X is None or y is None:
+                raise ValueError("X and y are required when loaders are not supplied")
+            if not 0 < train_ratio < 1:
+                raise ValueError("train_ratio must be between 0 and 1")
+            if batch_size < 1:
+                raise ValueError("batch_size must be at least 1")
+            if self.task_type == "classification":
+                num_labels = len(np.unique(y))
+                if num_labels > self.num_classes:
+                    raise DataValidationError("input class number is larger than num_classes")
 
-        # Dataset preparation
-        dataset = TensorDataset(X, y)
-        train_size = int(len(dataset) * train_ratio)
-        train_set, val_set = random_split(dataset, [train_size, len(dataset)-train_size])
-        
-        train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
-        val_loader = DataLoader(val_set, batch_size=batch_size)
+            X = self._convert_to_tensor(X)
+            y = self._convert_to_tensor(
+                y, dtype=torch.long if self.task_type == "classification" else torch.float32
+            )
+            self._validate_input_shape(X)
+            dataset = TensorDataset(X, y)
+            train_size = int(len(dataset) * train_ratio)
+            if train_size == 0 or train_size == len(dataset):
+                raise ValueError("training and validation splits must both be nonempty")
+            train_set, val_set = random_split(
+                dataset, [train_size, len(dataset) - train_size]
+            )
+            train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
+            val_loader = DataLoader(val_set, batch_size=batch_size)
+        elif X is not None or y is not None:
+            raise ValueError("X and y cannot be combined with external loaders")
 
-        # Training setup
-        optimizer = torch.optim.Adam(self.model.parameters(), lr=lr)
-        
-        total_batches = epochs * len(train_loader)
+        if optimizer is None:
+            if scheduler is not None:
+                raise ValueError("pass an optimizer when using a scheduler")
+            if lr <= 0:
+                raise ValueError("lr must be positive")
+            optimizer = torch.optim.Adam(self.model.parameters(), lr=lr)
+        elif not isinstance(optimizer, torch.optim.Optimizer):
+            raise TypeError("optimizer must be a torch.optim.Optimizer")
+
+        model_parameters = {id(param) for param in self.model.parameters()}
+        optimizer_parameters = {
+            id(param) for group in optimizer.param_groups for param in group["params"]
+        }
+        if not model_parameters.intersection(optimizer_parameters):
+            raise ValueError("optimizer is not bound to the current model")
+        if scheduler is not None:
+            if not callable(getattr(scheduler, "step", None)):
+                raise TypeError("scheduler must provide a step() method")
+            if getattr(scheduler, "optimizer", optimizer) is not optimizer:
+                raise ValueError("scheduler is not bound to the supplied optimizer")
+            if (scheduler_step == "batch" and
+                    isinstance(scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau)):
+                raise ValueError("ReduceLROnPlateau requires scheduler_step='epoch'")
+
+        try:
+            batches_per_epoch = len(train_loader)
+        except TypeError:
+            batches_per_epoch = None
+        if batches_per_epoch == 0:
+            raise ValueError("train_loader must not be empty")
+        total_batches = epochs * batches_per_epoch if batches_per_epoch is not None else None
         self.robust_obj = None
-        
+
         with tqdm(total=total_batches, unit="batch", disable=not verbose) as pbar:
-            for epoch in range(epochs):
+            for _ in range(epochs):
                 self.model.train()
                 epoch_loss = 0.0
+                batch_count = 0
                 for inputs, labels in train_loader:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
-                    
+
                     optimizer.zero_grad()
                     outputs = self.model(inputs)
-                    self.current_inputs = inputs # this is for HRNNDRO
+                    self.current_inputs = inputs
                     loss = self._criterion(outputs, labels)
                     loss.backward()
                     optimizer.step()
-                    
+
+                    if scheduler is not None and scheduler_step == "batch":
+                        scheduler.step()
                     epoch_loss += loss.item()
+                    batch_count += 1
                     pbar.update(1)
-                
-                avg_epoch_loss = epoch_loss / len(train_loader)
+
+                if batch_count == 0:
+                    raise ValueError("train_loader must not be empty")
+                avg_epoch_loss = epoch_loss / batch_count
                 self.robust_obj = float(avg_epoch_loss)
                 pbar.set_postfix(loss=avg_epoch_loss)
+                if scheduler is not None and scheduler_step == "epoch":
+                    if isinstance(scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
+                        scheduler.step(avg_epoch_loss)
+                    else:
+                        scheduler.step()
 
-        # Validation phase
-        return self._evaluate(val_loader)    
+        return self._evaluate(val_loader)
         
     def _convert_to_tensor(self, data: Union[np.ndarray, torch.Tensor], 
                           dtype: torch.dtype = torch.float32) -> torch.Tensor:
@@ -474,7 +543,7 @@ class BaseNNDRO:
             return torch.tensor(data, dtype=dtype)
         return data.to(dtype=dtype)
 
-    def _evaluate(self, loader: DataLoader) -> Tuple[float, float]:
+    def _evaluate(self, loader: DataLoader) -> Dict[str, float]:
         """Evaluate model on given data loader."""
         self.model.eval()
         all_preds = []
@@ -484,9 +553,15 @@ class BaseNNDRO:
             for inputs, labels in loader:
                 inputs = inputs.to(self.device)
                 outputs = self.model(inputs)
-                _, preds = torch.max(outputs, 1)
-                all_preds.extend(preds.cpu().numpy())
-                all_labels.extend(labels.cpu().numpy())
+                if self.task_type == "classification":
+                    preds = outputs.argmax(dim=1)
+                else:
+                    preds = outputs.reshape(-1)
+                all_preds.extend(preds.cpu().numpy().reshape(-1))
+                all_labels.extend(labels.cpu().numpy().reshape(-1))
+
+        if not all_labels:
+            raise ValueError("val_loader must not be empty")
         
         if self.task_type == "classification":
             acc = np.mean(np.array(all_preds) == np.array(all_labels))
@@ -502,8 +577,9 @@ class BaseNNDRO:
         with torch.no_grad():
             inputs = X.to(self.device)
             outputs = self.model(inputs)
-            _, preds = torch.max(outputs, 1)
-            return preds.cpu().numpy()
+            if self.task_type == "classification":
+                outputs = outputs.argmax(dim=1)
+            return outputs.reshape(-1).cpu().numpy()
 
     def score(self, X: Union[np.ndarray, torch.Tensor], 
              y: Union[np.ndarray, torch.Tensor]) -> float:

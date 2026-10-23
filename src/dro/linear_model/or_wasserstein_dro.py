@@ -22,7 +22,7 @@ class ORWDRO(BaseLinearDRO):
     ORWDRO_Paper: https://arxiv.org/pdf/2311.05573
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', solver: str = 'MOSEK', eps: float = 0.0, 
+    def __init__(self, input_dim: int, model_type: str = 'svm', solver: str = 'CLARABEL', eps: float = 0.0,
                  eta: float = 0.0, dual_norm: int = 1):
         """Initialize OR-WDRO model with anomaly-robust parameters.
 
@@ -91,7 +91,7 @@ class ORWDRO(BaseLinearDRO):
         if dual_norm not in {1, 2}:
             raise ValueError(f"dual_norm must be 1 or 2, got {dual_norm}")
 
-        BaseLinearDRO.__init__(self, input_dim, model_type)
+        BaseLinearDRO.__init__(self, input_dim, model_type, solver=solver)
         self.eps = eps
         self.eta = eta
         self.dual_norm = dual_norm

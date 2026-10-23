@@ -2,6 +2,14 @@ import unittest
 import numpy as np
 from src.dro.linear_model.marginal_dro import MarginalCVaRDRO, MarginalCVaRDROError
 
+
+class _FixedLossMarginalDRO(MarginalCVaRDRO):
+    """Isolate transport risk; the predictor penalty is minimized at zero."""
+
+    def _cvx_loss(self, X, y, theta, b, design_matrix=None):
+        return y + theta[0] ** 2
+
+
 class TestMarginalCVaRDRO(unittest.TestCase):
     """Unit tests for Marginal CVaR-DRO model."""
 
@@ -127,6 +135,38 @@ class TestMarginalCVaRDRO(unittest.TestCase):
         model = MarginalCVaRDRO(input_dim=5, fit_intercept=False)
         params = model.fit(self.valid_X, self.valid_y)
         assert params["b"] == 0.0
+
+    def test_unaccelerated_two_sample_transport_risk(self):
+        # For two losses [0, 1], the full symmetric transport constraints give
+        # |q[1] - q[0]| <= L**(p-1) * distance**(p-1) / 2.
+        # Only the first feature is controlled; the second must not affect cost.
+        X = np.array([[0.0, 100.0], [1.0, -100.0]])
+        losses = np.array([0.0, 1.0])
+        for p, expected_risk in [(1, 0.75), (2, 0.60)]:
+            with self.subTest(p=p):
+                model = _FixedLossMarginalDRO(
+                    input_dim=2, model_type='ols', fit_intercept=False,
+                    alpha=0.5, L=0.4, p=p,
+                )
+                model.update({'control_name': [0]})
+                model.fit(X, losses, accelerate=False)
+                self.assertAlmostEqual(model.robust_obj, expected_risk, places=5)
+
+    def test_unaccelerated_full_cost_and_permutation_invariance(self):
+        # At this L the distance constraints are inactive, giving CVaR 1/30.
+        # The old sparse cost allowed free flows and reduced this to mean 1/60.
+        n = 60
+        X = np.arange(n, dtype=float)[:, None]
+        losses = np.zeros(n)
+        losses[-1] = 1.0
+        permutation = np.random.default_rng(7).permutation(n)
+        for order in [np.arange(n), permutation]:
+            model = _FixedLossMarginalDRO(
+                input_dim=1, model_type='ols', fit_intercept=False,
+                alpha=0.5, L=2.0, p=2,
+            )
+            model.fit(X[order], losses[order], accelerate=False)
+            self.assertAlmostEqual(model.robust_obj, 1.0 / 30.0, places=5)
 
     def _validate_output_structure(self, params: dict):
         """Validate output dictionary structure and value ranges."""

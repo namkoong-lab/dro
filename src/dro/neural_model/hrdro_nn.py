@@ -1,10 +1,11 @@
 import cvxpy as cp
 import torch
-import torchattacks
 import warnings
 import numpy as np
-from typing import Optional, Dict, Union, List
+from typing import Optional, Dict, Union
+from torch.utils.data import DataLoader
 from .base_nn import BaseNNDRO, DROError
+from ._attack_utils import make_norm_ball_attacks, run_norm_ball_attack
 
 class HRNNDRO(BaseNNDRO):
     """Holistic Robust DRO.
@@ -85,8 +86,11 @@ class HRNNDRO(BaseNNDRO):
 
         :type learning_approach: str
 
-        :param adversarial_params: Adversarial training configuration:
-            Defaults to ``{"steps":7, "step_size":0.03, "norm":"l-inf", "method":"PGD"}``
+        :param adversarial_params: Adversarial training configuration.
+            ``norm`` is ``'l2'`` or ``'l-inf'``; ``method`` is ``'PGD'``,
+            ``'FGSM'``, or ``'FFGSM'``. FGSM and FFGSM require ``'l-inf'``.
+            Torchattacks clips attack inputs to [0, 1]. Defaults to
+            ``{"steps":10, "step_size":0.02, "norm":"l2", "method":"PGD"}``.
 
         :type adversarial_params: dict
 
@@ -103,7 +107,7 @@ class HRNNDRO(BaseNNDRO):
             - If invalid learning_approach
 
         Example (CIFAR-10)::
-            >>> adv_params = {"steps":5, "norm":"l2", "method":"PGD"}
+            >>> adv_params = {"steps":5, "step_size":0.03, "norm":"l2", "method":"PGD"}
             >>> model = HRNNDRO(
             ...     input_dim=3072, 
             ...     num_classes=10,
@@ -150,17 +154,22 @@ class HRNNDRO(BaseNNDRO):
     def _init_adversarial_attack(self):
         """Initialize adversarial attack generator"""
         params = self.adversarial_params
-        attack_cls = {
-            'PGD': torchattacks.PGDL2 if params['norm'] == 'l2' else torchattacks.PGD,
-            'FFGSM': torchattacks.FFGSM
-        }.get(params['method'], torchattacks.PGD)
-
-        self.attack = attack_cls(
-            self.model,
-            eps=self.epsilon,
-            alpha=params['step_size'],
-            steps=params['steps']
+        self.attack, self._tabular_attack = make_norm_ball_attacks(
+            self.model, params['method'], params['norm'], self.epsilon,
+            params['step_size'], params['steps'],
         )
+
+    def update_user_mode(
+        self,
+        input_dim: int,
+        num_classes: int,
+        model: torch.nn.Module,
+        task_type: str = "classification",
+        device: torch.device = torch.device("cpu"),
+    ) -> None:
+        """Replace the network and bind both attacks to the new network."""
+        super().update_user_mode(input_dim, num_classes, model, task_type, device)
+        self._init_adversarial_attack()
 
     def _init_optimization_problem(self):
         """Initialize CVXPY optimization problem"""
@@ -220,13 +229,15 @@ class HRNNDRO(BaseNNDRO):
         # Generate adversarial examples
         if self.epsilon > 0:
             inputs = self.current_inputs  # Saved during forward pass
-            adv_inputs = self.attack(inputs, labels)
+            adv_inputs = run_norm_ball_attack(
+                self.attack, self._tabular_attack, inputs, labels
+            )
             outputs = self.model(adv_inputs)
 
         if self.task_type == "classification":
             losses = torch.nn.CrossEntropyLoss(reduction="none")(outputs, labels)
         else:
-            losses = torch.nn.MSELoss(reduction="none")(outputs, labels)
+            losses = (outputs.reshape(-1) - labels.reshape(-1)).square()
         
         # Dynamic batch size handling
         batch_size = labels.size(0)
@@ -240,13 +251,10 @@ class HRNNDRO(BaseNNDRO):
         self.worst_case.value = losses.max().item()
         
         try:
-            self.problem.solve(solver=cp.ECOS, verbose=False)
+            self.problem.solve(solver=cp.CLARABEL, verbose=False)
         except cp.SolverError:
-            try:
-                self.loss_param.value += self.numerical_eps
-                self.problem.solve(solver=cp.MOSEK, verbose=False)
-            except cp.SolverError:
-                self.problem.solve(solver=cp.SCS, verbose=False)
+            self.loss_param.value += self.numerical_eps
+            self.problem.solve(solver=cp.SCS, verbose=False)
 
         # Get optimal weights
         weights = torch.from_numpy(self.p.value).to(self.device)
@@ -254,45 +262,57 @@ class HRNNDRO(BaseNNDRO):
 
     def fit(
         self,
-        X: Union[np.ndarray, torch.Tensor],
-        y: Union[np.ndarray, torch.Tensor],
+        X: Optional[Union[np.ndarray, torch.Tensor]] = None,
+        y: Optional[Union[np.ndarray, torch.Tensor]] = None,
         train_ratio: float = 0.8,
         lr: float = 1e-3,
         batch_size: int = None,
         epochs: int = 100,
-        verbose: bool = True
-    ) -> Dict[str, List[float]]:
-        """Enhanced training loop with adversarial training"""
-        
-        # Use specified batch size or default
-        batch_size = batch_size or self.train_batch_size
-        
-        # Convert inputs to tensor and validate
-        X_tensor = self._convert_to_tensor(X)
-        y_tensor = self._convert_to_tensor(y, 
-            dtype=torch.long if self.task_type == "classification" else None)
-        self._validate_input_shape(X_tensor)
+        verbose: bool = True,
+        *,
+        train_loader: Optional[DataLoader] = None,
+        val_loader: Optional[DataLoader] = None,
+        optimizer: Optional[torch.optim.Optimizer] = None,
+        scheduler: Optional[object] = None,
+        scheduler_step: str = "epoch",
+    ) -> Dict[str, float]:
+        """Fit HR-DRO using arrays or caller-supplied training components."""
+        if batch_size is None:
+            batch_size = self.train_batch_size
 
-        # Call base class fit with modified parameters
+        if train_loader is None and val_loader is None and X is not None and y is not None:
+            X = self._convert_to_tensor(X)
+            y = self._convert_to_tensor(
+                y, dtype=torch.long if self.task_type == "classification" else torch.float32
+            )
+            self._validate_input_shape(X)
+
         return super().fit(
-            X=X_tensor,
-            y=y_tensor,
+            X=X,
+            y=y,
             train_ratio=train_ratio,
             lr=lr,
             batch_size=batch_size,
             epochs=epochs,
-            verbose=verbose
+            verbose=verbose,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            optimizer=optimizer,
+            scheduler=scheduler,
+            scheduler_step=scheduler_step,
         )
 
     def predict(self, X: Union[np.ndarray, torch.Tensor]) -> np.ndarray:
         """Adversarial-robust prediction"""
-        X_tensor = self._convert_to_tensor(X)
+        X_tensor = self._convert_to_tensor(X).to(self.device)
         self.current_inputs = X_tensor  # Store for adversarial generation
         
         # Generate adversarial examples if needed
         if self.epsilon > 0:
-            dummy_targets = torch.zeros(X_tensor.size(0), dtype=torch.long).to(self.device)
-            X_tensor = self.attack(X_tensor, dummy_targets)
+            dummy_targets = torch.zeros(X_tensor.size(0), dtype=torch.long, device=self.device)
+            X_tensor = run_norm_ball_attack(
+                self.attack, self._tabular_attack, X_tensor, dummy_targets
+            )
         
         return super().predict(X_tensor)
     

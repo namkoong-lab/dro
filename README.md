@@ -39,8 +39,19 @@ pip install dro
 ```
 And it will install all required packages.
 
-### (2) Optional: Prepare `MOSEK` license
-When implementing the solvers with exact solutions, our package is built upon `cvxpy`, and called based on `MOSEK` by default, which is efficient for all optimization problems encountered in the reformulation. `MOSEK` needs the license file. The steps are as follows:
+### (2) Solver selection
+
+The convex linear DRO models use `CLARABEL` through `cvxpy` by default, so no commercial solver license is needed. You can select another installed solver when its capabilities cover your model's formulation. For example:
+
+```python
+from dro.linear_model.chi2_dro import Chi2DRO
+
+model = Chi2DRO(input_dim=2, solver='SCS')
+```
+
+You can also set `model.solver = 'SCS'` before calling `fit()`. See the [CVXPY solver guide](https://www.cvxpy.org/tutorial/solvers/index.html) for solver capabilities and options.
+
+`MOSEK` (or 'GUROBI') remains an optional choice for faster implementation. To use it, run `pip install mosek`, obtain a license, and set `solver='MOSEK'` (or `solver='GUROBI'`) when creating a model. To prepare the license for MOSEK:
 
 * Request license at <a href="https://www.mosek.com/products/academic-licenses/">Official Website</a>, and then the license `mosek.lic` will be emailed to you.
 * Put your license in your home directory as follows:
@@ -50,23 +61,6 @@ When implementing the solvers with exact solutions, our package is built upon `c
     mkdir mosek
     mv /path_to_license/mosek.lic  mosek/
     ```
-
-Alternatively, we can set the solver among some open-source solvers such as `ECOS`, `SCS` in `cvxpy` (see <a href = "https://www.cvxpy.org/tutorial/solvers/index.html">here</a> for more details). In any given DRO model, this can be done during initialization:
-
-    ```
-    model = XXDRO(..., solver = 'ECOS')
-    ```
-
-by simply updating after initialization:
-
-    ```
-    model.solver = 'ECOS'
-    ```
-
-These solvers can solve all the optimization problems implemented in the package as well.
-
-
-
 
 ## Quick Start
 A simple user example is as follows:

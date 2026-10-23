@@ -17,7 +17,7 @@ class KLDRO(BaseLinearDRO):
     Reference: <https://optimization-online.org/wp-content/uploads/2012/11/3677.pdf>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear', eps: float = 0.0):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'CLARABEL', kernel: str = 'linear', eps: float = 0.0):
         """Initialize KL-divergence Distributionally Robust Optimization model.
 
         Inherits from BaseLinearDRO and configures KL ambiguity set parameters. 
@@ -47,7 +47,8 @@ class KLDRO(BaseLinearDRO):
         :type fit_intercept: bool
         :param solver: Convex optimization solver, supported values:
 
-            - ``'MOSEK'`` (recommended): Requires academic/commercial license
+            - ``'CLARABEL'`` (open source, default)
+            - ``'MOSEK'`` (optional; requires a license)
             
         :type solver: str
     

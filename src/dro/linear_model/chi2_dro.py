@@ -17,7 +17,7 @@ class Chi2DRO(BaseLinearDRO):
     Reference: <https://www.jmlr.org/papers/volume20/17-750/17-750.pdf>
     """
 
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'CLARABEL', kernel: str = 'linear'):
         """Initialize the Chi-squared Distributionally Robust Optimization (Chi2-DRO) model.
 
         :param input_dim: Dimensionality of the input feature space. 
@@ -40,8 +40,8 @@ class Chi2DRO(BaseLinearDRO):
         :type fit_intercept: bool
         :param solver: Convex optimization solver. 
             Recommended solvers: 
-            - ``'MOSEK'`` (requires license)
-            Defaults to 'MOSEK'.
+            - ``'CLARABEL'`` (open source, default)
+            - ``'MOSEK'`` (optional; requires a license)
         :type solver: str
 
         :param kernel: the kernel type to be used in the optimization model, default = 'linear'

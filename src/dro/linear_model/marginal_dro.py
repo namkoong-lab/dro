@@ -23,7 +23,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
     https://arxiv.org/pdf/2007.13982.pdf with parameters L and p.
     """
     
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear', alpha: float = 1.0, L: float = 10.0, p: int = 2):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'CLARABEL', kernel: str = 'linear', alpha: float = 1.0, L: float = 10.0, p: int = 2):
         """
         :param input_dim: Dimension of input features. Must be ≥ 1.
         :type input_dim: int
@@ -41,7 +41,7 @@ class MarginalCVaRDRO(BaseLinearDRO):
         :param fit_intercept: Whether to learn intercept term :math:`b`. 
             Set False for pre-centered data. Defaults to True.
         :type fit_intercept: bool
-        :param solver: Convex optimization solver. Defaults to 'MOSEK'.
+        :param solver: Convex optimization solver. Defaults to 'CLARABEL'.
         :type solver: str
         :param kernel: the kernel type to be used in the optimization model, default = 'linear'
         :type kernel: str
@@ -199,7 +199,8 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
         :type y: numpy.ndarray
 
-        :param accelerate: Whether to use acceleration for quadratic approximation.
+        :param accelerate: Use the sparse auxiliary-vector surrogate when True.
+            When False, use a full transport matrix with all pairwise costs.
 
         :type accelerate: bool
 
@@ -248,10 +249,15 @@ class MarginalCVaRDRO(BaseLinearDRO):
 
         
         control_X = X[:, self.control_name] if self.control_name else X
-        nbrs = NearestNeighbors(n_neighbors=50).fit(control_X)
-        dist_sparse = nbrs.kneighbors_graph(mode='distance')
-        dist = triu(dist_sparse, format='coo')
-        dist.data = (dist.data ** (self.p-1)).astype(np.float32)
+        if accelerate:
+            nbrs = NearestNeighbors(n_neighbors=50).fit(control_X)
+            dist_sparse = nbrs.kneighbors_graph(mode='distance')
+            dist = triu(dist_sparse, format='coo')
+            dist.data = (dist.data ** (self.p-1)).astype(np.float32)
+        else:
+            # Every allowed flow B[i, j] must receive its pairwise cost.
+            dist = pairwise_distances(control_X, metric='euclidean') ** (self.p - 1)
+            np.fill_diagonal(dist, 0.0)
 
 
         if self.kernel != 'linear':

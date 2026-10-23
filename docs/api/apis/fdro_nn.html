@@ -292,20 +292,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – <p>Output dimension:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – <p>Output dimension:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
 <li><p>Regression: Automatically set to 1</p></li>
 </ul>
 </p></li>
-<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
+<li><p><strong>task_type</strong> (<em>str</em>) – <p>Learning task type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
 </ul>
 </p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -313,14 +313,14 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Chi-square divergence radius <span class="math notranslate nohighlight">\(\rho \geq 0\)</span> controlling distributional robustness. Larger values increase conservativeness. Defaults to 0.1.</p></li>
-<li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>size</strong> (<em>float</em>) – Chi-square divergence radius <span class="math notranslate nohighlight">\(\rho \geq 0\)</span> controlling distributional robustness. Larger values increase conservativeness. Defaults to 0.1.</p></li>
+<li><p><strong>reg</strong> (<em>float</em>) – Regularization coefficient. Defaults to 0.1.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If size &lt; 0</p></li>
 <li><p>If reg ≤ 0</p></li>
 <li><p>If max_iter &lt; 1</p></li>
@@ -343,20 +343,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – <p>Output dimension:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – <p>Output dimension:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
 <li><p>Regression: Automatically set to 1</p></li>
 </ul>
 </p></li>
-<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
+<li><p><strong>task_type</strong> (<em>str</em>) – <p>Learning task type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
 </ul>
 </p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -364,14 +364,14 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – CVaR ratio <span class="math notranslate nohighlight">\(1 \geq \rho \geq 0\)</span> controlling distributional robustness. Smaller values increase conservativeness. Defaults to 0.1.</p></li>
-<li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>size</strong> (<em>float</em>) – CVaR ratio <span class="math notranslate nohighlight">\(1 \geq \rho \geq 0\)</span> controlling distributional robustness. Smaller values increase conservativeness. Defaults to 0.1.</p></li>
+<li><p><strong>reg</strong> (<em>float</em>) – Regularization coefficient. Defaults to 0.1.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If size &lt; 0</p></li>
 <li><p>If reg ≤ 0</p></li>
 <li><p>If max_iter &lt; 1</p></li>

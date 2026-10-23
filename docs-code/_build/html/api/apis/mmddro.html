@@ -290,11 +290,27 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.linear_model.mmd_dro">
-<span id="mmd-dro"></span><h1>MMD DRO<a class="headerlink" href="#module-dro.linear_model.mmd_dro" title="Link to this heading">¶</a></h1>
-<dl class="py class">
+  <section id="mmd-dro">
+<h1>MMD DRO<a class="headerlink" href="#mmd-dro" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">MMD_DRO</span></code> fits a linear predictor while a kernel defines the MMD ambiguity
+set on joint feature–target samples. The default kernel is Gaussian RBF;
+Laplacian, polynomial, and linear kernels are also available.</p>
+<p><code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y,</span> <span class="pre">accelerate=True)</span></code> (the default) approximates the kernel with a
+Nyström feature map fitted once on the sampled support, then transforms that
+support in parallel batches. It enforces the loss constraints on at most
+5,000 sampled support points. Set <code class="docutils literal notranslate"><span class="pre">n_components</span></code> through
+<code class="docutils literal notranslate"><span class="pre">update_kernel({&quot;n_components&quot;:</span> <span class="pre">...})</span></code> to choose the feature-map rank;
+the default is the smaller of 100 and the support size. With
+<code class="docutils literal notranslate"><span class="pre">accelerate=False</span></code>, fitting instead uses the full kernel Gram matrix and
+constraints for every sampled support point. In the accelerated mode,
+<code class="docutils literal notranslate"><span class="pre">accelerated_regularizer=&quot;feature_coefficients&quot;</span></code> is the default and uses
+the feature-coefficient norm corresponding to the approximate RKHS penalty.
+<code class="docutils literal notranslate"><span class="pre">&quot;support_values&quot;</span></code> retains the legacy penalty on sampled function values,
+which differs from the RKHS penalty. Nyström approximation and constraint
+subsampling still distinguish accelerated fitting from the full formulation.</p>
+<dl class="py class" id="module-dro.linear_model.mmd_dro">
 <dt class="sig sig-object py" id="dro.linear_model.mmd_dro.MMD_DRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.mmd_dro.</span></span><span class="sig-name descname"><span class="pre">MMD_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bound'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_coef0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.mmd_dro.</span></span><span class="sig-name descname"><span class="pre">MMD_DRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLARABEL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bound'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_coef0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>MMD-DRO (Maximum Mean Discrepancy - Distributionally Robust Optimization)
 Implementation with flexible sampling methods and model types.</p>
@@ -303,8 +319,8 @@ Implementation with flexible sampling methods and model types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimension of input features. Must match training data.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model type. Supported:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Dimension of input features. Must match training data.</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Base model type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Support Vector Machine (hinge loss)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic Regression (log loss)</p></li>
@@ -312,29 +328,29 @@ Implementation with flexible sampling methods and model types.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least Absolute Deviation (L1 loss)</p></li>
 </ul>
 </p></li>
-<li><p><strong>sampling_method</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Supported:</p>
+<li><p><strong>sampling_method</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'bound'</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'hull'</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Kernel defining the MMD ambiguity set. Supported values are
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Kernel defining the MMD ambiguity set. Supported values are
 <code class="docutils literal notranslate"><span class="pre">'rbf'</span></code> (default), <code class="docutils literal notranslate"><span class="pre">'laplacian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'polynomial'</span></code> (or
 <code class="docutils literal notranslate"><span class="pre">'poly'</span></code>), and <code class="docutils literal notranslate"><span class="pre">'linear'</span></code>.</p></li>
-<li><p><strong>kernel_gamma</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>None</em>) – Positive kernel scale for RBF, Laplacian, and
+<li><p><strong>kernel_gamma</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> or </em><em>None</em>) – Positive kernel scale for RBF, Laplacian, and
 polynomial kernels. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, RBF and Laplacian use a robust
 median-distance heuristic, while polynomial uses
 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">(input_dim</span> <span class="pre">+</span> <span class="pre">1)</span></code>.</p></li>
-<li><p><strong>kernel_degree</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Positive integer degree of the polynomial kernel.
+<li><p><strong>kernel_degree</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Positive integer degree of the polynomial kernel.
 Defaults to 2.</p></li>
-<li><p><strong>kernel_coef0</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Non-negative independent term in the polynomial
+<li><p><strong>kernel_coef0</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Non-negative independent term in the polynomial
 kernel. Defaults to 1.0.</p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If <cite>model_type</cite> not in supported list</p></li>
 <li><p>If <cite>input_dim</cite> ≤ 0</p></li>
 <li><p>If <cite>sampling_method</cite> is invalid</p></li>
@@ -344,8 +360,8 @@ kernel. Defaults to 1.0.</p></li>
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">sampling_method</span> <span class="o">=</span> <span class="s1">&#39;hull&#39;</span> 
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'rbf'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">sampling_method</span> <span class="o">=</span> <span class="s1">'hull'</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="mf">0.5</span>  
 </pre></div>
 </div>
@@ -356,13 +372,15 @@ kernel. Defaults to 1.0.</p></li>
 <span class="sig-name descname"><span class="pre">update_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO.update_kernel" title="Link to this definition">¶</a></dt>
 <dd><p>Update the MMD kernel using the package’s kernel-update convention.</p>
 <p><code class="docutils literal notranslate"><span class="pre">metric</span></code> is accepted as an alias for <code class="docutils literal notranslate"><span class="pre">kernel</span></code>; <code class="docutils literal notranslate"><span class="pre">degree</span></code> and
-<code class="docutils literal notranslate"><span class="pre">coef0</span></code> are accepted as aliases for their <code class="docutils literal notranslate"><span class="pre">kernel_</span></code> counterparts.</p>
+<code class="docutils literal notranslate"><span class="pre">coef0</span></code> are accepted as aliases for their <code class="docutils literal notranslate"><span class="pre">kernel_</span></code> counterparts.
+<code class="docutils literal notranslate"><span class="pre">n_components=None</span></code> restores the default Nyström rank selection;
+<code class="docutils literal notranslate"><span class="pre">fit(...,</span> <span class="pre">accelerate=False)</span></code> selects the full kernel matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>)</p>
+<dd class="field-even"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.15)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a><em>]</em>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -373,7 +391,7 @@ kernel. Defaults to 1.0.</p></li>
 <dd><p>Update MMD-DRO model configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary containing optional keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary containing optional keys:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">eta</span></code> (float): </dt><dd><p>MMD radius controlling distributional robustness. 
@@ -385,8 +403,11 @@ Defaults to current value.</p>
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">sampling_method</span></code> (str): </dt><dd><p>Ambiguity set sampling strategy. Valid options:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">'bound'</span></code>: Sample on MMD ball boundary</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'hull'</span></code>: Sample within convex hull</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'bound'</span></code>: Sample uniformly in [-1, 1] for features and targets</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'hull'</span></code>: For regression, sample features in the pooled
+observed feature range and targets in their observed range.
+For classification, sample features in [-1, 1] and labels in
+{-1, +1}. Both fitting paths use these same sampling regions.</p></li>
 </ul>
 </dd>
 </dl>
@@ -424,7 +445,7 @@ data-driven default.</p>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">eta</span></code> is non-positive</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">sampling_method</span></code> not in {‘bound’, ‘hull’}</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">n_certify_ratio</span></code> ∉ (0, 1]</p></li>
@@ -433,16 +454,16 @@ data-driven default.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>              
-<span class="gp">... </span>    <span class="s1">&#39;sampling_method&#39;</span><span class="p">:</span> <span class="s1">&#39;hull&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="s1">&#39;polynomial&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;kernel_degree&#39;</span><span class="p">:</span> <span class="mi">2</span>
+<span class="gp">... </span>    <span class="s1">'eta'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>              
+<span class="gp">... </span>    <span class="s1">'sampling_method'</span><span class="p">:</span> <span class="s1">'hull'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'kernel'</span><span class="p">:</span> <span class="s1">'polynomial'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'kernel_degree'</span><span class="p">:</span> <span class="mi">2</span>
 <span class="gp">... </span><span class="p">})</span>
 </pre></div>
 </div>
@@ -470,10 +491,10 @@ data-driven default.</p>
 <dd><p>Load linear MMD-DRO parameters independently of the MMD kernel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>)</p>
+<dd class="field-even"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.15)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a><em>]</em>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -484,13 +505,13 @@ data-driven default.</p>
 <dd><p>Evaluate the linear predictor independently of the MMD kernel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a>)</p></li>
 <li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>fast</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<li><p><strong>fast</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -498,18 +519,41 @@ data-driven default.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.linear_model.mmd_dro.MMD_DRO.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accelerate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO.fit" title="Link to this definition">¶</a></dt>
-<dd><p>Vectorized implementation of MMD-DRO fit function.</p>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accelerate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accelerated_regularizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'feature_coefficients'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mmd_dro.MMD_DRO.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Fit MMD-DRO using a Nyström approximation or the full kernel matrix.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>accelerate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
+Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
+<ul>
+<li><p>Classification: ±1 labels</p></li>
+<li><p>Regression: Continuous values</p></li>
 </ul>
+</p></li>
+<li><p><strong>accelerate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> (default), fit a Nyström feature map
+on the sampled support and transform it in parallel batches;
+constrain at most 5,000 sampled support points. If <code class="docutils literal notranslate"><span class="pre">False</span></code>,
+use the full kernel Gram matrix and constrain every sampled
+support point.</p></li>
+<li><p><strong>accelerated_regularizer</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Regularizer used with the Nyström
+feature map. The default, <code class="docutils literal notranslate"><span class="pre">&quot;feature_coefficients&quot;</span></code>, uses the
+feature-space norm corresponding to the unaccelerated RKHS
+penalty. <code class="docutils literal notranslate"><span class="pre">&quot;support_values&quot;</span></code> retains the legacy penalty on
+function values at the sampled support points. This setting has
+no effect when <code class="docutils literal notranslate"><span class="pre">accelerate=False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Dictionary containing trained parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code>: Weight vector of shape <cite>(n_features,)</cite></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>

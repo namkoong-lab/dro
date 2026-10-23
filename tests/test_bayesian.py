@@ -285,13 +285,27 @@ def test_output_structure_no_intercept():
     assert 'theta' in params
 
 def test_newsvendor_loss():
-    """Test the newsvendor loss formulation"""
-    model = BayesianDRO(input_dim=3, model_type='newsvendor')
-    X = cp.Parameter((10, 3))
-    y = cp.Parameter(10)
-    theta = cp.Variable(3)
-    
-    loss_expr = model._cvx_loss(X, y, theta, 0)
+    """Underage costs three times as much as the same amount of overage."""
+    model = BayesianDRO(input_dim=1, model_type='newsvendor')
+    X = np.ones((3, 1))
+    y = np.array([2.0, -2.0, 0.0])
+    loss_expr = model._cvx_loss(X, y, cp.Constant([0.0]), 0)
+    np.testing.assert_allclose(loss_expr.value, [6.0, 2.0, 0.0])
+
+
+def test_newsvendor_loss_selects_upper_quartile():
+    """A 3:1 cost ratio selects the empirical 75th-percentile demand."""
+    model = BayesianDRO(
+        input_dim=1, model_type='newsvendor', fit_intercept=False,
+        distance_type='chi2', eps=0.0,
+    )
+    X = np.ones((5, 1))
+    y = np.arange(5, dtype=float)
+    order = cp.Variable(1)
+    problem = cp.Problem(cp.Minimize(cp.sum(model._cvx_loss(X, y, order, 0)) / len(y)))
+    problem.solve(solver='CLARABEL')
+    assert problem.status == 'optimal'
+    assert order.value[0] == pytest.approx(3.0, abs=1e-4)
 
 if __name__ == "__main__":
     pytest.main(["-v", "--cov=your_module"])

@@ -308,22 +308,52 @@ for companion neural <span class="math notranslate nohighlight">\(f\)</span>-DRO
 </section>
 <section id="wasserstein-dro">
 <h2>2. Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
-<p>For WDRO on neural networks, the main challenge is the perturbation. In our package, the perturbation step is implemented via recent advanced adversarial attack techniques which slightly perturb the data points to increase the prediction error. And the general procedure follows [2].</p>
+<p><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> supports two modes: <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> and <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code>.</p>
+<p>In the default <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode, PGD/PGDL2 approximately maximizes each example’s loss within a fixed input-norm ball; training then minimizes the mean loss on the perturbed examples. With exact inner maximization and label-preserving perturbations, this mode has a <span class="math notranslate nohighlight">\(W_\infty\)</span>-style interpretation. Here <span class="math notranslate nohighlight">\(\infty\)</span> is the Wasserstein order; the input norm can be <span class="math notranslate nohighlight">\(\ell_2\)</span> or <span class="math notranslate nohighlight">\(\ell_\infty\)</span>. The <span class="math notranslate nohighlight">\(\ell_2\)</span> PGD attack also accepts two-dimensional tabular inputs.</p>
+<p><strong>Implementation credit:</strong> <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode uses <a class="reference external" href="https://github.com/Harry24k/adversarial-attacks-pytorch">Torchattacks</a> by Hoki Kim to generate adversarial examples (PGD, PGDL2, FGSM, and FFGSM). The attack implementations are provided by that library [2].</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode follows the penalized Wasserstein objective of [3]. For each training example, its inner ascent approximately maximizes</p>
+<div class="math notranslate nohighlight">
+\[
+\ell(f_\theta(x'),y_i)-\gamma\lVert x'-x_i\rVert_2^2,
+\]</div>
+<p>and the outer training step minimizes the mean of these penalized losses. Squared Euclidean distance is the ground cost underlying label-preserving <span class="math notranslate nohighlight">\(W_2^2\)</span> transport. This mode uses a fixed penalty <span class="math notranslate nohighlight">\(\gamma\)</span>; it does not optimize the dual parameter to enforce a prescribed Wasserstein radius. The inner ascent is implemented directly in PyTorch and does not use Torchattacks.</p>
 <section id="id1">
 <h3>Hyperparameters<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>epsilon: Dual parameter. Coefficient of the penalty during adversarial training.</p></li>
-<li><p>adversarial_steps: Num of steps of the inner adversarial attacking.</p></li>
-<li><p>adversarial_step_size: Learning rate of the inner adversarial attacking.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">robust_objective</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;norm_ball&quot;</span></code> (default) or <code class="docutils literal notranslate"><span class="pre">&quot;transport_penalty&quot;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">epsilon</span></code>: Per-example <span class="math notranslate nohighlight">\(\ell_2\)</span> or <span class="math notranslate nohighlight">\(\ell_\infty\)</span> attack radius in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode. It is not used in <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">adversarial_norm</span></code> and <code class="docutils literal notranslate"><span class="pre">adversarial_method</span></code>: Select <code class="docutils literal notranslate"><span class="pre">&quot;l2&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;l-inf&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;PGD&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;FGSM&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;FFGSM&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode. FGSM and FFGSM require <code class="docutils literal notranslate"><span class="pre">&quot;l-inf&quot;</span></code>. Torchattacks clips attack inputs to <span class="math notranslate nohighlight">\([0,1]\)</span>, so scale features to that range. <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> uses squared <span class="math notranslate nohighlight">\(\ell_2\)</span> cost and gradient ascent.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gamma</span></code>: Positive coefficient of the squared transport cost in <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode. Larger values discourage movement from the original inputs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">adversarial_steps</span></code>: Number of PGD or <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> inner iterations. FGSM and FFGSM each use one step.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">adversarial_step_size</span></code>: Step size for PGD, FFGSM, or <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code>. FGSM uses <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> as its step size.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">input_bounds</span></code>: Optional <code class="docutils literal notranslate"><span class="pre">(lower,</span> <span class="pre">upper)</span></code> clipping bounds for <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode. The default is no clipping; use <code class="docutils literal notranslate"><span class="pre">(0.0,</span> <span class="pre">1.0)</span></code> for inputs scaled to that interval.</p></li>
 </ul>
-<p>[2] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi. ICLR 2018.</p>
+<p>For example, train a classifier on flattened images scaled to <span class="math notranslate nohighlight">\([0,1]\)</span> with the penalized <span class="math notranslate nohighlight">\(W_2^2\)</span> objective:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">WNNDRO</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">784</span><span class="p">,</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">robust_objective</span><span class="o">=</span><span class="s2">"transport_penalty"</span><span class="p">,</span>
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">adversarial_step_size</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">input_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Tune <code class="docutils literal notranslate"><span class="pre">gamma</span></code> and the ascent step size for the input scale. The inner ascent is approximate, especially for nonconvex neural networks. With unbounded inputs and squared-error regression, too small a <code class="docutils literal notranslate"><span class="pre">gamma</span></code> can make the inner maximum unbounded; set suitable input bounds or increase <code class="docutils literal notranslate"><span class="pre">gamma</span></code>.</p>
+<p>[2] <a class="reference external" href="https://arxiv.org/abs/2010.01950">Torchattacks: A PyTorch Repository for Adversarial Attacks</a>. Hoki Kim. arXiv:2010.01950, 2020.</p>
+<p>[3] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi. ICLR 2018.</p>
 <p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">Other NN DRO notebook</span></a>
 for companion neural Wasserstein DRO material.</p>
 </section>
 </section>
 <section id="holistic-robust-dro">
 <h2>3. Holistic Robust DRO<a class="headerlink" href="#holistic-robust-dro" title="Link to this heading">¶</a></h2>
-<p>We follow [3], and our code is largely based on <a class="reference external" href="https://github.com/RyanLucas3/HR_Neural_Networks">https://github.com/RyanLucas3/HR_Neural_Networks</a>.</p>
+<p>We follow [4], and our code is largely based on <a class="reference external" href="https://github.com/RyanLucas3/HR_Neural_Networks">https://github.com/RyanLucas3/HR_Neural_Networks</a>.</p>
+<p><strong>Implementation credit:</strong> <code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code> uses <a class="reference external" href="https://github.com/Harry24k/adversarial-attacks-pytorch">Torchattacks</a> by Kim [2] for adversarial-example generation.</p>
 <section id="id2">
 <h3>Hyperparameters<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -331,14 +361,14 @@ for companion neural Wasserstein DRO material.</p>
 <li><p><span class="math notranslate nohighlight">\(\alpha\)</span>: Robustness parameter for the Levy-Prokhorov metric DRO, denoted as <code class="docutils literal notranslate"><span class="pre">alpha</span></code> in the model config.</p></li>
 <li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: Robustness parameter for the model noise (perturbed ball size), denoted as <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> in the model config.</p></li>
 </ul>
-<p>[3] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.</p>
+<p>[4] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.</p>
 <p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">Other NN DRO notebook</span></a>
 for companion Holistic Robust DRO material.</p>
 </section>
 </section>
 <section id="sinkhorn-dro">
 <h2>4. Sinkhorn DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
-<p>Sinkhorn DRO uses an entropic-regularized Wasserstein distance and Gaussian input perturbations to construct a smooth robust loss. The implementation supports standard stochastic gradient (SG), multilevel Monte Carlo (MLMC), and randomized truncated MLMC (RTMLMC) optimization [4].</p>
+<p>Sinkhorn DRO uses an entropic-regularized Wasserstein distance and Gaussian input perturbations to construct a smooth robust loss. The implementation supports standard stochastic gradient (SG), multilevel Monte Carlo (MLMC), and randomized truncated MLMC (RTMLMC) optimization [5].</p>
 <section id="id3">
 <h3>Hyperparameters<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -386,7 +416,7 @@ for companion Holistic Robust DRO material.</p>
 </pre></div>
 </div>
 <p>See the <a class="reference internal" href="../api/notebooks/sinkhorn-nn.html"><span class="doc">Sinkhorn NN notebook</span></a> for classification, regression, custom-model, and optimizer examples.</p>
-<p>[4] <a class="reference external" href="https://arxiv.org/abs/2109.11926">Sinkhorn Distributionally Robust Optimization</a>. Jie Wang, Rui Gao, and Yao Xie.</p>
+<p>[5] <a class="reference external" href="https://arxiv.org/abs/2109.11926">Sinkhorn Distributionally Robust Optimization</a>. Jie Wang, Rui Gao, and Yao Xie.</p>
 </section>
 </section>
 <section id="group-dro">
@@ -398,7 +428,7 @@ For group-average losses <span class="math notranslate nohighlight">\(L_g(\theta
 \min_\theta\max_{g\in\mathcal{G}}L_g(\theta).
 \]</div>
 <p>The neural implementation follows the stochastic exponentiated-gradient
-method in [5]. It maintains adversarial group probabilities <span class="math notranslate nohighlight">\(q_g\)</span> and updates
+method in [6]. It maintains adversarial group probabilities <span class="math notranslate nohighlight">\(q_g\)</span> and updates
 them after each mini-batch:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -473,7 +503,7 @@ zero while still generalizing poorly on a minority group. Monitor held-out
 worst-group performance rather than only aggregate validation accuracy.</p>
 <p>See the <a class="reference internal" href="../api/notebooks/groupdro_tutorial.html"><span class="doc">Group DRO notebook</span></a> for an
 end-to-end linear and neural example.</p>
-<p>[5] <a class="reference external" href="https://arxiv.org/abs/1911.08731">Distributionally Robust Neural Networks for Group Shifts: On the
+<p>[6] <a class="reference external" href="https://arxiv.org/abs/1911.08731">Distributionally Robust Neural Networks for Group Shifts: On the
 Importance of Regularization for Worst-Case
 Generalization</a>. Shiori Sagawa, Pang Wei Koh,
 Tatsunori B. Hashimoto, and Percy Liang, ICLR 2020. The exponentiated

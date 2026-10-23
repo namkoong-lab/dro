@@ -49,6 +49,9 @@ def test_robustloss_geometry_validation(geometry, valid):
 @pytest.mark.parametrize("size,geometry,valid", [
     (1.1, 'cvar', False),
     (0.5, 'cvar', True),
+    (0.0, 'cvar', False),
+    (-0.1, 'cvar', False),
+    (0.0, 'chi-square', True),
     (-0.1, 'chi-square', False),
     (5.0, 'chi-square', True)
 ])

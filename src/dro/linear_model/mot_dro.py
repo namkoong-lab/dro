@@ -26,14 +26,21 @@ class MOTDRO(BaseLinearDRO):
     :vartype theta2: float
     :ivar eps: Robustness radius for OT ambiguity set (:math:`\\epsilon \\geq 0`)
     :vartype eps: float
-    :ivar p: Norm order for feature perturbation. Valid values: 2 (L2), 'inf' (L_inf)
+
+    Feature transport keeps targets fixed and uses the cost
+    ``||X_1 - X_2||_p ** square``. The norm order and transport exponent
+    are independent parameters.
+
+    :ivar p: Feature perturbation norm order: 1, 2, or 'inf'. Defaults to 2.
     :vartype p: Union[float, str]
+    :ivar square: Transport exponent: 1 or 2. Defaults to 2.
+    :vartype square: int
 
     .. _MOTDRO_Paper: https://arxiv.org/abs/2308.05414
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', 
-                 fit_intercept: bool = True, solver: str = 'MOSEK'):
+                 fit_intercept: bool = True, solver: str = 'CLARABEL'):
         """Initialize MOT-DRO with restricted model types.
 
         :param input_dim: Dimension of input features. Must be ≥ 1.
@@ -48,7 +55,7 @@ class MOTDRO(BaseLinearDRO):
         :param fit_intercept: Whether to learn intercept term. 
             Set False for pre-centered data. Defaults to True.
         :type fit_intercept: bool
-        :param solver: Convex optimization solver. Defaults to 'MOSEK'.
+        :param solver: Convex optimization solver. Defaults to 'CLARABEL'.
         :type solver: str
 
         :raises MOTDROError: 
@@ -61,12 +68,13 @@ class MOTDRO(BaseLinearDRO):
 
             - ``theta1``: 1.0 (minimum Wasserstein scaling)
 
-            - ``square``: 2.0 (quadratic regularization strength)
+            - ``p``: 2 (Euclidean feature perturbation norm)
+
+            - ``square``: 2 (squared feature transport cost)
 
         Example:
             >>> model = MOTDRO(input_dim=5, model_type='svm')
-            >>> model.theta1 = 1.5  
-            >>> model.square = 1.0  
+            >>> model.update({'theta1': 1.5, 'eps': 0.1, 'p': 2, 'square': 1})
         """
         if model_type in ['ols', 'logistic']:
             raise MOTDROError("MOT DRO does not support OLS, logistic")
@@ -76,6 +84,24 @@ class MOTDRO(BaseLinearDRO):
         self.eps = 0        
         self.p = 2
         self.square = 2
+
+    @staticmethod
+    def _validate_transport_parameters(p, square):
+        """Validate the norm and exponent supported by the reformulation."""
+        is_infinite_norm = isinstance(p, str) and p == 'inf'
+        if not is_infinite_norm and (
+            isinstance(p, bool)
+            or not isinstance(p, (float, int))
+            or p not in (1, 2)
+        ):
+            raise MOTDROError("Norm parameter 'p' must be 1, 2, or 'inf'.")
+        if (
+            isinstance(square, bool)
+            or not isinstance(square, (float, int))
+            or square not in (1, 2)
+        ):
+            raise MOTDROError("Transport exponent 'square' must be 1 or 2.")
+        return 'inf' if is_infinite_norm else float(p), int(square)
 
     def update(self, config: Dict[str, Any]) -> None:
         """Update MOTDRO model configuration with coupled parameters.
@@ -93,14 +119,18 @@ class MOTDRO(BaseLinearDRO):
             - ``eps`` (float ≥ 0): 
                 Robustness radius for OT ambiguity set
             
-            - ``p`` (float ≥1 or 'inf'): 
-                Perturbation norm order (1 ≤ p ≤ ∞)
+            - ``p`` (1, 2, or 'inf'):
+                Feature perturbation norm order. Defaults to 2.
+
+            - ``square`` (1 or 2):
+                Transport exponent, independent of the norm order. Defaults to 2.
 
         :raises MOTDROError: 
             - If ``theta1`` ≤ 1 or ``theta2`` ≤ 1
             - If ``theta1``/``theta2`` relationship becomes invalid
             - If ``eps`` < 0 or non-numeric
-            - If ``p`` < 1 (when numeric) or not 'inf'
+            - If ``p`` is not 1, 2, or 'inf'
+            - If ``square`` is not 1 or 2
             - If parameter types are incorrect
 
         Parameter Coupling:
@@ -112,11 +142,14 @@ class MOTDRO(BaseLinearDRO):
             >>> model.update({
             ...     'theta1': 2.5,       
             ...     'p': 'inf',          
+            ...     'square': 2,
             ...     'eps': 0.3           
             ... })
 
         """
-        
+        p, square = self._validate_transport_parameters(
+            config.get('p', self.p), config.get('square', self.square)
+        )
         if "theta1" in config.keys():
             self.theta1 = config["theta1"]
             self.theta2 = 1/(1-1/self.theta1)
@@ -131,22 +164,11 @@ class MOTDRO(BaseLinearDRO):
                 raise MOTDROError("Robustness parameter 'eps' must be a non-negative float.")
             self.eps = float(eps)
 
-        if 'p' in config.keys():
-            p = config['p']
-            if p != 'inf':
-                if not isinstance(p, (float, int)) or p < 1:
-                    raise MOTDROError("Norm parameter 'p' must be float and larger than 1.")
-                self.p = float(p)
-            else:
-                self.p = p
-        if 'square' in config.keys():
-            square = config['square']
-            if square not in [1, 2]:
-                raise MOTDROError("Distance parameter 'square' can only take values in 1,2.")
-            self.square = square
+        self.p = p
+        self.square = square
 
     def fit(self, X, y):
-        """Fit the MMD-DRO model to the data.
+        """Fit the MOT-DRO model to the data.
         
         :param X: Training feature matrix of shape `(n_samples, n_features)`.
             Must satisfy `n_features == self.input_dim`.
@@ -180,15 +202,25 @@ class MOTDRO(BaseLinearDRO):
         if N_train != y.shape[0]:
             raise MOTDROError("Input X and target y must have the same number of samples.")
 
+        p, square = self._validate_transport_parameters(self.p, self.square)
         self.theta1_par = self.theta1
         self.theta2_par = self.theta2
 
-        if self.p == 1:
-            q = "inf"
-        elif self.p == 2:
-            q = 2
-        elif self.p == "inf":
-            q = 1
+        # At zero radius the ambiguity set is the empirical distribution.
+        # Its dual can approach the optimum only as lambda grows without bound.
+        if self.eps == 0:
+            theta = cp.Variable(dim)
+            b = cp.Variable() if self.fit_intercept else 0
+            problem = cp.Problem(cp.Minimize(cp.sum(self._cvx_loss(X, y, theta, b)) / N_train))
+            problem.solve(solver=self.solver)
+            if theta.value is None:
+                raise MOTDROError(f"Optimization failed to solve using {self.solver}.")
+            self.theta = theta.value
+            self.b = float(b.value) if self.fit_intercept else 0.0
+            self.robust_obj = float(problem.value)
+            return {"theta": self.theta.reshape(-1).tolist(), "b": self.b}
+
+        q = {1: "inf", 2: 2, "inf": 1}[p]
 
         # Decision variables
         t = cp.Variable(1)
@@ -213,11 +245,11 @@ class MOTDRO(BaseLinearDRO):
         ]
         cons.extend(exp_cones)
 
-        if self.square == 1:
+        if square == 1:
             cons.append(self.lambda_ * self.theta1 >= cp.norm(theta, q))
             loss_constraints = self._cvx_loss(X, y, theta, b) <= epig_
             cons.append(loss_constraints)  
-        elif self.square == 2:
+        elif square == 2:
             reg_denominator = 4 * self.lambda_ * self.theta1
             quad_terms = cp.quad_over_lin(cp.norm(theta, q), reg_denominator)
             combined_loss = self._cvx_loss(X, y, theta, b) + quad_terms

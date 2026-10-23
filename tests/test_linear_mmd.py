@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 import numpy as np
 import cvxpy as cp
 from src.dro.linear_model.mmd_dro import MMD_DRO, MMDDROError
@@ -289,6 +290,60 @@ class TestMMDDROModel(unittest.TestCase):
         model = MMD_DRO(input_dim=5, model_type='svm', sampling_method='hull')
         params = model.fit(self.valid_X, self.valid_y)
         self._validate_output_structure(params)
+
+    def test_default_accelerated_regularizer_matches_full_rank_rkhs(self):
+        """A full-rank feature map recovers the unaccelerated RKHS objective."""
+        X = np.array([[-1.0, -0.3], [-0.2, 0.8], [0.6, -0.7], [1.0, 0.4]])
+        y = np.array([-1.0, 1.0, -1.0, 1.0])
+        objectives = []
+        for options in (
+            {},
+            {'accelerated_regularizer': 'feature_coefficients'},
+            {'accelerate': False},
+            {'accelerated_regularizer': 'support_values'},
+        ):
+            model = MMD_DRO(
+                input_dim=2, model_type='svm', sampling_method='hull',
+                kernel_gamma=1.3,
+            )
+            model.update({'eta': 0.2, 'n_certify_ratio': 1.0})
+            model.update_kernel({'n_components': 8})
+            np.random.seed(17)
+            model.fit(X, y, **options)
+            objectives.append(model.robust_obj)
+
+        self.assertAlmostEqual(objectives[0], objectives[1], places=6)
+        self.assertAlmostEqual(objectives[0], objectives[2], places=5)
+        self.assertGreater(abs(objectives[0] - objectives[3]), 1e-3)
+
+    def test_hull_sampling_matches_between_fitting_paths(self):
+        """Both paths must generate the same support under the same RNG seed."""
+        X = np.array([[10.0, -20.0], [20.0, -15.0], [30.0, -10.0], [40.0, -5.0]])
+        for model_type in ('svm', 'logistic', 'ols', 'lad'):
+            with self.subTest(model_type=model_type):
+                classification = model_type in ('svm', 'logistic')
+                y = np.array([-1.0, 1.0, -1.0, 1.0]) if classification else np.array([2.0, 5.0, 9.0, 3.0])
+                supports = []
+                for accelerate in (False, True):
+                    model = MMD_DRO(input_dim=2, model_type=model_type, sampling_method='hull')
+                    model.update({'n_certify_ratio': 1.0})
+                    np.random.seed(17)
+                    # Capture generated support before kernel construction or solving.
+                    with patch.object(model, '_kernel_parameters', side_effect=RuntimeError('support captured')) as capture:
+                        with self.assertRaisesRegex(RuntimeError, 'support captured'):
+                            model.fit(X, y, accelerate=accelerate)
+                        supports.append(capture.call_args.args[0].copy())
+
+                np.testing.assert_array_equal(supports[0], supports[1])
+                np.testing.assert_array_equal(supports[0][:len(X)], np.column_stack([X, y]))
+                sampled = supports[0][len(X):]
+                self.assertEqual(sampled.shape, (4, 3))
+                low, high = (-1.0, 1.0) if classification else (X.min(), X.max())
+                self.assertTrue(np.all((sampled[:, :-1] >= low) & (sampled[:, :-1] <= high)))
+                if classification:
+                    self.assertTrue(np.all(np.isin(sampled[:, -1], [-1, 1])))
+                else:
+                    self.assertTrue(np.all((sampled[:, -1] >= y.min()) & (sampled[:, -1] <= y.max())))
 
     def test_hull_sampling_regression_behavior(self):
         """Test model fitting with hull sampling method with regression"""

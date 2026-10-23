@@ -1,6 +1,6 @@
 # Formulation
 
-Given the empirical distribution $\hat P$ from the training data $\{(x_i, y_i)\}_{i \in [N]}$, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:
+Given the empirical distribution $\widehat P$ from the training data $\{(x_i, y_i)\}_{i \in [N]}$, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:
 
 $$
 \min_{f \in \mathcal{F}}\max_{Q \in \mathcal{P}}\mathbb{E}_Q[\ell(f(X), Y)],
@@ -9,7 +9,7 @@ $$
 where $\mathcal{P}$ is denoted as the ambiguity set. Usually, it satisfies the following structure:
 
 $$
-\mathcal{P}(d, \epsilon) = \{Q: d(Q, \hat P) \leq \epsilon\}. 
+\mathcal{P}(d, \epsilon) = \{Q: d(Q, \widehat P) \leq \epsilon\}.
 $$
 
 
@@ -31,7 +31,7 @@ Following the general pipeline of "Data -> Model -> Evaluation / Diagnostics", w
   </tr></thead>
 <tbody>
   <tr>
-    <td class="tg-0pky" rowspan="4"><br><br><br><br>dro.src.data.dataloader_classification</td>
+    <td class="tg-0pky" rowspan="4"><br><br><br><br>dro.data.dataloader_classification</td>
     <td class="tg-0pky">classification_basic</td>
     <td class="tg-0pky">Basic classification task</td>
   </tr>
@@ -48,7 +48,7 @@ Following the general pipeline of "Data -> Model -> Evaluation / Diagnostics", w
     <td class="tg-0lax">Following Section 4.1 (Classification) of <br>"Distributionally Robust Optimization with Data Geometry"</td>
   </tr>
   <tr>
-    <td class="tg-0lax" rowspan="5"><br><br><br><br><br>dro.src.data.dataloader_regression</td>
+    <td class="tg-0lax" rowspan="5"><br><br><br><br><br>dro.data.dataloader_regression</td>
     <td class="tg-0lax">regression_basic</td>
     <td class="tg-0lax">Basic regression task</td>
   </tr>
@@ -89,7 +89,7 @@ Regression:
 * Least absolute deviation (``lad``): $\ell(f(X), Y) = |Y - f(X)|$.
 * Ordinary least squares (``ols``): $\ell(f(X), Y) = (Y - f(X))^2$.
 
-The linear models use built-in ``cvxpy`` solvers; our tests use ``MOSEK``.
+The convex linear models use ``CLARABEL`` through ``cvxpy`` by default. You can select another installed solver, such as ``SCS`` or the licensed ``MOSEK``, when it supports the model's formulation.
 
 #### Kernel Setup
 
@@ -99,7 +99,7 @@ The kernel interface follows scikit-learn:
 
 * ``metric``: ``additive_chi2``, ``chi2``, ``linear``, ``poly``, ``polynomial``, or ``rbf``.
 * ``kernel_gamma``: a positive gamma value, ``scale``, or ``auto``.
-* ``n_components``: ``None`` for exact fitting, or an integer for a Nystroem approximation when $n$ is large.
+* ``n_components``: ``None`` for the full kernel representation, or an integer for a Nystroem approximation when $n$ is large.
 
 #### Supported DRO Methods
 
@@ -108,11 +108,15 @@ The kernel interface follows scikit-learn:
 * Generalized $f$-DRO: CVaR-DRO, Marginal DRO (CVaR), and Conditional DRO (CVaR).
 * MMD-DRO.
 * Bayesian-based DRO: Bayesian-PDRO and PDRO.
-* Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, and Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
+* Hybrid-distance DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, and Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).
 
 ### Neural Network Models (Approximate Fitting)
 
-The neural module implements $\chi^2$-DRO, CVaR-DRO, Wasserstein DRO through adversarial training, and Holistic Robust DRO. Supported architectures are linear models, vanilla MLP, AlexNet, and ResNet18. Users can also supply their own architecture through the `update` function in `BaseNNDRO`.
+The neural module implements $\chi^2$-DRO, CVaR-DRO, Wasserstein DRO through adversarial training, and Holistic Robust DRO. Supported architectures are linear models, vanilla MLP, AlexNet, and ResNet18. Users can also supply their own architecture through `BaseNNDRO.update_user_mode(...)`.
+
+See the {doc}`neural-model guide <neural_model>` for training interfaces and the
+{doc}`NN-DRO robustness certificates guide <neural_certificates>` for
+post-training bounds on the worst-case loss of a fitted network.
 
 ### Tree-based Ensemble Models (Approximate Fitting)
 
@@ -120,7 +124,7 @@ The tree module supports KL-DRO, CVaR-DRO, and $\chi^2$-DRO with LightGBM and XG
 
 ### Evaluation and Diagnostics
 
-Some linear DRO models provide ``worst_distribution`` to inspect worst-case model performance. The ``evaluate`` function in `BaseLinearDRO` estimates true model performance from fitted data.
+Some linear DRO models provide ``worst_distribution`` to inspect worst-case model performance. The ``evaluate`` function in `BaseLinearDRO` provides a bias-corrected loss estimate only for linear-kernel OLS and logistic models. It raises `NotImplementedError` for SVM, LAD, and nonlinear-kernel models; use `score()` for standard predictive metrics.
 
 
 ## Reference

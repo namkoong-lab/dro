@@ -66,8 +66,8 @@ Linear and kernelized predictors are supported through the common
 - `group_idx`: required index of the finite categorical group feature.
 - `model_type`: one of `"svm"`, `"logistic"`, `"ols"`, or `"lad"`.
 - `fit_intercept`: whether to learn an intercept; the default is `True`.
-- `solver`: an installed CVXPY solver. The package default is `"MOSEK"`;
-  `"CLARABEL"` or `"SCS"` can be used when available.
+- `solver`: an installed CVXPY solver. The package default is `"CLARABEL"`;
+  `"SCS"` or the licensed `"MOSEK"` can also be used when available.
 - `kernel`: kernel name passed to `BaseLinearDRO`; the default is `"linear"`.
 
 The group feature can be changed before refitting with
@@ -84,7 +84,6 @@ model = GroupDRO(
     input_dim=X.shape[1],
     group_idx=2,
     model_type="svm",
-    solver="CLARABEL",
 )
 result = model.fit(X, y)
 predictions = model.predict(X)

@@ -57,7 +57,7 @@ def _chi2_weights(loss: np.ndarray, epsilon: float) -> np.ndarray:
             <= epsilon / sample_size,
         ],
     )
-    problem.solve()
+    problem.solve(solver=cp.CLARABEL)
     if probabilities.value is None:
         raise RuntimeError("Unable to compute chi-square robust objective")
     return np.asarray(probabilities.value) * sample_size
@@ -209,7 +209,7 @@ class KLDRO_XGB:
             raise RuntimeError(f"XGBoost training failed: {str(e)}") from e
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Generate predictions
+        """Generate predictions; classification thresholds raw margins at zero.
         
         :param numpy.ndarray X: Input features (n_samples, n_features)
         :return: Model predictions
@@ -221,10 +221,10 @@ class KLDRO_XGB:
             
         X = check_array(X, ensure_2d=True, dtype=np.float32)
         dtest = DMatrix(X)
-        y_pred = self.model.predict(dtest)
+        y_pred = self.model.predict(dtest, output_margin=self.kind == "classification")
         
         if self.kind == "classification":
-            return (y_pred > 0.5).astype(int)
+            return (y_pred > 0).astype(int)
         return y_pred
 
     def score(self, X, y):
@@ -335,7 +335,7 @@ class Chi2DRO_XGB:
             objective = cp.Maximize(p @ loss)
             constraints = [cp.sum(p) == 1, p >= 0, cp.sum_squares(p - (1/n)) <= epsilon / n]
             prob = cp.Problem(objective, constraints)
-            prob.solve(solver = 'MOSEK')
+            prob.solve(solver=cp.CLARABEL)
 
             softmax_weights = np.array(p.value) * n
         
@@ -379,7 +379,7 @@ class Chi2DRO_XGB:
             raise RuntimeError(f"XGBoost training failed: {str(e)}") from e
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Generate predictions
+        """Generate predictions; classification thresholds raw margins at zero.
         
         :param numpy.ndarray X: Input features (n_samples, n_features)
         :return: Model predictions
@@ -391,10 +391,10 @@ class Chi2DRO_XGB:
             
         X = check_array(X, ensure_2d=True, dtype=np.float32)
         dtest = DMatrix(X)
-        y_pred = self.model.predict(dtest)
+        y_pred = self.model.predict(dtest, output_margin=self.kind == "classification")
         
         if self.kind == "classification":
-            return (y_pred > 0.5).astype(int)
+            return (y_pred > 0).astype(int)
         return y_pred
 
     def score(self, X, y):
@@ -536,7 +536,7 @@ class CVaRDRO_XGB:
             raise RuntimeError(f"XGBoost training failed: {str(e)}") from e
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Generate predictions
+        """Generate predictions; classification thresholds raw margins at zero.
         
         :param numpy.ndarray X: Input features (n_samples, n_features)
         :return: Model predictions
@@ -548,10 +548,10 @@ class CVaRDRO_XGB:
             
         X = check_array(X, ensure_2d=True, dtype=np.float32)
         dtest = DMatrix(X)
-        y_pred = self.model.predict(dtest)
+        y_pred = self.model.predict(dtest, output_margin=self.kind == "classification")
         
         if self.kind == "classification":
-            return (y_pred > 0.5).astype(int)
+            return (y_pred > 0).astype(int)
         return y_pred
     
     def score(self, X, y):

@@ -15,14 +15,54 @@
     "\n",
     "\n",
     "## Frequentist\n",
-    "From an frequentist perspective, if we only change the nominal distribution $\\hat P$ as some parametric distribution $P_{\\ell}$ (fitted via the dataset first), we can directly call ``fit`` function to solve that and obtain the corresponding parameters. "
+    "Fit a single parametric nominal distribution to the observed data, then solve an f-DRO problem around that fitted distribution. Here we estimate a joint Gaussian distribution for `(X, y)` using its sample mean and maximum-likelihood covariance. We draw 500 joint samples from this fitted Gaussian and pass them to `Chi2DRO.fit()` for robust linear regression.\n",
+    "\n",
+    "This is a finite Monte Carlo approximation to the parametric f-DRO problem. Increasing the simulated sample count improves the approximation; `eps` separately controls the chi-square ambiguity radius. The Gaussian parameters are point estimates, with no posterior sampling.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "Coefficients: [ 1.443 -2.019]\n",
+      "Robust objective: 0.367\n",
+      "Observed-data MSE: 0.256\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "from dro.linear_model.chi2_dro import Chi2DRO\n",
+    "\n",
+    "# Observed regression data.\n",
+    "rng = np.random.default_rng(42)\n",
+    "X_observed = rng.normal(size=(100, 2))\n",
+    "y_observed = X_observed @ np.array([1.5, -2.0]) + rng.normal(scale=0.5, size=100)\n",
+    "\n",
+    "# Fit one joint Gaussian nominal distribution and approximate it by sampling.\n",
+    "joint_observed = np.column_stack((X_observed, y_observed))\n",
+    "mean_hat = joint_observed.mean(axis=0)\n",
+    "cov_hat = np.cov(joint_observed, rowvar=False, ddof=0)\n",
+    "joint_nominal = rng.multivariate_normal(mean_hat, cov_hat, size=500)\n",
+    "\n",
+    "frequentist_model = Chi2DRO(input_dim=2, model_type='ols', solver='CLARABEL')\n",
+    "frequentist_model.update({'eps': 0.1})\n",
+    "frequentist_params = frequentist_model.fit(joint_nominal[:, :-1], joint_nominal[:, -1])\n",
+    "\n",
+    "print('Coefficients:', np.round(frequentist_params['theta'], 3))\n",
+    "print(f'Robust objective: {frequentist_model.robust_obj:.3f}')\n",
+    "print(f'Observed-data MSE: {frequentist_model.score(X_observed, y_observed):.3f}')\n"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Below we only focus on the Bayesian setting.\n",
     "## Bayesian\n",
     "For the Bayesian-DRO model, we provide additional model type called ``newsvendor`` loss. The default setup is as follows:\n",
     "$\\ell(\\theta;(X, Y)) = 3 (Y - \\theta)_+ + (\\theta - Y)_+$.\n",
@@ -37,14 +77,20 @@
    "metadata": {},
    "outputs": [
     {
-     "data": {
-      "text/plain": [
-       "{'theta': [1.3816098929349603], 'b': None}"
-      ]
-     },
+     "output_type": "stream",
+     "name": "stderr",
+     "text": [
+      "/Users/twang/anaconda3/lib/python3.11/site-packages/cvxpy/problems/problem.py:1510: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.\n",
+      "  warnings.warn(\n"
+     ]
+    },
+    {
+     "output_type": "execute_result",
      "execution_count": 2,
-     "metadata": {},
-     "output_type": "execute_result"
+     "data": {
+      "text/plain": "{'theta': [2.7673592736142574], 'b': None}"
+     },
+     "metadata": {}
     }
    ],
    "source": [
@@ -57,6 +103,7 @@
     "\n",
     "feature_dim = 1\n",
     "sample_num = 1000\n",
+    "np.random.seed(42)\n",
     "X = np.ones((sample_num, feature_dim))\n",
     "y = np.random.exponential(2, sample_num)\n",
     "\n",
@@ -71,14 +118,12 @@
    "metadata": {},
    "outputs": [
     {
-     "data": {
-      "text/plain": [
-       "'KL'"
-      ]
-     },
+     "output_type": "execute_result",
      "execution_count": 3,
-     "metadata": {},
-     "output_type": "execute_result"
+     "data": {
+      "text/plain": "'KL'"
+     },
+     "metadata": {}
     }
    ],
    "source": [
@@ -91,32 +136,8 @@
    "metadata": {},
    "outputs": [
     {
-     "name": "stdout",
      "output_type": "stream",
-     "text": [
-      "None\n"
-     ]
-    }
-   ],
-   "source": [
-    "theta = cp.Variable(1)\n",
-    "b = cp.Variable(1)\n",
-    "eta = cp.Variable()\n",
-    "loss = np.sqrt(1) / np.sqrt(sample_num) * cp.norm(cp.pos(reg_model._cvx_loss(X[0], y[0], theta, b) - eta), 2) + eta\n",
-    "t = cp.Variable()\n",
-    "problem = cp.Problem(cp.Minimize(t), [t >= loss])\n",
-    "problem.solve(solver = 'MOSEK')\n",
-    "print(theta.value)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 5,
-   "metadata": {},
-   "outputs": [
-    {
      "name": "stdout",
-     "output_type": "stream",
      "text": [
       "sample lool 0\n",
       "sample lool 1\n",
@@ -126,19 +147,12 @@
      ]
     },
     {
+     "output_type": "execute_result",
+     "execution_count": 4,
      "data": {
-      "text/plain": [
-       "{'theta': [62.169443051525285,\n",
-       "  97.87564003822867,\n",
-       "  63.87624899340756,\n",
-       "  55.84248039099289,\n",
-       "  35.333453154516214],\n",
-       " 'b': array(1.38349967)}"
-      ]
+      "text/plain": "{'theta': [60.74800146657186,\n  98.693117658742,\n  63.25954565625883,\n  55.55298677774016,\n  35.337352668380284],\n 'b': array(-0.7762879)}"
      },
-     "execution_count": 5,
-     "metadata": {},
-     "output_type": "execute_result"
+     "metadata": {}
     }
    ],
    "source": [

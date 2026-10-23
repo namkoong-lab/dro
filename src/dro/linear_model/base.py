@@ -46,7 +46,7 @@ class BaseLinearDRO:
         recent successful fit, or ``None`` before it is available.
 
     """
-    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
+    def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, solver: str = 'CLARABEL', kernel: str = 'linear'):
         """
         :param input_dim: Dimensionality of the input features.
         :type input_dim: int
@@ -54,7 +54,7 @@ class BaseLinearDRO:
         :type model_type: str
         :param fit_intercept: Whether to calculate the intercept for this model. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered), default = True.
         :type fit_intercept: bool
-        :param solver: Optimization solver to solve the problem, default = 'MOSEK'.
+        :param solver: Optimization solver to solve the problem, default = 'CLARABEL'.
         :type solver: str 
         :param kernel: the kernel type to be used in the optimization model, default = 'linear'
         :type kernel: str
@@ -86,14 +86,16 @@ class BaseLinearDRO:
 
             - ``metric``: The metric to use when calculating kernel between instances in a feature array. 
             - ``kernel_gamma``: Parameter gamma of the pairwise kernel specified by metric.
-            - ``n_components``: The number of 
+            - ``n_components``: Integer number of Nyström components, or
+              ``None`` to use the full kernel representation on the next fit.
 
         :type config: dict[str, Any]
 
         :raises ValueError:
             - If ``kernel_gamma`` is not in scale, auto;
-            - If ``n_components`` is not an int;
             - If ``metric`` is 
+
+        :raises TypeError: If ``n_components`` is neither an integer nor ``None``.
         """
 
         if 'metric' in config:
@@ -116,8 +118,8 @@ class BaseLinearDRO:
 
         if 'n_components' in config:
             n_components = config['n_components']
-            if not isinstance(n_components, (int)):
-                raise TypeError("n_components should be int")
+            if n_components is not None and not isinstance(n_components, int):
+                raise TypeError("n_components should be int or None")
             self.n_components = n_components
         
 
@@ -336,11 +338,10 @@ class BaseLinearDRO:
             raise NotImplementedError("CVXPY loss not implemented for the specified model_type value.")
 
     def evaluate(self, X: np.ndarray, y: np.ndarray, fast: bool = True) -> float:
-        """Evaluate model performance with bias-corrected mean squared error (MSE) or binary cross entropy error (BCE).
-        
-        Specifically designed for OLS / Logistic models to compute an unbiased performance estimate 
-        by adjusting for the covariance structure of the features. This implementation 
-        accelerates evaluation by avoiding full retraining.
+        """Estimate performance with bias-corrected OLS or logistic loss.
+
+        Supported only for linear-kernel OLS and logistic models. SVM, LAD,
+        and nonlinear-kernel models are not supported by this method.
 
         :param X: Feature matrix of shape `(n_samples, n_features)`. 
             Must match the model's `input_dim` (n_features).
@@ -348,12 +349,13 @@ class BaseLinearDRO:
         :param y: Target values of shape `(n_samples,)`.
         :type y: numpy.ndarray
 
-        :return: Bias-corrected MSE for OLS models. Returns raw MSE for other model types.
+        :return: Bias-corrected MSE for OLS or binary cross entropy for logistic.
         :rtype: float
+        :raises NotImplementedError: For SVM, LAD, or nonlinear-kernel models.
         :raises ValueError: 
             - If `X` and `y` have inconsistent sample sizes
             - If `X` feature dimension ≠ `input_dim`
-        :raises LinAlgError: If feature covariance matrix is singular (non-invertible)
+        :raises LinAlgError: If the logistic information matrix is singular.
 
         
         Example:
@@ -364,9 +366,15 @@ class BaseLinearDRO:
             >>> print(f"Corrected MSE: {score:.4f}")
 
         .. note::
-            - Currently, bias correction is only implemented for ``model_type='ols'``; other model types return the raw MSE.
-            - Covariance matrix computation uses pseudo-inverse to handle high-dimensional data (``n_features > n_samples``).
+            - Use ``score()`` for standard predictive metrics for SVM and LAD.
+            - OLS uses a pseudo-inverse; logistic evaluation requires an
+              invertible information matrix.
         """
+        if self.model_type not in {'ols', 'logistic'} or self.kernel != 'linear':
+            raise NotImplementedError(
+                "evaluate() supports only linear-kernel OLS and logistic models; "
+                "use score() for standard predictive metrics."
+            )
         sample_num, __ = X.shape
         if self.model_type == 'ols' and self.kernel == 'linear':
             predictions = self.predict(X)

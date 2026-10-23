@@ -3,6 +3,7 @@ MANIFEST.in
 README.md
 setup.py
 src/dro/__init__.py
+src/dro.egg-info/.DS_Store
 src/dro.egg-info/PKG-INFO
 src/dro.egg-info/SOURCES.txt
 src/dro.egg-info/dependency_links.txt
@@ -30,6 +31,8 @@ src/dro/linear_model/sinkhorn_dro.py
 src/dro/linear_model/tv_dro.py
 src/dro/linear_model/wasserstein_dro.py
 src/dro/neural_model/__init__.py
+src/dro/neural_model/_attack_utils.py
+src/dro/neural_model/_certificates.py
 src/dro/neural_model/base_nn.py
 src/dro/neural_model/fdro_nn.py
 src/dro/neural_model/fdro_utils.py
@@ -47,7 +50,9 @@ tests/test_groupdro.py
 tests/test_lgbm.py
 tests/test_linear_chi2dro.py
 tests/test_linear_cvar.py
+tests/test_linear_evaluate.py
 tests/test_linear_hrdro.py
+tests/test_linear_kernel_config.py
 tests/test_linear_kldro.py
 tests/test_linear_marginal.py
 tests/test_linear_mmd.py
@@ -56,10 +61,16 @@ tests/test_linear_ordro.py
 tests/test_linear_sinkhorn.py
 tests/test_linear_tvdro.py
 tests/test_linear_wdro.py
+tests/test_nn_certificates.py
 tests/test_nn_fdro.py
+tests/test_nn_fit_customization.py
 tests/test_nn_hrdro.py
+tests/test_nn_hrdro_attack_rebinding.py
 tests/test_nn_sinkhorn.py
 tests/test_nn_wdro.py
+tests/test_nn_wdro_attacks.py
+tests/test_nn_wdro_transport.py
 tests/test_robust_obj.py
 tests/test_robust_util.py
+tests/test_tree_prediction_margins.py
 tests/test_xgb.py

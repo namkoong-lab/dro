@@ -38,6 +38,21 @@ class TestTVDROModel(unittest.TestCase):
         self.assertTrue(np.isfinite(model.robust_obj))
         self.assertEqual(len(params['theta']), 100)  # For RBF, theta matches sample size
 
+    def test_constructor_eps_bounds(self):
+        for eps in (-0.1, 1.0, 1.1, float('inf'), float('nan')):
+            with self.subTest(eps=eps):
+                with self.assertRaisesRegex(ValueError, r'\[0, 1\)'):
+                    TVDRO(input_dim=1, eps=eps)
+        for eps in (0.0, 0.1, np.nextafter(1.0, 0.0)):
+            self.assertEqual(TVDRO(input_dim=1, eps=eps).eps, eps)
+
+    def test_half_l1_tv_normalization(self):
+        # Predictions are fixed at zero. Moving probability 0.1 from loss 0
+        # to loss 9 changes mean loss 3.5 to 4.4 under TV = 0.5 * L1.
+        model = TVDRO(input_dim=1, model_type='ols', fit_intercept=False, eps=0.1)
+        model.fit(np.zeros((4, 1)), np.array([0.0, 1.0, 2.0, 3.0]))
+        self.assertAlmostEqual(model.robust_obj, 4.4, places=5)
+
 
     def test_invalid_input_dim(self):
         """Test initialization with invalid feature dimension."""

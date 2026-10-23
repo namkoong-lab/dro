@@ -512,6 +512,21 @@ slope, as explained in [4]. OLS uses the separate exact construction above.</p>
 <li><p><span class="math notranslate nohighlight">\(\kappa\)</span>: Robustness parameter for the perturbation of Y.</p></li>
 <li><p><span class="math notranslate nohighlight">\(\tau\)</span>: <span class="math notranslate nohighlight">\(\tau \geq 1\)</span> is set as the multiplication of the best empirical performance with <span class="math notranslate nohighlight">\(E_{(X, Y)\sim \hat P_n}[\ell(\theta_{ERM};(X, Y))]\)</span>.</p></li>
 </ul>
+<p>For example, fit a linear SVM with an empirical-loss target 25% above the
+best empirical loss. The optimizer then minimizes the fitted sensitivity
+(<code class="docutils literal notranslate"><span class="pre">robust_obj</span></code>) subject to that target:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.data.dataloader_classification</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_basic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.wasserstein_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">WassersteinDROsatisficing</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDROsatisficing</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">"svm"</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"target_ratio"</span><span class="p">:</span> <span class="mf">1.25</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+
+<span class="n">parameters</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>       <span class="c1"># Fitted theta and intercept b</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">robust_obj</span><span class="p">)</span> <span class="c1"># Minimized sensitivity</span>
+</pre></div>
+</div>
 <p>See the <a class="reference internal" href="../api/notebooks/WassersteinDRO_tutorial.html"><span class="doc">Wasserstein DRO notebook</span></a>
 for end-to-end classification, regression, and robust-satisficing examples.</p>
 </section>

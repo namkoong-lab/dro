@@ -343,8 +343,8 @@ objective as a large group; it is not down-weighted by its sample count.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">group_idx</span></code>: required index of the finite categorical group feature.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">model_type</span></code>: one of <code class="docutils literal notranslate"><span class="pre">&quot;svm&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;logistic&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;ols&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;lad&quot;</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fit_intercept</span></code>: whether to learn an intercept; the default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">solver</span></code>: an installed CVXPY solver. The package default is <code class="docutils literal notranslate"><span class="pre">&quot;MOSEK&quot;</span></code>;
-<code class="docutils literal notranslate"><span class="pre">&quot;CLARABEL&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;SCS&quot;</span></code> can be used when available.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">solver</span></code>: an installed CVXPY solver. The package default is <code class="docutils literal notranslate"><span class="pre">&quot;CLARABEL&quot;</span></code>;
+<code class="docutils literal notranslate"><span class="pre">&quot;SCS&quot;</span></code> or the licensed <code class="docutils literal notranslate"><span class="pre">&quot;MOSEK&quot;</span></code> can also be used when available.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">kernel</span></code>: kernel name passed to <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code>; the default is <code class="docutils literal notranslate"><span class="pre">&quot;linear&quot;</span></code>.</p></li>
 </ul>
 <p>The group feature can be changed before refitting with
@@ -358,8 +358,7 @@ objective as a large group; it is not down-weighted by its sample count.</p>
 <span class="n">model</span> <span class="o">=</span> <span class="n">GroupDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">group_idx</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;svm&quot;</span><span class="p">,</span>
-    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;CLARABEL&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"svm"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>

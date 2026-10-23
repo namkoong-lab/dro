@@ -261,7 +261,7 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
@@ -282,7 +282,8 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="linear-models">
 <h1>Linear Models<a class="headerlink" href="#linear-models" title="Link to this heading">¶</a></h1>
-<p>These optimization problems are solved exactly (or approximately, e.g., kernel) through solvers.</p>
+<p>The convex linear formulations are solved numerically with CVXPY. Some methods
+also use approximations, such as a reduced kernel representation.</p>
 <p>Each method below links to its conceptual guide and literature references, its
 estimator API documentation (where available), and a runnable notebook.</p>
 <section id="f-divergence-dro">
@@ -330,16 +331,16 @@ frequentist and Bayesian formulations, the
 details, and the <a class="reference internal" href="../api/notebooks/param_dro.html"><span class="doc">Bayesian DRO notebook</span></a> for
 runnable frequentist and Bayesian parametric examples.</p>
 </section>
-<section id="mixed-distance-dro">
-<h2>Mixed-distance DRO<a class="headerlink" href="#mixed-distance-dro" title="Link to this heading">¶</a></h2>
-<p>See the <a class="reference internal" href="linear_mixdro.html"><span class="doc">mixed-distance DRO guide and references</span></a> for the
+<section id="hybrid-distance-dro">
+<h2>Hybrid-distance DRO<a class="headerlink" href="#hybrid-distance-dro" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference internal" href="linear_mixdro.html"><span class="doc">Hybrid-distance DRO guide and references</span></a> for the
 Sinkhorn, MOT, outlier-robust Wasserstein, and Holistic DRO formulations.
 Estimator references are available for
 <a class="reference internal" href="../api/apis/sinkhorn_dro.html"><span class="doc">Sinkhorn DRO</span></a>,
 <a class="reference internal" href="../api/apis/motdro.html"><span class="doc">MOT DRO</span></a>,
 <a class="reference internal" href="../api/apis/or_wdro.html"><span class="doc">outlier-robust Wasserstein DRO</span></a>, and
 <a class="reference internal" href="../api/apis/hrdro.html"><span class="doc">Holistic Robust DRO</span></a>. See the
-<a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html"><span class="doc">mixed-distance DRO notebook</span></a> for
+<a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html"><span class="doc">Hybrid-distance DRO notebook</span></a> for
 runnable examples of all four methods.</p>
 </section>
 </section>
@@ -364,7 +365,7 @@ runnable examples of all four methods.</p>
 <li><a class="reference internal" href="#group-dro">Group DRO</a></li>
 <li><a class="reference internal" href="#mmd-dro">MMD-DRO</a></li>
 <li><a class="reference internal" href="#bayesian-parametric-dro">Bayesian (Parametric) DRO</a></li>
-<li><a class="reference internal" href="#mixed-distance-dro">Mixed-distance DRO</a></li>
+<li><a class="reference internal" href="#hybrid-distance-dro">Hybrid-distance DRO</a></li>
 </ul>
 </li>
 </ul>

@@ -337,8 +337,9 @@
         <span class="n">residual</span><span class="p">,</span> <span class="n">NEWSVENDOR_SLOPES</span><span class="p">,</span> <span class="n">NEWSVENDOR_OFFSETS</span>
     <span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">newsvendor_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="n">residual</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">y</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">newsvendor_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">design_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">X</span> <span class="k">if</span> <span class="n">design_matrix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">design_matrix</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">features</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">y</span>
     <span class="k">return</span> <span class="n">piecewise_affine_cvxpy</span><span class="p">(</span>
         <span class="n">residual</span><span class="p">,</span> <span class="n">NEWSVENDOR_SLOPES</span><span class="p">,</span> <span class="n">NEWSVENDOR_OFFSETS</span>
     <span class="p">)</span>
@@ -580,6 +581,168 @@ gradient shape: (3, 1)
 </pre></div></div>
 </div>
 </section>
+<section id="Matching-the-Wasserstein-inner-search-to-a-custom-loss">
+<h3>Matching the Wasserstein inner search to a custom loss<a class="headerlink" href="#Matching-the-Wasserstein-inner-search-to-a-custom-loss" title="Link to this heading">¶</a></h3>
+<p>The preceding <code class="docutils literal notranslate"><span class="pre">wdro_nn._loss</span></code> check evaluates the custom loss without running the attack. With the default <code class="docutils literal notranslate"><span class="pre">robust_objective='norm_ball'</span></code> and positive <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>, Torchattacks generates perturbations using classification cross-entropy; overriding <code class="docutils literal notranslate"><span class="pre">_loss</span></code> changes the outer loss only. For continuous targets, <code class="docutils literal notranslate"><span class="pre">robust_objective='transport_penalty'</span></code> uses <code class="docutils literal notranslate"><span class="pre">_loss</span></code> in both the inner search and outer objective. The example below differentiates that complete objective on a small batch.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wdro_transport</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">'regression'</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span>
+    <span class="n">robust_objective</span><span class="o">=</span><span class="s1">'transport_penalty'</span><span class="p">,</span>
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">adversarial_step_size</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">wdro_transport</span><span class="o">.</span><span class="n">_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">decision_aware_wdro_loss</span><span class="p">,</span> <span class="n">wdro_transport</span><span class="p">)</span>
+
+<span class="n">transport_inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]])</span>
+<span class="n">transport_targets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span>
+<span class="n">wdro_transport</span><span class="o">.</span><span class="n">current_inputs</span> <span class="o">=</span> <span class="n">transport_inputs</span>
+<span class="n">transport_outputs</span> <span class="o">=</span> <span class="n">wdro_transport</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">transport_inputs</span><span class="p">)</span>
+<span class="n">transport_objective</span> <span class="o">=</span> <span class="n">wdro_transport</span><span class="o">.</span><span class="n">_criterion</span><span class="p">(</span><span class="n">transport_outputs</span><span class="p">,</span> <span class="n">transport_targets</span><span class="p">)</span>
+<span class="n">transport_objective</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Transport-penalty objective:'</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">transport_objective</span><span class="o">.</span><span class="n">detach</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Custom-data-loaders,-optimizers,-and-schedulers">
+<h2>Custom data loaders, optimizers, and schedulers<a class="headerlink" href="#Custom-data-loaders,-optimizers,-and-schedulers" title="Link to this heading">¶</a></h2>
+<p>The neural classes now accept <code class="docutils literal notranslate"><span class="pre">train_loader</span></code>, <code class="docutils literal notranslate"><span class="pre">val_loader</span></code>, <code class="docutils literal notranslate"><span class="pre">optimizer</span></code>, and <code class="docutils literal notranslate"><span class="pre">scheduler</span></code> in <code class="docutils literal notranslate"><span class="pre">fit(...)</span></code>. Both loaders are required on this path, and <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are omitted. Each batch must yield <code class="docutils literal notranslate"><span class="pre">(inputs,</span> <span class="pre">labels)</span></code>. Build the optimizer <strong>after</strong> calling <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> so it follows the replacement network’s parameters. A scheduler requires an explicit optimizer; <code class="docutils literal notranslate"><span class="pre">scheduler_step='epoch'</span></code> advances it once per epoch, while <code class="docutils literal notranslate"><span class="pre">'batch'</span></code> advances it after every training
+batch.</p>
+<p>The next toy classification data stay in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>, which also meets the input range expected by Torchattacks in the HR-DRO example. The class-1 examples have twice the cost in the personalized <span class="math notranslate nohighlight">\(f\)</span>-DRO loss below.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.fdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">CVaRNNDRO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.hrdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">HRNNDRO</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">train_positions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">val_positions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_classification_data</span><span class="p">(</span><span class="n">positions</span><span class="p">):</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">positions</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">positions</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="n">positions</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span>
+
+<span class="n">train_inputs</span><span class="p">,</span> <span class="n">train_labels</span> <span class="o">=</span> <span class="n">make_classification_data</span><span class="p">(</span><span class="n">train_positions</span><span class="p">)</span>
+<span class="n">val_inputs</span><span class="p">,</span> <span class="n">val_labels</span> <span class="o">=</span> <span class="n">make_classification_data</span><span class="p">(</span><span class="n">val_positions</span><span class="p">)</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">TensorDataset</span><span class="p">(</span><span class="n">train_inputs</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">val_inputs</span><span class="p">,</span> <span class="n">val_labels</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Chi-squared-and-CVaR-neural-f-DRO">
+<h3>Chi-squared and CVaR neural <span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#Chi-squared-and-CVaR-neural-f-DRO" title="Link to this heading">¶</a></h3>
+<p>Both models use the same per-example cost-sensitive classification loss. Their <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> geometry determines how those losses are aggregated. Each run supplies a replacement network, an SGD optimizer, and a <code class="docutils literal notranslate"><span class="pre">StepLR</span></code> scheduler to the shared fitting loop. The learning-rate value printed at the end confirms that the scheduler was stepped.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CostSensitiveRobustLoss</span><span class="p">(</span><span class="n">RobustLoss</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">is_regression</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_individual_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+        <span class="n">per_sample_ce</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">targets</span><span class="o">.</span><span class="n">float</span><span class="p">())</span> <span class="o">*</span> <span class="n">per_sample_ce</span>
+
+<span class="n">f_dro_results</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model_class</span><span class="p">,</span> <span class="n">geometry</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'chi-squared'</span><span class="p">,</span> <span class="n">Chi2NNDRO</span><span class="p">,</span> <span class="s1">'chi-square'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'CVaR'</span><span class="p">,</span> <span class="n">CVaRNNDRO</span><span class="p">,</span> <span class="s1">'cvar'</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="n">neural_model</span> <span class="o">=</span> <span class="n">model_class</span><span class="p">(</span>
+        <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span>
+        <span class="n">model_type</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">custom_network</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">neural_model</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
+        <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">custom_network</span><span class="p">,</span>
+        <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">robust_loss</span> <span class="o">=</span> <span class="n">CostSensitiveRobustLoss</span><span class="p">(</span>
+        <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cost_sensitive_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loss_module</span><span class="o">=</span><span class="n">robust_loss</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">loss_module</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+    <span class="n">neural_model</span><span class="o">.</span><span class="n">_criterion</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">cost_sensitive_criterion</span><span class="p">,</span> <span class="n">neural_model</span><span class="p">)</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">neural_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span>
+        <span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.8</span>
+    <span class="p">)</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">neural_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+        <span class="n">train_loader</span><span class="o">=</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span> <span class="n">scheduler_step</span><span class="o">=</span><span class="s1">'epoch'</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">f_dro_results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'metrics'</span><span class="p">:</span> <span class="n">metrics</span><span class="p">,</span>
+        <span class="s1">'final_learning_rate'</span><span class="p">:</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'lr'</span><span class="p">],</span>
+    <span class="p">}</span>
+
+<span class="n">f_dro_results</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="HR-DRO-with-a-replacement-network">
+<h3>HR-DRO with a replacement network<a class="headerlink" href="#HR-DRO-with-a-replacement-network" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">HRNNDRO.update_user_mode(...)</span></code> also rebuilds its attack against the replacement network. The optimizer and scheduler are created afterward. HR-DRO still uses its built-in cross-entropy loss here; the cost-sensitive <span class="math notranslate nohighlight">\(f\)</span>-DRO hook above does not alter HR-DRO’s CVXPY weighting or Torchattacks objective. Set <code class="docutils literal notranslate"><span class="pre">train_batch_size</span></code> to the loader batch size to avoid needless CVXPY problem rebuilds. A shorter last batch is handled dynamically.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hr_dro</span> <span class="o">=</span> <span class="n">HRNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+    <span class="n">learning_approach</span><span class="o">=</span><span class="s1">'HD'</span><span class="p">,</span> <span class="n">train_batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">adversarial_params</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">'method'</span><span class="p">:</span> <span class="s1">'FGSM'</span><span class="p">,</span> <span class="s1">'norm'</span><span class="p">:</span> <span class="s1">'l-inf'</span><span class="p">,</span> <span class="s1">'steps'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'step_size'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">hr_network</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">hr_dro</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">hr_network</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">hr_dro</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="n">hr_dro</span><span class="o">.</span><span class="n">model</span>
+<span class="n">hr_optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">hr_dro</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">hr_scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span>
+    <span class="n">hr_optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.8</span>
+<span class="p">)</span>
+<span class="n">hr_metrics</span> <span class="o">=</span> <span class="n">hr_dro</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">train_loader</span><span class="o">=</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">hr_optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="o">=</span><span class="n">hr_scheduler</span><span class="p">,</span> <span class="n">scheduler_step</span><span class="o">=</span><span class="s1">'epoch'</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'HR-DRO validation:'</span><span class="p">,</span> <span class="n">hr_metrics</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Final learning rate:'</span><span class="p">,</span> <span class="n">hr_optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'lr'</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</section>
 </section>
 </section>
 
@@ -607,6 +770,12 @@ gradient shape: (3, 1)
 <li><a class="reference internal" href="#Neural-approximation-with-a-decision-aware-piecewise-loss">Neural approximation with a decision-aware piecewise loss</a><ul>
 <li><a class="reference internal" href="#Neural-f-DRO">Neural <span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
 <li><a class="reference internal" href="#Neural-Wasserstein-DRO">Neural Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#Matching-the-Wasserstein-inner-search-to-a-custom-loss">Matching the Wasserstein inner search to a custom loss</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Custom-data-loaders,-optimizers,-and-schedulers">Custom data loaders, optimizers, and schedulers</a><ul>
+<li><a class="reference internal" href="#Chi-squared-and-CVaR-neural-f-DRO">Chi-squared and CVaR neural <span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
+<li><a class="reference internal" href="#HR-DRO-with-a-replacement-network">HR-DRO with a replacement network</a></li>
 </ul>
 </li>
 </ul>

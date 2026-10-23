@@ -26,6 +26,7 @@ Tutorial
    :caption: NN DRO
 
    ../tutorials/neural_model
+   ../tutorials/neural_certificates
 
 .. toctree::
    :maxdepth: 2

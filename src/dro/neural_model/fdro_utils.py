@@ -123,10 +123,13 @@ class RobustLoss(nn.Module):
         if self.geometry not in GEOMETRIES:
             raise ParameterError(f"Unsupported geometry: {self.geometry}")
             
-        if self.geometry == 'cvar' and self.size > 1:
-            raise ParameterError(f"CVaR α must be ≤ 1, got {self.size}")
+        if self.geometry == 'cvar' and not (0 < self.size <= 1):
+            raise ParameterError(f"CVaR α must be in (0, 1], got {self.size}")
+
+        if self.geometry == 'chi-square' and not (self.size >= 0):
+            raise ParameterError(f"Chi-square radius must be ≥ 0, got {self.size}")
             
-        if self.reg < 0 or self.size <= 0:
+        if not (self.reg >= 0):
             raise ParameterError(f"Regularization must be ≥ 0, got {self.reg}")
 
     def forward(self, outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
@@ -150,6 +153,10 @@ class RobustLoss(nn.Module):
 
     def _compute_robust_loss(self, v: torch.Tensor) -> torch.Tensor:
         """Core robust loss computation."""
+        # A one-sample batch has no distributional reweighting to optimize.
+        # This also avoids degenerate bisection and scalar dot-product inputs.
+        if v.numel() == 1:
+            return v.mean()
         if self.size == 0:  # ERM fallback
             return v.mean()
 

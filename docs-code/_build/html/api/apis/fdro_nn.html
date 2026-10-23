@@ -281,9 +281,29 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.neural_model.fdro_nn">
-<span id="f-divergence-dro"></span><h1>f-Divergence DRO<a class="headerlink" href="#module-dro.neural_model.fdro_nn" title="Link to this heading">¶</a></h1>
-<dl class="py class">
+  <section id="f-divergence-dro">
+<h1>f-Divergence DRO<a class="headerlink" href="#f-divergence-dro" title="Link to this heading">¶</a></h1>
+<section id="training-customization">
+<h2>Training customization<a class="headerlink" href="#training-customization" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code> and <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code> inherit the <a class="reference internal" href="base_nn.html#neural-fit-customization"><span class="std std-ref">neural training controls</span></a>. Their <code class="docutils literal notranslate"><span class="pre">fit(...)</span></code> methods accept paired
+<code class="docutils literal notranslate"><span class="pre">train_loader</span></code> and <code class="docutils literal notranslate"><span class="pre">val_loader</span></code> arguments, a PyTorch <code class="docutils literal notranslate"><span class="pre">optimizer</span></code>, and
+an optional <code class="docutils literal notranslate"><span class="pre">scheduler</span></code> with <code class="docutils literal notranslate"><span class="pre">scheduler_step=&quot;epoch&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code>.
+Build the optimizer after any <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> call so that it
+updates the current network. The existing <code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y,</span> <span class="pre">...)</span></code> path remains
+available with an internal split and Adam optimizer.</p>
+</section>
+<section id="radius-certificates">
+<h2>Radius certificates<a class="headerlink" href="#radius-certificates" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO.certify_radius(losses,</span> <span class="pre">candidate_weights,</span> <span class="pre">eta,</span> <span class="pre">epsilon=None)</span></code>
+returns <code class="docutils literal notranslate"><span class="pre">epsilon_cert</span></code>. <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO.certify_radius(losses,</span>
+<span class="pre">candidate_weights,</span> <span class="pre">eta,</span> <span class="pre">alpha=None)</span></code> returns <code class="docutils literal notranslate"><span class="pre">alpha_cert</span></code>; a larger tail
+fraction means a smaller ambiguity set. Both methods also return the
+certified empirical loss bound, the upper bound at the input parameter, and
+their gap, or <code class="docutils literal notranslate"><span class="pre">None</span></code> when the reduced parameter cannot be certified at the
+candidate loss. Pass full-data per-example losses and feasible weights for
+the final frozen network. See the <a class="reference internal" href="../../tutorials/neural_certificates.html"><span class="doc">certificate derivations and runnable
+example</span></a>.</p>
+<dl class="py class" id="module-dro.neural_model.fdro_nn">
 <dt class="sig sig-object py" id="dro.neural_model.fdro_nn.Chi2NNDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.fdro_nn.</span></span><span class="sig-name descname"><span class="pre">Chi2NNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.fdro_nn.Chi2NNDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.neural_model.base_nn.BaseNNDRO" title="dro.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
@@ -292,20 +312,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – <p>Output dimension:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – <p>Output dimension:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
 <li><p>Regression: Automatically set to 1</p></li>
 </ul>
 </p></li>
-<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
 </ul>
 </p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -314,13 +334,13 @@
 </ul>
 </p></li>
 <li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Chi-square divergence radius <span class="math notranslate nohighlight">\(\rho \geq 0\)</span> controlling distributional robustness. Larger values increase conservativeness. Defaults to 0.1.</p></li>
-<li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Chi-square divergence radius <span class="math notranslate nohighlight">\(\rho \geq 0\)</span> controlling distributional robustness. Zero uses the mean empirical loss. Larger values increase conservativeness. Defaults to 0.1.</p></li>
+<li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
+<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If size &lt; 0</p></li>
 <li><p>If reg ≤ 0</p></li>
 <li><p>If max_iter &lt; 1</p></li>
@@ -333,6 +353,19 @@
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.fdro_nn.Chi2NNDRO.update" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.neural_model.fdro_nn.Chi2NNDRO.certify_radius">
+<span class="sig-name descname"><span class="pre">certify_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">losses</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.fdro_nn.Chi2NNDRO.certify_radius" title="Link to this definition">¶</a></dt>
+<dd><p>Certify a smaller empirical <span class="math notranslate nohighlight">\(\chi^2\)</span> divergence radius.</p>
+<p><code class="docutils literal notranslate"><span class="pre">losses</span></code> are the final network’s per-example losses on one complete
+reference dataset. <code class="docutils literal notranslate"><span class="pre">candidate_weights</span></code> must be feasible at the
+input radius, and <code class="docutils literal notranslate"><span class="pre">eta</span></code> is any finite scalar in the upper bound.
+<code class="docutils literal notranslate"><span class="pre">epsilon</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">size</span></code>. The calculation uses unregularized
+losses even when training used <code class="docutils literal notranslate"><span class="pre">reg</span></code>. Returns <code class="docutils literal notranslate"><span class="pre">None</span></code> if the gap
+is too large; otherwise returns a dictionary with <code class="docutils literal notranslate"><span class="pre">epsilon_cert</span></code>,
+the certified loss bound, the input upper bound, and their gap.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -343,20 +376,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – <p>Output dimension:</p>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – <p>Output dimension:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)</p></li>
 <li><p>Regression: Automatically set to 1</p></li>
 </ul>
 </p></li>
-<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Learning task type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
 </ul>
 </p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -365,13 +398,13 @@
 </ul>
 </p></li>
 <li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – CVaR ratio <span class="math notranslate nohighlight">\(1 \geq \rho \geq 0\)</span> controlling distributional robustness. Smaller values increase conservativeness. Defaults to 0.1.</p></li>
-<li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – CVaR ratio <span class="math notranslate nohighlight">\(1 \geq \rho \geq 0\)</span> controlling distributional robustness. Smaller values increase conservativeness. Defaults to 0.1.</p></li>
+<li><p><strong>reg</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Regularization coefficient. Defaults to 0.1.</p></li>
+<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Maximum Sinkhorn iterations. Defaults to 100.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If size &lt; 0</p></li>
 <li><p>If reg ≤ 0</p></li>
 <li><p>If max_iter &lt; 1</p></li>
@@ -384,8 +417,23 @@
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.fdro_nn.CVaRNNDRO.update" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.neural_model.fdro_nn.CVaRNNDRO.certify_radius">
+<span class="sig-name descname"><span class="pre">certify_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">losses</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.fdro_nn.CVaRNNDRO.certify_radius" title="Link to this definition">¶</a></dt>
+<dd><p>Certify a smaller empirical CVaR ambiguity set.</p>
+<p><code class="docutils literal notranslate"><span class="pre">losses</span></code> are the final network’s per-example losses on one complete
+reference dataset. <code class="docutils literal notranslate"><span class="pre">candidate_weights</span></code> must be feasible at the
+input tail fraction, and <code class="docutils literal notranslate"><span class="pre">eta</span></code> is any finite scalar in the upper
+bound. <code class="docutils literal notranslate"><span class="pre">alpha</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">size</span></code>. The calculation uses
+unregularized losses even when training used <code class="docutils literal notranslate"><span class="pre">reg</span></code>. Returns
+<code class="docutils literal notranslate"><span class="pre">None</span></code> if the gap is too large; otherwise returns a dictionary
+with <code class="docutils literal notranslate"><span class="pre">alpha_cert</span></code>, the certified loss bound, the input upper bound,
+and their gap. Larger <code class="docutils literal notranslate"><span class="pre">alpha_cert</span></code> means a smaller ambiguity set.</p>
 </dd></dl>
 
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -403,12 +451,18 @@
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">f-Divergence DRO</a><ul>
+<li><a class="reference internal" href="#training-customization">Training customization</a></li>
+<li><a class="reference internal" href="#radius-certificates">Radius certificates</a><ul>
 <li><a class="reference internal" href="#dro.neural_model.fdro_nn.Chi2NNDRO"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></a><ul>
 <li><a class="reference internal" href="#dro.neural_model.fdro_nn.Chi2NNDRO.update"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.neural_model.fdro_nn.Chi2NNDRO.certify_radius"><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO.certify_radius()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#dro.neural_model.fdro_nn.CVaRNNDRO"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code></a><ul>
 <li><a class="reference internal" href="#dro.neural_model.fdro_nn.CVaRNNDRO.update"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO.update()</span></code></a></li>
+<li><a class="reference internal" href="#dro.neural_model.fdro_nn.CVaRNNDRO.certify_radius"><code class="docutils literal notranslate"><span class="pre">CVaRNNDRO.certify_radius()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

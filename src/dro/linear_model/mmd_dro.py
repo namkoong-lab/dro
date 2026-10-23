@@ -27,7 +27,7 @@ class MMD_DRO(BaseLinearDRO):
         input_dim: int,
         model_type: str = 'svm',
         fit_intercept: bool = True,
-        solver: str = 'MOSEK',
+        solver: str = 'CLARABEL',
         sampling_method: str = 'bound',
         kernel: str = 'rbf',
         kernel_gamma: Optional[float] = None,
@@ -148,6 +148,8 @@ class MMD_DRO(BaseLinearDRO):
 
         ``metric`` is accepted as an alias for ``kernel``; ``degree`` and
         ``coef0`` are accepted as aliases for their ``kernel_`` counterparts.
+        ``n_components=None`` restores the default Nyström rank selection;
+        ``fit(..., accelerate=False)`` selects the full kernel matrix.
         """
         allowed_keys = {
             'metric',
@@ -196,12 +198,12 @@ class MMD_DRO(BaseLinearDRO):
         n_components = self.n_components
         if 'n_components' in config:
             n_components = config['n_components']
-            if (
+            if n_components is not None and (
                 isinstance(n_components, bool)
                 or not isinstance(n_components, int)
                 or n_components <= 0
             ):
-                raise ValueError("Parameter 'n_components' must be a positive integer.")
+                raise ValueError("Parameter 'n_components' must be a positive integer or None.")
 
         self.update(kernel_config)
         self.n_components = n_components
@@ -219,9 +221,12 @@ class MMD_DRO(BaseLinearDRO):
             - ``sampling_method`` (str): 
                 Ambiguity set sampling strategy. Valid options:
                 
-                - ``'bound'``: Sample on MMD ball boundary
+                - ``'bound'``: Sample uniformly in [-1, 1] for features and targets
 
-                - ``'hull'``: Sample within convex hull
+                - ``'hull'``: For regression, sample features in the pooled
+                  observed feature range and targets in their observed range.
+                  For classification, sample features in [-1, 1] and labels in
+                  {-1, +1}. Both fitting paths use these same sampling regions.
                 
                 
             - ``n_certify_ratio`` (float): 
@@ -464,9 +469,14 @@ class MMD_DRO(BaseLinearDRO):
     
 
 
-    def fit(self, X: np.ndarray, y: np.ndarray, accelerate: bool = True) -> None:
-        """Vectorized implementation of MMD-DRO fit function."""
-        """Fit the MMD-DRO model to the data.
+    def fit(
+        self,
+        X: np.ndarray,
+        y: np.ndarray,
+        accelerate: bool = True,
+        accelerated_regularizer: str = "feature_coefficients",
+    ) -> Dict[str, Any]:
+        """Fit MMD-DRO using a Nyström approximation or the full kernel matrix.
         
         :param X: Training feature matrix of shape `(n_samples, n_features)`.
             Must satisfy `n_features == self.input_dim`.
@@ -480,9 +490,21 @@ class MMD_DRO(BaseLinearDRO):
 
         :type y: numpy.ndarray
 
-        :param accelerate: Whether to use acceleration for kernel approximation.
+        :param accelerate: If ``True`` (default), fit a Nyström feature map
+            on the sampled support and transform it in parallel batches;
+            constrain at most 5,000 sampled support points. If ``False``,
+            use the full kernel Gram matrix and constrain every sampled
+            support point.
 
         :type accelerate: bool
+
+        :param accelerated_regularizer: Regularizer used with the Nyström
+            feature map. The default, ``"feature_coefficients"``, uses the
+            feature-space norm corresponding to the unaccelerated RKHS
+            penalty. ``"support_values"`` retains the legacy penalty on
+            function values at the sampled support points. This setting has
+            no effect when ``accelerate=False``.
+        :type accelerated_regularizer: str
 
         :returns: Dictionary containing trained parameters:
         
@@ -503,6 +525,12 @@ class MMD_DRO(BaseLinearDRO):
         if input_dim != self.input_dim:
             raise ValueError(f"Expected input_dim={self.input_dim}, got {input_dim}")
 
+        if accelerated_regularizer not in {"support_values", "feature_coefficients"}:
+            raise ValueError(
+                "accelerated_regularizer must be 'support_values' or "
+                "'feature_coefficients'"
+            )
+
         n_certify = int(self.n_certify_ratio * sample_size)
 
         if accelerate == True:
@@ -519,20 +547,17 @@ class MMD_DRO(BaseLinearDRO):
                 # Uniform sampling in [-1, 1]^d
                 zeta_certify = np.random.uniform(-1, 1, (n_certify, self.input_dim + 1))
             elif self.sampling_method == 'hull':
-                # Feature-wise bounds
-                feat_mins = X.min(axis=0)
-                feat_maxs = X.max(axis=0)
-                # Generate features in [min, max]^d via matrix op
-                zeta_feat = np.random.uniform(feat_mins, feat_maxs, (n_certify, self.input_dim))
-                
-                # Label generation
-                if self.model_type in ["svm", "logistic"]:
-                    zeta_label = np.random.choice([-1, 1], n_certify)
+                # Match the sampling regions and draws of the full-kernel path.
+                if self.model_type in ["ols", "lad"]:
+                    zeta_feat = np.random.uniform(np.min(X), np.max(X), size=(n_certify, self.input_dim))
+                    zeta_label = np.random.uniform(np.min(y), np.max(y), size=(n_certify, 1))
+                elif self.model_type in ["svm", "logistic"]:
+                    zeta_feat = np.random.uniform(-1, 1, size=(n_certify, self.input_dim))
+                    zeta_label = np.random.choice([-1, 1], size=(n_certify, 1))
                 else:
-                    label_min, label_max = y.min(), y.max()
-                    zeta_label = np.random.uniform(label_min, label_max, n_certify)
-                
-                zeta_certify = np.hstack([zeta_feat, zeta_label.reshape(-1, 1)])
+                    raise NotImplementedError(f"Model type {self.model_type} is not supported.")
+
+                zeta_certify = np.hstack([zeta_feat, zeta_label])
 
             # Merge with original data (no loops)
             zeta = np.vstack([
@@ -573,7 +598,7 @@ class MMD_DRO(BaseLinearDRO):
             # Vectorized loss computation
             if self.model_type == 'svm':
                 # SVM: 1 - y*(X@theta + b) <= s --> s >= 1 - y*(X@theta + b)
-                losses = 1 - cp.multiply(y_selected, (X_selected @ theta + b))
+                losses = cp.pos(1 - cp.multiply(y_selected, (X_selected @ theta + b)))
             elif self.model_type == 'logistic':
                 # Logistic: log(1 + exp(-y*(X@theta + b))) <= s
                 linear_term = cp.multiply(y_selected, (X_selected @ theta + b))
@@ -594,15 +619,18 @@ class MMD_DRO(BaseLinearDRO):
             constraints = [losses <= rhs]
 
             loss_term = cp.sum(K_approx[:sample_size] @ a) / sample_size
-            reg_term = self.eta * cp.norm(K_approx @ a)
+            if accelerated_regularizer == "feature_coefficients":
+                # If K ≈ Phi Phi.T and f = Phi a, the RKHS penalty is ||a||.
+                reg_term = self.eta * cp.norm(a)
+            else:
+                reg_term = self.eta * cp.norm(K_approx @ a)
 
             objective = cp.Minimize(f0 + loss_term + reg_term)
 
             problem = cp.Problem(objective, constraints)
             problem.solve(
-                solver=self.solver, 
-                verbose=True, 
-                mosek_params={'MSK_IPAR_NUM_THREADS': 8} if self.solver == 'MOSEK' else {}
+                solver=self.solver,
+                verbose=True,
             )
 
             self.theta = theta.value

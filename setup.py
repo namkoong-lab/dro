@@ -21,12 +21,11 @@ setup(
                       'scikit-learn',
                       'torch', 
                       'scipy',
-                      'cvxpy', 
+                      'cvxpy>=1.5',
                       'torchvision', 
                       'ucimlrepo', 
                       'matplotlib',
                       'torchattacks',
-                      'mosek>=10.2.17',
                       'xgboost',
                       'lightgbm',
 
@@ -37,5 +36,5 @@ setup(
         "Operating System :: MacOS",
         'Operating System :: POSIX :: Linux',
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.8",
 )

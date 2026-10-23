@@ -1,5 +1,6 @@
 import pytest
 import numpy as np
+import cvxpy as cp
 from sklearn.datasets import make_classification, make_regression
 from src.dro.linear_model.cvar_dro import CVaRDRO, CVaRDROError
 
@@ -90,6 +91,7 @@ def test_fit_success(model_type):
         model_type=model_type,
         alpha=0.95
     )
+    assert model.solver == 'CLARABEL'
     
     params = model.fit(X, y)
     
@@ -159,17 +161,43 @@ def test_alpha_one_worst_distribution():
 # Solver Compatibility Tests
 # --------------------------
 
-def test_solver_fallback():
-    """Test solver compatibility with open-source alternatives"""
+def test_explicit_clarabel_solver():
+    """An explicit Clarabel selection solves the CVaR formulation."""
     X, y = make_classification(n_samples=50, n_features=10)
     y = np.sign(y-0.5)
     model = CVaRDRO(
         input_dim=10,
         alpha=0.9,
-        solver='MOSEK'  # Open-source solver
+        solver='CLARABEL'
     )
     params = model.fit(X, y)
     assert params["theta"] is not None
+
+
+@pytest.mark.parametrize("model_type", ['logistic', 'ols', 'lad'])
+def test_clarabel_and_scs_agree_on_objective(model_type):
+    """Compare the same fitted objective across two conic solvers."""
+    if 'SCS' not in cp.installed_solvers():
+        pytest.skip("SCS is not installed")
+
+    X = np.array([[-2.0], [-1.0], [0.0], [1.0], [2.0], [3.0]])
+    if model_type in {'svm', 'logistic'}:
+        y = np.array([-1, -1, 1, -1, 1, 1])
+    else:
+        y = np.array([-1.1, -0.8, 0.4, 1.1, 1.9, 2.8])
+
+    objectives = {}
+    for solver in ('CLARABEL', 'SCS'):
+        kwargs = {} if solver == 'CLARABEL' else {'solver': solver}
+        model = CVaRDRO(input_dim=1, model_type=model_type, alpha=0.8, **kwargs)
+        assert model.solver == solver
+        model.fit(X, y)
+        objectives[solver] = model.robust_obj
+
+    assert np.isfinite(objectives['CLARABEL'])
+    assert objectives['CLARABEL'] == pytest.approx(
+        objectives['SCS'], rel=5e-3, abs=5e-3
+    )
 
 # --------------------------
 # Edge Case Handling

@@ -294,7 +294,7 @@
 <span id="mot-dro"></span><h1>MOT DRO<a class="headerlink" href="#module-dro.linear_model.mot_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.linear_model.mot_dro.MOTDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.mot_dro.</span></span><span class="sig-name descname"><span class="pre">MOTDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mot_dro.MOTDRO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.mot_dro.</span></span><span class="sig-name descname"><span class="pre">MOTDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLARABEL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mot_dro.MOTDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Optimal Transport DRO with Conditional Moment Constraints.</p>
 <p>Implements DRO with composite transportation cost:</p>
@@ -305,18 +305,18 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>theta1</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Wasserstein distance scaling factor (<span class="math notranslate nohighlight">\(\theta_1 \geq 0\)</span>)</p></li>
-<li><p><strong>theta2</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – KL divergence penalty coefficient (<span class="math notranslate nohighlight">\(\theta_2 \geq 0\)</span>)</p></li>
-<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Robustness radius for OT ambiguity set (<span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span>)</p></li>
-<li><p><strong>p</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – Norm order for feature perturbation. Valid values: 2 (L2), ‘inf’ (L_inf)</p></li>
+<li><p><strong>theta1</strong> (<em>float</em>) – Wasserstein distance scaling factor (<span class="math notranslate nohighlight">\(\theta_1 \geq 0\)</span>)</p></li>
+<li><p><strong>theta2</strong> (<em>float</em>) – KL divergence penalty coefficient (<span class="math notranslate nohighlight">\(\theta_2 \geq 0\)</span>)</p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – Robustness radius for OT ambiguity set (<span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span>)</p></li>
+<li><p><strong>p</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>]</em>) – Norm order for feature perturbation. Valid values: 2 (L2), ‘inf’ (L_inf)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>input_dim</strong> (<em>int</em>)</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>)</p></li>
+<li><p><strong>fit_intercept</strong> (<em>bool</em>)</p></li>
+<li><p><strong>solver</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -324,16 +324,16 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimension of input features. Must be ≥ 1.</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model type. Defaults to ‘svm’. Supported:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of input features. Must be ≥ 1.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Base model type. Defaults to ‘svm’. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Support Vector Machine (hinge loss)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least Absolute Deviation (L1 loss)</p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept term. 
+<li><p><strong>fit_intercept</strong> (<em>bool</em>) – Whether to learn intercept term. 
 Set False for pre-centered data. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Convex optimization solver. Defaults to ‘MOSEK’.</p></li>
+<li><p><strong>solver</strong> (<em>str</em>) – Convex optimization solver. Defaults to ‘CLARABEL’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -365,7 +365,7 @@ Set False for pre-centered data. Defaults to True.</p></li>
 <dd><p>Update MOTDRO model configuration with coupled parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – <p>Dictionary containing parameters to update. Valid keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – <p>Dictionary containing parameters to update. Valid keys:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">theta1</span></code> (float &gt; 1): </dt><dd><p>Wasserstein distance scaling factor. Updates trigger:
@@ -403,7 +403,7 @@ Set False for pre-centered data. Defaults to True.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 <dl>
@@ -430,13 +430,13 @@ Set False for pre-centered data. Defaults to True.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.linear_model.mot_dro.MOTDRO.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mot_dro.MOTDRO.fit" title="Link to this definition">¶</a></dt>
-<dd><p>Fit the MMD-DRO model to the data.</p>
+<dd><p>Fit the MOT-DRO model to the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
 Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
 <ul>
 <li><p>Classification: ±1 labels</p></li>
 <li><p>Regression: Continuous values</p></li>
@@ -452,7 +452,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[str, Any]</p>
 </dd>
 </dl>
 </dd></dl>

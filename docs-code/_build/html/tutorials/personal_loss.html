@@ -261,8 +261,9 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO: Model Formulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">NN-DRO: Robustness Certificates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Personalization</a></li>
 </ul>
@@ -286,7 +287,9 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MethodType</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">xxx</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cvx_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">design_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">X</span> <span class="k">if</span> <span class="n">design_matrix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">design_matrix</span>
+    <span class="c1"># Construct the custom loss using features @ theta + b.</span>
     <span class="n">xxx</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">XXDRO</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
@@ -294,10 +297,13 @@
 <span class="n">model</span><span class="o">.</span><span class="n">_cvx_loss</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">_cvx_loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>if we want to modify the <code class="docutils literal notranslate"><span class="pre">self._cvx_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_loss</span></code> functions in the model class.</p>
-<section id="linear-exact-dro-methods">
-<h2>1. Linear (Exact) DRO Methods<a class="headerlink" href="#linear-exact-dro-methods" title="Link to this heading">¶</a></h2>
-<p>In DRO models that are solved exactly, for each particular DRO type, we change <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> in each class.</p>
+<p>if we want to modify the <code class="docutils literal notranslate"><span class="pre">self._cvx_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">_loss</span></code> functions in the model class.
+Wasserstein DRO passes a precomputed <code class="docutils literal notranslate"><span class="pre">design_matrix</span></code> to <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code>; use it when
+provided so the custom loss uses the same linear or kernel coordinates as fitting.</p>
+<section id="linear-convex-dro-methods">
+<h2>1. Linear (Convex) DRO Methods<a class="headerlink" href="#linear-convex-dro-methods" title="Link to this heading">¶</a></h2>
+<p>For linear DRO models formulated in CVXPY, customize both <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> for the chosen loss function.</p>
 <p>As a general high-level example, consider a convex piecewise-affine loss of the
 prediction residual</p>
 <div class="math notranslate nohighlight">
@@ -340,52 +346,254 @@ formulation in Theorem 4 of
 </section>
 <section id="remark">
 <h3>Remark<a class="headerlink" href="#remark" title="Link to this heading">¶</a></h3>
-<p>We remark that for more complicated losses, e.g., losses with a mixture of distances, we have not implemented the personalize loss yet.</p>
+<p>Personalized loss hooks for Hybrid-distance DRO formulations have not yet been implemented.</p>
 <p>Note that we have not implemented the personalized constraint module yet <span class="math notranslate nohighlight">\((e.g., for \)</span>\theta$). Stay tuned for that.</p>
 </section>
 </section>
 <section id="nn-based-dro-methods">
 <h2>2. NN-Based DRO Methods<a class="headerlink" href="#nn-based-dro-methods" title="Link to this heading">¶</a></h2>
+<p>For post-training bounds on the robust loss of a fitted neural model, see the
+<a class="reference internal" href="neural_certificates.html"><span class="doc">NN-DRO robustness certificates guide</span></a>.</p>
 <section id="personalized-loss">
-<h3>2.1 Personalized Loss<a class="headerlink" href="#personalized-loss" title="Link to this heading">¶</a></h3>
-<p>For <code class="docutils literal notranslate"><span class="pre">f-DRO</span></code> and <code class="docutils literal notranslate"><span class="pre">WDRO</span></code> methods, our package supports personalized loss functions.</p>
+<h3>2.1 Personalized loss<a class="headerlink" href="#personalized-loss" title="Link to this heading">¶</a></h3>
 <p>For example, a decision-aware regression model can use the unbalanced L1 loss</p>
 <div class="math notranslate nohighlight">
 \[
 c_{\mathrm{under}}(y-\hat y)^+
 + c_{\mathrm{over}}(\hat y-y)^+,
 \]</div>
-<p>where the two coefficients encode the different downstream costs of
-under-predicting and over-predicting. The final section of the personalized-loss
-notebook shows how to use this per-sample loss in both the neural <span class="math notranslate nohighlight">\(f\)</span>-DRO and
-neural Wasserstein hooks.</p>
-<section id="id1">
-<h4><span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
-<p>To integrate a custom loss function:</p>
-<ol class="arabic simple">
-<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">fdro_utils.py</span></code>), and re-write the <code class="docutils literal notranslate"><span class="pre">self._compute_individual_loss()</span></code> function to user-specified forms.</p></li>
-<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code> or <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">fdro_nn.py</span></code>), and re-write the <code class="docutils literal notranslate"><span class="pre">self._criterion()</span></code> function with the newly-modified <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> instance above.</p></li>
-</ol>
+<p>where the coefficients encode the different costs of under-predicting and
+over-predicting. The <a class="reference internal" href="../api/notebooks/personalize_loss_tutorial.html"><span class="doc">personalized-loss notebook</span></a>
+shows the corresponding per-sample loss for neural <span class="math notranslate nohighlight">\(f\)</span>-DRO and Wasserstein DRO.</p>
+<section id="neural-f-dro">
+<h4>Neural <span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#neural-f-dro" title="Link to this heading">¶</a></h4>
+<p>For <code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code> and <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code>, subclass <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> from <code class="docutils literal notranslate"><span class="pre">fdro_utils.py</span></code> and
+override <code class="docutils literal notranslate"><span class="pre">_compute_individual_loss()</span></code> to return one loss per sample. Bind an
+instance to the model by overriding <code class="docutils literal notranslate"><span class="pre">_criterion(outputs,</span> <span class="pre">labels)</span></code>; it must
+return the scalar robust objective. The notebook demonstrates this for both
+chi-squared and CVaR geometry.</p>
 </section>
-<section id="wdro">
-<h4>WDRO<a class="headerlink" href="#wdro" title="Link to this heading">¶</a></h4>
-<p>When personalizing the loss function for WDRO, please:</p>
-<ol class="arabic simple">
-<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> instance (from <code class="docutils literal notranslate"><span class="pre">wdro_nn.py</span></code>).</p></li>
-<li><p>Re-write the <code class="docutils literal notranslate"><span class="pre">self._loss()</span></code> function.</p></li>
-</ol>
+<section id="neural-wasserstein-dro">
+<h4>Neural Wasserstein DRO<a class="headerlink" href="#neural-wasserstein-dro" title="Link to this heading">¶</a></h4>
+<p>For <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code>, override <code class="docutils literal notranslate"><span class="pre">_loss(outputs,</span> <span class="pre">labels)</span></code> to return one loss per sample.
+With <code class="docutils literal notranslate"><span class="pre">robust_objective='transport_penalty'</span></code>, the model uses this loss in both
+the inner perturbation search and the outer training objective. With
+<code class="docutils literal notranslate"><span class="pre">robust_objective='norm_ball'</span></code> and positive <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>, Torchattacks generates
+perturbations using its classification cross-entropy loss; <code class="docutils literal notranslate"><span class="pre">_loss</span></code> changes the
+outer objective but does not change that attack objective. A custom norm-ball
+inner loss requires a matching custom attack. The Torchattacks path also
+expects classification labels, so use the transport-penalty path for the
+notebook’s continuous regression targets when perturbations are enabled.</p>
+</section>
+<section id="hr-dro">
+<h4>HR-DRO<a class="headerlink" href="#hr-dro" title="Link to this heading">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code> currently computes cross-entropy or MSE inside <code class="docutils literal notranslate"><span class="pre">_criterion</span></code> and
+uses Torchattacks when <code class="docutils literal notranslate"><span class="pre">epsilon</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>. Replacing that loss requires a matching
+change to the per-sample losses passed to its CVXPY weight problem and, if the
+attack objective should change, a custom attack. Its training controls below
+do not change the loss or attack objective. The example in the next section
+replaces the architecture, per-sample loss, and training attack.</p>
 </section>
 </section>
 <section id="personalized-model-architecture">
-<h3>2.2 Personalized Model Architecture<a class="headerlink" href="#personalized-model-architecture" title="Link to this heading">¶</a></h3>
-<p>Users could pass their own model via <code class="docutils literal notranslate"><span class="pre">self.update()</span></code> function. Note that the personalized model must be written via <code class="docutils literal notranslate"><span class="pre">PyTorch</span></code> and is a sub-class of <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>.</p>
+<h3>2.2 Personalized model architecture<a class="headerlink" href="#personalized-model-architecture" title="Link to this heading">¶</a></h3>
+<p>Pass a custom <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> through <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> before fitting.
+For HR-DRO and WNNDRO norm-ball mode, this also binds the adversarial attack to
+the replacement network.
+The <code class="docutils literal notranslate"><span class="pre">update(config)</span></code> methods of neural <span class="math notranslate nohighlight">\(f\)</span>-DRO rebuild a preset network; they
+are not the custom-network interface. Create a PyTorch optimizer only <strong>after</strong>
+the final network has been installed, so it references that network’s
+parameters.</p>
+<p>The following example replaces the default MLP with a small residual network.
+Its <code class="docutils literal notranslate"><span class="pre">forward</span></code> method must accept a batch of two-feature inputs and return two
+logits per sample for binary classification.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.fdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chi2NNDRO</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ResidualClassifier</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">positions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">positions</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">positions</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">positions</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">ResidualClassifier</span><span class="p">(),</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">ResidualClassifier</span></code> with any compatible <code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>. For a custom
+regression model, return one output per sample and set <code class="docutils literal notranslate"><span class="pre">task_type='regression'</span></code>
+and <code class="docutils literal notranslate"><span class="pre">num_classes=1</span></code>.</p>
+<p>For HR-DRO, the following code continues from the same <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">ResidualClassifier</span></code>. It doubles the loss for class 1. A custom projected
+gradient attack maximizes that same loss within an <span class="math notranslate nohighlight">\(\ell_\infty\)</span> ball of radius
+<code class="docutils literal notranslate"><span class="pre">epsilon</span></code>, and the attacked per-sample losses are passed to the robust
+weighting problem. The raw-gradient step lets the class-specific cost affect
+the perturbation size; projection enforces the radius. Inputs are clipped to
+<code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code> as in the notebook’s toy data.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cvxpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.hrdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">HRNNDRO</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cost_sensitive_losses</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">labels</span><span class="o">.</span><span class="n">float</span><span class="p">())</span> <span class="o">*</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
+        <span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">'none'</span>
+    <span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CostSensitivePGD</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_size</span> <span class="o">=</span> <span class="n">step_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="n">steps</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="n">original</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        <span class="n">perturbed</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">was_training</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">enable_grad</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">):</span>
+                    <span class="n">perturbed</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">cost_sensitive_losses</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">perturbed</span><span class="p">),</span> <span class="n">labels</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+                    <span class="n">gradient</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">perturbed</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">perturbed</span> <span class="o">=</span> <span class="n">perturbed</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_size</span> <span class="o">*</span> <span class="n">gradient</span>
+                    <span class="n">perturbed</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                        <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">perturbed</span><span class="p">,</span> <span class="n">original</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">),</span>
+                        <span class="n">original</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">was_training</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">perturbed</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CostSensitiveHRNNDRO</span><span class="p">(</span><span class="n">HRNNDRO</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_adversarial_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adversarial_params</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">'method'</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">'PGD'</span> <span class="ow">or</span> <span class="n">params</span><span class="p">[</span><span class="s1">'norm'</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">'l-inf'</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'This example supports l-inf PGD only'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack</span> <span class="o">=</span> <span class="n">CostSensitivePGD</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">'step_size'</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s1">'steps'</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tabular_attack</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="n">adversarial_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_inputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+        <span class="n">losses</span> <span class="o">=</span> <span class="n">cost_sensitive_losses</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">adversarial_inputs</span><span class="p">),</span> <span class="n">labels</span><span class="p">)</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">batch_size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_batch_size</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_optimization_problem</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_param</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">losses</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worst_case</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">losses</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">CLARABEL</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">cp</span><span class="o">.</span><span class="n">SolverError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_param</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerical_eps</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">SCS</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">losses</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">losses</span><span class="o">.</span><span class="n">device</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">weights</span><span class="p">[:</span><span class="n">batch_size</span><span class="p">]</span> <span class="o">*</span> <span class="n">losses</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <span class="n">weights</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">losses</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+<span class="n">hr_model</span> <span class="o">=</span> <span class="n">CostSensitiveHRNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">train_batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+    <span class="n">adversarial_params</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">'method'</span><span class="p">:</span> <span class="s1">'PGD'</span><span class="p">,</span> <span class="s1">'norm'</span><span class="p">:</span> <span class="s1">'l-inf'</span><span class="p">,</span> <span class="s1">'step_size'</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s1">'steps'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="n">hr_model</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">ResidualClassifier</span><span class="p">(),</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">hr_model</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="n">hr_model</span><span class="o">.</span><span class="n">model</span>
+<span class="n">hr_metrics</span> <span class="o">=</span> <span class="n">hr_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">adversarial_inputs</span> <span class="o">=</span> <span class="n">hr_model</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">5</span><span class="p">],</span> <span class="n">y</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The attack uses the true labels for each training batch. For labeled
+adversarial evaluation, call <code class="docutils literal notranslate"><span class="pre">hr_model.attack(X_eval,</span> <span class="pre">y_eval)</span></code> with the true
+labels; the inherited <code class="docutils literal notranslate"><span class="pre">HRNNDRO.predict()</span></code> instead supplies dummy labels. This
+example overrides HR-DRO internals because the class does not currently expose
+custom-loss or custom-attack hooks. Check those internals when upgrading the
+package.</p>
+</section>
+<section id="data-loaders-optimizers-and-schedulers">
+<h3>2.3 Data loaders, optimizers, and schedulers<a class="headerlink" href="#data-loaders-optimizers-and-schedulers" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code>, <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code>, <code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code>, and <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> accept these optional controls
+through <code class="docutils literal notranslate"><span class="pre">fit(...)</span></code>. Supply both <code class="docutils literal notranslate"><span class="pre">train_loader</span></code> and <code class="docutils literal notranslate"><span class="pre">val_loader</span></code> as loaders of
+<code class="docutils literal notranslate"><span class="pre">(inputs,</span> <span class="pre">labels)</span></code> batches, and omit <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> on this path. Pass a PyTorch
+optimizer built from <code class="docutils literal notranslate"><span class="pre">model.model.parameters()</span></code>; a scheduler also requires an
+explicit optimizer. <code class="docutils literal notranslate"><span class="pre">scheduler_step='epoch'</span></code> steps it after each epoch, while
+<code class="docutils literal notranslate"><span class="pre">scheduler_step='batch'</span></code> steps it after each training batch. Without external
+loaders, <code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y,</span> <span class="pre">...)</span></code> retains the existing internal split and Adam default.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.fdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chi2NNDRO</span>
+
+<span class="c1"># X_train/X_val are float tensors; y_train/y_val are long class labels.</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">custom_network</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">custom_network</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">train_loader</span><span class="o">=</span><span class="n">train_loader</span><span class="p">,</span>
+    <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+    <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span>
+    <span class="n">scheduler_step</span><span class="o">=</span><span class="s1">'epoch'</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The same fitting arguments apply to <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code> and <code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code> instances.
+For HR-DRO, set <code class="docutils literal notranslate"><span class="pre">train_batch_size</span></code> to the loader’s usual batch size when
+constructing the model. A shorter final batch is handled by rebuilding its
+CVXPY problem for that batch size. Torchattacks clips adversarial inputs to
+<code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>, so prepare inputs accordingly when <code class="docutils literal notranslate"><span class="pre">epsilon</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>. The notebook
+includes complete chi-squared, CVaR, and HR-DRO fitting examples.</p>
 </section>
 </section>
 <section id="tree-based-dro-methods">
 <h2>3. Tree-Based DRO Methods<a class="headerlink" href="#tree-based-dro-methods" title="Link to this heading">¶</a></h2>
-<p>For tree-based DRO methods, users can rewrite the <code class="docutils literal notranslate"><span class="pre">self.loss()</span></code> function to change loss functions. To change the DRO type, adjust <code class="docutils literal notranslate"><span class="pre">self._kl_dro_loss()</span></code> (or <code class="docutils literal notranslate"><span class="pre">self._cvar_dro_loss()</span></code>) if the base model is <code class="docutils literal notranslate"><span class="pre">KLDRO_XX</span></code> (or <code class="docutils literal notranslate"><span class="pre">CVaRDRO_XX</span></code>), respectively.</p>
+<p>For tree-based DRO methods, <code class="docutils literal notranslate"><span class="pre">loss(preds,</span> <span class="pre">labels)</span></code> supplies the per-example
+losses used for robust sample weighting and the reported objective. When a
+personalized loss also changes its prediction derivatives, update the booster
+objective’s gradients and Hessians as well (for example, <code class="docutils literal notranslate"><span class="pre">_kl_dro_loss()</span></code> in
+<code class="docutils literal notranslate"><span class="pre">KLDRO_XGB</span></code>).</p>
 <p>See the <a class="reference internal" href="../api/notebooks/personalize_loss_tutorial.html"><span class="doc">personalized-loss notebook</span></a>
-for end-to-end linear and neural customization examples.</p>
+for end-to-end linear, neural, and cost-sensitive XGBoost examples.</p>
 </section>
 </section>
 
@@ -404,19 +612,21 @@ for end-to-end linear and neural customization examples.</p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Personalization</a><ul>
-<li><a class="reference internal" href="#linear-exact-dro-methods">1. Linear (Exact) DRO Methods</a><ul>
+<li><a class="reference internal" href="#linear-convex-dro-methods">1. Linear (Convex) DRO Methods</a><ul>
 <li><a class="reference internal" href="#f-dro"><span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
 <li><a class="reference internal" href="#wasserstein-dro">Wasserstein DRO</a></li>
 <li><a class="reference internal" href="#remark">Remark</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#nn-based-dro-methods">2. NN-Based DRO Methods</a><ul>
-<li><a class="reference internal" href="#personalized-loss">2.1 Personalized Loss</a><ul>
-<li><a class="reference internal" href="#id1"><span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
-<li><a class="reference internal" href="#wdro">WDRO</a></li>
+<li><a class="reference internal" href="#personalized-loss">2.1 Personalized loss</a><ul>
+<li><a class="reference internal" href="#neural-f-dro">Neural <span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
+<li><a class="reference internal" href="#neural-wasserstein-dro">Neural Wasserstein DRO</a></li>
+<li><a class="reference internal" href="#hr-dro">HR-DRO</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#personalized-model-architecture">2.2 Personalized Model Architecture</a></li>
+<li><a class="reference internal" href="#personalized-model-architecture">2.2 Personalized model architecture</a></li>
+<li><a class="reference internal" href="#data-loaders-optimizers-and-schedulers">2.3 Data loaders, optimizers, and schedulers</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#tree-based-dro-methods">3. Tree-Based DRO Methods</a></li>

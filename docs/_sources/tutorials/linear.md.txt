@@ -1,6 +1,7 @@
 # Linear Models
 
-These optimization problems are solved exactly (or approximately, e.g., kernel) through solvers.
+The convex linear formulations are solved numerically with CVXPY. Some methods
+also use approximations, such as a reduced kernel representation.
 
 Each method below links to its conceptual guide and literature references, its
 estimator API documentation (where available), and a runnable notebook.

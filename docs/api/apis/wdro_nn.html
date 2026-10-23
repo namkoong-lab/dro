@@ -285,21 +285,23 @@
 <span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.neural_model.wdro_nn" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.neural_model.wdro_nn.WNNDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.wdro_nn.</span></span><span class="sig-name descname"><span class="pre">WNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PGD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.wdro_nn.WNNDRO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.wdro_nn.</span></span><span class="sig-name descname"><span class="pre">WNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PGD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robust_objective</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'norm_ball'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.wdro_nn.WNNDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.neural_model.base_nn.BaseNNDRO" title="dro.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
-<p>Wasserstein Neural DRO with Adversarial Robustness.</p>
-<p>Initialize Wasserstein DRO model with adversarial training.</p>
+<p>Neural adversarial training with norm-ball or transport-penalty objectives.</p>
+<p><code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> uses fixed-radius attacks. <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> uses the
+squared Euclidean transport cost from Sinha et al. (2018).</p>
+<p>Initialize a neural adversarial training model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Output dimension:
+<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – Output dimension:
 - Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)
 - Regression: Automatically set to 1</p></li>
-<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Learning task type. Supported:
+<li><p><strong>task_type</strong> (<em>str</em>) – Learning task type. Supported:
 - <code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss
 - <code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -307,33 +309,47 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Dual parameter (parameter of the L2-penalty during adversarial training) <span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span> controlling distributional robustness.
-Larger values increase model conservativeness. Defaults to 0.1.</p></li>
-<li><p><strong>adversarial_steps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of PGD attack iterations <span class="math notranslate nohighlight">\(T_{adv} \geq 1\)</span>.
+<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em>) – Radius <span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span> of the per-example
+<span class="math notranslate nohighlight">\(\ell_2\)</span> or <span class="math notranslate nohighlight">\(\ell_\infty\)</span> attack ball in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code>
+mode. Zero disables norm-ball perturbations. Defaults to 0.1.</p></li>
+<li><p><strong>adversarial_steps</strong> (<em>int</em>) – Number of inner attack iterations <span class="math notranslate nohighlight">\(T_{adv} \geq 1\)</span>
+for PGD or transport-penalty ascent. FGSM uses one step.
 Defaults to 10.</p></li>
-<li><p><strong>adversarial_step_size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – PGD step size <span class="math notranslate nohighlight">\(\eta_{adv} &gt; 0\)</span>.
+<li><p><strong>adversarial_step_size</strong> (<em>float</em>) – Inner attack step size <span class="math notranslate nohighlight">\(\eta_{adv} &gt; 0\)</span>
+for PGD or transport-penalty ascent. FGSM uses <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>.
 Defaults to 0.02.</p></li>
-<li><p><strong>adversarial_norm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Adversarial perturbation norm type. Options:</p>
+<li><p><strong>adversarial_norm</strong> (<em>str</em>) – <p>Perturbation norm in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode. Options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'l2'</span></code>: <span class="math notranslate nohighlight">\(\ell_2\)</span>-ball constraint</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'l-inf'</span></code>: <span class="math notranslate nohighlight">\(\ell_\infty\)</span>-ball constraint</p></li>
 </ul>
 </p></li>
-<li><p><strong>adversarial_method</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Adversarial example generation method. Options:</p>
+<li><p><strong>adversarial_method</strong> (<em>str</em>) – <p>Attack method in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode. Options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'PGD'</span></code>: Projected Gradient Descent (default)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'FGSM'</span></code>: Fast Gradient Sign Method</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'FGSM'</span></code>: Fast Gradient Sign Method (requires <code class="docutils literal notranslate"><span class="pre">'l-inf'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'FFGSM'</span></code>: Fast FGSM with a random start (requires <code class="docutils literal notranslate"><span class="pre">'l-inf'</span></code>)</p></li>
 </ul>
 </p></li>
+<li><p><strong>robust_objective</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">'norm_ball'</span></code> (default) or
+<code class="docutils literal notranslate"><span class="pre">'transport_penalty'</span></code>. The latter approximately optimizes the
+penalized squared-Wasserstein objective of Sinha et al. (2018).</p></li>
+<li><p><strong>gamma</strong> (<em>float</em>) – Positive coefficient of the squared Euclidean transport
+cost in <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode. Larger values discourage
+perturbations. Defaults to 1.0.</p></li>
+<li><p><strong>input_bounds</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – Optional lower and upper input bounds for
+<code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode. For images in [0, 1], use <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code>.
+Defaults to no clipping.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If epsilon &lt; 0</p></li>
 <li><p>If adversarial_steps &lt; 1</p></li>
 <li><p>If adversarial_step_size ≤ 0</p></li>
-<li><p>If invalid norm/method type</p></li>
+<li><p>If robust_objective, gamma, input_bounds, or norm-ball attack
+configuration is invalid</p></li>
 </ul>
 </p>
 </dd>
@@ -350,6 +366,26 @@ Defaults to 0.02.</p></li>
 </div>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.neural_model.wdro_nn.WNNDRO.update_user_mode">
+<span class="sig-name descname"><span class="pre">update_user_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.wdro_nn.WNNDRO.update_user_mode" title="Link to this definition">¶</a></dt>
+<dd><p>Replace the network and bind norm-ball attacks to the new network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>)</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>)</p></li>
+<li><p><strong>model</strong> (<em>Module</em>)</p></li>
+<li><p><strong>task_type</strong> (<em>str</em>)</p></li>
+<li><p><strong>device</strong> (<em>device</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -369,7 +405,10 @@ Defaults to 0.02.</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Wasserstein DRO</a><ul>
-<li><a class="reference internal" href="#dro.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a></li>
+<li><a class="reference internal" href="#dro.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a><ul>
+<li><a class="reference internal" href="#dro.neural_model.wdro_nn.WNNDRO.update_user_mode"><code class="docutils literal notranslate"><span class="pre">WNNDRO.update_user_mode()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

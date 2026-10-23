@@ -16,7 +16,7 @@ class HR_DRO_LR(BaseLinearDRO):
     """
     
     def __init__(self, input_dim: int, model_type: str = 'svm', fit_intercept: bool = True, 
-                 solver: str = 'MOSEK', r: float = 1.0, alpha: float = 0.0, 
+                 solver: str = 'CLARABEL', r: float = 1.0, alpha: float = 0.0,
                  epsilon: float = 0.5, epsilon_prime: float = 1.0):
         """Initialize advanced DRO model with dual robustness parameters.
 
@@ -26,7 +26,7 @@ class HR_DRO_LR(BaseLinearDRO):
         :type model_type: str
         :param fit_intercept: Whether to fit intercept term. Defaults to True.
         :type fit_intercept: bool
-        :param solver: Optimization solver. Defaults to 'MOSEK'.
+        :param solver: Optimization solver. Defaults to 'CLARABEL'.
         :type solver: str
         :param r: Ambiguity set curvature parameter. Must satisfy r ≥ 0. Defaults to 1.0.
         :type r: float
@@ -264,9 +264,7 @@ class HR_DRO_LR(BaseLinearDRO):
         # Solve the optimization problem
         problem = cp.Problem(objective, constraints)
         try:
-            problem.solve(solver=cp.MOSEK,
-                mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-8},
-                verbose=True)
+            problem.solve(solver=self.solver, verbose=True)
         except cp.error.SolverError as e:
             raise HRDROError(f"Optimization failed to solve using {self.solver}.") from e
 

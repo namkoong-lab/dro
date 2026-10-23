@@ -294,7 +294,7 @@
 <span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.linear_model.wasserstein_dro" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDRO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDRO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLARABEL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Wasserstein Distributionally Robust Optimization (WDRO) model</p>
 <p>This model minimizes a Wasserstein-robust loss function for both regression and classification.</p>
@@ -329,8 +329,8 @@ exactly <span class="math notranslate nohighlight">\(\kappa\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimension of feature space. Must satisfy :math:`      ext{input_dim} geq 1`</p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of feature space. Must satisfy :math:`      ext{input_dim} geq 1`</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code>: Hinge loss (classification)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>: Logistic loss (classification)</p></li>
@@ -338,18 +338,19 @@ exactly <span class="math notranslate nohighlight">\(\kappa\)</span>.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code>: Least absolute deviation (regression)</p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>.
+<li><p><strong>fit_intercept</strong> (<em>bool</em>) – Whether to learn intercept term <span class="math notranslate nohighlight">\(b\)</span>.
 Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> for pre-centered data. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Convex optimization solver. Valid options:</p>
+<li><p><strong>solver</strong> (<em>str</em>) – <p>Convex optimization solver. Valid options:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (commercial, recommended)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'CLARABEL'</span></code> (open source, default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (optional; requires a license)</p></li>
 </ul>
 </p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>kernel</strong> (<em>str</em>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
 <li><p>If unsupported solver is selected</p></li>
 </ul>
@@ -360,7 +361,7 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">solver</span><span class="o">=</span><span class="s1">'MOSEK'</span>
+<span class="gp">... </span>    <span class="n">solver</span><span class="o">=</span><span class="s1">'CLARABEL'</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">cost_matrix</span><span class="o">.</span><span class="n">shape</span>  <span class="c1"># (5, 5)</span>
 </pre></div>
@@ -379,7 +380,7 @@ Set to <code class="docutils literal notranslate"><span class="pre">False</span>
 <dd><p>Update Wasserstein-DRO model parameters dynamically.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with keys:</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <p>Configuration dictionary with keys:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cost_matrix'</span></code>: Mahalanobis metric matrix <span class="math notranslate nohighlight">\(\Sigma \succ 0\)</span></p>
 <blockquote>
@@ -400,14 +401,14 @@ makes the robust absolute loss unbounded. OLS requires
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul>
+<li><p><strong>ValueError</strong> – <ul>
 <li><p>If cost_matrix is not positive definite</p></li>
 <li><p>If eps &lt; 0</p></li>
 <li><p>If p &lt; 1 and p ≠ ‘inf’</p></li>
 <li><p>If kappa &lt; 0 and kappa ≠ ‘inf’</p></li>
 </ul>
 </p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – <ul>
+<li><p><strong>TypeError</strong> – <ul>
 <li><p>If cost_matrix is not numpy array</p></li>
 <li><p>If numeric parameters are not float/int</p></li>
 </ul>
@@ -415,7 +416,7 @@ makes the robust absolute loss unbounded. OLS requires
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 <dl>
@@ -440,15 +441,15 @@ makes the robust absolute loss unbounded. OLS requires
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Training feature matrix of shape <cite>(n_samples, n_features)</cite>.
 Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
-<li><p><strong>Y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
+<li><p><strong>Y</strong> (<em>numpy.ndarray</em>) – <p>Target values of shape <cite>(n_samples,)</cite>. Format requirements:</p>
 <ul>
 <li><p>Classification: ±1 labels</p></li>
 <li><p>Regression: Continuous values</p></li>
 </ul>
 </p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -462,7 +463,7 @@ linear kernel, <code class="docutils literal notranslate"><span class="pre">n_sa
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
+<dd class="field-odd"><p>Dict[str, Any]</p>
 </dd>
 </dl>
 <p>.raises: WassersteinDROError: If the optimization problem fails to solve.</p>
@@ -478,16 +479,16 @@ controls are grouped in <code class="docutils literal notranslate"><span class="
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Training features with shape <code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">input_dim)</span></code>.</p></li>
-<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Binary <code class="docutils literal notranslate"><span class="pre">-1/+1</span></code> labels or continuous regression targets.</p></li>
-<li><p><strong>asymptotic_options</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span>) – Options used only by SVM, logistic, and LAD:
+<li><p><strong>X</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Training features with shape <code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">input_dim)</span></code>.</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Binary <code class="docutils literal notranslate"><span class="pre">-1/+1</span></code> labels or continuous regression targets.</p></li>
+<li><p><strong>asymptotic_options</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span>) – Options used only by SVM, logistic, and LAD:
 <code class="docutils literal notranslate"><span class="pre">gamma</span></code>, <code class="docutils literal notranslate"><span class="pre">objective_atol</span></code>, <code class="docutils literal notranslate"><span class="pre">objective_rtol</span></code>,
 <code class="docutils literal notranslate"><span class="pre">feasibility_tol</span></code>, <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>, and <code class="docutils literal notranslate"><span class="pre">gamma_decay</span></code>. Omit this
 dictionary for OLS.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The atoms and weights together with <code class="docutils literal notranslate"><span class="pre">source_index</span></code>,
@@ -514,7 +515,7 @@ Shafiee et al. (2026).</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDROsatisficing">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDROsatisficing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MOSEK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.wasserstein_dro.</span></span><span class="sig-name descname"><span class="pre">WassersteinDROsatisficing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLARABEL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>Robust satisficing version of Wasserstein DRO</p>
 <p>This model minimizes the subject to (approximated version) of the robust satisficing constraint of Wasserstein DRO. The Wasserstein Distance is defined as the minimum probability coupling of two distributions for the distance metric:</p>
@@ -525,8 +526,8 @@ Shafiee et al. (2026).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Feature space dimension. Must satisfy <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Base model architecture. Supported:</p>
+<li><p><strong>input_dim</strong> (<em>int</em>) – Feature space dimension. Must satisfy <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>model_type</strong> (<em>str</em>) – <p>Base model architecture. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'svm'</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'logistic'</span></code></p></li>
@@ -534,18 +535,19 @@ Shafiee et al. (2026).</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'lad'</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to learn intercept <span class="math notranslate nohighlight">\(b\)</span>.
+<li><p><strong>fit_intercept</strong> (<em>bool</em>) – Whether to learn intercept <span class="math notranslate nohighlight">\(b\)</span>.
 Disable for standardized data. Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>Convex optimization solver. Options:</p>
+<li><p><strong>solver</strong> (<em>str</em>) – <p>Convex optimization solver. Options:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (commercial, recommended)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'CLARABEL'</span></code> (open source, default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'MOSEK'</span></code> (optional; requires a license)</p></li>
 </ul>
 </p></li>
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
+<li><p><strong>kernel</strong> (<em>str</em>) – the kernel type to be used in the optimization model, default = ‘linear’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – <ul class="simple">
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
 <li><p>If invalid solver selected</p></li>
 </ul>
@@ -562,7 +564,7 @@ Disable for standardized data. Defaults to True.</p></li>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WassersteinDROsatisficing</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">solver</span><span class="o">=</span><span class="s1">'ECOS'</span>
+<span class="gp">... </span>    <span class="n">solver</span><span class="o">=</span><span class="s1">'CLARABEL'</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">cost_matrix</span><span class="o">.</span><span class="n">shape</span>  <span class="c1"># (5, 5)</span>
 </pre></div>
@@ -575,10 +577,10 @@ Disable for standardized data. Defaults to True.</p></li>
 <dd><p>Update model parameters based on configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The model configuration</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – The model configuration</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -590,19 +592,19 @@ Disable for standardized data. Defaults to True.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input covariates</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – input labels</p></li>
+<li><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) – input covariates</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) – input labels</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle">
-<span class="sig-name descname"><span class="pre">fit_oracle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit_oracle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.wasserstein_dro.WassersteinDROsatisficing.fit_oracle" title="Link to this definition">¶</a></dt>
 <dd><p>Depreciated, find the optimal that given the ambiguity constraint.</p>
 <dl>
 <dt>Args:</dt><dd><p>X (np.ndarray): Input feature matrix with shape (n_samples, n_features).</p>

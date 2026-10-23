@@ -15,12 +15,12 @@ class TVDRO(BaseLinearDRO):
     .. math::
         \\mathcal{P} = \{ Q \, | \, \\text{TV}(Q, P) \\leq \\epsilon \}
 
-    where :math:`\\text{TV}` is the total variation distance.
+    where :math:`\\text{TV}(Q,P)=\\frac12\\int|dQ-dP|`.
 
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', 
-                 fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear', 
+                 fit_intercept: bool = True, solver: str = 'CLARABEL', kernel: str = 'linear',
                  eps: float = 0.0):
         """Initialize TV-constrained DRO model.
 
@@ -42,7 +42,8 @@ class TVDRO(BaseLinearDRO):
             Disable for pre-centered data. Defaults to True.
         :type fit_intercept: bool
         :param solver: Convex optimization solver. Recommended:
-            - ``'MOSEK'`` (commercial)
+            - ``'CLARABEL'`` (open source, default)
+            - ``'MOSEK'`` (optional; requires a license)
         :type solver: str
 
         :param kernel: the kernel type to be used in the optimization model, default = 'linear'
@@ -52,7 +53,7 @@ class TVDRO(BaseLinearDRO):
 
             - 0: Standard empirical risk minimization
 
-            - >0: Controls distributional robustness
+            - 0 < eps < 1: Controls distributional robustness
 
         :type eps: float
 
@@ -60,7 +61,7 @@ class TVDRO(BaseLinearDRO):
 
             - If input_dim < 1
 
-            - If eps < 0
+            - If eps is outside [0, 1)
 
         Example:
             >>> model = TVDRO(
@@ -73,8 +74,8 @@ class TVDRO(BaseLinearDRO):
         """
         if input_dim < 1:
             raise ValueError(f"input_dim must be ≥ 1, got {input_dim}")
-        if eps < 0:
-            raise ValueError(f"eps must be ≥ 0, got {eps}")
+        if not (0 <= eps < 1):
+            raise ValueError(f"eps must be in the range [0, 1), got {eps}")
 
         BaseLinearDRO.__init__(self, input_dim, model_type, fit_intercept, solver, kernel)
         self.eps = eps
@@ -86,7 +87,8 @@ class TVDRO(BaseLinearDRO):
 
         :param config: Dictionary containing configuration updates. Supported keys:
 
-            - ``eps``: Robustness parameter controlling the size of the chi-squared ambiguity set (must be ≥ 0)
+            - ``eps``: Total-variation ambiguity radius, strictly between 0 and 1.
+              The constructor defaults to zero radius; ``update()`` rejects both endpoints.
             
         :type config: Dict[str, Any]
 
@@ -175,7 +177,7 @@ class TVDRO(BaseLinearDRO):
             self.theta = theta.value
             self.threshold_val = eta.value
         except cp.SolverError as e:
-            raise TVDROError("Optimization failed to solve using MOSEK.") from e
+            raise TVDROError(f"Optimization failed to solve using {self.solver}.") from e
 
         if self.theta is None or self.threshold_val is None:
             raise TVDROError("Optimization did not converge to a solution.")

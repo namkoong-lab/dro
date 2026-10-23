@@ -366,7 +366,7 @@
 <li><p>Least absolute deviation (<code class="docutils literal notranslate"><span class="pre">lad</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = |Y - f(X)|\)</span>.</p></li>
 <li><p>Ordinary least squares (<code class="docutils literal notranslate"><span class="pre">ols</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = (Y - f(X))^2\)</span>.</p></li>
 </ul>
-<p>The linear models use built-in <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> solvers; our tests use <code class="docutils literal notranslate"><span class="pre">MOSEK</span></code>.</p>
+<p>The convex linear models use <code class="docutils literal notranslate"><span class="pre">CLARABEL</span></code> through <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> by default. You can select another installed solver, such as <code class="docutils literal notranslate"><span class="pre">SCS</span></code> or the licensed <code class="docutils literal notranslate"><span class="pre">MOSEK</span></code>, when it supports the model’s formulation.</p>
 </section>
 <section id="kernel-setup">
 <h4>Kernel Setup<a class="headerlink" href="#kernel-setup" title="Link to this heading">¶</a></h4>
@@ -375,7 +375,7 @@
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">metric</span></code>: <code class="docutils literal notranslate"><span class="pre">additive_chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">linear</span></code>, <code class="docutils literal notranslate"><span class="pre">poly</span></code>, <code class="docutils literal notranslate"><span class="pre">polynomial</span></code>, or <code class="docutils literal notranslate"><span class="pre">rbf</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code>: a positive gamma value, <code class="docutils literal notranslate"><span class="pre">scale</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">n_components</span></code>: <code class="docutils literal notranslate"><span class="pre">None</span></code> for exact fitting, or an integer for a Nystroem approximation when <span class="math notranslate nohighlight">\(n\)</span> is large.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_components</span></code>: <code class="docutils literal notranslate"><span class="pre">None</span></code> for the full kernel representation, or an integer for a Nystroem approximation when <span class="math notranslate nohighlight">\(n\)</span> is large.</p></li>
 </ul>
 </section>
 <section id="supported-dro-methods">

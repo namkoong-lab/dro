@@ -261,8 +261,9 @@
 <li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO: Model Formulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">NN-DRO: Robustness Certificates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
@@ -282,7 +283,7 @@
             
   <section class="tex2jax_ignore mathjax_ignore" id="formulation">
 <h1>Formulation<a class="headerlink" href="#formulation" title="Link to this heading">¶</a></h1>
-<p>Given the empirical distribution <span class="math notranslate nohighlight">\(\hat P\)</span> from the training data <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}_{i \in [N]}\)</span>, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:</p>
+<p>Given the empirical distribution <span class="math notranslate nohighlight">\(\widehat P\)</span> from the training data <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}_{i \in [N]}\)</span>, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:</p>
 <div class="math notranslate nohighlight">
 \[
 \min_{f \in \mathcal{F}}\max_{Q \in \mathcal{P}}\mathbb{E}_Q[\ell(f(X), Y)],
@@ -290,7 +291,7 @@
 <p>where <span class="math notranslate nohighlight">\(\mathcal{P}\)</span> is denoted as the ambiguity set. Usually, it satisfies the following structure:</p>
 <div class="math notranslate nohighlight">
 \[
-\mathcal{P}(d, \epsilon) = \{Q: d(Q, \hat P) \leq \epsilon\}. 
+\mathcal{P}(d, \epsilon) = \{Q: d(Q, \widehat P) \leq \epsilon\}.
 \]</div>
 <p>Here, <span class="math notranslate nohighlight">\(d(\cdot, \cdot)\)</span> is a notion of distance between probability measures and <span class="math notranslate nohighlight">\(\epsilon\)</span> captures the size of the ambiguity set.</p>
 <p>Given each function class <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>, we classify all the models into the following cases, where each case can be further classified given each distance type <span class="math notranslate nohighlight">\(d\)</span>.</p>
@@ -309,7 +310,7 @@
   </tr></thead>
 <tbody>
   <tr>
-    <td class="tg-0pky" rowspan="4"><br><br><br><br>dro.src.data.dataloader_classification</td>
+    <td class="tg-0pky" rowspan="4"><br><br><br><br>dro.data.dataloader_classification</td>
     <td class="tg-0pky">classification_basic</td>
     <td class="tg-0pky">Basic classification task</td>
   </tr>
@@ -326,7 +327,7 @@
     <td class="tg-0lax">Following Section 4.1 (Classification) of <br>"Distributionally Robust Optimization with Data Geometry"</td>
   </tr>
   <tr>
-    <td class="tg-0lax" rowspan="5"><br><br><br><br><br>dro.src.data.dataloader_regression</td>
+    <td class="tg-0lax" rowspan="5"><br><br><br><br><br>dro.data.dataloader_regression</td>
     <td class="tg-0lax">regression_basic</td>
     <td class="tg-0lax">Basic regression task</td>
   </tr>
@@ -366,7 +367,7 @@
 <li><p>Least absolute deviation (<code class="docutils literal notranslate"><span class="pre">lad</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = |Y - f(X)|\)</span>.</p></li>
 <li><p>Ordinary least squares (<code class="docutils literal notranslate"><span class="pre">ols</span></code>): <span class="math notranslate nohighlight">\(\ell(f(X), Y) = (Y - f(X))^2\)</span>.</p></li>
 </ul>
-<p>The linear models use built-in <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> solvers; our tests use <code class="docutils literal notranslate"><span class="pre">MOSEK</span></code>.</p>
+<p>The convex linear models use <code class="docutils literal notranslate"><span class="pre">CLARABEL</span></code> through <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> by default. You can select another installed solver, such as <code class="docutils literal notranslate"><span class="pre">SCS</span></code> or the licensed <code class="docutils literal notranslate"><span class="pre">MOSEK</span></code>, when it supports the model’s formulation.</p>
 </section>
 <section id="kernel-setup">
 <h4>Kernel Setup<a class="headerlink" href="#kernel-setup" title="Link to this heading">¶</a></h4>
@@ -375,7 +376,7 @@
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">metric</span></code>: <code class="docutils literal notranslate"><span class="pre">additive_chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">chi2</span></code>, <code class="docutils literal notranslate"><span class="pre">linear</span></code>, <code class="docutils literal notranslate"><span class="pre">poly</span></code>, <code class="docutils literal notranslate"><span class="pre">polynomial</span></code>, or <code class="docutils literal notranslate"><span class="pre">rbf</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code>: a positive gamma value, <code class="docutils literal notranslate"><span class="pre">scale</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">n_components</span></code>: <code class="docutils literal notranslate"><span class="pre">None</span></code> for exact fitting, or an integer for a Nystroem approximation when <span class="math notranslate nohighlight">\(n\)</span> is large.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_components</span></code>: <code class="docutils literal notranslate"><span class="pre">None</span></code> for the full kernel representation, or an integer for a Nystroem approximation when <span class="math notranslate nohighlight">\(n\)</span> is large.</p></li>
 </ul>
 </section>
 <section id="supported-dro-methods">
@@ -386,13 +387,16 @@
 <li><p>Generalized <span class="math notranslate nohighlight">\(f\)</span>-DRO: CVaR-DRO, Marginal DRO (CVaR), and Conditional DRO (CVaR).</p></li>
 <li><p>MMD-DRO.</p></li>
 <li><p>Bayesian-based DRO: Bayesian-PDRO and PDRO.</p></li>
-<li><p>Mixed-DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, and Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).</p></li>
+<li><p>Hybrid-distance DRO: Sinkhorn-DRO, HR-DRO, MOT-DRO, and Outlier-Robust Wasserstein DRO (OR-Wasserstein DRO).</p></li>
 </ul>
 </section>
 </section>
 <section id="neural-network-models-approximate-fitting">
 <h3>Neural Network Models (Approximate Fitting)<a class="headerlink" href="#neural-network-models-approximate-fitting" title="Link to this heading">¶</a></h3>
-<p>The neural module implements <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO through adversarial training, and Holistic Robust DRO. Supported architectures are linear models, vanilla MLP, AlexNet, and ResNet18. Users can also supply their own architecture through the <code class="docutils literal notranslate"><span class="pre">update</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code>.</p>
+<p>The neural module implements <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO through adversarial training, and Holistic Robust DRO. Supported architectures are linear models, vanilla MLP, AlexNet, and ResNet18. Users can also supply their own architecture through <code class="docutils literal notranslate"><span class="pre">BaseNNDRO.update_user_mode(...)</span></code>.</p>
+<p>See the <a class="reference internal" href="neural_model.html"><span class="doc">neural-model guide</span></a> for training interfaces and the
+<a class="reference internal" href="neural_certificates.html"><span class="doc">NN-DRO robustness certificates guide</span></a> for
+post-training bounds on the worst-case loss of a fitted network.</p>
 </section>
 <section id="tree-based-ensemble-models-approximate-fitting">
 <h3>Tree-based Ensemble Models (Approximate Fitting)<a class="headerlink" href="#tree-based-ensemble-models-approximate-fitting" title="Link to this heading">¶</a></h3>
@@ -400,7 +404,7 @@
 </section>
 <section id="evaluation-and-diagnostics">
 <h3>Evaluation and Diagnostics<a class="headerlink" href="#evaluation-and-diagnostics" title="Link to this heading">¶</a></h3>
-<p>Some linear DRO models provide <code class="docutils literal notranslate"><span class="pre">worst_distribution</span></code> to inspect worst-case model performance. The <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code> estimates true model performance from fitted data.</p>
+<p>Some linear DRO models provide <code class="docutils literal notranslate"><span class="pre">worst_distribution</span></code> to inspect worst-case model performance. The <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> function in <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code> provides a bias-corrected loss estimate only for linear-kernel OLS and logistic models. It raises <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> for SVM, LAD, and nonlinear-kernel models; use <code class="docutils literal notranslate"><span class="pre">score()</span></code> for standard predictive metrics.</p>
 </section>
 </section>
 <section id="reference">

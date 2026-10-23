@@ -56,7 +56,7 @@ class WassersteinDRO(BaseLinearDRO):
     """
 
     def __init__(self, input_dim: int, model_type: str = 'svm', 
-                 fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
+                 fit_intercept: bool = True, solver: str = 'CLARABEL', kernel: str = 'linear'):
         """Initialize Mahalanobis-Wasserstein DRO model.
 
         :param input_dim: Dimension of feature space. Must satisfy :math:`\text{input\_dim} \geq 1`
@@ -80,7 +80,8 @@ class WassersteinDRO(BaseLinearDRO):
 
         :param solver: Convex optimization solver. Valid options:
         
-                - ``'MOSEK'`` (commercial, recommended)
+                - ``'CLARABEL'`` (open source, default)
+                - ``'MOSEK'`` (optional; requires a license)
         
         :type solver: str
 
@@ -97,7 +98,7 @@ class WassersteinDRO(BaseLinearDRO):
             >>> model = WassersteinDRO(
             ...     input_dim=5,
             ...     model_type='svm',
-            ...     solver='MOSEK'
+            ...     solver='CLARABEL'
             ... )
             >>> model.cost_matrix.shape  # (5, 5)
 
@@ -1079,7 +1080,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
 
     """
     def __init__(self, input_dim: int, model_type: str = 'svm', 
-                fit_intercept: bool = True, solver: str = 'MOSEK', kernel: str = 'linear'):
+                fit_intercept: bool = True, solver: str = 'CLARABEL', kernel: str = 'linear'):
         """Initialize Robust satisficing version of Wasserstein DRO.
 
         :param input_dim: Feature space dimension. Must satisfy :math:`d \geq 1`
@@ -1103,7 +1104,8 @@ class WassersteinDROsatisficing(BaseLinearDRO):
 
         :param solver: Convex optimization solver. Options:
 
-            - ``'MOSEK'`` (commercial, recommended)
+            - ``'CLARABEL'`` (open source, default)
+            - ``'MOSEK'`` (optional; requires a license)
 
         :type solver: str
 
@@ -1125,7 +1127,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             >>> model = WassersteinDROsatisficing(
             ...     input_dim=5,
             ...     model_type='svm',
-            ...     solver='ECOS'
+            ...     solver='CLARABEL'
             ... )
             >>> model.cost_matrix.shape  # (5, 5)
 
@@ -1180,11 +1182,16 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             theta = cp.Variable(self.input_dim)
         
     
+        design_matrix = None
         if self.kernel != 'linear':
             if self.n_components is not None:
-                nystrom = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
-                Phi_X = nystrom.fit_transform(self.support_vectors_)
-                theta_K = sqrtm(Phi_X.T @ Phi_X) @ theta
+                self.nystroem_transformer = Nystroem(
+                    kernel=self.kernel,
+                    gamma=self.kernel_gamma,
+                    n_components=self.n_components,
+                )
+                design_matrix = self.nystroem_transformer.fit_transform(self.support_vectors_)
+                theta_K = sqrtm(design_matrix.T @ design_matrix) @ theta
             else:
                 theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
 
@@ -1199,13 +1206,13 @@ class WassersteinDROsatisficing(BaseLinearDRO):
             dual_norm = 1
 
         sample_size, __ = X.shape
-        empirical_rmse = self.fit_oracle(X, y)
+        empirical_rmse = self.fit_oracle(X, y, design_matrix=design_matrix)
         TGT = self.target_ratio * empirical_rmse
         if self.fit_intercept == True:
             b = cp.Variable()
         else:
             b = 0
-        cons = [TGT >= cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size]
+        cons = [TGT >= cp.sum(self._cvx_loss(X, y, theta, b, design_matrix=design_matrix)) / sample_size]
         if self.model_type == 'lad':
             if self.kappa == 'inf':
                 obj = cp.norm(self.cost_inv_transform @ theta_K, dual_norm)
@@ -1278,8 +1285,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         """
         if self.kernel != 'linear':
             if self.n_components is not None:
-                nystrom = Nystroem(kernel = self.kernel, gamma = self.kernel_gamma, n_components = self.n_components)
-                Phi_X = nystrom.fit_transform(self.support_vectors_)
+                Phi_X = self.nystroem_transformer.transform(self.support_vectors_)
                 theta_K = sqrtm(Phi_X.T @ Phi_X) @ theta
             else:
                 theta_K = sqrtm(pairwise_kernels(self.support_vectors_, self.support_vectors_, metric = self.kernel, gamma = self.kernel_gamma)) @ theta
@@ -1304,7 +1310,7 @@ class WassersteinDROsatisficing(BaseLinearDRO):
                 return cp.maximum(cp.norm(self.cost_inv_transform @ theta_K, dual_norm), 1 / self.kappa)
             
 
-    def fit_oracle(self, X, y):
+    def fit_oracle(self, X, y, design_matrix=None):
         """
         Depreciated, find the optimal that given the ambiguity constraint.
 
@@ -1339,6 +1345,14 @@ class WassersteinDROsatisficing(BaseLinearDRO):
                 self.cost_inv_transform = np.eye(self.n_components)
         else:
             theta = cp.Variable(self.input_dim)
+
+        if self.kernel != 'linear' and self.n_components is not None and design_matrix is None:
+            self.nystroem_transformer = Nystroem(
+                kernel=self.kernel,
+                gamma=self.kernel_gamma,
+                n_components=self.n_components,
+            )
+            design_matrix = self.nystroem_transformer.fit_transform(X)
             
         if self.fit_intercept == True:
             b = cp.Variable()
@@ -1349,18 +1363,18 @@ class WassersteinDROsatisficing(BaseLinearDRO):
         lamb_da = cp.Variable()
         cons = [lamb_da >= self._penalization(theta)]
         if self.model_type == 'ols':
-            final_loss = cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size + math.sqrt(self.eps) * lamb_da
+            final_loss = cp.sum(self._cvx_loss(X, y, theta, b, design_matrix=design_matrix)) / sample_size + math.sqrt(self.eps) * lamb_da
 
         else:
             if self.model_type in ['svm', 'logistic']:
                 s = cp.Variable(sample_size)
-                cons += [s >= self._cvx_loss(X, y, theta, b)]
+                cons += [s >= self._cvx_loss(X, y, theta, b, design_matrix=design_matrix)]
                 if self.kappa != 'inf':
-                    cons += [s >= self._cvx_loss(X, -y, theta, b) - lamb_da * self.kappa]
+                    cons += [s >= self._cvx_loss(X, -y, theta, b, design_matrix=design_matrix) - lamb_da * self.kappa]
                 final_loss = cp.sum(s) / sample_size + self.eps * lamb_da
             else:
                 # model type == 'lad' for general p.
-                final_loss = cp.sum(self._cvx_loss(X, y, theta, b)) / sample_size + self.eps * lamb_da
+                final_loss = cp.sum(self._cvx_loss(X, y, theta, b, design_matrix=design_matrix)) / sample_size + self.eps * lamb_da
 
         problem = cp.Problem(cp.Minimize(final_loss), cons)
 

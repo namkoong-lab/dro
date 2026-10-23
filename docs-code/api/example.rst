@@ -7,7 +7,7 @@ Example
 
    Linear f-Divergence DRO <notebooks/f_dro_tutorial>
    Linear Wasserstein DRO <notebooks/WassersteinDRO_tutorial>
-   Linear DRO with Hybrid Distances <notebooks/mixed_dro_tutorial>
+   Hybrid-distance DRO for Linear Models <notebooks/mixed_dro_tutorial>
    Kernel DRO <notebooks/kernel_dro_tutorial>
    Group DRO (Linear and NN) <notebooks/groupdro_tutorial>
    NN Sinkhorn DRO <notebooks/sinkhorn-nn>

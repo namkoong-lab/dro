@@ -89,7 +89,7 @@ Regression:
 * Least absolute deviation (``lad``): $\ell(f(X), Y) = |Y - f(X)|$.
 * Ordinary least squares (``ols``): $\ell(f(X), Y) = (Y - f(X))^2$.
 
-The linear models use built-in ``cvxpy`` solvers; our tests use ``MOSEK``.
+The convex linear models use ``CLARABEL`` through ``cvxpy`` by default. You can select another installed solver, such as ``SCS`` or the licensed ``MOSEK``, when it supports the model's formulation.
 
 #### Kernel Setup
 
@@ -99,7 +99,7 @@ The kernel interface follows scikit-learn:
 
 * ``metric``: ``additive_chi2``, ``chi2``, ``linear``, ``poly``, ``polynomial``, or ``rbf``.
 * ``kernel_gamma``: a positive gamma value, ``scale``, or ``auto``.
-* ``n_components``: ``None`` for exact fitting, or an integer for a Nystroem approximation when $n$ is large.
+* ``n_components``: ``None`` for the full kernel representation, or an integer for a Nystroem approximation when $n$ is large.
 
 #### Supported DRO Methods
 
