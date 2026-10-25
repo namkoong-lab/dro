@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Bayesian DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Bayesian DRO &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -17,7 +17,7 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/apis/bayesian_dro.html" />
+    <link rel="canonical" href="https://python-dro.org/api/apis/bayesian_dro.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Neural Network DRO Methods" href="../nn_dro.html" />
@@ -152,7 +152,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -304,12 +304,12 @@ recent successful fit, or <code class="docutils literal notranslate"><span class
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>)</p></li>
-<li><p><strong>model_type</strong> (<em>str</em>)</p></li>
-<li><p><strong>fit_intercept</strong> (<em>bool</em>)</p></li>
-<li><p><strong>solver</strong> (<em>str</em>)</p></li>
-<li><p><strong>eps</strong> (<em>float</em>)</p></li>
-<li><p><strong>distance_type</strong> (<em>str</em>)</p></li>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>distance_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -318,12 +318,12 @@ recent successful fit, or <code class="docutils literal notranslate"><span class
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Dimensionality of the input features.</p></li>
-<li><p><strong>model_type</strong> (<em>str</em>) – Type of base model. Supported values: ‘svm’, ‘logistic’, ‘ols’, ‘lad’(‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression with L2-loss, ‘lad’ for Linear Regression with L1-loss). Defaults to ‘svm’.</p></li>
-<li><p><strong>fit_intercept</strong> (<em>bool</em>) – Whether to fit an intercept term. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered). Defaults to True.</p></li>
-<li><p><strong>solver</strong> (<em>str</em>) – Installed CVXPY solver. Defaults to ‘CLARABEL’.</p></li>
-<li><p><strong>eps</strong> (<em>float</em>) – Robustness parameter for KL-divergence ambiguity set. A higher value increases robustness. Defaults to 0.0 (non-robust).</p></li>
-<li><p><strong>distance_type</strong> (<em>str</em>) – Distance type in DRO model, default = ‘KL’. Also support ‘chi2’. Default to ‘KL’.</p></li>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Dimensionality of the input features.</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Type of base model. Supported values: ‘svm’, ‘logistic’, ‘ols’, ‘lad’(‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression with L2-loss, ‘lad’ for Linear Regression with L1-loss). Defaults to ‘svm’.</p></li>
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>) – Whether to fit an intercept term. If set to False, no intercept will be used in calculations (i.e. data is expected to be centered). Defaults to True.</p></li>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Installed CVXPY solver. Defaults to ‘CLARABEL’.</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Robustness parameter for KL-divergence ambiguity set. A higher value increases robustness. Defaults to 0.0 (non-robust).</p></li>
+<li><p><strong>distance_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Distance type in DRO model, default = ‘KL’. Also support ‘chi2’. Default to ‘KL’.</p></li>
 </ul>
 </dd>
 </dl>
@@ -335,7 +335,7 @@ recent successful fit, or <code class="docutils literal notranslate"><span class
 or other algorithm settings during runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing configuration key-value pairs to update. Supported keys include:</p>
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing configuration key-value pairs to update. Supported keys include:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: Robustness parameter (non-negative float)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">solver</span></code>: Optimization solver (e.g., ‘CLARABEL’, ‘SCS’)</p></li>
@@ -348,11 +348,11 @@ or other algorithm settings during runtime.</p>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the configuration contains invalid keys, unsupported values, 
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the configuration contains invalid keys, unsupported values, 
 or negative values for parameters like <code class="docutils literal notranslate"><span class="pre">eps</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -363,7 +363,7 @@ or negative values for parameters like <code class="docutils literal notranslate
 </ul>
 </div>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"eps"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"distance_type"</span><span class="p">:</span> <span class="s2">"chi2"</span><span class="p">,</span> <span class="s2">"solver"</span><span class="p">:</span> <span class="s2">"CLARABEL"</span><span class="p">})</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;eps&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;distance_type&quot;</span><span class="p">:</span> <span class="s2">&quot;chi2&quot;</span><span class="p">,</span> <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="s2">&quot;CLARABEL&quot;</span><span class="p">})</span>
 </pre></div>
 </div>
 </dd>
@@ -378,8 +378,8 @@ or negative values for parameters like <code class="docutils literal notranslate
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Original feature matrix of shape <cite>(sample_size, input_dim)</cite>.</p></li>
-<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Original target values of shape <cite>(sample_size,)</cite> or <cite>(sample_size, n_targets)</cite>.</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Original feature matrix of shape <cite>(sample_size, input_dim)</cite>.</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Original target values of shape <cite>(sample_size,)</cite> or <cite>(sample_size, n_targets)</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -391,10 +391,10 @@ or negative values for parameters like <code class="docutils literal notranslate
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[numpy.ndarray, numpy.ndarray]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)">numpy.ndarray</a>]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If <cite>X</cite> and <cite>y</cite> have inconsistent sample sizes (first dimension mismatch).</p></li>
 <li><p>If <cite>posterior_param_num</cite> is not initialized (e.g., model not yet fitted).</p></li>
 </ul>
@@ -419,8 +419,8 @@ or negative values for parameters like <code class="docutils literal notranslate
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Feature matrix of shape <cite>(original_sample_size, input_dim)</cite>.</p></li>
-<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Target values of shape <cite>(original_sample_size,)</cite> for classification or <cite>(original_sample_size, n_targets)</cite> for regression.</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Feature matrix of shape <cite>(original_sample_size, input_dim)</cite>.</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Target values of shape <cite>(original_sample_size,)</cite> for classification or <cite>(original_sample_size, n_targets)</cite> for regression.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -432,12 +432,12 @@ or negative values for parameters like <code class="docutils literal notranslate
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, Union[List[float], float]]</p>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, Union[List[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>], <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>]]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>BayesianDROError</strong> – If the optimization solver fails to converge.</p></li>
-<li><p><strong>ValueError</strong> – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul>
 <li><p>If <cite>X</cite> and <cite>y</cite> have inconsistent sample sizes.</p></li>
 <li><p>If resampled data dimensions are incompatible with <cite>posterior_param_num</cite>.</p></li>
 </ul>
@@ -464,8 +464,8 @@ where K = <cite>posterior_param_num</cite>, eps = <cite>self.eps</cite></p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">])</span>  <span class="c1"># e.g., [0.5, -1.2, ..., 0.8]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"b"</span><span class="p">])</span>      <span class="c1"># e.g., 0.3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">])</span>  <span class="c1"># e.g., [0.5, -1.2, ..., 0.8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">])</span>      <span class="c1"># e.g., 0.3</span>
 </pre></div>
 </div>
 </dd>

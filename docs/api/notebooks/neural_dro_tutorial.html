@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Other Neural DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Other Neural DRO &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
-    <script src="../../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -20,7 +20,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/neural_dro_tutorial.html" />
+    <link rel="canonical" href="https://python-dro.org/api/notebooks/neural_dro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Tree DRO" href="tree_dro_tutorial.html" />
@@ -155,7 +155,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -313,14 +313,14 @@
 <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
 
 <span class="n">fit_options</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"train_ratio"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
-    <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
-    <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="s2">"epochs"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="s2">"verbose"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;train_ratio&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+    <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
+    <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"X shape: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">; class counts: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;X shape: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">; class counts: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -344,14 +344,14 @@ X shape: (200, 10); class counts: [139  61]
 <span class="n">chi2_model</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
     <span class="n">size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">chi2_metrics</span> <span class="o">=</span> <span class="n">chi2_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_options</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Chi-square DRO:"</span><span class="p">,</span> <span class="n">chi2_metrics</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Chi-square DRO:&quot;</span><span class="p">,</span> <span class="n">chi2_metrics</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -375,14 +375,14 @@ Chi-square DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.1489361702127
 <span class="n">cvar_model</span> <span class="o">=</span> <span class="n">CVaRNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
     <span class="n">size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">cvar_metrics</span> <span class="o">=</span> <span class="n">cvar_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_options</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"CVaR-DRO:"</span><span class="p">,</span> <span class="n">cvar_metrics</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CVaR-DRO:&quot;</span><span class="p">,</span> <span class="n">cvar_metrics</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -406,16 +406,16 @@ CVaR-DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.14893617021276595}
 <span class="n">wasserstein_model</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
     <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">adversarial_step_size</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
-    <span class="n">adversarial_norm</span><span class="o">=</span><span class="s2">"l2"</span><span class="p">,</span>
-    <span class="n">adversarial_method</span><span class="o">=</span><span class="s2">"PGD"</span><span class="p">,</span>
+    <span class="n">adversarial_norm</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
+    <span class="n">adversarial_method</span><span class="o">=</span><span class="s2">&quot;PGD&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">wasserstein_metrics</span> <span class="o">=</span> <span class="n">wasserstein_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_options</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Wasserstein DRO:"</span><span class="p">,</span> <span class="n">wasserstein_metrics</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wasserstein DRO:&quot;</span><span class="p">,</span> <span class="n">wasserstein_metrics</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -451,14 +451,14 @@ Wasserstein DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.148936170212
 
 <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">custom_wasserstein_model</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
-    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span>
     <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">adversarial_step_size</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
-    <span class="n">adversarial_norm</span><span class="o">=</span><span class="s2">"l2"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">),</span>
+    <span class="n">adversarial_norm</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 <span class="n">custom_network</span> <span class="o">=</span> <span class="n">ResidualTabularClassifier</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">custom_wasserstein_model</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">custom_network</span><span class="p">,</span>
-    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">),</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 
 <span class="n">features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -475,8 +475,8 @@ Wasserstein DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.148936170212
     <span class="n">train_loader</span><span class="o">=</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
     <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Custom WNNDRO:"</span><span class="p">,</span> <span class="n">custom_metrics</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Learning rate after training:"</span><span class="p">,</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">get_last_lr</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Custom WNNDRO:&quot;</span><span class="p">,</span> <span class="n">custom_metrics</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Learning rate after training:&quot;</span><span class="p">,</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">get_last_lr</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -502,22 +502,22 @@ Learning rate after training: 0.01743392200500001
 <span class="n">holistic_model</span> <span class="o">=</span> <span class="n">HRNNDRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">r</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
     <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-    <span class="n">learning_approach</span><span class="o">=</span><span class="s2">"HD"</span><span class="p">,</span>
+    <span class="n">learning_approach</span><span class="o">=</span><span class="s2">&quot;HD&quot;</span><span class="p">,</span>
     <span class="n">adversarial_params</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">"steps"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">"step_size"</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
-        <span class="s2">"norm"</span><span class="p">:</span> <span class="s2">"l2"</span><span class="p">,</span>
-        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"PGD"</span><span class="p">,</span>
+        <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;step_size&quot;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
+        <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="s2">&quot;l2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;PGD&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="n">train_batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">holistic_metrics</span> <span class="o">=</span> <span class="n">holistic_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_options</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Holistic Robust DRO:"</span><span class="p">,</span> <span class="n">holistic_metrics</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Holistic Robust DRO:&quot;</span><span class="p">,</span> <span class="n">holistic_metrics</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -538,14 +538,14 @@ Holistic Robust DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.14893617
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"Chi-square DRO"</span><span class="p">:</span> <span class="n">chi2_metrics</span><span class="p">,</span>
-    <span class="s2">"CVaR-DRO"</span><span class="p">:</span> <span class="n">cvar_metrics</span><span class="p">,</span>
-    <span class="s2">"Wasserstein DRO"</span><span class="p">:</span> <span class="n">wasserstein_metrics</span><span class="p">,</span>
-    <span class="s2">"Holistic Robust DRO"</span><span class="p">:</span> <span class="n">holistic_metrics</span><span class="p">,</span>
+    <span class="s2">&quot;Chi-square DRO&quot;</span><span class="p">:</span> <span class="n">chi2_metrics</span><span class="p">,</span>
+    <span class="s2">&quot;CVaR-DRO&quot;</span><span class="p">:</span> <span class="n">cvar_metrics</span><span class="p">,</span>
+    <span class="s2">&quot;Wasserstein DRO&quot;</span><span class="p">:</span> <span class="n">wasserstein_metrics</span><span class="p">,</span>
+    <span class="s2">&quot;Holistic Robust DRO&quot;</span><span class="p">:</span> <span class="n">holistic_metrics</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">metrics</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">method</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> accuracy=</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'acc'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, f1=</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'f1'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> accuracy=</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, f1=</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -575,19 +575,19 @@ metrics are illustrative rather than a robustness guarantee.</p>
 <span class="n">toy_fit_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fit_options</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span>
-    <span class="p">(</span><span class="s2">"L2 PGD"</span><span class="p">,</span> <span class="s2">"l2"</span><span class="p">,</span> <span class="s2">"PGD"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Linf PGD"</span><span class="p">,</span> <span class="s2">"l-inf"</span><span class="p">,</span> <span class="s2">"PGD"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Linf FGSM"</span><span class="p">,</span> <span class="s2">"l-inf"</span><span class="p">,</span> <span class="s2">"FGSM"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;L2 PGD&quot;</span><span class="p">,</span> <span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="s2">&quot;PGD&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Linf PGD&quot;</span><span class="p">,</span> <span class="s2">&quot;l-inf&quot;</span><span class="p">,</span> <span class="s2">&quot;PGD&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Linf FGSM&quot;</span><span class="p">,</span> <span class="s2">&quot;l-inf&quot;</span><span class="p">,</span> <span class="s2">&quot;FGSM&quot;</span><span class="p">),</span>
 <span class="p">):</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
     <span class="n">toy_model</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
-        <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span>
+        <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span>
         <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">adversarial_norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">adversarial_method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
         <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">adversarial_step_size</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">toy_metrics</span> <span class="o">=</span> <span class="n">toy_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">toy_X</span><span class="p">,</span> <span class="n">toy_y</span><span class="p">,</span> <span class="o">**</span><span class="n">toy_fit_options</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: robust training loss=</span><span class="si">{</span><span class="n">toy_model</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, "</span>
-          <span class="sa">f</span><span class="s2">"validation accuracy=</span><span class="si">{</span><span class="n">toy_metrics</span><span class="p">[</span><span class="s1">'acc'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: robust training loss=</span><span class="si">{</span><span class="n">toy_model</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;validation accuracy=</span><span class="si">{</span><span class="n">toy_metrics</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

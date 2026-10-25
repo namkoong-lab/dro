@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>About &#8212; dro 0.4.2 documentation</title>
+    <title>About &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <script src="../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -19,7 +19,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/about.html" />
+    <link rel="canonical" href="https://python-dro.org/api/about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Installation Guide" href="install.html" />
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -271,12 +271,20 @@
 <span id="id1"></span><h1>About<a class="headerlink" href="#about" title="Link to this heading">¶</a></h1>
 <a class="reference internal image-reference" href="../_images/logo-new.png"><img alt="../_images/logo-new.png" class="align-center" src="../_images/logo-new.png" style="width: 800px;" />
 </a>
-<p><cite>dro</cite> is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code>. The <cite>dro</cite> package supports different kinds of distance metrics <span class="math notranslate nohighlight">\(d(\cdot,\cdot)\)</span> as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, tree-ensembles, neural networks…). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers.</p>
+<p><code class="docutils literal notranslate"><span class="pre">dro</span></code> 0.4.3 is a Python package for distributionally robust optimization
+in supervised learning. It supports linear and kernel models (including SVM,
+logistic regression, and linear regression), neural networks, and tree ensembles
+with several choices of ambiguity set. It also includes synthetic data
+generators, runnable examples, and tools for model evaluation.</p>
+<p>The convex linear formulations use <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> with <code class="docutils literal notranslate"><span class="pre">CLARABEL</span></code> by default.
+Commercial solvers such as <code class="docutils literal notranslate"><span class="pre">MOSEK</span></code> are optional. See the
+<a class="reference internal" href="install.html"><span class="doc">installation guide</span></a> for solver selection and the
+<a class="reference internal" href="tutorials.html"><span class="doc">tutorials</span></a> for formulations and usage.</p>
 <p>Without specified, our DRO model is to solve the following optimization problem:</p>
 <div class="math notranslate nohighlight">
 \[\min_{\theta} \max_{P: P \in U} E_{(X,Y) \sim P}[\ell(\theta;(X, Y))],\]</div>
 <p>where <span class="math notranslate nohighlight">\(U\)</span> is the so-called ambiguity set and typically of the form <span class="math notranslate nohighlight">\(U = \{P: d(P, \hat P_n) \leq \epsilon\}\)</span> and <span class="math notranslate nohighlight">\(\hat P_n := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}\)</span> is the empirical distribution of training samples <span class="math notranslate nohighlight">\(\{(X_i, Y_i)\}_{i = 1}^n\)</span>. And <span class="math notranslate nohighlight">\(\epsilon\)</span> is the hyperparameter.</p>
-<p>As for the current release, <cite>dro</cite> supports:</p>
+<p>In release 0.4.3, <code class="docutils literal notranslate"><span class="pre">dro</span></code> supports:</p>
 <section id="synthetic-data-generation">
 <h2>Synthetic data generation<a class="headerlink" href="#synthetic-data-generation" title="Link to this heading">¶</a></h2>
 <table class="docutils align-default">

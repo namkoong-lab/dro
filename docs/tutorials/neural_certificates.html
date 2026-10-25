@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Neural DRO Robustness Certificates &#8212; dro 0.4.2 documentation</title>
+    <title>Neural DRO Robustness Certificates &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <script src="../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -19,7 +19,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/neural_certificates.html" />
+    <link rel="canonical" href="https://python-dro.org/tutorials/neural_certificates.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Tree DRO" href="tree_model.html" />
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -628,20 +628,20 @@ It returns <code class="docutils literal notranslate"><span class="pre">None</sp
 <span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">WNNDRO</span><span class="p">,</span> <span class="n">Chi2NNDRO</span><span class="p">,</span> <span class="n">CVaRNNDRO</span>
 
 <span class="c1"># Analytic Wasserstein example: f(x)=x, y=1, x=0, squared cost,</span>
-<span class="c1"># and penalty lambda=2. The global penalized maximizer is x'=-1.</span>
-<span class="n">w</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s2">"regression"</span><span class="p">,</span>
-           <span class="n">model_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span> <span class="n">robust_objective</span><span class="o">=</span><span class="s2">"transport_penalty"</span><span class="p">,</span>
-           <span class="n">gamma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">))</span>
+<span class="c1"># and penalty lambda=2. The global penalized maximizer is x&#39;=-1.</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span>
+           <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="n">robust_objective</span><span class="o">=</span><span class="s2">&quot;transport_penalty&quot;</span><span class="p">,</span>
+           <span class="n">gamma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">))</span>
 <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
     <span class="n">w</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
     <span class="n">w</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_adv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">]]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">]])</span>
-    <span class="n">adv_losses</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x_adv</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span>
+    <span class="n">adv_losses</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x_adv</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
     <span class="n">costs</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_adv</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">square</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># Here g(x')=(x'-1)^2-2(x')^2 has global maximum at x'=-1,</span>
+<span class="c1"># Here g(x&#39;)=(x&#39;-1)^2-2(x&#39;)^2 has global maximum at x&#39;=-1,</span>
 <span class="c1"># so the verified inner error bound is zero.</span>
 <span class="n">w_cert</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">certify_radius</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">adv_losses</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">certified_inner_errors</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">w_cert</span><span class="p">[</span><span class="s2">"epsilon_cert"</span><span class="p">],</span> <span class="n">w_cert</span><span class="p">[</span><span class="s2">"loss_bound"</span><span class="p">])</span>  <span class="c1"># 1.0, 4.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">w_cert</span><span class="p">[</span><span class="s2">&quot;epsilon_cert&quot;</span><span class="p">],</span> <span class="n">w_cert</span><span class="p">[</span><span class="s2">&quot;loss_bound&quot;</span><span class="p">])</span>  <span class="c1"># 1.0, 4.0</span>
 
 <span class="c1"># Illustrative full-data losses and feasible adversarial weights for a</span>
 <span class="c1"># frozen chi-square or CVaR network. Replace these with values from your</span>
@@ -650,11 +650,11 @@ It returns <code class="docutils literal notranslate"><span class="pre">None</sp
 <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
 <span class="n">chi2</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">chi2_cert</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">certify_radius</span><span class="p">(</span><span class="n">losses</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">chi2_cert</span><span class="p">[</span><span class="s2">"epsilon_cert"</span><span class="p">])</span>  <span class="c1"># 0.0625</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">chi2_cert</span><span class="p">[</span><span class="s2">&quot;epsilon_cert&quot;</span><span class="p">])</span>  <span class="c1"># 0.0625</span>
 
 <span class="n">cvar</span> <span class="o">=</span> <span class="n">CVaRNNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">cvar_cert</span> <span class="o">=</span> <span class="n">cvar</span><span class="o">.</span><span class="n">certify_radius</span><span class="p">(</span><span class="n">losses</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cvar_cert</span><span class="p">[</span><span class="s2">"alpha_cert"</span><span class="p">])</span>  <span class="c1"># 0.666666...</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cvar_cert</span><span class="p">[</span><span class="s2">&quot;alpha_cert&quot;</span><span class="p">])</span>  <span class="c1"># 0.666666...</span>
 </pre></div>
 </div>
 <p>For a general <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> run, a finite number of attack steps does not

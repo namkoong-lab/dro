@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Personalization &#8212; dro 0.4.2 documentation</title>
+    <title>Personalization &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
-    <script src="../../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -20,7 +20,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/personalize_loss_tutorial.html" />
+    <link rel="canonical" href="https://python-dro.org/api/notebooks/personalize_loss_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="API" href="../api.html" />
@@ -155,7 +155,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -528,7 +528,7 @@
 </section>
 <section id="Neural-Wasserstein-DRO">
 <h3>Neural Wasserstein DRO<a class="headerlink" href="#Neural-Wasserstein-DRO" title="Link to this heading">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">WNNDRO._loss</span></code> must return the per-sample loss vector. Its existing criterion handles adversarial input generation and then averages these personalized losses. The rest of the training API is unchanged.</p>
+<p>In.<code class="docutils literal notranslate"><span class="pre">WNNDRO._loss</span></code>, we need to return the per-sample loss vector. Its existing criterion handles adversarial input generation and then averages these personalized losses.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -557,7 +557,8 @@
 </pre></div>
 </div>
 </div>
-<p>Call <code class="docutils literal notranslate"><span class="pre">fdro_nn.fit(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">wdro_nn.fit(...)</span></code> after binding the hooks. The Wasserstein regression model above uses <code class="docutils literal notranslate"><span class="pre">robust_objective='transport_penalty'</span></code>, so both its inner perturbation search and outer objective use the custom loss with continuous targets. <code class="docutils literal notranslate"><span class="pre">gamma</span></code> penalizes squared feature transport; it is not a norm-ball radius.</p>
+<p>After binding the new model, we call <code class="docutils literal notranslate"><span class="pre">fdro_nn.fit(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">wdro_nn.fit(...)</span></code>.</p>
+<p>The Wasserstein regression model above uses <code class="docutils literal notranslate"><span class="pre">robust_objective='transport_penalty'</span></code>, so both its inner perturbation search and outer objective use the custom loss with continuous targets. <code class="docutils literal notranslate"><span class="pre">gamma</span></code> penalizes squared feature transport; it is not a norm-ball radius.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>

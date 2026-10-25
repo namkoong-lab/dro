@@ -11,7 +11,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "This notebook gives linear-model examples of hybrid-distance DRO: Sinkhorn DRO, MOT-DRO, Outlier-Robust WDRO, and Holistic Robust DRO."
+    "This notebook gives fitting examples of hybrid-distance DRO on the  linear model: Sinkhorn DRO, MOT-DRO, Outlier-Robust WDRO, and Holistic Robust DRO."
    ]
   },
   {
@@ -77,12 +77,24 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "execute_result",
-     "execution_count": 3,
      "data": {
-      "text/plain": "{'theta': [76.21457174414209,\n  53.29326621232062,\n  5.2469449389300955,\n  52.46352965500506,\n  71.73948099284381,\n  1.2142872834616918,\n  63.723358742618025,\n  14.065127722489464,\n  2.9976925582270986,\n  44.93590563802071],\n 'b': array(1.29106352)}"
+      "text/plain": [
+       "{'theta': [76.21457174414209,\n",
+       "  53.29326621232062,\n",
+       "  5.2469449389300955,\n",
+       "  52.46352965500506,\n",
+       "  71.73948099284381,\n",
+       "  1.2142872834616918,\n",
+       "  63.723358742618025,\n",
+       "  14.065127722489464,\n",
+       "  2.9976925582270986,\n",
+       "  44.93590563802071],\n",
+       " 'b': array(1.29106352)}"
+      ]
      },
-     "metadata": {}
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
     }
    ],
    "source": [

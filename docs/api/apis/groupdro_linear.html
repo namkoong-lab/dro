@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Group DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Group DRO &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -19,7 +19,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/apis/groupdro_linear.html" />
+    <link rel="canonical" href="https://python-dro.org/api/apis/groupdro_linear.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="KL DRO" href="kldro_linear.html" />
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -312,13 +312,13 @@ the other linear models in this package.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Number of columns in the input feature matrix.</p></li>
-<li><p><strong>group_idx</strong> (<em>int</em>) – Zero-based index of the categorical group feature.</p></li>
-<li><p><strong>model_type</strong> (<em>str</em>) – Loss/model type: <code class="docutils literal notranslate"><span class="pre">'svm'</span></code>, <code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ols'</span></code>,
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Number of columns in the input feature matrix.</p></li>
+<li><p><strong>group_idx</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Zero-based index of the categorical group feature.</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Loss/model type: <code class="docutils literal notranslate"><span class="pre">'svm'</span></code>, <code class="docutils literal notranslate"><span class="pre">'logistic'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ols'</span></code>,
 or <code class="docutils literal notranslate"><span class="pre">'lad'</span></code>.</p></li>
-<li><p><strong>fit_intercept</strong> (<em>bool</em>) – Whether to fit an intercept.</p></li>
-<li><p><strong>solver</strong> (<em>str</em>) – Installed CVXPY solver used for optimization.</p></li>
-<li><p><strong>kernel</strong> (<em>str</em>) – Kernel accepted by
+<li><p><strong>fit_intercept</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>) – Whether to fit an intercept.</p></li>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Installed CVXPY solver used for optimization.</p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Kernel accepted by
 <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a>.</p></li>
 <li><p><strong>input_dim</strong> – Dimensionality of the input features.</p></li>
 <li><p><strong>model_type</strong> – Model type indicator (‘svm’ for SVM, ‘logistic’ for Logistic Regression, ‘ols’ for Linear Regression for OLS, ‘lad’ for Linear Regression for LAD), default = ‘svm’.</p></li>
@@ -343,12 +343,12 @@ the fitted solution.</p></li>
 <dd><p>Update the feature used to define groups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary.  <code class="docutils literal notranslate"><span class="pre">group_idx</span></code> is the only
+<dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary.  <code class="docutils literal notranslate"><span class="pre">group_idx</span></code> is the only
 Group DRO-specific key; unrelated keys are ignored consistently
 with the other linear model implementations.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -360,9 +360,9 @@ with the other linear model implementations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – Numeric feature matrix of shape <code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">input_dim)</span></code>.
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Numeric feature matrix of shape <code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">input_dim)</span></code>.
 Column <code class="docutils literal notranslate"><span class="pre">group_idx</span></code> supplies the finite group categories.</p></li>
-<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – Binary labels in <code class="docutils literal notranslate"><span class="pre">{-1,</span> <span class="pre">+1}</span></code> for classification, or numeric
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Binary labels in <code class="docutils literal notranslate"><span class="pre">{-1,</span> <span class="pre">+1}</span></code> for classification, or numeric
 targets for regression.</p></li>
 </ul>
 </dd>
@@ -371,7 +371,7 @@ targets for regression.</p></li>
 <code class="docutils literal notranslate"><span class="pre">group_losses</span></code> align with <code class="docutils literal notranslate"><span class="pre">group_values</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, Any]</p>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>

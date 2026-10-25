@@ -107,12 +107,14 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "execute_result",
-     "execution_count": 2,
      "data": {
-      "text/plain": "{'theta': [-0.47101600668852506, 0.9420320649788056], 'b': array(0.94203196)}"
+      "text/plain": [
+       "{'theta': [-0.47101600668852506, 0.9420320649788056], 'b': array(0.94203196)}"
+      ]
      },
-     "metadata": {}
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
     }
    ],
    "source": [
@@ -185,12 +187,14 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "execute_result",
-     "execution_count": 4,
      "data": {
-      "text/plain": "{'theta': [-0.4999999974041001, 3.802290229295084e-14], 'b': array(2.)}"
+      "text/plain": [
+       "{'theta': [-0.4999999974041001, 3.802290229295084e-14], 'b': array(2.)}"
+      ]
      },
-     "metadata": {}
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
     }
    ],
    "source": [
@@ -310,7 +314,7 @@
    "source": [
     "### Neural Wasserstein DRO\n",
     "\n",
-    "`WNNDRO._loss` must return the per-sample loss vector. Its existing criterion handles adversarial input generation and then averages these personalized losses. The rest of the training API is unchanged."
+    "In.`WNNDRO._loss`, we need to return the per-sample loss vector. Its existing criterion handles adversarial input generation and then averages these personalized losses. "
    ]
   },
   {
@@ -348,7 +352,9 @@
    "id": "d0fbf716",
    "metadata": {},
    "source": [
-    "Call `fdro_nn.fit(...)` or `wdro_nn.fit(...)` after binding the hooks. The Wasserstein regression model above uses `robust_objective='transport_penalty'`, so both its inner perturbation search and outer objective use the custom loss with continuous targets. `gamma` penalizes squared feature transport; it is not a norm-ball radius."
+    "After binding the new model, we call `fdro_nn.fit(...)` or `wdro_nn.fit(...)`. \n",
+    "\n",
+    "The Wasserstein regression model above uses `robust_objective='transport_penalty'`, so both its inner perturbation search and outer objective use the custom loss with continuous targets. `gamma` penalizes squared feature transport; it is not a norm-ball radius."
    ]
   },
   {
@@ -358,8 +364,8 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "f-DRO robust objective: 1.0904502868652344\n",
       "WDRO individual losses: [0.59999996 0.20000005 1.5       ]\n",
@@ -398,8 +404,8 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Transport-penalty objective: 3.6209213733673096\n"
      ]
@@ -487,12 +493,17 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "execute_result",
-     "execution_count": 11,
      "data": {
-      "text/plain": "{'chi-squared': {'metrics': {'acc': 0.5, 'f1': 0.3333333333333333},\n  'final_learning_rate': 0.03200000000000001},\n 'CVaR': {'metrics': {'acc': 0.5, 'f1': 0.3333333333333333},\n  'final_learning_rate': 0.03200000000000001}}"
+      "text/plain": [
+       "{'chi-squared': {'metrics': {'acc': 0.5, 'f1': 0.3333333333333333},\n",
+       "  'final_learning_rate': 0.03200000000000001},\n",
+       " 'CVaR': {'metrics': {'acc': 0.5, 'f1': 0.3333333333333333},\n",
+       "  'final_learning_rate': 0.03200000000000001}}"
+      ]
      },
-     "metadata": {}
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
     }
    ],
    "source": [
@@ -571,8 +582,8 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "HR-DRO validation: {'acc': 0.75, 'f1': 0.7333333333333334}\n",
       "Final learning rate: 0.0064\n"
@@ -629,8 +640,8 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Losses at probability 0.5: [0.69314718 2.07944154]\n",
       "Test accuracy: 0.933\n",

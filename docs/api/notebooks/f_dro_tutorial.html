@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Linear f-divergence DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Linear f-divergence DRO &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
-    <script src="../../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -20,7 +20,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/f_dro_tutorial.html" />
+    <link rel="canonical" href="https://python-dro.org/api/notebooks/f_dro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Linear Wasserstein DRO" href="WassersteinDRO_tutorial.html" />
@@ -155,7 +155,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -307,8 +307,7 @@
 </div>
 <section id="Standard-f-divergence-DRO">
 <h2>Standard f-divergence DRO<a class="headerlink" href="#Standard-f-divergence-DRO" title="Link to this heading">¶</a></h2>
-<p>We include chi2, cvar, kl, tv distance, which corresponds to the standard definition of (generalized) f-divergence.</p>
-<p>The following steps including model fitting, and worst-case illustrations.</p>
+<p>In the following, we fit each DRO model, and provide corresponding worst-case illustrations.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -319,10 +318,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.kl_dro</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 
-<span class="n">clf_model_chi2</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'logistic'</span><span class="p">)</span>
-<span class="n">clf_model_cvar</span> <span class="o">=</span> <span class="n">CVaRDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'logistic'</span><span class="p">)</span>
-<span class="n">clf_model_kl</span> <span class="o">=</span> <span class="n">KLDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'logistic'</span><span class="p">)</span>
-<span class="n">clf_model_tv</span> <span class="o">=</span> <span class="n">TVDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'logistic'</span><span class="p">)</span>
+<span class="n">clf_model_chi2</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
+<span class="n">clf_model_cvar</span> <span class="o">=</span> <span class="n">CVaRDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
+<span class="n">clf_model_kl</span> <span class="o">=</span> <span class="n">KLDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
+<span class="n">clf_model_tv</span> <span class="o">=</span> <span class="n">TVDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -331,13 +330,13 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## model fitting</span>
-<span class="n">clf_model_chi2</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">clf_model_chi2</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">clf_model_chi2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
-<span class="n">clf_model_kl</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">clf_model_kl</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">clf_model_kl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
-<span class="n">clf_model_tv</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">})</span>
+<span class="n">clf_model_tv</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">clf_model_tv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
-<span class="n">clf_model_cvar</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'alpha'</span><span class="p">:</span><span class="mf">0.8</span><span class="p">})</span>
+<span class="n">clf_model_cvar</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="mf">0.8</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">clf_model_cvar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -359,16 +358,16 @@
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># worst case distribution for each method</span>
 <span class="n">worst_chi2</span> <span class="o">=</span> <span class="n">clf_model_chi2</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_chi2</span><span class="p">[</span><span class="s1">'sample_pts'</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_chi2</span><span class="p">[</span><span class="s1">'sample_pts'</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_chi2</span><span class="p">[</span><span class="s1">'weight'</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">'worst-chi2'</span><span class="p">)</span>
+<span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_chi2</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_chi2</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_chi2</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;worst-chi2&#39;</span><span class="p">)</span>
 
 <span class="n">worst_kl</span> <span class="o">=</span> <span class="n">clf_model_kl</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_kl</span><span class="p">[</span><span class="s1">'sample_pts'</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_kl</span><span class="p">[</span><span class="s1">'sample_pts'</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_kl</span><span class="p">[</span><span class="s1">'weight'</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">'worst-kl'</span><span class="p">)</span>
+<span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_kl</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_kl</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_kl</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;worst-kl&#39;</span><span class="p">)</span>
 
 <span class="n">worst_tv</span> <span class="o">=</span> <span class="n">clf_model_tv</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_tv</span><span class="p">[</span><span class="s1">'sample_pts'</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_tv</span><span class="p">[</span><span class="s1">'sample_pts'</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_tv</span><span class="p">[</span><span class="s1">'weight'</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">'worst-tv'</span><span class="p">)</span>
+<span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_tv</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_tv</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_tv</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;worst-tv&#39;</span><span class="p">)</span>
 
 <span class="n">worst_cvar</span> <span class="o">=</span> <span class="n">clf_model_cvar</span><span class="o">.</span><span class="n">worst_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_cvar</span><span class="p">[</span><span class="s1">'sample_pts'</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_cvar</span><span class="p">[</span><span class="s1">'sample_pts'</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_cvar</span><span class="p">[</span><span class="s1">'weight'</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">'worst-cvar'</span><span class="p">)</span>
+<span class="n">draw_classification</span><span class="p">(</span><span class="n">worst_cvar</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">worst_cvar</span><span class="p">[</span><span class="s1">&#39;sample_pts&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">worst_cvar</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;worst-cvar&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -401,8 +400,8 @@
 </div>
 </div>
 </section>
-<section id="data-driven-evaluation">
-<h2>data driven evaluation<a class="headerlink" href="#data-driven-evaluation" title="Link to this heading">¶</a></h2>
+<section id="Data-driven-Evaluation">
+<h2>Data-driven Evaluation<a class="headerlink" href="#Data-driven-Evaluation" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
@@ -418,8 +417,8 @@
 
 <span class="n">eps</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">sample_num</span>
 
-<span class="n">dro_model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'ols'</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">dro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
+<span class="n">dro_model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;ols&#39;</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">dro_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
 <span class="n">dro_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">dro_model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
@@ -452,10 +451,10 @@
 24.05810847832465
 </pre></div></div>
 </div>
-<p>These f-divergence DROs are suitable for handling general distribution shifts with likelihood misspecification, while can be too worst-case in practice.</p>
 </section>
 <section id="Partial-Distribution-Shift">
 <h2>Partial Distribution Shift<a class="headerlink" href="#Partial-Distribution-Shift" title="Link to this heading">¶</a></h2>
+<p>The f-divergence DROs above are suitable for handling general distribution shifts with likelihood misspecification. However, they can be too worst-case in practice.</p>
 <p>Some special kinds of DRO models can help handle problems of particular worst-case distribution shift, i.e., covariate shift (marginal_dro). Both of them are built from CVaR-DRO.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
@@ -473,22 +472,22 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/api_notebooks_f_dro_tutorial_11_0.png" src="../../_images/api_notebooks_f_dro_tutorial_11_0.png" />
+<img alt="../../_images/api_notebooks_f_dro_tutorial_10_0.png" src="../../_images/api_notebooks_f_dro_tutorial_10_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model_margin</span> <span class="o">=</span> <span class="n">MarginalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'svm'</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf_model_margin</span> <span class="o">=</span> <span class="n">MarginalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">)</span>
 
-<span class="n">clf_model_cond</span> <span class="o">=</span> <span class="n">ConditionalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'logistic'</span><span class="p">)</span>
+<span class="n">clf_model_cond</span> <span class="o">=</span> <span class="n">ConditionalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">)</span>
 
-<span class="n">clf_model_margin</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'alpha'</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">})</span>
-<span class="n">clf_model_cond</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'alpha'</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">})</span>
+<span class="n">clf_model_margin</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">})</span>
+<span class="n">clf_model_cond</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">})</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">'marginal'</span><span class="p">,</span> <span class="n">clf_model_margin</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)[</span><span class="s1">'theta'</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'conditional'</span><span class="p">,</span> <span class="n">clf_model_cond</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;marginal&#39;</span><span class="p">,</span> <span class="n">clf_model_margin</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)[</span><span class="s1">&#39;theta&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;conditional&#39;</span><span class="p">,</span> <span class="n">clf_model_cond</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -520,7 +519,7 @@ conditional {&#39;theta&#39;: [-1.2843606942632635, 3.5303014542999374], &#39;b&
                 <ul>
 <li><a class="reference internal" href="#">Linear f-divergence DRO</a><ul>
 <li><a class="reference internal" href="#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li><a class="reference internal" href="#data-driven-evaluation">data driven evaluation</a></li>
+<li><a class="reference internal" href="#Data-driven-Evaluation">Data-driven Evaluation</a></li>
 <li><a class="reference internal" href="#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
 </ul>
 </li>

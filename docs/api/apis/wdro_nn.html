@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wasserstein DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Wasserstein DRO &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -19,7 +19,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/apis/wdro_nn.html" />
+    <link rel="canonical" href="https://python-dro.org/api/apis/wdro_nn.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Tree-Ensembles DRO Methods" href="../tree_dro.html" />
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -320,14 +320,14 @@ squared Euclidean transport cost from Sinha et al. (2018).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – Output dimension:
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Output dimension:
 - Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)
 - Regression: Automatically set to 1</p></li>
-<li><p><strong>task_type</strong> (<em>str</em>) – Learning task type. Supported:
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Learning task type. Supported:
 - <code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss
 - <code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
-<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -335,42 +335,42 @@ squared Euclidean transport cost from Sinha et al. (2018).</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
-<li><p><strong>epsilon</strong> (<em>float</em>) – Radius <span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span> of the per-example
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Radius <span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span> of the per-example
 <span class="math notranslate nohighlight">\(\ell_2\)</span> or <span class="math notranslate nohighlight">\(\ell_\infty\)</span> attack ball in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code>
 mode. Zero disables norm-ball perturbations. Defaults to 0.1.</p></li>
-<li><p><strong>adversarial_steps</strong> (<em>int</em>) – Number of inner attack iterations <span class="math notranslate nohighlight">\(T_{adv} \geq 1\)</span>
+<li><p><strong>adversarial_steps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Number of inner attack iterations <span class="math notranslate nohighlight">\(T_{adv} \geq 1\)</span>
 for PGD or transport-penalty ascent. FGSM uses one step.
 Defaults to 10.</p></li>
-<li><p><strong>adversarial_step_size</strong> (<em>float</em>) – Inner attack step size <span class="math notranslate nohighlight">\(\eta_{adv} &gt; 0\)</span>
+<li><p><strong>adversarial_step_size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Inner attack step size <span class="math notranslate nohighlight">\(\eta_{adv} &gt; 0\)</span>
 for PGD or transport-penalty ascent. FGSM uses <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>.
 Defaults to 0.02.</p></li>
-<li><p><strong>adversarial_norm</strong> (<em>str</em>) – <p>Perturbation norm in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode. Options:</p>
+<li><p><strong>adversarial_norm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Perturbation norm in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode. Options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'l2'</span></code>: <span class="math notranslate nohighlight">\(\ell_2\)</span>-ball constraint</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'l-inf'</span></code>: <span class="math notranslate nohighlight">\(\ell_\infty\)</span>-ball constraint</p></li>
 </ul>
 </p></li>
-<li><p><strong>adversarial_method</strong> (<em>str</em>) – <p>Attack method in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode. Options:</p>
+<li><p><strong>adversarial_method</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Attack method in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode. Options:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'PGD'</span></code>: Projected Gradient Descent (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'FGSM'</span></code>: Fast Gradient Sign Method (requires <code class="docutils literal notranslate"><span class="pre">'l-inf'</span></code>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'FFGSM'</span></code>: Fast FGSM with a random start (requires <code class="docutils literal notranslate"><span class="pre">'l-inf'</span></code>)</p></li>
 </ul>
 </p></li>
-<li><p><strong>robust_objective</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">'norm_ball'</span></code> (default) or
+<li><p><strong>robust_objective</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <code class="docutils literal notranslate"><span class="pre">'norm_ball'</span></code> (default) or
 <code class="docutils literal notranslate"><span class="pre">'transport_penalty'</span></code>. The latter approximately optimizes the
 penalized squared-Wasserstein objective of Sinha et al. (2018).</p></li>
-<li><p><strong>gamma</strong> (<em>float</em>) – Positive coefficient of the squared Euclidean transport
+<li><p><strong>gamma</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Positive coefficient of the squared Euclidean transport
 cost in <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode. Larger values discourage
 perturbations. Defaults to 1.0.</p></li>
-<li><p><strong>input_bounds</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – Optional lower and upper input bounds for
+<li><p><strong>input_bounds</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>]</em>) – Optional lower and upper input bounds for
 <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode. For images in [0, 1], use <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code>.
 Defaults to no clipping.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If epsilon &lt; 0</p></li>
 <li><p>If adversarial_steps &lt; 1</p></li>
 <li><p>If adversarial_step_size ≤ 0</p></li>
@@ -385,7 +385,7 @@ configuration is invalid</p></li>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">784</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">adversarial_norm</span><span class="o">=</span><span class="s2">"l-inf"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">adversarial_norm</span><span class="o">=</span><span class="s2">&quot;l-inf&quot;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">7</span>
 <span class="gp">... </span><span class="p">)</span>
 </pre></div>
@@ -398,15 +398,15 @@ configuration is invalid</p></li>
 <dd><p>Replace the network and bind norm-ball attacks to the new network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>)</p></li>
-<li><p><strong>model</strong> (<em>Module</em>)</p></li>
-<li><p><strong>task_type</strong> (<em>str</em>)</p></li>
-<li><p><strong>device</strong> (<em>device</em>)</p></li>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>model</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.14)"><em>Module</em></a>)</p></li>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>device</em></a>)</p></li>
 </ul>
 </dd>
 </dl>

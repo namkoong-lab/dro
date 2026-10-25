@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Kernel DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Kernel DRO &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=a35ea3b2" />
-    <script src="../../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -20,7 +20,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/kernel_dro_tutorial.html" />
+    <link rel="canonical" href="https://python-dro.org/api/notebooks/kernel_dro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Group DRO (Linear and Neural)" href="groupdro_tutorial.html" />
@@ -155,7 +155,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -300,18 +300,18 @@
 <span class="p">)</span>
 
 <span class="c1"># Omitting kernel selects the default RBF kernel and median heuristic.</span>
-<span class="n">rbf_mmd</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">)</span>
+<span class="n">rbf_mmd</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">)</span>
 
 <span class="c1"># An inhomogeneous quadratic polynomial kernel. gamma=None gives 1 / (d + 1).</span>
 <span class="n">polynomial_mmd</span> <span class="o">=</span> <span class="n">MMD_DRO</span><span class="p">(</span>
     <span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span>
-    <span class="n">kernel</span><span class="o">=</span><span class="s1">'polynomial'</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span>
+    <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;polynomial&#39;</span><span class="p">,</span>
     <span class="n">kernel_gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">kernel_degree</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">kernel_coef0</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">polynomial_mmd</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eta'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">'sampling_method'</span><span class="p">:</span> <span class="s1">'hull'</span><span class="p">})</span>
+<span class="n">polynomial_mmd</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;sampling_method&#39;</span><span class="p">:</span> <span class="s1">&#39;hull&#39;</span><span class="p">})</span>
 <span class="n">mmd_params</span> <span class="o">=</span> <span class="n">polynomial_mmd</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_mmd</span><span class="p">,</span> <span class="n">y_mmd</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -449,16 +449,16 @@ solve time = 98.810498ms
 <span class="p">)</span>
 
 <span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span>
-    <span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'poly'</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">'CLARABEL'</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;CLARABEL&#39;</span>
 <span class="p">)</span>
 <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span>
-    <span class="s1">'metric'</span><span class="p">:</span> <span class="s1">'poly'</span><span class="p">,</span> <span class="s1">'kernel_gamma'</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">'n_components'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="s1">&#39;kernel_gamma&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;n_components&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
 <span class="p">})</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">'p'</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Robust training objective: </span><span class="si">{</span><span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Robust training objective: </span><span class="si">{</span><span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">accuracy</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Training accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">; F1: </span><span class="si">{</span><span class="n">f1</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Training accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">; F1: </span><span class="si">{</span><span class="n">f1</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <br/></pre></div>
 </div>
 </div>
@@ -486,26 +486,26 @@ Training accuracy: 0.984; F1: 0.984
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'svm'</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">'poly'</span><span class="p">)</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">'n_components'</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">Chi2DRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">&#39;poly&#39;</span><span class="p">)</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">&#39;n_components&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">KLDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'svm'</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">'rbf'</span><span class="p">)</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">'n_components'</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">KLDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">&#39;rbf&#39;</span><span class="p">)</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">&#39;n_components&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 <span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">CVaRDRO</span><span class="p">(</span>
-    <span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'logistic'</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'sigmoid'</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">'SCS'</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;logistic&#39;</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;SCS&#39;</span>
 <span class="p">)</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">'n_components'</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'alpha'</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">&#39;n_components&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">})</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">TVDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'logistic'</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">'poly'</span><span class="p">)</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">'n_components'</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">TVDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;logistic&#39;</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">&#39;poly&#39;</span><span class="p">)</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">&#39;n_components&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">})</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <br/><br/><br/></pre></div>
 </div>
@@ -514,8 +514,8 @@ Training accuracy: 0.984; F1: 0.984
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">MarginalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'svm'</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">'poly'</span><span class="p">)</span>
-<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'alpha'</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">})</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kernel_clf_model</span> <span class="o">=</span> <span class="n">MarginalCVaRDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;svm&#39;</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">&#39;poly&#39;</span><span class="p">)</span>
+<span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">})</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">kernel_clf_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
@@ -542,9 +542,9 @@ Training accuracy: 0.984; F1: 0.984
 <span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">classification_basic</span><span class="p">(</span><span class="n">d</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">visualize</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 
-<span class="n">clf</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span> <span class="o">=</span> <span class="s1">'rbf'</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="mi">100000000</span><span class="p">)</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span> <span class="o">=</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="mi">100000000</span><span class="p">)</span>
 <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'coef'</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">dual_coef_</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">intercept_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">dual_coef_</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">intercept_</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -575,10 +575,10 @@ coef [[-0.25769266 -0.64158585 -3.57086163 -0.78030986 -0.43010956 -0.01490551
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feature_dim</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">regression_basic</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">noise</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="n">reg_model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">'lad'</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">'rbf'</span><span class="p">)</span>
+<span class="n">reg_model</span> <span class="o">=</span> <span class="n">WassersteinDRO</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;lad&#39;</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="s1">&#39;rbf&#39;</span><span class="p">)</span>
 
-<span class="n">reg_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">'metric'</span><span class="p">:</span> <span class="s1">'rbf'</span><span class="p">})</span>
-<span class="n">reg_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">reg_model</span><span class="o">.</span><span class="n">update_kernel</span><span class="p">({</span><span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="s1">&#39;rbf&#39;</span><span class="p">})</span>
+<span class="n">reg_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 <span class="n">reg_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>

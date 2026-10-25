@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Base Class &#8212; dro 0.4.2 documentation</title>
+    <title>Base Class &#8212; dro 0.4.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <script src="../../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../../_static/documentation_options.js?v=5bfaad31"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -19,7 +19,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <script src="../../_static/js/petite-vue.js"></script>
-    <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/apis/base_nn.html" />
+    <link rel="canonical" href="https://python-dro.org/api/apis/base_nn.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="f-Divergence DRO" href="fdro_nn.html" />
@@ -154,7 +154,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+        <h1><a href="../../index.html" title="Go to homepage">dro 0.4.3 documentation</a></h1>
             <a id="source_link" href="https://github.com/namkoong-lab/dro">
     
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -304,7 +304,7 @@ epoch stepping and receives the mean training loss for that epoch.</p>
 <span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">20</span><span class="p">],</span> <span class="n">y</span><span class="p">[:</span><span class="mi">20</span><span class="p">]),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">20</span><span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="mi">20</span><span class="p">:]),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">)</span>
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 <span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 <span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
@@ -312,7 +312,7 @@ epoch stepping and receives the mean training loss for that epoch.</p>
     <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span>
     <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
     <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span>
-    <span class="n">scheduler_step</span><span class="o">=</span><span class="s2">"epoch"</span><span class="p">,</span>
+    <span class="n">scheduler_step</span><span class="o">=</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span>
     <span class="n">epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
@@ -323,7 +323,7 @@ custom networks, losses, and examples for the individual DRO methods.</p>
 <dl class="py class" id="module-dro.neural_model.base_nn">
 <dt class="sig sig-object py" id="dro.neural_model.base_nn.Linear">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">Linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.base_nn.Linear" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Fully-connected neural layer for classification/regression.</p>
 <p>Implements the linear transformation:</p>
 <div class="math notranslate nohighlight">
@@ -340,8 +340,8 @@ custom networks, losses, and examples for the individual DRO methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of input features <span class="math notranslate nohighlight">\(d\)</span>. Must be ≥ 1.</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – Number of output classes <span class="math notranslate nohighlight">\(K\)</span>. 
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Dimension of input features <span class="math notranslate nohighlight">\(d\)</span>. Must be ≥ 1.</p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Number of output classes <span class="math notranslate nohighlight">\(K\)</span>. 
 Use 1 for binary classification.</p></li>
 </ul>
 </dd>
@@ -363,14 +363,14 @@ Use 1 for binary classification.</p></li>
 <dd><p>Forward pass of the linear layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>torch.Tensor</em>) – Input tensor of shape <span class="math notranslate nohighlight">\((N, d)\)</span>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Input tensor of shape <span class="math notranslate nohighlight">\((N, d)\)</span>
 where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Output logits of shape <span class="math notranslate nohighlight">\((N, K)\)</span></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -380,7 +380,7 @@ where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.neural_model.base_nn.MLP">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ReLU()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.base_nn.MLP" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Multi-Layer Perceptron with dropout regularization.</p>
 <p>Implements the forward computation:</p>
 <div class="math notranslate nohighlight">
@@ -399,15 +399,15 @@ y &amp;= W_o h_2 + b_o\end{split}\]</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – Output dimension <span class="math notranslate nohighlight">\(K \geq 1\)</span></p></li>
-<li><p><strong>hidden_units</strong> (<em>int</em>) – Hidden layer dimension <span class="math notranslate nohighlight">\(h \geq 1\)</span>, 
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Output dimension <span class="math notranslate nohighlight">\(K \geq 1\)</span></p></li>
+<li><p><strong>hidden_units</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Hidden layer dimension <span class="math notranslate nohighlight">\(h \geq 1\)</span>, 
 defaults to 16</p></li>
-<li><p><strong>activation</strong> (<em>torch.nn.Module</em>) – Nonlinear activation module, 
-defaults to <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.ReLU</span></code></p></li>
-<li><p><strong>dropout_rate</strong> (<em>float</em>) – Dropout probability <span class="math notranslate nohighlight">\(p \in [0,1)\)</span>, 
+<li><p><strong>activation</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.14)"><em>torch.nn.Module</em></a>) – Nonlinear activation module, 
+defaults to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="(in PyTorch v2.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.ReLU</span></code></a></p></li>
+<li><p><strong>dropout_rate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Dropout probability <span class="math notranslate nohighlight">\(p \in [0,1)\)</span>, 
 defaults to 0.1</p></li>
-<li><p><strong>num_layers</strong> (<em>int</em>) – Number of layers,
+<li><p><strong>num_layers</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Number of layers,
 defaults to 2</p></li>
 </ul>
 </dd>
@@ -435,14 +435,14 @@ defaults to 2</p></li>
 <dd><p>Forward propagation with dropout regularization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>torch.Tensor</em>) – Input tensor of shape <span class="math notranslate nohighlight">\((N, d)\)</span>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Input tensor of shape <span class="math notranslate nohighlight">\((N, d)\)</span>
 where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Output logits of shape <span class="math notranslate nohighlight">\((N, K)\)</span></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -452,7 +452,7 @@ where <span class="math notranslate nohighlight">\(N\)</span> = batch size</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.neural_model.base_nn.BaseNNDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">BaseNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.base_nn.BaseNNDRO" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Neural Network-based Distributionally Robust Optimization (DRO) framework.</p>
 <p>Implements the core DRO optimization objective:</p>
 <div class="math notranslate nohighlight">
@@ -471,11 +471,11 @@ objective, or <code class="docutils literal notranslate"><span class="pre">None<
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>)</p></li>
-<li><p><strong>task_type</strong> (<em>str</em>)</p></li>
-<li><p><strong>model_type</strong> (<em>str</em>)</p></li>
-<li><p><strong>device</strong> (<em>device</em>)</p></li>
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>device</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -483,14 +483,14 @@ objective, or <code class="docutils literal notranslate"><span class="pre">None<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – Output dimension:
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Output dimension:
 - Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)
 - Regression: Automatically set to 1</p></li>
-<li><p><strong>task_type</strong> (<em>str</em>) – Learning task type. Supported:
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Learning task type. Supported:
 - <code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss
 - <code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
-<li><p><strong>model_type</strong> (<em>str</em>) – <p>Neural architecture type. Supported:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>Neural architecture type. Supported:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mlp'</span></code>: Multi-Layer Perceptron (default)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linear</span></code></p></li>
@@ -498,11 +498,11 @@ objective, or <code class="docutils literal notranslate"><span class="pre">None<
 <li><p><code class="docutils literal notranslate"><span class="pre">alexnet</span></code></p></li>
 </ul>
 </p></li>
-<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
 <li><p>If classification task with num_classes &lt; 2</p></li>
 <li><p>If unsupported model_type</p></li>
@@ -514,9 +514,9 @@ objective, or <code class="docutils literal notranslate"><span class="pre">None<
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">BaseNNDRO</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">task_type</span><span class="o">=</span><span class="s2">"classification"</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s2">"mlp"</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cuda"</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
@@ -524,7 +524,7 @@ objective, or <code class="docutils literal notranslate"><span class="pre">None<
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">BaseNNDRO</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">input_dim</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>  <span class="c1"># Auto-override to 1</span>
-<span class="gp">... </span>    <span class="n">task_type</span><span class="o">=</span><span class="s2">"regression"</span>
+<span class="gp">... </span>    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span>
 <span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
@@ -535,15 +535,15 @@ objective, or <code class="docutils literal notranslate"><span class="pre">None<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dim</strong> (<em>int</em>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
-<li><p><strong>num_classes</strong> (<em>int</em>) – Output dimension:
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Input feature dimension <span class="math notranslate nohighlight">\(d \geq 1\)</span></p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Output dimension:
 - Classification: <span class="math notranslate nohighlight">\(K \geq 2\)</span> (number of classes)
 - Regression: Automatically set to 1</p></li>
-<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – User’s own model</p></li>
-<li><p><strong>task_type</strong> (<em>str</em>) – Learning task type. Supported:
+<li><p><strong>model</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.14)"><em>torch.nn.Module</em></a>) – User’s own model</p></li>
+<li><p><strong>task_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Learning task type. Supported:
 - <code class="docutils literal notranslate"><span class="pre">'classification'</span></code>: Cross-entropy loss
 - <code class="docutils literal notranslate"><span class="pre">'regression'</span></code>: MSE loss</p></li>
-<li><p><strong>device</strong> (<em>torch.device</em>) – Target computation device, defaults to CPU</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><em>torch.device</em></a>) – Target computation device, defaults to CPU</p></li>
 </ul>
 </dd>
 </dl>
@@ -556,37 +556,37 @@ objective, or <code class="docutils literal notranslate"><span class="pre">None<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>Union</em><em>[</em><em>numpy.ndarray</em><em>, </em><em>torch.Tensor</em><em>]</em><em>, </em><em>optional</em>) – <p>Input feature matrix/tensor. Shape:</p>
+<li><p><strong>X</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a><em>, </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a><em>]</em><em>, </em><em>optional</em>) – <p>Input feature matrix/tensor. Shape:</p>
 <ul>
 <li><p><span class="math notranslate nohighlight">\((N, d)\)</span> where <span class="math notranslate nohighlight">\(N\)</span> = total samples</p></li>
 <li><p>Supports both numpy arrays and torch tensors</p></li>
 </ul>
 </p></li>
-<li><p><strong>y</strong> (<em>Union</em><em>[</em><em>numpy.ndarray</em><em>, </em><em>torch.Tensor</em><em>]</em><em>, </em><em>optional</em>) – <p>Target labels. Shape:</p>
+<li><p><strong>y</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a><em>, </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a><em>]</em><em>, </em><em>optional</em>) – <p>Target labels. Shape:</p>
 <ul>
 <li><p>Classification: <span class="math notranslate nohighlight">\((N,)\)</span> (class indices). Note that y in {0,1} here.</p></li>
 <li><p>Regression: <span class="math notranslate nohighlight">\((N,)\)</span> or <span class="math notranslate nohighlight">\((N, 1)\)</span></p></li>
 </ul>
 </p></li>
-<li><p><strong>train_ratio</strong> (<em>float</em>) – Train-validation split ratio <span class="math notranslate nohighlight">\(\in (0,1)\)</span>, 
+<li><p><strong>train_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Train-validation split ratio <span class="math notranslate nohighlight">\(\in (0,1)\)</span>, 
 defaults to 0.8</p></li>
-<li><p><strong>lr</strong> (<em>float</em>) – Learning rate <span class="math notranslate nohighlight">\(\eta &gt; 0\)</span>, defaults to 1e-3</p></li>
-<li><p><strong>batch_size</strong> (<em>int</em>) – Mini-batch size <span class="math notranslate nohighlight">\(B \geq 1\)</span>, 
+<li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Learning rate <span class="math notranslate nohighlight">\(\eta &gt; 0\)</span>, defaults to 1e-3</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Mini-batch size <span class="math notranslate nohighlight">\(B \geq 1\)</span>, 
 defaults to 32</p></li>
-<li><p><strong>epochs</strong> (<em>int</em>) – Maximum training epochs <span class="math notranslate nohighlight">\(T \geq 1\)</span>, 
+<li><p><strong>epochs</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Maximum training epochs <span class="math notranslate nohighlight">\(T \geq 1\)</span>, 
 defaults to 100</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print epoch-wise metrics, 
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>) – Whether to print epoch-wise metrics, 
 defaults to True</p></li>
-<li><p><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em><em>, </em><em>optional</em>) – Caller-provided training loader. Supply together
+<li><p><strong>train_loader</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.14)"><em>torch.utils.data.DataLoader</em></a><em>, </em><em>optional</em>) – Caller-provided training loader. Supply together
 with val_loader instead of X and y. Each batch must contain an
 input tensor and a target tensor.</p></li>
-<li><p><strong>val_loader</strong> (<em>torch.utils.data.DataLoader</em><em>, </em><em>optional</em>) – Caller-provided validation loader.</p></li>
-<li><p><strong>optimizer</strong> (<em>torch.optim.Optimizer</em><em>, </em><em>optional</em>) – PyTorch optimizer built from the current model’s
+<li><p><strong>val_loader</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.14)"><em>torch.utils.data.DataLoader</em></a><em>, </em><em>optional</em>) – Caller-provided validation loader.</p></li>
+<li><p><strong>optimizer</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/optim.html#torch.optim.Optimizer" title="(in PyTorch v2.14)"><em>torch.optim.Optimizer</em></a><em>, </em><em>optional</em>) – PyTorch optimizer built from the current model’s
 parameters. If omitted, Adam is constructed using lr.</p></li>
-<li><p><strong>scheduler</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>]</span>) – Learning-rate scheduler bound to optimizer. Requires
+<li><p><strong>scheduler</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.15)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a>]</span>) – Learning-rate scheduler bound to optimizer. Requires
 an explicit optimizer. ReduceLROnPlateau receives the mean
 training loss after each epoch.</p></li>
-<li><p><strong>scheduler_step</strong> (<em>str</em>) – Step the scheduler after each epoch (default)
+<li><p><strong>scheduler_step</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Step the scheduler after each epoch (default)
 or after each batch. ReduceLROnPlateau supports epoch only.</p></li>
 </ul>
 </dd>
@@ -595,10 +595,10 @@ or after each batch. ReduceLROnPlateau supports epoch only.</p></li>
 for regression.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, float]</p>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – <ul class="simple">
 <li><p>If input dimensions mismatch</p></li>
 <li><p>If train_ratio ∉ (0,1)</p></li>
 <li><p>If learning rate ≤ 0</p></li>
@@ -610,13 +610,13 @@ for regression.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">BaseNNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">5e-4</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'acc'</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Example (Regression):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">BaseNNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s1">'regression'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">BaseNNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -628,10 +628,10 @@ for regression.</p>
 <dd><p>Make predictions on input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>X</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p>
+<dd class="field-even"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -642,12 +642,12 @@ for regression.</p>
 <dd><p>Calculate classification accuracy and macro-F1 score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p></li>
-<li><p><strong>y</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a>)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -659,12 +659,12 @@ for regression.</p>
 <dd><p>Calculate classification accuracy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p></li>
-<li><p><strong>y</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a>)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -676,12 +676,12 @@ for regression.</p>
 <dd><p>Calculate macro-averaged F1 score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p></li>
-<li><p><strong>y</strong> (<em>ndarray</em><em> | </em><em>Tensor</em>)</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a>)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>ndarray</em></a><em> | </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a>)</p></li>
 </ul>
 </dd>
 </dl>

@@ -10,10 +10,10 @@ sys.path.insert(0, os.path.abspath('../src'))
 project = 'dro'
 copyright = '2026, DRO developers'
 author = 'DRO developers'
-release = '0.4.2'
+release = '0.4.3'
 
 # html_static_path = ['../docs']
-html_baseurl = 'https://namkoong-lab.github.io/dro/' 
+html_baseurl = 'https://python-dro.org/'
 
 
 extensions = [
@@ -110,6 +110,8 @@ autoclass_content = 'both'
 
 nitpicky = True
 nitpick_ignore = [
+    # Autodoc treats the qualifier in ":type ...: ..., optional" as a class.
+    ("py:class", "optional"),
     ("py:class", "torch.device"),
     ("py:class", "torch.nn.Module"),
     ("py:class", "nn.Module"),

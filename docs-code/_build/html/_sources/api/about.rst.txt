@@ -7,7 +7,16 @@ About
    :width: 800px
    :align: center
 
-`dro` is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver ``cvxpy``. The `dro` package supports different kinds of distance metrics :math:`d(\cdot,\cdot)` as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, tree-ensembles, neural networks...). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers.
+``dro`` |release| is a Python package for distributionally robust optimization
+in supervised learning. It supports linear and kernel models (including SVM,
+logistic regression, and linear regression), neural networks, and tree ensembles
+with several choices of ambiguity set. It also includes synthetic data
+generators, runnable examples, and tools for model evaluation.
+
+The convex linear formulations use ``cvxpy`` with ``CLARABEL`` by default.
+Commercial solvers such as ``MOSEK`` are optional. See the
+:doc:`installation guide <install>` for solver selection and the
+:doc:`tutorials <tutorials>` for formulations and usage.
 
 Without specified, our DRO model is to solve the following optimization problem:
 
@@ -16,7 +25,7 @@ Without specified, our DRO model is to solve the following optimization problem:
 
 where :math:`U` is the so-called ambiguity set and typically of the form :math:`U = \{P: d(P, \hat P_n) \leq \epsilon\}` and :math:`\hat P_n := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}` is the empirical distribution of training samples :math:`\{(X_i, Y_i)\}_{i = 1}^n`. And :math:`\epsilon` is the hyperparameter.
 
-As for the current release, `dro` supports:
+In release |release|, ``dro`` supports:
 
 Synthetic data generation
 -------------------------
