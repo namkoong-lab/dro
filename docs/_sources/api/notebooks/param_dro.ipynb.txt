@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Bayesian DRO"
+    "# Linear Bayesian DRO"
    ]
   },
   {
@@ -15,31 +15,87 @@
     "\n",
     "\n",
     "## Frequentist\n",
-    "From an frequentist perspective, if we only change the nominal distribution $\\hat P$ as some parametric distribution $P_{\\ell}$ (fitted via the dataset first), we can directly call ``fit`` function to solve that and obtain the corresponding parameters. "
+    "Fit a single parametric nominal distribution to the observed data, then solve an f-DRO problem around that fitted distribution. Here we estimate a joint Gaussian distribution for `(X, y)` using its sample mean and maximum-likelihood covariance. We draw 500 joint samples from this fitted Gaussian and pass them to `Chi2DRO.fit()` for robust linear regression.\n",
+    "\n",
+    "This is a finite Monte Carlo approximation to the parametric f-DRO problem. Increasing the simulated sample count improves the approximation; `eps` separately controls the chi-square ambiguity radius. The Gaussian parameters are point estimates, with no posterior sampling.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:12.842948Z",
+     "iopub.status.busy": "2026-10-24T21:35:12.842806Z",
+     "iopub.status.idle": "2026-10-24T21:35:20.155020Z",
+     "shell.execute_reply": "2026-10-24T21:35:20.153771Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Coefficients: [ 1.443 -2.019]\n",
+      "Robust objective: 0.367\n",
+      "Observed-data MSE: 0.256\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "from dro.linear_model.chi2_dro import Chi2DRO\n",
+    "\n",
+    "# Observed regression data.\n",
+    "rng = np.random.default_rng(42)\n",
+    "X_observed = rng.normal(size=(100, 2))\n",
+    "y_observed = X_observed @ np.array([1.5, -2.0]) + rng.normal(scale=0.5, size=100)\n",
+    "\n",
+    "# Fit one joint Gaussian nominal distribution and approximate it by sampling.\n",
+    "joint_observed = np.column_stack((X_observed, y_observed))\n",
+    "mean_hat = joint_observed.mean(axis=0)\n",
+    "cov_hat = np.cov(joint_observed, rowvar=False, ddof=0)\n",
+    "joint_nominal = rng.multivariate_normal(mean_hat, cov_hat, size=500)\n",
+    "\n",
+    "frequentist_model = Chi2DRO(input_dim=2, model_type='ols', solver='CLARABEL')\n",
+    "frequentist_model.update({'eps': 0.1})\n",
+    "frequentist_params = frequentist_model.fit(joint_nominal[:, :-1], joint_nominal[:, -1])\n",
+    "\n",
+    "print('Coefficients:', np.round(frequentist_params['theta'], 3))\n",
+    "print(f'Robust objective: {frequentist_model.robust_obj:.3f}')\n",
+    "print(f'Observed-data MSE: {frequentist_model.score(X_observed, y_observed):.3f}')\n"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Below we only focus on the Bayesian setting.\n",
     "## Bayesian\n",
     "For the Bayesian-DRO model, we provide additional model type called ``newsvendor`` loss. The default setup is as follows:\n",
     "$\\ell(\\theta;(X, Y)) = 3 (Y - \\theta)_+ + (\\theta - Y)_+$.\n",
     "In this case, X is the unit vector. That corresponds to exponential gamma conjugate.\n",
     "\n",
-    "That is, when conducting fitting, resampling, we ignore the existence of $X$. "
+    "That is, when conducting fitting, resampling, we ignore the existence of $X$.\n",
+    "\n",
+    "Both Bayesian examples explicitly set `eps=0.1` to illustrate a positive-radius ambiguity set. The newsvendor example uses SCS for its exponential-cone formulation and `fit_intercept=False`, since its loss depends only on the order quantity."
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 2,
-   "metadata": {},
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:20.192885Z",
+     "iopub.status.busy": "2026-10-24T21:35:20.192601Z",
+     "iopub.status.idle": "2026-10-24T21:35:23.374014Z",
+     "shell.execute_reply": "2026-10-24T21:35:23.373552Z"
+    }
+   },
    "outputs": [
     {
      "data": {
       "text/plain": [
-       "{'theta': [1.3816098929349603], 'b': None}"
+       "{'theta': [3.5978596108504233], 'b': 0}"
       ]
      },
      "execution_count": 2,
@@ -57,10 +113,14 @@
     "\n",
     "feature_dim = 1\n",
     "sample_num = 1000\n",
+    "np.random.seed(42)\n",
     "X = np.ones((sample_num, feature_dim))\n",
     "y = np.random.exponential(2, sample_num)\n",
     "\n",
-    "reg_model = BayesianDRO(input_dim = feature_dim, model_type = 'newsvendor')\n",
+    "reg_model = BayesianDRO(\n",
+    "    input_dim=feature_dim, model_type='newsvendor',\n",
+    "    eps=0.1, solver='SCS', fit_intercept=False,\n",
+    ")\n",
     "reg_model.update({'posterior_param_num': 1, 'distribution_class': 'Exponential', 'distance_type': 'KL'})\n",
     "reg_model.fit(X, y)"
    ]
@@ -68,7 +128,14 @@
   {
    "cell_type": "code",
    "execution_count": 3,
-   "metadata": {},
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:23.377953Z",
+     "iopub.status.busy": "2026-10-24T21:35:23.377570Z",
+     "iopub.status.idle": "2026-10-24T21:35:23.438153Z",
+     "shell.execute_reply": "2026-10-24T21:35:23.380899Z"
+    }
+   },
    "outputs": [
     {
      "data": {
@@ -87,8 +154,15 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
-   "metadata": {},
+   "execution_count": 4,
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:23.440996Z",
+     "iopub.status.busy": "2026-10-24T21:35:23.440771Z",
+     "iopub.status.idle": "2026-10-24T21:35:23.525825Z",
+     "shell.execute_reply": "2026-10-24T21:35:23.525227Z"
+    }
+   },
    "outputs": [
     {
      "name": "stdout",
@@ -104,15 +178,15 @@
     {
      "data": {
       "text/plain": [
-       "{'theta': [62.169443051525285,\n",
-       "  97.87564003822867,\n",
-       "  63.87624899340756,\n",
-       "  55.84248039099289,\n",
-       "  35.333453154516214],\n",
-       " 'b': array(1.38349967)}"
+       "{'theta': [61.057566360599026,\n",
+       "  98.39982638076957,\n",
+       "  62.38125553686774,\n",
+       "  55.18121760481207,\n",
+       "  35.213916290192095],\n",
+       " 'b': array(-0.77980186)}"
       ]
      },
-     "execution_count": 5,
+     "execution_count": 4,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -127,7 +201,7 @@
     "feature_dim = 5\n",
     "X, y = regression_basic(num_samples = 100, d = feature_dim, noise = 1)\n",
     "\n",
-    "reg_model = BayesianDRO(input_dim = feature_dim, model_type = 'ols')\n",
+    "reg_model = BayesianDRO(input_dim=feature_dim, model_type='ols', eps=0.1, solver='CLARABEL')\n",
     "\n",
     "reg_model.update({'posterior_param_num': 5, 'distance_type': 'chi2'})\n",
     "reg_model.fit(X, y)"
@@ -150,7 +224,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.10.14"
+   "version": "3.11.7"
   },
   "vscode": {
    "interpreter": {

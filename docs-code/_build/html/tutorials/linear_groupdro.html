@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Group DRO for Linear Models &#8212; dro 0.4.2 documentation</title>
+    <title>Linear Group DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_groupdro.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="f-divergence DRO" href="linear_fdro.html" />
-    <link rel="prev" title="Linear Models" href="linear.html" /> 
+    <link rel="next" title="Linear MMD-DRO" href="linear_mmddro.html" />
+    <link rel="prev" title="Linear Wasserstein DRO" href="linear_wdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,21 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -280,13 +281,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="group-dro-for-linear-models">
-<h1>Group DRO for Linear Models<a class="headerlink" href="#group-dro-for-linear-models" title="Link to this heading">¶</a></h1>
-<p>Group distributionally robust optimization (Group DRO) is useful when the
-training data is divided into known groups and average performance can hide a
-poorly performing subgroup. Instead of minimizing the average loss over all
-samples, Group DRO minimizes the largest empirical mean loss among the observed
-groups.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-group-dro">
+<h1>Linear Group DRO<a class="headerlink" href="#linear-group-dro" title="Link to this heading">¶</a></h1>
+<p>We describe the Group DRO here, which is useful when the
+training data is divided into known groups and average performance can hide a poorly performing subgroup. Instead of minimizing the average loss over all samples, Group DRO minimizes the largest empirical mean loss among the observed groups.</p>
 <section id="formulation">
 <h2>Formulation<a class="headerlink" href="#formulation" title="Link to this heading">¶</a></h2>
 <p>Let <span class="math notranslate nohighlight">\(g_i \in \mathcal{G}\)</span> be the group category for sample <span class="math notranslate nohighlight">\(i\)</span>, and let <span class="math notranslate nohighlight">\(n_g\)</span>
@@ -299,13 +297,12 @@ solves</p>
 \ell(\theta,b;x_i,y_i).
 \]</div>
 <p>The maximum is represented by an epigraph variable <span class="math notranslate nohighlight">\(t\)</span>. For every observed
-group, the CVXPY problem adds the constraint</p>
-<div class="math notranslate nohighlight">
-\[
+group, the CVXPY problem adds the constraint
+$<span class="math notranslate nohighlight">\(
 \frac{1}{n_g}\sum_{i:g_i=g}\ell_i(\theta,b)\leq t,
-\]</div>
-<p>and minimizes <span class="math notranslate nohighlight">\(t\)</span>. This is an exact convex formulation for each loss supported
-by <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code>.</p>
+\)</span><span class="math notranslate nohighlight">\(
+and minimizes \)</span>t$. This is an exact convex formulation for each loss supported by <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code>. Group DRO supports all the four loss types within <code class="docutils literal notranslate"><span class="pre">model_type</span></code>, i.e., <code class="docutils literal notranslate"><span class="pre">&quot;svm&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;logistic&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;ols&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;lad&quot;</span></code>. Linear and kernelized predictors are supported through the common <code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code> machinery. For a kernelized model, call <code class="docutils literal notranslate"><span class="pre">update_kernel()</span></code> before
+<code class="docutils literal notranslate"><span class="pre">fit()</span></code> just as with the other linear DRO estimators.</p>
 </section>
 <section id="defining-groups">
 <h2>Defining groups<a class="headerlink" href="#defining-groups" title="Link to this heading">¶</a></h2>
@@ -321,19 +318,6 @@ sensitive attribute.</p>
 <p>Every category present in the training data contributes one group-average
 constraint. A small group therefore has the same opportunity to determine the
 objective as a large group; it is not down-weighted by its sample count.</p>
-</section>
-<section id="supported-losses">
-<h2>Supported losses<a class="headerlink" href="#supported-losses" title="Link to this heading">¶</a></h2>
-<p>Choose the loss with <code class="docutils literal notranslate"><span class="pre">model_type</span></code>:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;svm&quot;</span></code>: hinge loss for binary labels in <span class="math notranslate nohighlight">\(\{-1,+1\}\)</span>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;logistic&quot;</span></code>: logistic loss for binary labels in <span class="math notranslate nohighlight">\(\{-1,+1\}\)</span>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ols&quot;</span></code>: squared loss for regression.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;lad&quot;</span></code>: absolute loss for regression.</p></li>
-</ul>
-<p>Linear and kernelized predictors are supported through the common
-<code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code> machinery. For a kernelized model, call <code class="docutils literal notranslate"><span class="pre">update_kernel()</span></code> before
-<code class="docutils literal notranslate"><span class="pre">fit()</span></code> just as with the other linear DRO estimators.</p>
 </section>
 <section id="hyperparameters">
 <h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h2>
@@ -415,10 +399,9 @@ of Regularization for Worst-Case Generalization.” ICLR, 2020.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Group DRO for Linear Models</a><ul>
+<li><a class="reference internal" href="#">Linear Group DRO</a><ul>
 <li><a class="reference internal" href="#formulation">Formulation</a></li>
 <li><a class="reference internal" href="#defining-groups">Defining groups</a></li>
-<li><a class="reference internal" href="#supported-losses">Supported losses</a></li>
 <li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
 <li><a class="reference internal" href="#fitting-and-diagnostics">Fitting and diagnostics</a></li>
 <li><a class="reference internal" href="#practical-guidance">Practical guidance</a></li>
@@ -437,14 +420,14 @@ of Regularization for Worst-Case Generalization.” ICLR, 2020.</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="linear.html">
-                    <span class="icon">&lt;</span><span>Linear Models</span></a>
+                <a href="linear_wdro.html">
+                    <span class="icon">&lt;</span><span>Linear Wasserstein DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="linear_fdro.html"><span>f-divergence DRO</span><span class="icon">&gt;</span></a>
+                    <a href="linear_mmddro.html"><span>Linear MMD-DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

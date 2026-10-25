@@ -4,11 +4,11 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Tree-based DRO\n",
+    "# Tree DRO\n",
     "\n",
-    "This tutorial fits distributionally robust tree ensembles with XGBoost and LightGBM. The examples use the same binary classification data and booster settings so that the KL-DRO and CVaR-DRO setup is easy to compare.\n",
+    "This notebook fits distributionally robust tree ensembles with XGBoost and LightGBM. The examples use the same binary classification data and booster settings so that the KL-DRO and CVaR-DRO setup is easy to compare.\n",
     "\n",
-    "Each example follows the same sequence: choose a DRO class and its robustness parameter, provide the tree-booster configuration with `update`, call `fit`, and then inspect both predictive accuracy and the fitted robust objective."
+    "See the [tree-model tutorial](../../tutorials/tree_model.md) for the objective formulations, booster configuration, and interpretation of the fitted robust objective."
    ]
   },
   {
@@ -63,31 +63,6 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## Objective and booster configuration\n",
-    "\n",
-    "There are two separate parts of the model setup:\n",
-    "\n",
-    "1. **Robust objective:** the class selects KL-DRO or CVaR-DRO, while `eps` controls that objective. For fitted sample losses $\\ell_1, \\ldots, \\ell_n$, the reported KL objective is\n",
-    "\n",
-    "   $$\\frac{1}{\\varepsilon} \\log\\left(\\frac{1}{n}\\sum_{i=1}^n \\exp(\\varepsilon \\ell_i)\\right),$$\n",
-    "\n",
-    "   and the reported CVaR objective is\n",
-    "\n",
-    "   $$t + \\frac{1}{1-\\varepsilon}\\frac{1}{n}\\sum_{i=1}^n(\\ell_i-t)_+,$$\n",
-    "\n",
-    "   where $t$ is the empirical `eps` quantile of the fitted losses.\n",
-    "\n",
-    "2. **Booster configuration:** the dictionary passed to `update` controls tree construction. Here, `max_depth` limits tree depth, `learning_rate` scales each boosting step, and the required `num_boost_round` sets the number of boosting iterations. The DRO wrapper supplies the custom training objective during `fit`.\n",
-    "\n",
-    "Before fitting, `model.robust_obj` is `None`. After fitting, it contains the robust empirical objective evaluated on the training data. It is a training diagnostic rather than a test-set metric; compare it only when the data, loss, and DRO formulation are held fixed.\n",
-    "\n",
-    "Classification predictions threshold raw booster margins at zero, equivalent to applying a sigmoid and thresholding the resulting probability at 0.5."
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
     "## XGBoost\n",
     "\n",
     "### KL-DRO\n",
@@ -101,8 +76,8 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Test accuracy: 0.950\n",
       "Robust training objective: 0.130190\n"
@@ -139,8 +114,8 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Test accuracy: 0.945\n",
       "Robust training objective: 0.137117\n"
@@ -179,8 +154,8 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Test accuracy: 0.940\n",
       "Robust training objective: 0.139228\n"
@@ -217,8 +192,8 @@
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Test accuracy: 0.925\n",
       "Robust training objective: 0.157335\n"
@@ -242,9 +217,6 @@
   }
  ],
  "metadata": {
-  "nbsphinx": {
-   "orphan": true
-  },
   "kernelspec": {
    "display_name": "pdro",
    "language": "python",
@@ -261,6 +233,9 @@
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
    "version": "3.11.15"
+  },
+  "nbsphinx": {
+   "orphan": true
   }
  },
  "nbformat": 4,

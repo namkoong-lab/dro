@@ -253,13 +253,13 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../nn_dro.html">Neural Network DRO Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_nn.html">NN DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base_nn.html">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fdro_nn.html">f-Divergence DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_nn.html">Group DRO</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Holistic Robust DRO</a></li>
@@ -281,9 +281,18 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.neural_model.hrdro_nn">
-<span id="holistic-robust-dro"></span><h1>Holistic Robust DRO<a class="headerlink" href="#module-dro.neural_model.hrdro_nn" title="Link to this heading">¶</a></h1>
-<dl class="py class">
+  <section id="holistic-robust-dro">
+<h1>Holistic Robust DRO<a class="headerlink" href="#holistic-robust-dro" title="Link to this heading">¶</a></h1>
+<section id="training-customization">
+<h2>Training customization<a class="headerlink" href="#training-customization" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">HRNNDRO.fit(...)</span></code> accepts paired <code class="docutils literal notranslate"><span class="pre">train_loader</span></code> and <code class="docutils literal notranslate"><span class="pre">val_loader</span></code>
+arguments, a PyTorch <code class="docutils literal notranslate"><span class="pre">optimizer</span></code>, and an optional <code class="docutils literal notranslate"><span class="pre">scheduler</span></code>. Select
+<code class="docutils literal notranslate"><span class="pre">scheduler_step=&quot;epoch&quot;</span></code> (default) or <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code>. Build the optimizer
+after calling <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code>; that call also rebinds the
+adversarial attack to the replacement network. The loader batch size can
+differ from <code class="docutils literal notranslate"><span class="pre">train_batch_size</span></code>: HR-DRO rebuilds its weighting problem
+when the size changes. See the <a class="reference internal" href="base_nn.html#neural-fit-customization"><span class="std std-ref">shared training rules</span></a> for validation and defaults.</p>
+<dl class="py class" id="module-dro.neural_model.hrdro_nn">
 <dt class="sig sig-object py" id="dro.neural_model.hrdro_nn.HRNNDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.hrdro_nn.</span></span><span class="sig-name descname"><span class="pre">HRNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_approach</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.hrdro_nn.HRNNDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.neural_model.base_nn.BaseNNDRO" title="dro.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
@@ -422,6 +431,7 @@ defaults to 64.</p></li>
 </dd></dl>
 
 </section>
+</section>
 
 
             <div class="clearer"></div>
@@ -438,10 +448,13 @@ defaults to 64.</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Holistic Robust DRO</a><ul>
+<li><a class="reference internal" href="#training-customization">Training customization</a><ul>
 <li><a class="reference internal" href="#dro.neural_model.hrdro_nn.HRNNDRO"><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code></a><ul>
 <li><a class="reference internal" href="#dro.neural_model.hrdro_nn.HRNNDRO.update_user_mode"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.update_user_mode()</span></code></a></li>
 <li><a class="reference internal" href="#dro.neural_model.hrdro_nn.HRNNDRO.fit"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.fit()</span></code></a></li>
 <li><a class="reference internal" href="#dro.neural_model.hrdro_nn.HRNNDRO.predict"><code class="docutils literal notranslate"><span class="pre">HRNNDRO.predict()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -1,21 +1,21 @@
-Tutorial
+Tutorials
 ==============
 
 .. toctree::
    :maxdepth: 2
-   :caption: Overall Pipeline
+   :caption: Getting Started
 
    ../tutorials/index
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Linear DRO
+   :caption: Linear Models
 
    ../tutorials/linear
-   ../tutorials/linear_groupdro
    ../tutorials/linear_fdro
    ../tutorials/linear_wdro
+   ../tutorials/linear_groupdro
    ../tutorials/linear_mmddro
    ../tutorials/linear_pdro
    ../tutorials/linear_mixdro
@@ -23,13 +23,14 @@ Tutorial
 
 .. toctree::
    :maxdepth: 2
-   :caption: NN DRO
+   :caption: Neural Models
 
    ../tutorials/neural_model
+   ../tutorials/neural_certificates
 
 .. toctree::
    :maxdepth: 2
-   :caption: Tree DRO
+   :caption: Tree Models
 
    ../tutorials/tree_model
 

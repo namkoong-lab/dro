@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Linear f-Divergence DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Linear f-divergence DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Linear Wasserstein DRO" href="WassersteinDRO_tutorial.html" />
-    <link rel="prev" title="Example" href="../example.html" /> 
+    <link rel="prev" title="Examples" href="../example.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -254,17 +254,18 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear f-Divergence DRO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Linear Bayesian DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">NN Sinkhorn DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">DRO on Personalized Losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and Neural)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Neural Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other Neural DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">Tree DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -279,8 +280,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="Linear-f-Divergence-DRO">
-<h1>Linear f-Divergence DRO<a class="headerlink" href="#Linear-f-Divergence-DRO" title="Link to this heading">¶</a></h1>
+  <section id="Linear-f-divergence-DRO">
+<h1>Linear f-divergence DRO<a class="headerlink" href="#Linear-f-divergence-DRO" title="Link to this heading">¶</a></h1>
+<p>This notebook demonstrates linear DRO with chi-square, CVaR, Kullback-Leibler (KL), and total variation (TV) ambiguity sets. These models account for distribution shifts by changing the weights on observed samples. The examples fit logistic classifiers, visualize worst-case sample weights, and evaluate a chi-square regression model. The final section introduces marginal and conditional CVaR-DRO.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -305,8 +307,7 @@
 </div>
 <section id="Standard-f-divergence-DRO">
 <h2>Standard f-divergence DRO<a class="headerlink" href="#Standard-f-divergence-DRO" title="Link to this heading">¶</a></h2>
-<p>We include chi2, cvar, kl, tv distance, which corresponds to the standard definition of (generalized) f-divergence.</p>
-<p>The following steps including model fitting, and worst-case illustrations.</p>
+<p>In the following, we fit each DRO model, and provide corresponding worst-case illustrations.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -399,8 +400,8 @@
 </div>
 </div>
 </section>
-<section id="data-driven-evaluation">
-<h2>data driven evaluation<a class="headerlink" href="#data-driven-evaluation" title="Link to this heading">¶</a></h2>
+<section id="Data-driven-Evaluation">
+<h2>Data-driven Evaluation<a class="headerlink" href="#Data-driven-Evaluation" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
@@ -450,10 +451,10 @@
 24.05810847832465
 </pre></div></div>
 </div>
-<p>These f-divergence DROs are suitable for handling general distribution shifts with likelihood misspecification, while can be too worst-case in practice.</p>
 </section>
 <section id="Partial-Distribution-Shift">
 <h2>Partial Distribution Shift<a class="headerlink" href="#Partial-Distribution-Shift" title="Link to this heading">¶</a></h2>
+<p>The f-divergence DROs above are suitable for handling general distribution shifts with likelihood misspecification. However, they can be too worst-case in practice.</p>
 <p>Some special kinds of DRO models can help handle problems of particular worst-case distribution shift, i.e., covariate shift (marginal_dro). Both of them are built from CVaR-DRO.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
@@ -471,7 +472,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/api_notebooks_f_dro_tutorial_11_0.png" src="../../_images/api_notebooks_f_dro_tutorial_11_0.png" />
+<img alt="../../_images/api_notebooks_f_dro_tutorial_10_0.png" src="../../_images/api_notebooks_f_dro_tutorial_10_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -516,9 +517,9 @@ conditional {&#39;theta&#39;: [-1.2843606942632635, 3.5303014542999374], &#39;b&
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Linear f-Divergence DRO</a><ul>
+<li><a class="reference internal" href="#">Linear f-divergence DRO</a><ul>
 <li><a class="reference internal" href="#Standard-f-divergence-DRO">Standard f-divergence DRO</a></li>
-<li><a class="reference internal" href="#data-driven-evaluation">data driven evaluation</a></li>
+<li><a class="reference internal" href="#Data-driven-Evaluation">Data-driven Evaluation</a></li>
 <li><a class="reference internal" href="#Partial-Distribution-Shift">Partial Distribution Shift</a></li>
 </ul>
 </li>
@@ -535,7 +536,7 @@ conditional {&#39;theta&#39;: [-1.2843606942632635, 3.5303014542999374], &#39;b&
             <div class="left">
                 
                 <a href="../example.html">
-                    <span class="icon">&lt;</span><span>Example</span></a>
+                    <span class="icon">&lt;</span><span>Examples</span></a>
                 
             </div>
 

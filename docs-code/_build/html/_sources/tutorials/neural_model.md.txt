@@ -1,4 +1,4 @@
-# NN-DRO: Model Formulation
+# Neural DRO Overview
 
 For $\chi^2$-DRO, CVaR-DRO, Wasserstein DRO, Holistic Robust DRO, Sinkhorn DRO, and Group DRO, we implement their `neural-network` version, where the backbone model is (by default) MLP.
 
@@ -12,9 +12,9 @@ Furthermore, users can use their own model architectures via the `update_user_mo
 Implementation details are as follows:
 
 For post-training worst-case-loss bounds for Wasserstein, $\chi^2$, and CVaR
-neural models, see {doc}`NN-DRO robustness certificates <neural_certificates>`.
+neural models, see {doc}`Neural DRO robustness certificates <neural_certificates>`.
 
-## 1. $\chi^2$-DRO and CVaR-DRO
+## $\chi^2$-DRO and CVaR-DRO
 We follow [1] to implement these two $f$-DROs. Our code is largely based on https://github.com/daniellevy/fast-dro.
 
 ### Hyperparameters
@@ -24,11 +24,11 @@ We follow [1] to implement these two $f$-DROs. Our code is largely based on http
 
 [1] Large-Scale Methods for Distributionally Robust Optimization. Daniel Levy, Yair Carmon, John Duchi, and Aaron Sidford. NeurIPS 2020.
 
-See the {doc}`Other NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
+See the {doc}`Other Neural DRO notebook <../api/notebooks/neural_dro_tutorial>`
 for companion neural $f$-DRO material.
 
 
-## 2. Wasserstein DRO
+## Wasserstein DRO
 `WNNDRO` supports two modes: `norm_ball` and `transport_penalty`.
 
 In the default `norm_ball` mode, PGD/PGDL2 approximately maximizes each example's loss within a fixed input-norm ball; training then minimizes the mean loss on the perturbed examples. With exact inner maximization and label-preserving perturbations, this mode has a $W_\infty$-style interpretation. Here $\infty$ is the Wasserstein order; the input norm can be $\ell_2$ or $\ell_\infty$. The $\ell_2$ PGD attack also accepts two-dimensional tabular inputs.
@@ -76,11 +76,11 @@ Tune `gamma` and the ascent step size for the input scale. The inner ascent is a
 
 [3] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi. ICLR 2018.
 
-See the {doc}`Other NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
+See the {doc}`Other Neural DRO notebook <../api/notebooks/neural_dro_tutorial>`
 for companion neural Wasserstein DRO material.
 
 
-## 3. Holistic Robust DRO
+## Holistic Robust DRO
 We follow [4], and our code is largely based on https://github.com/RyanLucas3/HR_Neural_Networks.
 
 **Implementation credit:** `HRNNDRO` uses [Torchattacks](https://github.com/Harry24k/adversarial-attacks-pytorch) by Kim [2] for adversarial-example generation.
@@ -93,11 +93,11 @@ We follow [4], and our code is largely based on https://github.com/RyanLucas3/HR
 
 [4] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.
 
-See the {doc}`Other NN DRO notebook <../api/notebooks/neural_dro_tutorial>`
+See the {doc}`Other Neural DRO notebook <../api/notebooks/neural_dro_tutorial>`
 for companion Holistic Robust DRO material.
 
 
-## 4. Sinkhorn DRO
+## Sinkhorn DRO
 Sinkhorn DRO uses an entropic-regularized Wasserstein distance and Gaussian input perturbations to construct a smooth robust loss. The implementation supports standard stochastic gradient (SG), multilevel Monte Carlo (MLMC), and randomized truncated MLMC (RTMLMC) optimization [5].
 
 ### Hyperparameters
@@ -154,7 +154,7 @@ See the {doc}`Sinkhorn NN notebook <../api/notebooks/sinkhorn-nn>` for classific
 [5] [Sinkhorn Distributionally Robust Optimization](https://arxiv.org/abs/2109.11926). Jie Wang, Rui Gao, and Yao Xie.
 
 
-## 5. Group DRO
+## Group DRO
 
 Group DRO targets uniform performance across a finite set of observed groups.
 For group-average losses $L_g(\theta)$, its objective is

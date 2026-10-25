@@ -4,11 +4,11 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Other NN DRO\n",
+    "# Other Neural DRO\n",
     "\n",
     "This notebook demonstrates how to call the neural-network implementations of chi-square DRO, CVaR-DRO, Wasserstein DRO, and Holistic Robust DRO. All four examples use the same binary classification data, MLP architecture, and training settings so that the API differences are easy to compare. The focus here is code usage rather than mathematical formulations.\n",
     "\n",
-    "For post-training worst-case-loss bounds, see the [NN-DRO robustness certificates guide](../../tutorials/neural_certificates.md)."
+    "For post-training worst-case-loss bounds, see the [Neural DRO robustness certificates guide](../../tutorials/neural_certificates.md)."
    ]
   },
   {

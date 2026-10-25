@@ -4,7 +4,7 @@
       "cell_type": "markdown",
       "metadata": {},
       "source": [
-        "# NN Sinkhorn DRO\n",
+        "# Neural Sinkhorn DRO\n",
         "\n",
         "This notebook demonstrates how to use `SinkhornNNDRO` for distributionally robust optimization with neural network models. \n",
         "\n",
@@ -109,7 +109,7 @@
       "source": [
         "### MLMC (Multilevel Monte Carlo) Optimization\n",
         "\n",
-        "MLMC uses a hierarchy of sample levels for variance reduction while maintaining the same expected gradient."
+        "MLMC combines a hierarchy of sample levels with multilevel corrections to estimate the robust-loss gradient."
       ]
     },
     {
@@ -381,7 +381,7 @@
       "source": [
         "## Effect of Regularization Strength\n",
         "\n",
-        "The entropic regularization parameter $\\varepsilon$ (`reg_param`) controls the smoothness of the Sinkhorn distance. Larger $\\varepsilon$ → smoother transport plan → more regularized (closer to ERM); smaller $\\varepsilon$ → closer to true Wasserstein DRO."
+        "The entropic regularization parameter $\\varepsilon$ (`reg_param`) controls the smoothness of the Sinkhorn distance. Model with larger $\\varepsilon$ leads to smoother transport plan and more regularized versions, while the model with smaller $\\varepsilon$ leads to a closer performance to the true Wasserstein DRO."
       ]
     },
     {

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tree-DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Tree DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Personalization" href="personal_loss.html" />
-    <link rel="prev" title="NN-DRO" href="neural_model.html" /> 
+    <link rel="prev" title="Neural DRO Robustness Certificates" href="neural_certificates.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,21 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -281,7 +282,7 @@
           <div class="body" role="main">
             
   <section class="tex2jax_ignore mathjax_ignore" id="tree-dro">
-<h1>Tree-DRO<a class="headerlink" href="#tree-dro" title="Link to this heading">¶</a></h1>
+<h1>Tree DRO<a class="headerlink" href="#tree-dro" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">dro</span></code> package provides KL-DRO, <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, and CVaR-DRO wrappers for
 XGBoost and LightGBM. These methods fit tree ensembles with custom boosting
 gradients that place more emphasis on observations with large losses. Tree
@@ -343,8 +344,15 @@ it retain their ordinary gradients. This is a heuristic training rule, so the
 boosting updates are not exact derivatives of the displayed CVaR objective.</p>
 </section>
 </section>
-<section id="hyperparameters">
-<h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h2>
+<section id="objective-and-booster-configuration">
+<h2>Objective and booster configuration<a class="headerlink" href="#objective-and-booster-configuration" title="Link to this heading">¶</a></h2>
+<p>Configure the robust objective through the model class and <code class="docutils literal notranslate"><span class="pre">eps</span></code>, and pass
+tree-construction settings to <code class="docutils literal notranslate"><span class="pre">update()</span></code>. The DRO wrapper supplies the custom
+training objective during <code class="docutils literal notranslate"><span class="pre">fit()</span></code>.</p>
+<section id="robust-objective">
+<h3>Robust objective<a class="headerlink" href="#robust-objective" title="Link to this heading">¶</a></h3>
+<p>The model class selects KL-DRO, <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, or CVaR-DRO and the XGBoost or
+LightGBM backend. The formulations above define the corresponding objectives.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code> controls the selected DRO formulation. The default is <code class="docutils literal notranslate"><span class="pre">0.1</span></code> for KL
 and <span class="math notranslate nohighlight">\(\chi^2\)</span>, and <code class="docutils literal notranslate"><span class="pre">0.2</span></code> for CVaR. KL and <span class="math notranslate nohighlight">\(\chi^2\)</span> constructors require
@@ -357,15 +365,23 @@ to raw scores and use binary-classification gradients in both modes. Use
 <code class="docutils literal notranslate"><span class="pre">&quot;classification&quot;</span></code> with labels in <span class="math notranslate nohighlight">\(\{0,1\}\)</span> for the objectives described
 above. Although <code class="docutils literal notranslate"><span class="pre">&quot;regression&quot;</span></code> is accepted, its training updates do not
 implement the squared-loss DRO objective reported after fitting.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">num_boost_round</span></code> is a required key in the dictionary passed to <code class="docutils literal notranslate"><span class="pre">update()</span></code>.
-It sets the number of boosting iterations. Standard XGBoost or LightGBM
-options such as <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> and <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> go in the same dictionary;
-they control the tree booster, not the ambiguity set.</p></li>
 </ul>
+</section>
+<section id="booster-configuration">
+<h3>Booster configuration<a class="headerlink" href="#booster-configuration" title="Link to this heading">¶</a></h3>
+<p>Pass a dictionary of XGBoost or LightGBM settings to <code class="docutils literal notranslate"><span class="pre">update()</span></code> before fitting:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">max_depth</span></code> limits tree depth.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> scales each boosting step.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_boost_round</span></code> sets the number of boosting iterations and is required.</p></li>
+</ul>
+<p>These settings control tree construction. The class and <code class="docutils literal notranslate"><span class="pre">eps</span></code> determine the
+robust objective used to train the ensemble.</p>
 <p>Choose <code class="docutils literal notranslate"><span class="pre">eps</span></code> using held-out data and the performance measure relevant to the
 deployment setting. Tree depth, learning rate, and boosting rounds should be
 tuned as well: a larger robustness parameter cannot compensate for a poorly
 fitted or overfitted booster.</p>
+</section>
 </section>
 <section id="fitting-and-diagnostics">
 <h2>Fitting and diagnostics<a class="headerlink" href="#fitting-and-diagnostics" title="Link to this heading">¶</a></h2>
@@ -389,8 +405,11 @@ call <code class="docutils literal notranslate"><span class="pre">update()</span
 <p>The corresponding class names are <code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB</span></code>, <code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB</span></code>,
 <code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM</span></code>, <code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM</span></code>, and <code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM</span></code>. <code class="docutils literal notranslate"><span class="pre">robust_obj</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>
 before fitting and is the selected robust objective evaluated on the training
-losses afterward. It is a training diagnostic, not a held-out performance
-estimate. <code class="docutils literal notranslate"><span class="pre">score()</span></code> returns accuracy and macro F1 for classification.</p>
+losses afterward. It is a training diagnostic; compare it only when the data,
+loss, and DRO formulation are held fixed. Use held-out data to estimate
+predictive performance. <code class="docutils literal notranslate"><span class="pre">score()</span></code> returns accuracy and macro F1 for
+classification. Classification uses raw booster margins with a threshold of
+zero, equivalent to a sigmoid probability threshold of 0.5.</p>
 <p>See the <a class="reference internal" href="../api/notebooks/tree_dro_tutorial.html"><span class="doc">tree DRO notebook</span></a> for
 end-to-end XGBoost and LightGBM examples.</p>
 </section>
@@ -410,14 +429,18 @@ end-to-end XGBoost and LightGBM examples.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Tree-DRO</a><ul>
+<li><a class="reference internal" href="#">Tree DRO</a><ul>
 <li><a class="reference internal" href="#formulation">Formulation</a><ul>
 <li><a class="reference internal" href="#kl-dro">KL-DRO</a></li>
 <li><a class="reference internal" href="#chi-2-dro"><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO</a></li>
 <li><a class="reference internal" href="#cvar-dro">CVaR-DRO</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
+<li><a class="reference internal" href="#objective-and-booster-configuration">Objective and booster configuration</a><ul>
+<li><a class="reference internal" href="#robust-objective">Robust objective</a></li>
+<li><a class="reference internal" href="#booster-configuration">Booster configuration</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#fitting-and-diagnostics">Fitting and diagnostics</a></li>
 </ul>
 </li>
@@ -433,8 +456,8 @@ end-to-end XGBoost and LightGBM examples.</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="neural_model.html">
-                    <span class="icon">&lt;</span><span>NN-DRO</span></a>
+                <a href="neural_certificates.html">
+                    <span class="icon">&lt;</span><span>Neural DRO Robustness Certificates</span></a>
                 
             </div>
 

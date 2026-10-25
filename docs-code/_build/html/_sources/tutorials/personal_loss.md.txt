@@ -18,7 +18,7 @@ if we want to modify the ``self._cvx_loss`` and ``_loss`` functions in the model
 Wasserstein DRO passes a precomputed `design_matrix` to `_cvx_loss`; use it when
 provided so the custom loss uses the same linear or kernel coordinates as fitting.
 
-## 1. Linear (Convex) DRO Methods
+## Linear (Convex) DRO Methods
 For linear DRO models formulated in CVXPY, customize both ``_loss`` and
 ``_cvx_loss`` for the chosen loss function.
 
@@ -70,12 +70,12 @@ Personalized loss hooks for Hybrid-distance DRO formulations have not yet been i
 Note that we have not implemented the personalized constraint module yet $(e.g., for $\theta$). Stay tuned for that.
 
 
-## 2. NN-Based DRO Methods
+## NN-Based DRO Methods
 
 For post-training bounds on the robust loss of a fitted neural model, see the
-{doc}`NN-DRO robustness certificates guide <neural_certificates>`.
+{doc}`Neural DRO robustness certificates guide <neural_certificates>`.
 
-### 2.1 Personalized loss
+### Personalized loss
 
 For example, a decision-aware regression model can use the unbalanced L1 loss
 
@@ -117,7 +117,7 @@ attack objective should change, a custom attack. Its training controls below
 do not change the loss or attack objective. The example in the next section
 replaces the architecture, per-sample loss, and training attack.
 
-### 2.2 Personalized model architecture
+### Personalized model architecture
 
 Pass a custom `torch.nn.Module` through `update_user_mode(...)` before fitting.
 For HR-DRO and WNNDRO norm-ball mode, this also binds the adversarial attack to
@@ -269,7 +269,7 @@ example overrides HR-DRO internals because the class does not currently expose
 custom-loss or custom-attack hooks. Check those internals when upgrading the
 package.
 
-### 2.3 Data loaders, optimizers, and schedulers
+### Data loaders, optimizers, and schedulers
 
 `Chi2NNDRO`, `CVaRNNDRO`, `HRNNDRO`, and `WNNDRO` accept these optional controls
 through `fit(...)`. Supply both `train_loader` and `val_loader` as loaders of
@@ -315,7 +315,7 @@ CVXPY problem for that batch size. Torchattacks clips adversarial inputs to
 includes complete chi-squared, CVaR, and HR-DRO fitting examples.
 
 
-## 3. Tree-Based DRO Methods
+## Tree-Based DRO Methods
 
 For tree-based DRO methods, `loss(preds, labels)` supplies the per-example
 losses used for robust sample weighting and the reported objective. When a

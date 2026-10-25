@@ -253,8 +253,8 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 
@@ -278,9 +278,8 @@
 <p>where <span class="math notranslate nohighlight">\(U\)</span> is the so-called ambiguity set and typically of the form <span class="math notranslate nohighlight">\(U = \{P: d(P, \hat P_n) \leq \epsilon\}\)</span> and <span class="math notranslate nohighlight">\(\hat P_n := \frac{1}{n}\sum_{i = 1}^n \delta_{(X_i, Y_i)}\)</span> is the empirical distribution of training samples <span class="math notranslate nohighlight">\(\{(X_i, Y_i)\}_{i = 1}^n\)</span>. And <span class="math notranslate nohighlight">\(\epsilon\)</span> is the hyperparameter.</p>
 <p>As for the current release, <cite>dro</cite> supports:</p>
 <section id="synthetic-data-generation">
-<h2>(1) Synthetic data generation<a class="headerlink" href="#synthetic-data-generation" title="Link to this heading">¶</a></h2>
-<table class="docutils align-default" id="id2">
-<caption><span class="caption-text">Synthetic Data Generation Modules</span><a class="headerlink" href="#id2" title="Link to this table">¶</a></caption>
+<h2>Synthetic data generation<a class="headerlink" href="#synthetic-data-generation" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
 <colgroup>
 <col style="width: 20.0%" />
 <col style="width: 20.0%" />
@@ -293,52 +292,48 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.data.dataloader_classification</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.data.dataloader_classification</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">classification_basic</span></code></p></td>
 <td><p>Basic classification task</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">classification_DN21</span></code></p></td>
-<td><p>Following Section 3.1.1 of [1]</p></td>
+<td><p>Following Section 3.1.1 of <a class="reference internal" href="#about-reference-1">[1]</a></p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">classification_SNVD20</span></code></p></td>
-<td><p>Following Section 5.1 of [2]</p></td>
+<td><p>Following Section 5.1 of <a class="reference internal" href="#about-reference-2">[2]</a></p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">classification_LWLC</span></code></p></td>
-<td><p>Following Section 4.1 (Classification) of [3]</p></td>
+<td><p>Following Section 4.1 (Classification) of <a class="reference internal" href="#about-reference-3">[3]</a></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.data.dataloader_regression</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.data.dataloader_regression</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_basic</span></code></p></td>
 <td><p>Basic regression task</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_DN20_1</span></code></p></td>
-<td><p>Following Section 3.1.2 of [1]</p></td>
+<td><p>Following Section 3.1.2 of <a class="reference internal" href="#about-reference-1">[1]</a></p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_DN20_2</span></code></p></td>
-<td><p>Following Section 3.1.3 of [1]</p></td>
+<td><p>Following Section 3.1.3 of <a class="reference internal" href="#about-reference-1">[1]</a></p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_DN20_3</span></code></p></td>
-<td><p>Following Section 3.3 of [1]</p></td>
+<td><p>Following Section 3.3 of <a class="reference internal" href="#about-reference-1">[1]</a></p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">regression_LWLC</span></code></p></td>
-<td><p>Following Section 4.1 (Regression) of [3]</p></td>
+<td><p>Following Section 4.1 (Regression) of <a class="reference internal" href="#about-reference-3">[3]</a></p></td>
 </tr>
 </tbody>
 </table>
-<p>[1] Learning Models with Uniform Performance via Distributionally Robust Optimization.</p>
-<p>[2] Certifying Some Distributional Robustness with Principled Adversarial Training.</p>
-<p>[3] Distributionally Robust Optimization with Data Geometry.</p>
 </section>
 <section id="linear-dro-models">
-<h2>(2) Linear DRO models<a class="headerlink" href="#linear-dro-models" title="Link to this heading">¶</a></h2>
-<table class="docutils align-default" id="id3">
-<caption><span class="caption-text">Linear DRO Models</span><a class="headerlink" href="#id3" title="Link to this table">¶</a></caption>
+<h2>Linear DRO models<a class="headerlink" href="#linear-dro-models" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
 <colgroup>
 <col style="width: 25.0%" />
 <col style="width: 25.0%" />
@@ -351,43 +346,43 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.base</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.base</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></p></td>
 <td><p>Base class for linear DRO methods</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.chi2_dro</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.chi2_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">Chi2DRO</span></code></p></td>
 <td><p>Linear chi-square divergence-based DRO</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.kl_dro</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.kl_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">KLDRO</span></code></p></td>
 <td><p>Kullback-Leibler divergence-based DRO</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.cvar_dro</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.cvar_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">CVaRDRO</span></code></p></td>
 <td><p>CVaR DRO</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.tv_dro</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.tv_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">TVDRO</span></code></p></td>
 <td><p>Total Variation DRO</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.marginal_dro</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.marginal_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">MarginalCVaRDRO</span></code></p></td>
 <td><p>Marginal-X CVaR DRO</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.mmd_dro</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.mmd_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">MMD_DRO</span></code></p></td>
 <td><p>Maximum Mean Discrepancy DRO</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.conditional_dro</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.conditional_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ConditionalCVaRDRO</span></code></p></td>
 <td><p>Y|X (ConditionalShiftBased) CVaR DRO</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.hr_dro</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.hr_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">HR_DRO_LR</span></code></p></td>
 <td><p>Holistic Robust DRO on linear models</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.wasserstein_dro</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.wasserstein_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">WassersteinDRO</span></code></p></td>
 <td><p>Wasserstein DRO</p></td>
 </tr>
@@ -395,15 +390,15 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">WassersteinDROsatisficing</span></code></p></td>
 <td><p>Robust satisficing version of Wasserstein DRO</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.sinkhorn_dro</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.sinkhorn_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">SinkhornLinearDRO</span></code></p></td>
 <td><p>Sinkhorn DRO on linear models</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.mot_dro</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.mot_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">MOTDRO</span></code></p></td>
 <td><p>Optimal Transport DRO with Conditional Moment Constraints</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.linear_dro.or_wasserstein_dro</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.linear_model.or_wasserstein_dro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ORWDRO</span></code></p></td>
 <td><p>Outlier-Robust Wasserstein DRO</p></td>
 </tr>
@@ -415,9 +410,8 @@
 </table>
 </section>
 <section id="nn-dro-models">
-<h2>(3) NN DRO models<a class="headerlink" href="#nn-dro-models" title="Link to this heading">¶</a></h2>
-<table class="docutils align-default" id="id4">
-<caption><span class="caption-text">Neural Network DRO Models</span><a class="headerlink" href="#id4" title="Link to this table">¶</a></caption>
+<h2>NN DRO models<a class="headerlink" href="#nn-dro-models" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
 <colgroup>
 <col style="width: 25.0%" />
 <col style="width: 25.0%" />
@@ -430,19 +424,19 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.neural_model.base_nn</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.neural_model.base_nn</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></p></td>
 <td><p>Base model for neural-network-based DRO</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.neural_model.fdro_nn</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.neural_model.fdro_nn</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code></p></td>
 <td><p>Chi-square Divergence-based Neural DRO Model</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.neural_model.wdro_nn</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.neural_model.wdro_nn</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></p></td>
 <td><p>Wasserstein Neural DRO with Adversarial Robustness</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.neural_model.hrdro_nn</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.neural_model.hrdro_nn</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code></p></td>
 <td><p>Holistic Robust NN DRO</p></td>
 </tr>
@@ -458,9 +452,8 @@
 </table>
 </section>
 <section id="tree-ensembles-dro-models">
-<h2>(4) Tree-Ensembles DRO models<a class="headerlink" href="#tree-ensembles-dro-models" title="Link to this heading">¶</a></h2>
-<table class="docutils align-default" id="id5">
-<caption><span class="caption-text">Tree-Ensembles DRO Models</span><a class="headerlink" href="#id5" title="Link to this table">¶</a></caption>
+<h2>Tree-Ensembles DRO models<a class="headerlink" href="#tree-ensembles-dro-models" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
 <colgroup>
 <col style="width: 25.0%" />
 <col style="width: 25.0%" />
@@ -473,32 +466,47 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.xgb</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.tree_model.xgb</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">KLDRO_XGB</span></code></p></td>
 <td><p>KL-DRO for XGBoost</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.xgb</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.tree_model.xgb</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">CVaRDRO_XGB</span></code></p></td>
 <td><p>CVaR-DRO for XGBoost</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.xgb</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.tree_model.xgb</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">Chi2DRO_XGB</span></code></p></td>
 <td><p>Chi2-DRO for XGBoost</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.tree_model.lgbm</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">KLDRO_LGBM</span></code></p></td>
 <td><p>KL-DRO for Light GBM</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
+<tr class="row-even"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.tree_model.lgbm</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">CVaRDRO_LGBM</span></code></p></td>
 <td><p>CVaR-DRO for Light GBM</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.src.tree_model.lgbm</span></code></p></td>
+<tr class="row-odd"><td><p><code class="file docutils literal notranslate"><span class="pre">dro.tree_model.lgbm</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">Chi2DRO_LGBM</span></code></p></td>
 <td><p>Chi2-DRO for Light GBM</p></td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<p id="about-reference-1">[1] John C. Duchi and Hongseok Namkoong.
+<a class="reference external" href="https://doi.org/10.1214/20-AOS2004">Learning Models with Uniform Performance via Distributionally Robust Optimization</a>.
+<em>The Annals of Statistics</em>, 49(3):1378–1406, 2021.
+Institute of Mathematical Statistics.</p>
+<p id="about-reference-2">[2] Aman Sinha, Hongseok Namkoong, and John C. Duchi.
+<a class="reference external" href="https://openreview.net/forum?id=Hk6kPgZA-">Certifying Some Distributional Robustness with Principled Adversarial Training</a>.
+<em>International Conference on Learning Representations (ICLR)</em>, 2018.
+OpenReview.net.</p>
+<p id="about-reference-3">[3] Jiashuo Liu, Jiayun Wu, Bo Li, and Peng Cui.
+<a class="reference external" href="https://proceedings.neurips.cc/paper_files/paper/2022/hash/da535999561b932f56efdd559498282e-Abstract-Conference.html">Distributionally Robust Optimization with Data Geometry</a>.
+<em>Advances in Neural Information Processing Systems</em>, 35:33689–33701, 2022.
+Curran Associates, Inc.</p>
 </section>
 </section>
 
@@ -517,10 +525,11 @@
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">About</a><ul>
-<li><a class="reference internal" href="#synthetic-data-generation">(1) Synthetic data generation</a></li>
-<li><a class="reference internal" href="#linear-dro-models">(2) Linear DRO models</a></li>
-<li><a class="reference internal" href="#nn-dro-models">(3) NN DRO models</a></li>
-<li><a class="reference internal" href="#tree-ensembles-dro-models">(4) Tree-Ensembles DRO models</a></li>
+<li><a class="reference internal" href="#synthetic-data-generation">Synthetic data generation</a></li>
+<li><a class="reference internal" href="#linear-dro-models">Linear DRO models</a></li>
+<li><a class="reference internal" href="#nn-dro-models">NN DRO models</a></li>
+<li><a class="reference internal" href="#tree-ensembles-dro-models">Tree-Ensembles DRO models</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>

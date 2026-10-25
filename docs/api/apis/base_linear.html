@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Linear DRO Base Class &#8212; dro 0.4.2 documentation</title>
+    <title>Base Class &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -251,16 +251,16 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Linear DRO Base Class</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chi2dro_linear.html">Chi-square DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cvardro_linear.html">CVaR DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_linear.html">Group DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tvdro.html">TV DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mmddro.html">MMD DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wdro_linear.html">Wasserstein DRO</a></li>
@@ -289,7 +289,7 @@
           <div class="body" role="main">
             
   <section id="module-dro.linear_model.base">
-<span id="linear-dro-base-class"></span><h1>Linear DRO Base Class<a class="headerlink" href="#module-dro.linear_model.base" title="Link to this heading">¶</a></h1>
+<span id="base-class"></span><h1>Base Class<a class="headerlink" href="#module-dro.linear_model.base" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.base.</span></span><span class="sig-name descname"><span class="pre">BaseLinearDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLARABEL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO" title="Link to this definition">¶</a></dt>
@@ -322,17 +322,20 @@ recent successful fit, or <code class="docutils literal notranslate"><span class
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">metric</span></code>: The metric to use when calculating kernel between instances in a feature array.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code>: Parameter gamma of the pairwise kernel specified by metric.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">n_components</span></code>: The number of</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_components</span></code>: Integer number of Nyström components, or
+<code class="docutils literal notranslate"><span class="pre">None</span></code> to use the full kernel representation on the next fit.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – <ul>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">kernel_gamma</span></code> is not in scale, auto;</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">n_components</span></code> is not an int;</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">metric</span></code> is</p></li>
 </ul>
-</p>
+</p></li>
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">n_components</span></code> is neither an integer nor <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -428,10 +431,9 @@ recent successful fit, or <code class="docutils literal notranslate"><span class
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.linear_model.base.BaseLinearDRO.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.base.BaseLinearDRO.evaluate" title="Link to this definition">¶</a></dt>
-<dd><p>Evaluate model performance with bias-corrected mean squared error (MSE) or binary cross entropy error (BCE).</p>
-<p>Specifically designed for OLS / Logistic models to compute an unbiased performance estimate 
-by adjusting for the covariance structure of the features. This implementation 
-accelerates evaluation by avoiding full retraining.</p>
+<dd><p>Estimate performance with bias-corrected OLS or logistic loss.</p>
+<p>Supported only for linear-kernel OLS and logistic models. SVM, LAD,
+and nonlinear-kernel models are not supported by this method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -442,19 +444,20 @@ Must match the model’s <cite>input_dim</cite> (n_features).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Bias-corrected MSE for OLS models. Returns raw MSE for other model types.</p>
+<dd class="field-even"><p>Bias-corrected MSE for OLS or binary cross entropy for logistic.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
+<li><p><strong>NotImplementedError</strong> – For SVM, LAD, or nonlinear-kernel models.</p></li>
 <li><p><strong>ValueError</strong> – <ul>
 <li><p>If <cite>X</cite> and <cite>y</cite> have inconsistent sample sizes</p></li>
 <li><p>If <cite>X</cite> feature dimension ≠ <cite>input_dim</cite></p></li>
 </ul>
 </p></li>
-<li><p><strong>LinAlgError</strong> – If feature covariance matrix is singular (non-invertible)</p></li>
+<li><p><strong>LinAlgError</strong> – If the logistic information matrix is singular.</p></li>
 </ul>
 </dd>
 </dl>
@@ -471,8 +474,9 @@ Must match the model’s <cite>input_dim</cite> (n_features).</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>Currently, bias correction is only implemented for <code class="docutils literal notranslate"><span class="pre">model_type='ols'</span></code>; other model types return the raw MSE.</p></li>
-<li><p>Covariance matrix computation uses pseudo-inverse to handle high-dimensional data (<code class="docutils literal notranslate"><span class="pre">n_features</span> <span class="pre">&gt;</span> <span class="pre">n_samples</span></code>).</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">score()</span></code> for standard predictive metrics for SVM and LAD.</p></li>
+<li><p>OLS uses a pseudo-inverse; logistic evaluation requires an
+invertible information matrix.</p></li>
 </ul>
 </div>
 </dd></dl>
@@ -495,7 +499,7 @@ Must match the model’s <cite>input_dim</cite> (n_features).</p></li>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Linear DRO Base Class</a><ul>
+<li><a class="reference internal" href="#">Base Class</a><ul>
 <li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a><ul>
 <li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.update_kernel"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update_kernel()</span></code></a></li>
 <li><a class="reference internal" href="#dro.linear_model.base.BaseLinearDRO.update"><code class="docutils literal notranslate"><span class="pre">BaseLinearDRO.update()</span></code></a></li>

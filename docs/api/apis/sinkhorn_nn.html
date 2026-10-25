@@ -253,13 +253,13 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../nn_dro.html">Neural Network DRO Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_nn.html">NN DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base_nn.html">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fdro_nn.html">f-Divergence DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_nn.html">Group DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hrdro_nn.html">Holistic Robust DRO</a></li>
@@ -281,9 +281,16 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.neural_model.sinkhorn_nn">
-<span id="sinkhorn-dro"></span><h1>Sinkhorn DRO<a class="headerlink" href="#module-dro.neural_model.sinkhorn_nn" title="Link to this heading">¶</a></h1>
-<dl class="py exception">
+  <section id="sinkhorn-dro">
+<h1>Sinkhorn DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h1>
+<section id="training-customization">
+<h2>Training customization<a class="headerlink" href="#training-customization" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SinkhornNNDRO</span></code> also inherits the <a class="reference internal" href="base_nn.html#neural-fit-customization"><span class="std std-ref">neural training controls</span></a>. Supply both <code class="docutils literal notranslate"><span class="pre">train_loader</span></code> and <code class="docutils literal notranslate"><span class="pre">val_loader</span></code>
+to use external batches, and pass an <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> and optional <code class="docutils literal notranslate"><span class="pre">scheduler</span></code>
+to control parameter updates and the learning-rate schedule. Construct the
+optimizer after any <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> call. The original
+<code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y,</span> <span class="pre">...)</span></code> path remains available.</p>
+<dl class="py exception" id="module-dro.neural_model.sinkhorn_nn">
 <dt class="sig sig-object py" id="dro.neural_model.sinkhorn_nn.SinkhornNNDROError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.sinkhorn_nn.</span></span><span class="sig-name descname"><span class="pre">SinkhornNNDROError</span></span><a class="headerlink" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDROError" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DROError</span></code></p>
@@ -427,6 +434,7 @@ Defaults to 5.</p></li>
 </dd></dl>
 
 </section>
+</section>
 
 
             <div class="clearer"></div>
@@ -443,9 +451,12 @@ Defaults to 5.</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Sinkhorn DRO</a><ul>
+<li><a class="reference internal" href="#training-customization">Training customization</a><ul>
 <li><a class="reference internal" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDROError"><code class="docutils literal notranslate"><span class="pre">SinkhornNNDROError</span></code></a></li>
 <li><a class="reference internal" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDRO"><code class="docutils literal notranslate"><span class="pre">SinkhornNNDRO</span></code></a><ul>
 <li><a class="reference internal" href="#dro.neural_model.sinkhorn_nn.SinkhornNNDRO.update"><code class="docutils literal notranslate"><span class="pre">SinkhornNNDRO.update()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

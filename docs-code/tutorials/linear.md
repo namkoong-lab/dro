@@ -1,4 +1,4 @@
-# Linear Models
+# Linear DRO Overview
 
 The convex linear formulations are solved numerically with CVXPY. Some methods
 also use approximations, such as a reduced kernel representation.
@@ -53,12 +53,12 @@ runnable frequentist and Bayesian parametric examples.
 
 ## Hybrid-distance DRO
 
-See the {doc}`Hybrid-distance DRO guide and references <linear_mixdro>` for the
+See the {doc}`Linear Hybrid-Distance DRO guide and references <linear_mixdro>` for the
 Sinkhorn, MOT, outlier-robust Wasserstein, and Holistic DRO formulations.
 Estimator references are available for
 {doc}`Sinkhorn DRO <../api/apis/sinkhorn_dro>`,
 {doc}`MOT DRO <../api/apis/motdro>`,
 {doc}`outlier-robust Wasserstein DRO <../api/apis/or_wdro>`, and
 {doc}`Holistic Robust DRO <../api/apis/hrdro>`. See the
-{doc}`Hybrid-distance DRO notebook <../api/notebooks/mixed_dro_tutorial>` for
+{doc}`Linear Hybrid-Distance DRO notebook <../api/notebooks/mixed_dro_tutorial>` for
 runnable examples of all four methods.

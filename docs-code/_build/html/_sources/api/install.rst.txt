@@ -1,7 +1,7 @@
 Installation Guide
 ====================
 
-(1) Install ``dro`` package
+Install ``dro`` package
 -----------------------------
 
 To install ``dro`` package, you can simply run:
@@ -12,7 +12,7 @@ To install ``dro`` package, you can simply run:
 
 And it will install all required packages.
 
-(2) Solver selection
+Solver selection
 --------------------
 
 The convex linear DRO models use ``CLARABEL`` through ``cvxpy`` by default. No commercial solver license is needed. You can select another installed solver when it supports the model's formulation, either during initialization or before fitting:

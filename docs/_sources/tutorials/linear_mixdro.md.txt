@@ -1,5 +1,5 @@
-# DRO with a mixture of distance metrics
-Recall the training distribution as $\hat P$, we further implement several DRO methods based on a mixture of distance metrics, including Sinkhorn-DRO, Holistic Robust DRO, and DRO based on OT discrepancy with moment constraints (MOT-DRO).
+# Linear Hybrid-Distance DRO
+This guide covers hybrid-distance DRO formulations: Sinkhorn-DRO, Holistic Robust DRO, MOT-DRO, and outlier-robust Wasserstein DRO. They combine transport-based distances with entropy, divergence, moment, or contamination constraints. Let $\widehat P$ denote the empirical training distribution.
 
 
 ## Sinkhorn-DRO
@@ -12,8 +12,8 @@ $$
 where $\mu,\nu$ are reference measures satisfying $P\ll \mu$ and $Q\ll \nu$.
 
 ### Hyperparameters
-* reg_param: Dual parameter $\lambda$. Please refer to Equation (14) in [1].
-* lambda_param: Variance of the Gaussian noise distribution added to each sample. Please refer to Remark 8.
+* `reg_param`: entropic regularization strength $\epsilon$, also used as the Gaussian perturbation variance. Please refer to Remark 8 in [1].
+* `lambda_param`: dual scaling parameter $\lambda$. The robust loss uses the product `lambda_param * reg_param`; see Equation (14) in [1].
 * k_sample_max: $l$ in Equation (14) in [1], where $2^l$ points are sampled to approximate the sub-gradient.
 
 
@@ -42,20 +42,32 @@ where $\pi_{(Z,W)}=P, \pi_{(\hat Z, \hat W)}=Q$, and $\mathbb{E}_\pi[W]=1$.
 Taking the cost function as
 
 $$
-c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot \|\hat z - z\|^p +\theta_2\cdot (\phi(w)-\phi(\hat w))_+,
+c((z,w), (\hat z, \hat w))=\theta_1\cdot w \cdot \|\hat x - x\|_p^s +\theta_2\cdot (\phi(w)-\phi(\hat w))_+,
 $$
 
-where $\tilde{P} =\hat{P} \otimes \delta_1$.
+where $\tilde{P} =\hat{P} \otimes \delta_1$. Here $x$ is the feature component of
+$z=(x,y)$; targets $y$ remain fixed. The norm order $p$ and transport exponent
+$s$ are independent, configured through `p` and `square`, respectively.
 
 We support linear losses (SVM for classification and LAD for regression), where we follow Theorem 5.2 and Corollary 5.1 in [3].
 
 ### Hyperparameters
-* $\theta_1$ (or $\theta_2$): relative penalty of Wasserstein (outcome) perturbation or likelihood perturbation, satisfying $\frac{1}{\theta_1} + \frac{1}{\theta_2} = 1$.
-* $\epsilon$: robustness radius for OT ambigiuty set, denoted as ``epsilon``.
-* $p$: cost penalty of outcome perturbation, where we only implement the case of $p \in \{1, 2\}$.
+* $\theta_1$ (or $\theta_2$): relative penalty of feature transport or likelihood perturbation. The constructor sets both to `1`. Updating either through `theta1` or `theta2` requires a value greater than `1` and sets the other so that $\frac{1}{\theta_1} + \frac{1}{\theta_2} = 1$.
+* $\epsilon$: robustness radius for the OT ambiguity set, configured through `eps`.
+* $p$: feature perturbation norm order, configured through `p`. Supported values are `1`, `2`, and `'inf'`; the default is `2`.
+* $s$: transport exponent, configured through `square`. Supported values are `1` and `2`; the default is `2`.
+
+For squared Euclidean feature transport, use:
+
+```python
+from dro.linear_model.mot_dro import MOTDRO
+
+model = MOTDRO(input_dim=2, model_type='lad')
+model.update({'eps': 0.1, 'p': 2, 'square': 2})
+```
 
 ## Outlier-Robust Wasserstein DRO
-In Outlier-Robust Wassersteuin DRO (OR-WDRO) [4], $\mathcal{P}(W_p^{\eta};\epsilon) = \{Q: W_p^{\eta}(Q, \hat P)\leq \epsilon\}$, where:
+In Outlier-Robust Wassersteuin DRO (OR-WDRO) [4], $\mathcal{P}(W_p^{\eta};\epsilon) = \{Q: W_p^{\eta}(Q, \widehat P)\leq \epsilon\}$, where:
 
 $$
 W_p^{\eta}(P, Q) = \inf_{Q' \in \mathcal{P}(R^d), \|Q - Q'\|_{TV}\leq \eta} W_p(P, Q'),
@@ -69,7 +81,7 @@ where $p$ is the $p$-Wasserstein distance and $\eta \in [0, 0.5)$ denotes the co
 
 We only consider SVM (for classification) and LAD (for regression) based on the convex reformulation of Theorem 2 in [4]. Note that the model also requires the input of $\sigma$, which we take $\sigma = \sqrt{d_x}$ as default.
 
-See the {doc}`mixed-distance DRO notebook <../api/notebooks/mixed_dro_tutorial>`
+See the {doc}`Linear Hybrid-Distance DRO notebook <../api/notebooks/mixed_dro_tutorial>`
 for end-to-end Sinkhorn, MOT, OR-WDRO, and Holistic DRO examples.
 
 ## Reference

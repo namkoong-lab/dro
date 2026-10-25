@@ -22,8 +22,209 @@
   {
    "cell_type": "code",
    "execution_count": 1,
-   "metadata": {},
-   "outputs": [],
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:15.871517Z",
+     "iopub.status.busy": "2026-10-24T21:35:15.871350Z",
+     "iopub.status.idle": "2026-10-24T21:35:25.823591Z",
+     "shell.execute_reply": "2026-10-24T21:35:25.822798Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Your problem has 104 variables, 200 constraints, and 0 parameters.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: It is compliant with the following grammars: DCP, DQCP\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: (If you need to solve this problem multiple times, but with different data, consider using parameters.)\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: CVXPY will first compile your problem; then, it will invoke a numerical solver to obtain a solution.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Your problem is compiled with the CPP canonicalization backend.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Compiling problem (target solver=CLARABEL).\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Reduction chain: Dcp2Cone -> CvxAttr2Constr -> ConeMatrixStuffing -> CLARABEL\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Applying reduction Dcp2Cone\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Applying reduction CvxAttr2Constr\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Applying reduction ConeMatrixStuffing\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Applying reduction CLARABEL\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Finished problem compilation (took 3.301e-02 seconds).\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Invoking solver CLARABEL  to obtain a solution.\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "===============================================================================\n",
+      "                                     CVXPY                                     \n",
+      "                                     v1.6.7                                    \n",
+      "===============================================================================\n",
+      "-------------------------------------------------------------------------------\n",
+      "                                  Compilation                                  \n",
+      "-------------------------------------------------------------------------------\n",
+      "-------------------------------------------------------------------------------\n",
+      "                                Numerical solver                               \n",
+      "-------------------------------------------------------------------------------\n",
+      "-------------------------------------------------------------\n",
+      "           Clarabel.rs v0.11.1  -  Clever Acronym                \n",
+      "\n",
+      "                   (c) Paul Goulart                          \n",
+      "                University of Oxford, 2022                   \n",
+      "-------------------------------------------------------------\n",
+      "\n",
+      "problem:\n",
+      "  variables     = 305\n",
+      "  constraints   = 701\n",
+      "  nnz(P)        = 0\n",
+      "  nnz(A)        = 21501\n",
+      "  cones (total) = 2\n",
+      "    : Nonnegative = 1,  numel = 600\n",
+      "    : SecondOrder = 1,  numel = 101\n",
+      "\n",
+      "settings:\n",
+      "  linear algebra: direct / faer, precision: 64 bit (10 threads)\n",
+      "  max iter = 200, time limit = Inf,  max step = 0.990\n",
+      "  tol_feas = 1.0e-8, tol_gap_abs = 1.0e-8, tol_gap_rel = 1.0e-8,\n",
+      "  static reg : on, ϵ1 = 1.0e-8, ϵ2 = 4.9e-32\n",
+      "  dynamic reg: on, ϵ = 1.0e-13, δ = 2.0e-7\n",
+      "  iter refine: on, reltol = 1.0e-13, abstol = 1.0e-12,\n",
+      "               max iter = 10, stop ratio = 5.0\n",
+      "  equilibrate: on, min_scale = 1.0e-4, max_scale = 1.0e4\n",
+      "               max iter = 10\n",
+      "\n",
+      "iter    pcost        dcost       gap       pres      dres      k/t        μ       step      \n",
+      "---------------------------------------------------------------------------------------------\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Problem status: optimal\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Optimal value: 3.338e-01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Compilation took 3.301e-02 seconds\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  0  +1.0810e-01  +1.7921e+02  1.79e+02  8.68e-01  1.39e+01  1.00e+00  1.72e+00   ------   \n",
+      "  1  +3.1976e+00  +2.1047e+01  5.58e+00  6.93e-02  1.50e+00  5.64e-02  1.91e-01  9.08e-01  \n",
+      "  2  +1.4128e+00  +4.8852e+00  2.46e+00  2.29e-02  4.51e-01  1.37e-02  7.39e-02  6.73e-01  \n",
+      "  3  +4.9034e-01  +1.3326e+00  8.42e-01  7.04e-03  1.31e-01  6.80e-03  3.06e-02  9.58e-01  \n",
+      "  4  +4.1436e-01  +7.7251e-01  3.58e-01  3.08e-03  5.77e-02  2.18e-03  1.46e-02  7.61e-01  \n",
+      "  5  +3.7566e-01  +5.3947e-01  1.64e-01  1.46e-03  2.72e-02  8.29e-04  7.46e-03  6.29e-01  \n",
+      "  6  +3.5248e-01  +4.2192e-01  6.94e-02  6.40e-04  1.19e-02  2.54e-04  3.51e-03  7.96e-01  \n",
+      "  7  +3.5130e-01  +4.1238e-01  6.11e-02  5.61e-04  1.04e-02  2.00e-04  3.08e-03  3.59e-01  \n",
+      "  8  +3.3569e-01  +3.4889e-01  1.32e-02  1.23e-04  2.29e-03  3.70e-05  7.12e-04  8.67e-01  \n",
+      "  9  +3.3488e-01  +3.4092e-01  6.04e-03  5.64e-05  1.04e-03  1.42e-05  3.27e-04  7.57e-01  \n",
+      " 10  +3.3390e-01  +3.3525e-01  1.36e-03  1.27e-05  2.35e-04  3.01e-06  7.39e-05  8.24e-01  \n",
+      " 11  +3.3385e-01  +3.3477e-01  9.21e-04  8.62e-06  1.60e-04  1.91e-06  5.02e-05  5.19e-01  \n",
+      " 12  +3.3379e-01  +3.3406e-01  2.72e-04  2.55e-06  4.70e-05  5.51e-07  1.49e-05  7.35e-01  \n",
+      " 13  +3.3376e-01  +3.3380e-01  3.63e-05  3.41e-07  6.29e-06  6.82e-08  1.99e-06  9.29e-01  \n",
+      " 14  +3.3376e-01  +3.3377e-01  4.05e-06  3.80e-08  7.01e-07  7.36e-09  2.22e-07  9.27e-01  \n",
+      " 15  +3.3376e-01  +3.3376e-01  5.26e-08  4.94e-10  9.11e-09  9.56e-11  2.88e-09  9.87e-01  \n",
+      " 16  +3.3376e-01  +3.3376e-01  6.37e-09  5.97e-11  1.10e-09  1.15e-11  3.48e-10  8.91e-01  \n",
+      "---------------------------------------------------------------------------------------------\n",
+      "Terminated with status = Solved\n",
+      "solve time = 98.810498ms\n",
+      "-------------------------------------------------------------------------------\n",
+      "                                    Summary                                    \n",
+      "-------------------------------------------------------------------------------\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "(CVXPY) Oct 24 05:35:25 PM: Solver (including time spent in interface) took 1.036e-01 seconds\n"
+     ]
+    }
+   ],
    "source": [
     "from dro.linear_model.mmd_dro import MMD_DRO\n",
     "from dro.data.dataloader_classification import classification_basic\n",
@@ -58,17 +259,24 @@
     "\n",
     "The cubic polynomial kernel on two input features has ten independent feature directions. We use ten Nyström components to avoid a redundant 500-coefficient optimization problem and keep the example numerically stable with CLARABEL. For this dataset, the reduced representation reconstructs the polynomial kernel to numerical precision. We explicitly choose `p=2` and `eps=0.01` for the Wasserstein model.\n",
     "\n",
-    "The later KL and TV examples also use ten-component representations for numerical stability. These are reduced kernel representations; tune their component count and robustness parameters for your own data.\n"
+    "The chi-square, KL, CVaR, and TV examples also use ten-component representations for numerical stability. The sigmoid-kernel CVaR logistic model uses SCS; the other models use CLARABEL. These are reduced kernel representations; tune their component count and robustness parameters for your own data.\n"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 2,
-   "metadata": {},
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:25.828456Z",
+     "iopub.status.busy": "2026-10-24T21:35:25.828110Z",
+     "iopub.status.idle": "2026-10-24T21:35:25.873869Z",
+     "shell.execute_reply": "2026-10-24T21:35:25.873368Z"
+    }
+   },
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Robust training objective: 0.372083\n",
       "Training accuracy: 0.984; F1: 0.984\n"
@@ -100,18 +308,18 @@
   {
    "cell_type": "code",
    "execution_count": 3,
-   "metadata": {},
-   "outputs": [
-    {
-     "output_type": "stream",
-     "name": "stderr",
-     "text": [
-      "/Users/twang/anaconda3/lib/python3.11/site-packages/cvxpy/problems/problem.py:1510: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.\n",
-      "  warnings.warn(\n"
-     ]
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:25.875987Z",
+     "iopub.status.busy": "2026-10-24T21:35:25.875810Z",
+     "iopub.status.idle": "2026-10-24T21:35:36.713559Z",
+     "shell.execute_reply": "2026-10-24T21:35:36.712535Z"
     }
-   ],
+   },
+   "outputs": [],
    "source": [
+    "import numpy as np\n",
+    "\n",
     "from dro.linear_model.chi2_dro import *\n",
     "from dro.linear_model.kl_dro import *\n",
     "from dro.linear_model.tv_dro import *\n",
@@ -119,7 +327,10 @@
     "from dro.linear_model.marginal_dro import *\n",
     "from dro.linear_model.conditional_dro import *\n",
     "\n",
+    "np.random.seed(42)\n",
+    "\n",
     "kernel_clf_model = Chi2DRO(input_dim = feature_dim, model_type = 'svm', kernel = 'poly')\n",
+    "kernel_clf_model.update_kernel({'n_components': 10})\n",
     "kernel_clf_model.update({'eps': 10})\n",
     "params = kernel_clf_model.fit(X, y)\n",
     "\n",
@@ -128,7 +339,10 @@
     "kernel_clf_model.update({'eps': 2})\n",
     "params = kernel_clf_model.fit(X, y)\n",
     "\n",
-    "kernel_clf_model = CVaRDRO(input_dim = feature_dim, model_type = 'logistic', kernel = 'sigmoid')\n",
+    "kernel_clf_model = CVaRDRO(\n",
+    "    input_dim=feature_dim, model_type='logistic', kernel='sigmoid', solver='SCS'\n",
+    ")\n",
+    "kernel_clf_model.update_kernel({'n_components': 10})\n",
     "kernel_clf_model.update({'alpha': 0.9})\n",
     "params = kernel_clf_model.fit(X, y)\n",
     "\n",
@@ -143,15 +357,24 @@
   {
    "cell_type": "code",
    "execution_count": 4,
-   "metadata": {},
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:36.717950Z",
+     "iopub.status.busy": "2026-10-24T21:35:36.717726Z",
+     "iopub.status.idle": "2026-10-24T21:35:38.508192Z",
+     "shell.execute_reply": "2026-10-24T21:35:38.507672Z"
+    }
+   },
    "outputs": [
     {
-     "output_type": "execute_result",
-     "execution_count": 4,
      "data": {
-      "text/plain": "(0.986, 0.9859994959818554)"
+      "text/plain": [
+       "(0.986, 0.9859994959818554)"
+      ]
      },
-     "metadata": {}
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
     }
    ],
    "source": [
@@ -164,11 +387,18 @@
   {
    "cell_type": "code",
    "execution_count": 5,
-   "metadata": {},
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:38.514587Z",
+     "iopub.status.busy": "2026-10-24T21:35:38.514302Z",
+     "iopub.status.idle": "2026-10-24T21:35:38.523690Z",
+     "shell.execute_reply": "2026-10-24T21:35:38.522864Z"
+    }
+   },
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "coef [[-0.25769266 -0.64158585 -3.57086163 -0.78030986 -0.43010956 -0.01490551\n",
       "   0.76823835  0.16369363  1.56160661  1.47227558  0.03362333  1.69602757]] [[ 0.38846926 -0.7028592   1.35277704  0.69878398 -2.12650133]\n",
@@ -203,15 +433,44 @@
   {
    "cell_type": "code",
    "execution_count": 6,
-   "metadata": {},
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-24T21:35:38.526641Z",
+     "iopub.status.busy": "2026-10-24T21:35:38.526427Z",
+     "iopub.status.idle": "2026-10-24T21:35:38.550859Z",
+     "shell.execute_reply": "2026-10-24T21:35:38.550122Z"
+    }
+   },
    "outputs": [
     {
-     "output_type": "execute_result",
-     "execution_count": 6,
      "data": {
-      "text/plain": "{'theta': [28.183840216059043,\n  -40.587159870262745,\n  -25.771702054545074,\n  24.507923542613252,\n  -20.773407535187975,\n  -32.971991106392935,\n  3.7200730037962355,\n  -71.2804779091182,\n  70.9566258049175,\n  -50.902349774153635,\n  41.142793433932134,\n  -57.15251168586913,\n  57.59232483199867,\n  48.59608462873434,\n  26.428005719050088,\n  -0.056328121150369746,\n  9.225576771876137,\n  -40.70582945485824,\n  -30.048318322329195,\n  19.958741698253867],\n 'b': array(-37.78934524)}"
+      "text/plain": [
+       "{'theta': [28.183840216059043,\n",
+       "  -40.587159870262745,\n",
+       "  -25.771702054545074,\n",
+       "  24.507923542613252,\n",
+       "  -20.773407535187975,\n",
+       "  -32.971991106392935,\n",
+       "  3.7200730037962355,\n",
+       "  -71.2804779091182,\n",
+       "  70.9566258049175,\n",
+       "  -50.902349774153635,\n",
+       "  41.142793433932134,\n",
+       "  -57.15251168586913,\n",
+       "  57.59232483199867,\n",
+       "  48.59608462873434,\n",
+       "  26.428005719050088,\n",
+       "  -0.056328121150369746,\n",
+       "  9.225576771876137,\n",
+       "  -40.70582945485824,\n",
+       "  -30.048318322329195,\n",
+       "  19.958741698253867],\n",
+       " 'b': array(-37.78934524)}"
+      ]
      },
-     "metadata": {}
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
     }
    ],
    "source": [
@@ -242,7 +501,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.10.14"
+   "version": "3.11.7"
   },
   "vscode": {
    "interpreter": {

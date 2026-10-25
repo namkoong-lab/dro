@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>f-divergence DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Linear f-divergence DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_fdro.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Wasserstein DRO" href="linear_wdro.html" />
-    <link rel="prev" title="Group DRO for Linear Models" href="linear_groupdro.html" /> 
+    <link rel="next" title="Linear Wasserstein DRO" href="linear_wdro.html" />
+    <link rel="prev" title="Linear DRO Overview" href="linear.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,22 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO: Model Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">NN-DRO: Robustness Certificates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -281,8 +281,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="f-divergence-dro">
-<h1>f-divergence DRO<a class="headerlink" href="#f-divergence-dro" title="Link to this heading">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-f-divergence-dro">
+<h1>Linear f-divergence DRO<a class="headerlink" href="#linear-f-divergence-dro" title="Link to this heading">¶</a></h1>
 <p>We describe the <span class="math notranslate nohighlight">\(f\)</span>-divergence DRO here.</p>
 <section id="standard-generalized">
 <h2>Standard (Generalized)<a class="headerlink" href="#standard-generalized" title="Link to this heading">¶</a></h2>
@@ -350,7 +350,7 @@ for end-to-end standard and partial-distribution-shift examples.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">f-divergence DRO</a><ul>
+<li><a class="reference internal" href="#">Linear f-divergence DRO</a><ul>
 <li><a class="reference internal" href="#standard-generalized">Standard (Generalized)</a><ul>
 <li><a class="reference internal" href="#formulation">Formulation</a></li>
 <li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
@@ -374,14 +374,14 @@ for end-to-end standard and partial-distribution-shift examples.</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="linear_groupdro.html">
-                    <span class="icon">&lt;</span><span>Group DRO for Linear Models</span></a>
+                <a href="linear.html">
+                    <span class="icon">&lt;</span><span>Linear DRO Overview</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="linear_wdro.html"><span>Wasserstein DRO</span><span class="icon">&gt;</span></a>
+                    <a href="linear_wdro.html"><span>Linear Wasserstein DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

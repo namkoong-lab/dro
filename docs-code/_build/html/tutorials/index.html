@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Formulation &#8212; dro 0.4.2 documentation</title>
+    <title>Overview &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/index.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Linear Models" href="linear.html" />
-    <link rel="prev" title="Tutorial" href="../api/tutorials.html" /> 
+    <link rel="next" title="Linear DRO Overview" href="linear.html" />
+    <link rel="prev" title="Tutorials" href="../api/tutorials.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,22 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO: Model Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">NN-DRO: Robustness Certificates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -281,8 +281,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="formulation">
-<h1>Formulation<a class="headerlink" href="#formulation" title="Link to this heading">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h1>
 <p>Given the empirical distribution <span class="math notranslate nohighlight">\(\widehat P\)</span> from the training data <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}_{i \in [N]}\)</span>, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -395,7 +395,7 @@
 <h3>Neural Network Models (Approximate Fitting)<a class="headerlink" href="#neural-network-models-approximate-fitting" title="Link to this heading">¶</a></h3>
 <p>The neural module implements <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO through adversarial training, and Holistic Robust DRO. Supported architectures are linear models, vanilla MLP, AlexNet, and ResNet18. Users can also supply their own architecture through <code class="docutils literal notranslate"><span class="pre">BaseNNDRO.update_user_mode(...)</span></code>.</p>
 <p>See the <a class="reference internal" href="neural_model.html"><span class="doc">neural-model guide</span></a> for training interfaces and the
-<a class="reference internal" href="neural_certificates.html"><span class="doc">NN-DRO robustness certificates guide</span></a> for
+<a class="reference internal" href="neural_certificates.html"><span class="doc">Neural DRO robustness certificates guide</span></a> for
 post-training bounds on the worst-case loss of a fitted network.</p>
 </section>
 <section id="tree-based-ensemble-models-approximate-fitting">
@@ -430,7 +430,7 @@ preprint arXiv:2411.02549, 2024.</p></li>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Formulation</a><ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
 <li><a class="reference internal" href="#data-module">Data Module</a></li>
 <li><a class="reference internal" href="#synthetic-data-generation">Synthetic Data Generation</a></li>
 <li><a class="reference internal" href="#model-module">Model Module</a><ul>
@@ -461,13 +461,13 @@ preprint arXiv:2411.02549, 2024.</p></li>
             <div class="left">
                 
                 <a href="../api/tutorials.html">
-                    <span class="icon">&lt;</span><span>Tutorial</span></a>
+                    <span class="icon">&lt;</span><span>Tutorials</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="linear.html"><span>Linear Models</span><span class="icon">&gt;</span></a>
+                    <a href="linear.html"><span>Linear DRO Overview</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

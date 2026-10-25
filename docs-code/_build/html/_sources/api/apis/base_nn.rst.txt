@@ -1,4 +1,4 @@
-NN DRO Base Class 
+Base Class
 ====================
 
 .. _neural-fit-customization:

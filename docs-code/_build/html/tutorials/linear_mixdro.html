@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Hybrid-distance DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Linear Hybrid-Distance DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_mixdro.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="NN-DRO: Model Formulation" href="neural_model.html" />
-    <link rel="prev" title="Bayesian (Parametric) DRO" href="linear_pdro.html" /> 
+    <link rel="next" title="Neural DRO Overview" href="neural_model.html" />
+    <link rel="prev" title="Linear Bayesian DRO" href="linear_pdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,22 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Hybrid-distance DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO: Model Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">NN-DRO: Robustness Certificates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -281,9 +281,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="hybrid-distance-dro">
-<h1>Hybrid-distance DRO<a class="headerlink" href="#hybrid-distance-dro" title="Link to this heading">¶</a></h1>
-<p>This guide covers Hybrid-distance DRO formulations: Sinkhorn-DRO, Holistic Robust DRO, MOT-DRO, and outlier-robust Wasserstein DRO. They combine transport-based distances with entropy, divergence, moment, or contamination constraints. Let <span class="math notranslate nohighlight">\(\widehat P\)</span> denote the empirical training distribution.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-hybrid-distance-dro">
+<h1>Linear Hybrid-Distance DRO<a class="headerlink" href="#linear-hybrid-distance-dro" title="Link to this heading">¶</a></h1>
+<p>This guide covers hybrid-distance DRO formulations: Sinkhorn-DRO, Holistic Robust DRO, MOT-DRO, and outlier-robust Wasserstein DRO. They combine transport-based distances with entropy, divergence, moment, or contamination constraints. Let <span class="math notranslate nohighlight">\(\widehat P\)</span> denote the empirical training distribution.</p>
 <section id="sinkhorn-dro">
 <h2>Sinkhorn-DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
 <p>In Sinkhorn-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{P}(W_{\epsilon};{\rho,\epsilon})= \{P: W_{\epsilon}(P,\hat{P})\leq \rho \}\)</span>. Here <span class="math notranslate nohighlight">\(W_{\epsilon}(\cdot,\cdot)\)</span> denotes the Sinkhorn Distance, defined as:</p>
@@ -369,7 +369,7 @@ W_p^{\eta}(P, Q) = \inf_{Q' \in \mathcal{P}(R^d), \|Q - Q'\|_{TV}\leq \eta} W_p(
 <li><p><span class="math notranslate nohighlight">\(\eta\)</span>: Contamination level <span class="math notranslate nohighlight">\([0, 0.5)\)</span>.</p></li>
 </ul>
 <p>We only consider SVM (for classification) and LAD (for regression) based on the convex reformulation of Theorem 2 in [4]. Note that the model also requires the input of <span class="math notranslate nohighlight">\(\sigma\)</span>, which we take <span class="math notranslate nohighlight">\(\sigma = \sqrt{d_x}\)</span> as default.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html"><span class="doc">Hybrid-distance DRO notebook</span></a>
+<p>See the <a class="reference internal" href="../api/notebooks/mixed_dro_tutorial.html"><span class="doc">Linear Hybrid-Distance DRO notebook</span></a>
 for end-to-end Sinkhorn, MOT, OR-WDRO, and Holistic DRO examples.</p>
 </section>
 </section>
@@ -398,7 +398,7 @@ for end-to-end Sinkhorn, MOT, OR-WDRO, and Holistic DRO examples.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Hybrid-distance DRO</a><ul>
+<li><a class="reference internal" href="#">Linear Hybrid-Distance DRO</a><ul>
 <li><a class="reference internal" href="#sinkhorn-dro">Sinkhorn-DRO</a><ul>
 <li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
 </ul>
@@ -431,13 +431,13 @@ for end-to-end Sinkhorn, MOT, OR-WDRO, and Holistic DRO examples.</p>
             <div class="left">
                 
                 <a href="linear_pdro.html">
-                    <span class="icon">&lt;</span><span>Bayesian (Parametric) DRO</span></a>
+                    <span class="icon">&lt;</span><span>Linear Bayesian DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="neural_model.html"><span>NN-DRO: Model Formulation</span><span class="icon">&gt;</span></a>
+                    <a href="neural_model.html"><span>Neural DRO Overview</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

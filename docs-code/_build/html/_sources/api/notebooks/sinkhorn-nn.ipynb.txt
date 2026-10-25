@@ -4,7 +4,7 @@
       "cell_type": "markdown",
       "metadata": {},
       "source": [
-        "# NN Sinkhorn DRO\n",
+        "# Neural Sinkhorn DRO\n",
         "\n",
         "This notebook demonstrates how to use `SinkhornNNDRO` for distributionally robust optimization with neural network models. \n",
         "\n",

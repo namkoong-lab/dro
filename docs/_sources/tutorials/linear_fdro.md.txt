@@ -1,4 +1,4 @@
-# f-divergence DRO
+# Linear f-divergence DRO
 
 We describe the $f$-divergence DRO here.
 
@@ -13,23 +13,23 @@ For KL-DRO problem, we apply $f(x) = x \log x - (x - 1)$ and follow the reformul
 
 For $\chi^2$-DRO problem, we apply $f(x) = (x - 1)^2$ and follow the reformulation in Lemma 1 of [3] to fit the model.
 
-For TV-DRO problem, we apply $f(x) = |x - 1|$ and follow the reformulation in Theorem 1 of [4] to fit the model.
+For TV-DRO problem, we apply $f(x) = \frac12|x - 1|$, so $d(P,Q)=\frac12\int|dP-dQ|$. On the empirical support, the radius constraint is $\frac12\sum_i|p_i-1/n|\leq\epsilon$. We follow the reformulation in Theorem 1 of [4] to fit the model.
 
-For the CVaR-DRO problem, we apply $f(x) = 0$ if $x \in [\frac{1}{\alpha}, \alpha]$ and $\infty$ otherwise (an augmented definition of the standard $f$-DRO problem). Here $\alpha$ denotes the worst-case ratio. We follow the reformulation in Theorem 2 of [5] to fit the model.
+For CVaR-DRO, use $f(x)=0$ for $0\leq x\leq 1/\alpha$ and $f(x)=\infty$ otherwise, where $0<\alpha\leq1$ is the upper-tail fraction. Relative to the uniform empirical distribution, the adversarial probabilities satisfy $0\leq p_i\leq1/(n\alpha)$ and $\sum_i p_i=1$. Smaller `alpha` focuses on a smaller worst-loss tail; `alpha=1` gives ERM. We follow the reformulation in Theorem 2 of [5] to fit the model.
 
 
 ### Hyperparameters
-Across all the above models except CVaR-DRO problem, the only model-specific hyperparameter is the ambiguity size ``eps``. $\epsilon \geq 0$ (and reduce to ERM when $\epsilon = 0$). Specifically for TV-DRO problem, since TV-Distance is bounded between [0, 1], the corresponding $\epsilon \in [0, 1]$. In CVaR-DRO problem, the model-specific hyperparameter is the worst-case ratio ``alpha``, that takes values in (0, 1] (and reduce to ERM when $\alpha = 0$).
+Across all the above models except CVaR-DRO problem, the only model-specific hyperparameter is the ambiguity size ``eps``. $\epsilon \geq 0$ (and reduce to ERM when $\epsilon = 0$). For TV-DRO, the constructor requires $0\leq\epsilon<1$, while `TVDRO.update()` requires $0<\epsilon<1$ and rejects both endpoints. Zero radius is available through the constructor (`eps=0`, the default) for the non-robust setting. In CVaR-DRO, the model-specific hyperparameter is the upper-tail fraction `alpha`, taking values in $(0,1]$; `alpha=1` reduces to ERM.
 
 ### Worst-case illustration
 The above formulations are all based on joint perturbed probability. For example, in $\chi^2$-DRO, we find the perturbed probability $\{p_i\}_{i \in [n]}$ by solving the following optimization problem:
 
-$$\max_{p \in \Delta}\sum_{i \in [n]}p_i \cdot \ell_i,~\text{s.t.}~n \sum_{i \in [n]}n(p_i - 1/n)^2 \leq \epsilon,$$
+$$\max_{p \in \Delta}\sum_{i \in [n]}p_i \cdot \ell_i,~\text{s.t.}~n \sum_{i \in [n]}(p_i - 1/n)^2 \leq \epsilon,$$
 
 where $\ell_i$ is the loss for the $i$-th sample and $\Delta$ is the probability simplex.
 
 ### Evaluation
-For two smooth losses (OLS, Logistic), we provide a bias-corrected model assessment of model performance (please refer to the performance evaluation of DR-E2E from [6]) for most $f$-divergence model when the ambiguity size is small (i.e., $\epsilon = o(1)$ or $1-\alpha = o(1)$).
+For two smooth losses (OLS, Logistic) with a linear kernel, `BaseLinearDRO.evaluate()` provides a bias-corrected model assessment (please refer to the performance evaluation of DR-E2E from [6]) for most $f$-divergence models when the ambiguity size is small (i.e., $\epsilon = o(1)$ or $1-\alpha = o(1)$). It is not implemented for SVM, LAD, or nonlinear kernels and raises `NotImplementedError`; use `score()` for standard predictive metrics.
 
 
 ## Partial DRO

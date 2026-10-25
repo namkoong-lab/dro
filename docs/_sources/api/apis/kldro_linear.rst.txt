@@ -1,4 +1,4 @@
-KL-DRO 
+KL DRO
 ================
 
 .. automodule:: dro.linear_model.kl_dro

@@ -5,9 +5,13 @@
    "id": "30d4692d",
    "metadata": {},
    "source": [
-    "# DRO on Personalized Losses\n",
+    "# Personalization\n",
     "\n",
-    "In this notebook, we personalize the loss as a convex piecewise-affine loss. We use the same loss with exact $f$-DRO and Wasserstein DRO models, then carry its asymmetric decision costs into the neural approximation classes. "
+    "In this notebook, we personalize the loss as a convex piecewise-affine loss. We use the same loss with exact $f$-DRO and Wasserstein DRO models, then carry its asymmetric decision costs into the neural approximation classes.\n",
+    "\n",
+    "The tree-ensemble section illustrates the same 3:1 cost ratio with a cost-sensitive binary cross-entropy loss in XGBoost.\n",
+    "\n",
+    "For post-training worst-case-loss bounds, see the [Neural DRO robustness certificates guide](../../tutorials/neural_certificates.md)."
    ]
   },
   {
@@ -103,14 +107,12 @@
    "metadata": {},
    "outputs": [
     {
-     "data": {
-      "text/plain": [
-       "{'theta': [-0.47101600668852506, 0.9420320649788056], 'b': array(0.94203196)}"
-      ]
-     },
+     "output_type": "execute_result",
      "execution_count": 2,
-     "metadata": {},
-     "output_type": "execute_result"
+     "data": {
+      "text/plain": "{'theta': [-0.47101600668852506, 0.9420320649788056], 'b': array(0.94203196)}"
+     },
+     "metadata": {}
     }
    ],
    "source": [
@@ -183,14 +185,12 @@
    "metadata": {},
    "outputs": [
     {
-     "data": {
-      "text/plain": [
-       "{'theta': [-0.4999999974041001, 3.802290229295084e-14], 'b': array(2.)}"
-      ]
-     },
+     "output_type": "execute_result",
      "execution_count": 4,
-     "metadata": {},
-     "output_type": "execute_result"
+     "data": {
+      "text/plain": "{'theta': [-0.4999999974041001, 3.802290229295084e-14], 'b': array(2.)}"
+     },
+     "metadata": {}
     }
    ],
    "source": [
@@ -325,7 +325,10 @@
     "    num_classes=1,\n",
     "    task_type='regression',\n",
     "    model_type='linear',\n",
-    "    epsilon=0.05,\n",
+    "    robust_objective='transport_penalty',\n",
+    "    gamma=2.0,\n",
+    "    adversarial_steps=2,\n",
+    "    adversarial_step_size=0.02,\n",
     "    device=torch.device('cpu'),\n",
     ")\n",
     "\n",
@@ -345,7 +348,7 @@
    "id": "d0fbf716",
    "metadata": {},
    "source": [
-    "During training, we call `fdro_nn.fit(...)` or `wdro_nn.fit(...)` normally after binding the hooks. For positive-epsilon Wasserstein regression, we use an adversarial generator compatible with continuous targets; the package's built-in `torchattacks` path is primarily designed for classification."
+    "Call `fdro_nn.fit(...)` or `wdro_nn.fit(...)` after binding the hooks. The Wasserstein regression model above uses `robust_objective='transport_penalty'`, so both its inner perturbation search and outer objective use the custom loss with continuous targets. `gamma` penalizes squared feature transport; it is not a norm-ball radius."
    ]
   },
   {
@@ -355,8 +358,8 @@
    "metadata": {},
    "outputs": [
     {
-     "name": "stdout",
      "output_type": "stream",
+     "name": "stdout",
      "text": [
       "f-DRO robust objective: 1.0904502868652344\n",
       "WDRO individual losses: [0.59999996 0.20000005 1.5       ]\n",
@@ -385,15 +388,23 @@
    "source": [
     "### Matching the Wasserstein inner search to a custom loss\n",
     "\n",
-    "The preceding `wdro_nn._loss` check evaluates the custom loss without running the attack. With the default `robust_objective='norm_ball'` and positive `epsilon`, Torchattacks generates perturbations using classification cross-entropy; overriding `_loss` changes the outer loss only. For continuous targets, `robust_objective='transport_penalty'` uses `_loss` in both the inner search and outer objective. The example below differentiates that complete objective on a small batch."
+    "The preceding `wdro_nn._loss` check evaluates the custom loss without running the inner search. The model above uses transport-penalty mode. By comparison, with the default `robust_objective='norm_ball'` and positive `epsilon`, Torchattacks generates perturbations using classification cross-entropy; overriding `_loss` changes the outer loss only. For continuous targets, `robust_objective='transport_penalty'` uses `_loss` in both the inner search and outer objective. The example below differentiates that complete objective on a small batch."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 9,
    "id": "8c307d3c",
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "Transport-penalty objective: 3.6209213733673096\n"
+     ]
+    }
+   ],
    "source": [
     "wdro_transport = WNNDRO(\n",
     "    input_dim=2,\n",
@@ -431,7 +442,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 10,
    "id": "e646ff61",
    "metadata": {},
    "outputs": [],
@@ -466,15 +477,24 @@
    "source": [
     "### Chi-squared and CVaR neural $f$-DRO\n",
     "\n",
-    "Both models use the same per-example cost-sensitive classification loss. Their `RobustLoss` geometry determines how those losses are aggregated. Each run supplies a replacement network, an SGD optimizer, and a `StepLR` scheduler to the shared fitting loop. The learning-rate value printed at the end confirms that the scheduler was stepped."
+    "Both models use the same per-example cost-sensitive classification loss. Their `RobustLoss` geometry determines how those losses are aggregated. The `ResidualClassifier` below is a user-defined `torch.nn.Module`: its skip connection makes it different from the package's default MLP. Pass an instance to `update_user_mode(...)` before fitting. Its `forward` method maps each two-feature input to two class logits. Each run also supplies an SGD optimizer and a `StepLR` scheduler to the shared fitting loop. The learning-rate value printed at the end confirms that the scheduler was stepped."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 11,
    "id": "fbe36369",
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "execution_count": 11,
+     "data": {
+      "text/plain": "{'chi-squared': {'metrics': {'acc': 0.5, 'f1': 0.3333333333333333},\n  'final_learning_rate': 0.03200000000000001},\n 'CVaR': {'metrics': {'acc': 0.5, 'f1': 0.3333333333333333},\n  'final_learning_rate': 0.03200000000000001}}"
+     },
+     "metadata": {}
+    }
+   ],
    "source": [
     "class CostSensitiveRobustLoss(RobustLoss):\n",
     "    def __init__(self, **kwargs):\n",
@@ -484,6 +504,17 @@
     "        per_sample_ce = F.cross_entropy(outputs, targets, reduction='none')\n",
     "        return (1.0 + targets.float()) * per_sample_ce\n",
     "\n",
+    "class ResidualClassifier(torch.nn.Module):\n",
+    "    def __init__(self):\n",
+    "        super().__init__()\n",
+    "        self.skip = torch.nn.Linear(2, 2)\n",
+    "        self.hidden = torch.nn.Sequential(\n",
+    "            torch.nn.Linear(2, 8), torch.nn.Tanh(), torch.nn.Linear(8, 2)\n",
+    "        )\n",
+    "\n",
+    "    def forward(self, inputs):\n",
+    "        return self.skip(inputs) + self.hidden(inputs)\n",
+    "\n",
     "f_dro_results = {}\n",
     "for name, model_class, geometry in [\n",
     "    ('chi-squared', Chi2NNDRO, 'chi-square'),\n",
@@ -491,11 +522,9 @@
     "]:\n",
     "    neural_model = model_class(\n",
     "        input_dim=2, num_classes=2, task_type='classification',\n",
-    "        model_type='linear', size=0.5, reg=0.1, device=torch.device('cpu'),\n",
+    "        model_type='mlp', size=0.5, reg=0.1, device=torch.device('cpu'),\n",
     "    )\n",
-    "    custom_network = torch.nn.Sequential(\n",
-    "        torch.nn.Linear(2, 8), torch.nn.ReLU(), torch.nn.Linear(8, 2)\n",
-    "    )\n",
+    "    custom_network = ResidualClassifier()\n",
     "    neural_model.update_user_mode(\n",
     "        input_dim=2, num_classes=2, model=custom_network,\n",
     "        task_type='classification', device=torch.device('cpu'),\n",
@@ -537,10 +566,19 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 12,
    "id": "a9eba187",
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "HR-DRO validation: {'acc': 0.75, 'f1': 0.7333333333333334}\n",
+      "Final learning rate: 0.0064\n"
+     ]
+    }
+   ],
    "source": [
     "hr_dro = HRNNDRO(\n",
     "    input_dim=2, num_classes=2, task_type='classification',\n",
@@ -570,6 +608,92 @@
     ")\n",
     "print('HR-DRO validation:', hr_metrics)\n",
     "print('Final learning rate:', hr_optimizer.param_groups[0]['lr'])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "tree-cost-sensitive-intro",
+   "metadata": {},
+   "source": [
+    "## Tree-based ensemble with a personalized loss\n",
+    "\n",
+    "For binary XGBoost KL-DRO, `loss(preds, labels)` supplies one loss per training example. The wrapper uses those values for DRO sample weights and its reported robust objective. Replacing `loss()` alone does **not** change the ordinary cross-entropy gradients and Hessians used by boosting. To train with a prediction-dependent cost-sensitive loss, we also override `_kl_dro_loss()`.\n",
+    "\n",
+    "Here positive-class log loss costs three times as much as negative-class log loss, matching the 3:1 ratio above. The Hessian uses the same weighted diagonal approximation as the built-in KL-DRO objective. This example covers binary classification; other losses require matching derivatives and a compatible booster objective. The small toy run limits numerical-library threads during fitting and prediction."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "tree-cost-sensitive-example",
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "Losses at probability 0.5: [0.69314718 2.07944154]\n",
+      "Test accuracy: 0.933\n",
+      "Robust training objective: 0.445\n"
+     ]
+    }
+   ],
+   "source": [
+    "from scipy.special import expit\n",
+    "from threadpoolctl import threadpool_limits\n",
+    "from sklearn.datasets import make_classification\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "\n",
+    "from dro.tree_model.xgb import KLDRO_XGB\n",
+    "\n",
+    "class CostSensitiveKLDRO_XGB(KLDRO_XGB):\n",
+    "    def __init__(self, positive_cost, negative_cost, eps=0.1):\n",
+    "        super().__init__(eps=eps, kind='classification')\n",
+    "        self.positive_cost = positive_cost\n",
+    "        self.negative_cost = negative_cost\n",
+    "\n",
+    "    def loss(self, preds, labels):\n",
+    "        probabilities = np.clip(np.asarray(preds).reshape(-1), 1e-8, 1 - 1e-8)\n",
+    "        labels = np.asarray(labels).reshape(-1)\n",
+    "        costs = np.where(labels == 1, self.positive_cost, self.negative_cost)\n",
+    "        log_loss = -labels * np.log(probabilities) - (1 - labels) * np.log1p(-probabilities)\n",
+    "        return costs * log_loss\n",
+    "\n",
+    "    def _kl_dro_loss(self, raw_scores, dtrain, epsilon=0.1):\n",
+    "        labels = dtrain.get_label()\n",
+    "        probabilities = expit(raw_scores)\n",
+    "        losses = self.loss(probabilities, labels)\n",
+    "        scaled_losses = epsilon * losses\n",
+    "        weights = np.exp(scaled_losses - np.max(scaled_losses))\n",
+    "        weights *= len(labels) / weights.sum()\n",
+    "        costs = np.where(labels == 1, self.positive_cost, self.negative_cost)\n",
+    "        gradients = weights * costs * (probabilities - labels)\n",
+    "        hessians = weights * costs * probabilities * (1 - probabilities)\n",
+    "        return gradients, hessians\n",
+    "\n",
+    "tree_X, tree_y = make_classification(\n",
+    "    n_samples=120, n_features=2, n_informative=2, n_redundant=0,\n",
+    "    random_state=7,\n",
+    ")\n",
+    "tree_X_train, tree_X_test, tree_y_train, tree_y_test = train_test_split(\n",
+    "    tree_X, tree_y, test_size=0.25, stratify=tree_y, random_state=7,\n",
+    ")\n",
+    "tree_model = CostSensitiveKLDRO_XGB(\n",
+    "    positive_cost=UNDERAGE_COST, negative_cost=OVERAGE_COST, eps=0.1,\n",
+    ")\n",
+    "tree_model.update({\n",
+    "    'objective': 'binary:logistic', 'max_depth': 2,\n",
+    "    'learning_rate': 0.2, 'num_boost_round': 6,\n",
+    "    'nthread': 1, 'seed': 7,\n",
+    "})\n",
+    "with threadpool_limits(limits=1):\n",
+    "    tree_model.fit(tree_X_train, tree_y_train)\n",
+    "    tree_accuracy = (tree_model.predict(tree_X_test) == tree_y_test).mean()\n",
+    "print('Losses at probability 0.5:', tree_model.loss(\n",
+    "    np.array([0.5, 0.5]), np.array([0, 1]),\n",
+    "))\n",
+    "print(f'Test accuracy: {tree_accuracy:.3f}')\n",
+    "print(f'Robust training objective: {tree_model.robust_obj:.3f}')"
    ]
   }
  ],

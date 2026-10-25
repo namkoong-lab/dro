@@ -253,16 +253,16 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Linear DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chi2dro_linear.html">Chi-square DRO</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">CVaR DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_linear.html">Group DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tvdro.html">TV DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mmddro.html">MMD DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wdro_linear.html">Wasserstein DRO</a></li>
@@ -317,7 +317,7 @@ under a CVaR constraint.</p>
 Defaults to True.</p></li>
 <li><p><strong>solver</strong> (<em>str</em>) – Convex optimization solver. Defaults to ‘CLARABEL’.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Risk level controlling the CVaR conservativeness. Must satisfy 0 &lt; alpha ≤ 1.
-Defaults to 1.0 (equivalent to worst-case optimization).</p></li>
+Defaults to 1.0 (equivalent to empirical risk minimization).</p></li>
 <li><p><strong>kernel</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
@@ -369,7 +369,7 @@ Defaults to 1.0 (equivalent to worst-case optimization).</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>Decreasing <code class="docutils literal notranslate"><span class="pre">alpha</span></code> makes the model less conservative (focuses on average risk)</p></li>
+<li><p>Decreasing <code class="docutils literal notranslate"><span class="pre">alpha</span></code> focuses on a smaller upper tail and increases conservativeness</p></li>
 <li><p>Requires manual re-fitting via <a class="reference internal" href="#dro.linear_model.cvar_dro.CVaRDRO.fit" title="dro.linear_model.cvar_dro.CVaRDRO.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> after configuration changes</p></li>
 <li><p>Configuration keys other than <code class="docutils literal notranslate"><span class="pre">alpha</span></code> will be silently ignored</p></li>
 </ul>
@@ -444,8 +444,8 @@ for regression, use continuous values.</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>Higher <span class="math notranslate nohighlight">\(\alpha\)</span> values require solving more conservative (pessimistic) scenarios</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">threshold</span></code> value represents the <span class="math notranslate nohighlight">\(\alpha\)</span>-quantile of the loss distribution</p></li>
+<li><p>Smaller <span class="math notranslate nohighlight">\(\alpha\)</span> values focus on more conservative (pessimistic) scenarios</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">threshold</span></code> value is an optimal upper-tail cutoff (a <span class="math notranslate nohighlight">\(1-\alpha\)</span> loss quantile, potentially non-unique)</p></li>
 <li><p>Warm-starting not supported due to CVaR’s non-smooth nature</p></li>
 </ul>
 </div>

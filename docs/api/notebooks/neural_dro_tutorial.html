@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Other NN DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Other Neural DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -23,8 +23,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/neural_dro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Bayesian DRO" href="param_dro.html" />
-    <link rel="prev" title="NN Sinkhorn DRO" href="sinkhorn-nn.html" /> 
+    <link rel="next" title="Tree DRO" href="tree_dro_tutorial.html" />
+    <link rel="prev" title="Neural Sinkhorn DRO" href="sinkhorn-nn.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -254,17 +254,18 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Linear Bayesian DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">NN Sinkhorn DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Other NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">DRO on Personalized Losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and Neural)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Neural Sinkhorn DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Other Neural DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">Tree DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -279,9 +280,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="Other-NN-DRO">
-<h1>Other NN DRO<a class="headerlink" href="#Other-NN-DRO" title="Link to this heading">¶</a></h1>
+  <section id="Other-Neural-DRO">
+<h1>Other Neural DRO<a class="headerlink" href="#Other-Neural-DRO" title="Link to this heading">¶</a></h1>
 <p>This notebook demonstrates how to call the neural-network implementations of chi-square DRO, CVaR-DRO, Wasserstein DRO, and Holistic Robust DRO. All four examples use the same binary classification data, MLP architecture, and training settings so that the API differences are easy to compare. The focus here is code usage rather than mathematical formulations.</p>
+<p>For post-training worst-case-loss bounds, see the <a class="reference internal" href="../../tutorials/neural_certificates.html"><span class="doc">Neural DRO robustness certificates guide</span></a>.</p>
 <section id="Shared-setup">
 <h2>Shared setup<a class="headerlink" href="#Shared-setup" title="Link to this heading">¶</a></h2>
 <p>The Wasserstein and Holistic Robust estimators create bounded adversarial perturbations, so the synthetic features are scaled to the interval <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>. Set <code class="docutils literal notranslate"><span class="pre">verbose=False</span></code> to keep progress-bar output out of the generated documentation.</p>
@@ -425,6 +427,69 @@ CVaR-DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.14893617021276595}
 Wasserstein DRO: {&#39;acc&#39;: np.float64(0.175), &#39;f1&#39;: 0.14893617021276595}
 </pre></div></div>
 </div>
+<section id="Custom-WNNDRO-architecture-and-training-controls">
+<h3>Custom WNNDRO architecture and training controls<a class="headerlink" href="#Custom-WNNDRO-architecture-and-training-controls" title="Link to this heading">¶</a></h3>
+<p>The constructor’s <code class="docutils literal notranslate"><span class="pre">model_type</span></code> selects an initial network. <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> replaces it with a user-defined PyTorch module; in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode, WNNDRO also binds its attack to the new network. This classifier accepts the same 10-feature batches as above and returns two class logits. Construct the optimizer <em>after</em> replacing the network so that it updates the correct parameters. The external loaders and learning-rate scheduler are optional training controls.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ResidualTabularClassifier</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">custom_wasserstein_model</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span>
+    <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">adversarial_step_size</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+    <span class="n">adversarial_norm</span><span class="o">=</span><span class="s2">"l2"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">custom_network</span> <span class="o">=</span> <span class="n">ResidualTabularClassifier</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">custom_wasserstein_model</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">custom_network</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">TensorDataset</span><span class="p">(</span><span class="n">features</span><span class="p">[:</span><span class="mi">160</span><span class="p">],</span> <span class="n">labels</span><span class="p">[:</span><span class="mi">160</span><span class="p">]),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">TensorDataset</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="mi">160</span><span class="p">:],</span> <span class="n">labels</span><span class="p">[</span><span class="mi">160</span><span class="p">:]),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">custom_network</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">custom_metrics</span> <span class="o">=</span> <span class="n">custom_wasserstein_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">train_loader</span><span class="o">=</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+    <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Custom WNNDRO:"</span><span class="p">,</span> <span class="n">custom_metrics</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Learning rate after training:"</span><span class="p">,</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">get_last_lr</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Custom WNNDRO: {&#39;acc&#39;: 0.85, &#39;f1&#39;: 0.765625}
+Learning rate after training: 0.01743392200500001
+</pre></div></div>
+</div>
+</section>
 </section>
 <section id="Holistic-Robust-neural-DRO">
 <h2>Holistic Robust neural DRO<a class="headerlink" href="#Holistic-Robust-neural-DRO" title="Link to this heading">¶</a></h2>
@@ -553,11 +618,14 @@ Linf FGSM: robust training loss=0.503, validation accuracy=1.000
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Other NN DRO</a><ul>
+<li><a class="reference internal" href="#">Other Neural DRO</a><ul>
 <li><a class="reference internal" href="#Shared-setup">Shared setup</a></li>
 <li><a class="reference internal" href="#Chi-square-neural-DRO">Chi-square neural DRO</a></li>
 <li><a class="reference internal" href="#CVaR-neural-DRO">CVaR neural DRO</a></li>
-<li><a class="reference internal" href="#Wasserstein-neural-DRO">Wasserstein neural DRO</a></li>
+<li><a class="reference internal" href="#Wasserstein-neural-DRO">Wasserstein neural DRO</a><ul>
+<li><a class="reference internal" href="#Custom-WNNDRO-architecture-and-training-controls">Custom WNNDRO architecture and training controls</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#Holistic-Robust-neural-DRO">Holistic Robust neural DRO</a></li>
 <li><a class="reference internal" href="#Compare-the-returned-metrics">Compare the returned metrics</a></li>
 </ul>
@@ -575,13 +643,13 @@ Linf FGSM: robust training loss=0.503, validation accuracy=1.000
             <div class="left">
                 
                 <a href="sinkhorn-nn.html">
-                    <span class="icon">&lt;</span><span>NN Sinkhorn DRO</span></a>
+                    <span class="icon">&lt;</span><span>Neural Sinkhorn DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="param_dro.html"><span>Bayesian DRO</span><span class="icon">&gt;</span></a>
+                    <a href="tree_dro_tutorial.html"><span>Tree DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

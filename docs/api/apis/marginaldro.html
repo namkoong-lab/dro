@@ -253,16 +253,16 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Linear DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chi2dro_linear.html">Chi-square DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cvardro_linear.html">CVaR DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_linear.html">Group DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tvdro.html">TV DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mmddro.html">MMD DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wdro_linear.html">Wasserstein DRO</a></li>
@@ -451,7 +451,8 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </li>
 </ul>
 </p></li>
-<li><p><strong>accelerate</strong> (<em>bool</em>) – Whether to use acceleration for quadratic approximation.</p></li>
+<li><p><strong>accelerate</strong> (<em>bool</em>) – Use the sparse auxiliary-vector surrogate when True.
+When False, use a full transport matrix with all pairwise costs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

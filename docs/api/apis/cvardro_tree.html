@@ -250,8 +250,8 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a></li>
@@ -392,7 +392,7 @@ fitting.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.tree_model.lgbm.KLDRO_LGBM.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.KLDRO_LGBM.predict" title="Link to this definition">¶</a></dt>
-<dd><p>Generate predictions</p>
+<dd><p>Generate predictions; classification thresholds raw margins at zero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) – Input features (n_samples, n_features)</p>
@@ -533,7 +533,7 @@ fitting.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.tree_model.lgbm.Chi2DRO_LGBM.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.Chi2DRO_LGBM.predict" title="Link to this definition">¶</a></dt>
-<dd><p>Generate predictions</p>
+<dd><p>Generate predictions; classification thresholds raw margins at zero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) – Input features (n_samples, n_features)</p>
@@ -674,7 +674,7 @@ fitting.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dro.tree_model.lgbm.CVaRDRO_LGBM.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.tree_model.lgbm.CVaRDRO_LGBM.predict" title="Link to this definition">¶</a></dt>
-<dd><p>Generate predictions</p>
+<dd><p>Generate predictions; classification thresholds raw margins at zero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) – Input features (n_samples, n_features)</p>

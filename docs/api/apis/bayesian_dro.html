@@ -251,16 +251,16 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Linear DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chi2dro_linear.html">Chi-square DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cvardro_linear.html">CVaR DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_linear.html">Group DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tvdro.html">TV DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mmddro.html">MMD DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wdro_linear.html">Wasserstein DRO</a></li>
@@ -295,6 +295,8 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.bayesian_dro.</span></span><span class="sig-name descname"><span class="pre">BayesianDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLARABEL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.bayesian_dro.BayesianDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
 <p>This model minimizes a Bayesian version for regression and other types of losses</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">model_type='newsvendor'</span></code>, the prediction is <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">&#64;</span> <span class="pre">theta</span></code> and
+underage costs 3 per unit while overage costs 1 per unit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>robust_obj</strong> – Robust empirical optimization objective from the most

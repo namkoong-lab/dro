@@ -1,4 +1,4 @@
-# MMD-DRO
+# Linear MMD-DRO
 In MMD-DRO [1], $\mathcal{P}(d, \eta) = \{Q: d(Q, \widehat P)\leq \eta\}$.
 Here, $d(P, Q)$ is the kernel distance $\|\mu_P - \mu_Q\|_{\mathcal H}$, which is defined as:
 

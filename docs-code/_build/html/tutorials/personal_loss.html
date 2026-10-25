@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/personal_loss.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Example" href="../api/example.html" />
-    <link rel="prev" title="Tree-DRO" href="tree_model.html" /> 
+    <link rel="next" title="Examples" href="../api/example.html" />
+    <link rel="prev" title="Tree DRO" href="tree_model.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,22 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO: Model Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">NN-DRO: Robustness Certificates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -301,7 +301,7 @@
 Wasserstein DRO passes a precomputed <code class="docutils literal notranslate"><span class="pre">design_matrix</span></code> to <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code>; use it when
 provided so the custom loss uses the same linear or kernel coordinates as fitting.</p>
 <section id="linear-convex-dro-methods">
-<h2>1. Linear (Convex) DRO Methods<a class="headerlink" href="#linear-convex-dro-methods" title="Link to this heading">¶</a></h2>
+<h2>Linear (Convex) DRO Methods<a class="headerlink" href="#linear-convex-dro-methods" title="Link to this heading">¶</a></h2>
 <p>For linear DRO models formulated in CVXPY, customize both <code class="docutils literal notranslate"><span class="pre">_loss</span></code> and
 <code class="docutils literal notranslate"><span class="pre">_cvx_loss</span></code> for the chosen loss function.</p>
 <p>As a general high-level example, consider a convex piecewise-affine loss of the
@@ -351,11 +351,11 @@ formulation in Theorem 4 of
 </section>
 </section>
 <section id="nn-based-dro-methods">
-<h2>2. NN-Based DRO Methods<a class="headerlink" href="#nn-based-dro-methods" title="Link to this heading">¶</a></h2>
+<h2>NN-Based DRO Methods<a class="headerlink" href="#nn-based-dro-methods" title="Link to this heading">¶</a></h2>
 <p>For post-training bounds on the robust loss of a fitted neural model, see the
-<a class="reference internal" href="neural_certificates.html"><span class="doc">NN-DRO robustness certificates guide</span></a>.</p>
+<a class="reference internal" href="neural_certificates.html"><span class="doc">Neural DRO robustness certificates guide</span></a>.</p>
 <section id="personalized-loss">
-<h3>2.1 Personalized loss<a class="headerlink" href="#personalized-loss" title="Link to this heading">¶</a></h3>
+<h3>Personalized loss<a class="headerlink" href="#personalized-loss" title="Link to this heading">¶</a></h3>
 <p>For example, a decision-aware regression model can use the unbalanced L1 loss</p>
 <div class="math notranslate nohighlight">
 \[
@@ -396,7 +396,7 @@ replaces the architecture, per-sample loss, and training attack.</p>
 </section>
 </section>
 <section id="personalized-model-architecture">
-<h3>2.2 Personalized model architecture<a class="headerlink" href="#personalized-model-architecture" title="Link to this heading">¶</a></h3>
+<h3>Personalized model architecture<a class="headerlink" href="#personalized-model-architecture" title="Link to this heading">¶</a></h3>
 <p>Pass a custom <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> through <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> before fitting.
 For HR-DRO and WNNDRO norm-ball mode, this also binds the adversarial attack to
 the replacement network.
@@ -542,7 +542,7 @@ custom-loss or custom-attack hooks. Check those internals when upgrading the
 package.</p>
 </section>
 <section id="data-loaders-optimizers-and-schedulers">
-<h3>2.3 Data loaders, optimizers, and schedulers<a class="headerlink" href="#data-loaders-optimizers-and-schedulers" title="Link to this heading">¶</a></h3>
+<h3>Data loaders, optimizers, and schedulers<a class="headerlink" href="#data-loaders-optimizers-and-schedulers" title="Link to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Chi2NNDRO</span></code>, <code class="docutils literal notranslate"><span class="pre">CVaRNNDRO</span></code>, <code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code>, and <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> accept these optional controls
 through <code class="docutils literal notranslate"><span class="pre">fit(...)</span></code>. Supply both <code class="docutils literal notranslate"><span class="pre">train_loader</span></code> and <code class="docutils literal notranslate"><span class="pre">val_loader</span></code> as loaders of
 <code class="docutils literal notranslate"><span class="pre">(inputs,</span> <span class="pre">labels)</span></code> batches, and omit <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> on this path. Pass a PyTorch
@@ -586,7 +586,7 @@ includes complete chi-squared, CVaR, and HR-DRO fitting examples.</p>
 </section>
 </section>
 <section id="tree-based-dro-methods">
-<h2>3. Tree-Based DRO Methods<a class="headerlink" href="#tree-based-dro-methods" title="Link to this heading">¶</a></h2>
+<h2>Tree-Based DRO Methods<a class="headerlink" href="#tree-based-dro-methods" title="Link to this heading">¶</a></h2>
 <p>For tree-based DRO methods, <code class="docutils literal notranslate"><span class="pre">loss(preds,</span> <span class="pre">labels)</span></code> supplies the per-example
 losses used for robust sample weighting and the reported objective. When a
 personalized loss also changes its prediction derivatives, update the booster
@@ -612,24 +612,24 @@ for end-to-end linear, neural, and cost-sensitive XGBoost examples.</p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Personalization</a><ul>
-<li><a class="reference internal" href="#linear-convex-dro-methods">1. Linear (Convex) DRO Methods</a><ul>
+<li><a class="reference internal" href="#linear-convex-dro-methods">Linear (Convex) DRO Methods</a><ul>
 <li><a class="reference internal" href="#f-dro"><span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
 <li><a class="reference internal" href="#wasserstein-dro">Wasserstein DRO</a></li>
 <li><a class="reference internal" href="#remark">Remark</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#nn-based-dro-methods">2. NN-Based DRO Methods</a><ul>
-<li><a class="reference internal" href="#personalized-loss">2.1 Personalized loss</a><ul>
+<li><a class="reference internal" href="#nn-based-dro-methods">NN-Based DRO Methods</a><ul>
+<li><a class="reference internal" href="#personalized-loss">Personalized loss</a><ul>
 <li><a class="reference internal" href="#neural-f-dro">Neural <span class="math notranslate nohighlight">\(f\)</span>-DRO</a></li>
 <li><a class="reference internal" href="#neural-wasserstein-dro">Neural Wasserstein DRO</a></li>
 <li><a class="reference internal" href="#hr-dro">HR-DRO</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#personalized-model-architecture">2.2 Personalized model architecture</a></li>
-<li><a class="reference internal" href="#data-loaders-optimizers-and-schedulers">2.3 Data loaders, optimizers, and schedulers</a></li>
+<li><a class="reference internal" href="#personalized-model-architecture">Personalized model architecture</a></li>
+<li><a class="reference internal" href="#data-loaders-optimizers-and-schedulers">Data loaders, optimizers, and schedulers</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#tree-based-dro-methods">3. Tree-Based DRO Methods</a></li>
+<li><a class="reference internal" href="#tree-based-dro-methods">Tree-Based DRO Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -645,13 +645,13 @@ for end-to-end linear, neural, and cost-sensitive XGBoost examples.</p>
             <div class="left">
                 
                 <a href="tree_model.html">
-                    <span class="icon">&lt;</span><span>Tree-DRO</span></a>
+                    <span class="icon">&lt;</span><span>Tree DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="../api/example.html"><span>Example</span><span class="icon">&gt;</span></a>
+                    <a href="../api/example.html"><span>Examples</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

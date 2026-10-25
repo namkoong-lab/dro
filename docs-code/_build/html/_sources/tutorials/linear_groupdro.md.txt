@@ -1,10 +1,7 @@
-# Group DRO for Linear Models
+# Linear Group DRO
 
-Group distributionally robust optimization (Group DRO) is useful when the
-training data is divided into known groups and average performance can hide a
-poorly performing subgroup. Instead of minimizing the average loss over all
-samples, Group DRO minimizes the largest empirical mean loss among the observed
-groups.
+We describe the Group DRO here, which is useful when the
+training data is divided into known groups and average performance can hide a poorly performing subgroup. Instead of minimizing the average loss over all samples, Group DRO minimizes the largest empirical mean loss among the observed groups.
 
 ## Formulation
 
@@ -20,13 +17,11 @@ $$
 
 The maximum is represented by an epigraph variable $t$. For every observed
 group, the CVXPY problem adds the constraint
-
 $$
 \frac{1}{n_g}\sum_{i:g_i=g}\ell_i(\theta,b)\leq t,
 $$
-
-and minimizes $t$. This is an exact convex formulation for each loss supported
-by `BaseLinearDRO`.
+and minimizes $t$. This is an exact convex formulation for each loss supported by `BaseLinearDRO`. Group DRO supports all the four loss types within `model_type`, i.e., `"svm"`, `"logistic"`, `"ols"`, `"lad"`. Linear and kernelized predictors are supported through the common `BaseLinearDRO` machinery. For a kernelized model, call `update_kernel()` before
+`fit()` just as with the other linear DRO estimators.
 
 ## Defining groups
 
@@ -45,18 +40,7 @@ Every category present in the training data contributes one group-average
 constraint. A small group therefore has the same opportunity to determine the
 objective as a large group; it is not down-weighted by its sample count.
 
-## Supported losses
 
-Choose the loss with `model_type`:
-
-- `"svm"`: hinge loss for binary labels in $\{-1,+1\}$.
-- `"logistic"`: logistic loss for binary labels in $\{-1,+1\}$.
-- `"ols"`: squared loss for regression.
-- `"lad"`: absolute loss for regression.
-
-Linear and kernelized predictors are supported through the common
-`BaseLinearDRO` machinery. For a kernelized model, call `update_kernel()` before
-`fit()` just as with the other linear DRO estimators.
 
 ## Hyperparameters
 

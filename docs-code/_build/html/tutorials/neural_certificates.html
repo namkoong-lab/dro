@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>NN-DRO: Robustness Certificates &#8212; dro 0.4.2 documentation</title>
+    <title>Neural DRO Robustness Certificates &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/neural_certificates.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Tree-DRO" href="tree_model.html" />
-    <link rel="prev" title="NN-DRO: Model Formulation" href="neural_model.html" /> 
+    <link rel="next" title="Tree DRO" href="tree_model.html" />
+    <link rel="prev" title="Neural DRO Overview" href="neural_model.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,22 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO: Model Formulation</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">NN-DRO: Robustness Certificates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -281,8 +281,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="nn-dro-robustness-certificates">
-<h1>NN-DRO: Robustness Certificates<a class="headerlink" href="#nn-dro-robustness-certificates" title="Link to this heading">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="neural-dro-robustness-certificates">
+<h1>Neural DRO Robustness Certificates<a class="headerlink" href="#neural-dro-robustness-certificates" title="Link to this heading">¶</a></h1>
 <p>Neural DRO training uses approximate optimization, but the fitted network can
 still admit a bound on its worst-case loss. This tutorial explains how to
 construct such a certificate for Wasserstein, <span class="math notranslate nohighlight">\(\chi^2\)</span>, and CVaR ambiguity
@@ -295,7 +295,7 @@ In the current neural base class, <code class="docutils literal notranslate"><sp
 training-batch objectives [4]. It is not the full-data certificate of the
 final frozen network defined here.</p>
 <section id="certificate-guarantees">
-<h2>1. Certificate Guarantees<a class="headerlink" href="#certificate-guarantees" title="Link to this heading">¶</a></h2>
+<h2>Certificate Guarantees<a class="headerlink" href="#certificate-guarantees" title="Link to this heading">¶</a></h2>
 <p>Fix a fitted network <span class="math notranslate nohighlight">\(\widehat\theta\)</span> and a reference dataset
 <span class="math notranslate nohighlight">\(z_1,\ldots,z_N\)</span>, with empirical distribution
 <span class="math notranslate nohighlight">\(\widehat P=N^{-1}\sum_i\delta_{z_i}\)</span>. Write
@@ -335,7 +335,7 @@ numerical certificate also requires verified feasibility and conservative
 rounding of computed upper and lower values.</p>
 </section>
 <section id="wasserstein-dro">
-<h2>2. Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
+<h2>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
 <section id="formulation">
 <h3>Formulation<a class="headerlink" href="#formulation" title="Link to this heading">¶</a></h3>
 <p>Let <span class="math notranslate nohighlight">\(\mathcal T_c(P,Q)\)</span> be the minimum expected transport cost over couplings
@@ -428,7 +428,7 @@ upper bound. If <span class="math notranslate nohighlight">\(c=d^p\)</span>, the
 </section>
 </section>
 <section id="chi-2-dro">
-<h2>3. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO<a class="headerlink" href="#chi-2-dro" title="Link to this heading">¶</a></h2>
+<h2><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO<a class="headerlink" href="#chi-2-dro" title="Link to this heading">¶</a></h2>
 <section id="id1">
 <h3>Formulation<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p>For the neural reweighting convention used in [2], let
@@ -529,7 +529,7 @@ even when this inverse check fails.</p>
 </section>
 </section>
 <section id="cvar-dro">
-<h2>4. CVaR-DRO<a class="headerlink" href="#cvar-dro" title="Link to this heading">¶</a></h2>
+<h2>CVaR-DRO<a class="headerlink" href="#cvar-dro" title="Link to this heading">¶</a></h2>
 <section id="id4">
 <h3>Formulation<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
 <p>Here <span class="math notranslate nohighlight">\(\alpha\in(0,1]\)</span> is the upper-tail fraction, following the neural
@@ -619,7 +619,7 @@ prespecified target <span class="math notranslate nohighlight">\(\alpha_0\ge\alp
 </section>
 </section>
 <section id="examples">
-<h2>5. Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
 <p>For each of the Wasserstein, Chi2, and CVaR NN DRO, the interface <code class="docutils literal notranslate"><span class="pre">certify_radius(...)</span></code> is set for the post-training empirical calculation. It returns a dictionary containing <code class="docutils literal notranslate"><span class="pre">epsilon_cert</span></code> (or <code class="docutils literal notranslate"><span class="pre">alpha_cert</span></code> for CVaR), <code class="docutils literal notranslate"><span class="pre">loss_bound</span></code>, <code class="docutils literal notranslate"><span class="pre">input_upper_bound</span></code>, and <code class="docutils literal notranslate"><span class="pre">gap</span></code>.
 It returns <code class="docutils literal notranslate"><span class="pre">None</span></code> when the supplied lower loss cannot be certified at a valid reduced parameter. The inputs must come from the <strong>same frozen model and complete reference dataset</strong>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -702,27 +702,27 @@ bounds. They are not theorems attributed verbatim to these references.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">NN-DRO: Robustness Certificates</a><ul>
-<li><a class="reference internal" href="#certificate-guarantees">1. Certificate Guarantees</a></li>
-<li><a class="reference internal" href="#wasserstein-dro">2. Wasserstein DRO</a><ul>
+<li><a class="reference internal" href="#">Neural DRO Robustness Certificates</a><ul>
+<li><a class="reference internal" href="#certificate-guarantees">Certificate Guarantees</a></li>
+<li><a class="reference internal" href="#wasserstein-dro">Wasserstein DRO</a><ul>
 <li><a class="reference internal" href="#formulation">Formulation</a></li>
 <li><a class="reference internal" href="#primal-dual-certificate">Primal-dual certificate</a></li>
 <li><a class="reference internal" href="#radius-certificate">Radius certificate</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#chi-2-dro">3. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO</a><ul>
+<li><a class="reference internal" href="#chi-2-dro"><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO</a><ul>
 <li><a class="reference internal" href="#id1">Formulation</a></li>
 <li><a class="reference internal" href="#id2">Primal-dual certificate</a></li>
 <li><a class="reference internal" href="#id3">Radius certificate</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#cvar-dro">4. CVaR-DRO</a><ul>
+<li><a class="reference internal" href="#cvar-dro">CVaR-DRO</a><ul>
 <li><a class="reference internal" href="#id4">Formulation</a></li>
 <li><a class="reference internal" href="#id5">Primal-dual certificate</a></li>
 <li><a class="reference internal" href="#id6">Radius certificate</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#examples">5. Examples</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
 <li><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>
@@ -739,13 +739,13 @@ bounds. They are not theorems attributed verbatim to these references.</p>
             <div class="left">
                 
                 <a href="neural_model.html">
-                    <span class="icon">&lt;</span><span>NN-DRO: Model Formulation</span></a>
+                    <span class="icon">&lt;</span><span>Neural DRO Overview</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="tree_model.html"><span>Tree-DRO</span><span class="icon">&gt;</span></a>
+                    <a href="tree_model.html"><span>Tree DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

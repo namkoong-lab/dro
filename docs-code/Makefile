@@ -33,7 +33,7 @@ clean:
 	@echo "已清除所有构建产物"
 
 html:
-	$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS)
+	$(SPHINXBUILD) -b html -a "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS)
 	@echo
 	@echo "构建完成。打开 $(BUILDDIR)/html/index.html 查看文档"
 

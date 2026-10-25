@@ -1,4 +1,4 @@
-# Wasserstein DRO
+# Linear Wasserstein DRO
 In Wasserstein DRO,
 $\mathcal{P}(d, \epsilon) = \{Q: W(Q, \widehat P)\leq \epsilon\}$.
 

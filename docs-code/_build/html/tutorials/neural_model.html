@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>NN-DRO: Model Formulation &#8212; dro 0.4.2 documentation</title>
+    <title>Neural DRO Overview &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/neural_model.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="NN-DRO: Robustness Certificates" href="neural_certificates.html" />
-    <link rel="prev" title="Hybrid-distance DRO" href="linear_mixdro.html" /> 
+    <link rel="next" title="Neural DRO Robustness Certificates" href="neural_certificates.html" />
+    <link rel="prev" title="Linear Hybrid-Distance DRO" href="linear_mixdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,22 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">NN-DRO: Model Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">NN-DRO: Robustness Certificates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -281,8 +281,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="nn-dro-model-formulation">
-<h1>NN-DRO: Model Formulation<a class="headerlink" href="#nn-dro-model-formulation" title="Link to this heading">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="neural-dro-overview">
+<h1>Neural DRO Overview<a class="headerlink" href="#neural-dro-overview" title="Link to this heading">¶</a></h1>
 <p>For <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO, CVaR-DRO, Wasserstein DRO, Holistic Robust DRO, Sinkhorn DRO, and Group DRO, we implement their <code class="docutils literal notranslate"><span class="pre">neural-network</span></code> version, where the backbone model is (by default) MLP.</p>
 <p>We support the following NN architectures:</p>
 <ul class="simple">
@@ -294,9 +294,9 @@
 <p>Furthermore, users can use their own model architectures via the <code class="docutils literal notranslate"><span class="pre">update_user_mode()</span></code> function.
 Implementation details are as follows:</p>
 <p>For post-training worst-case-loss bounds for Wasserstein, <span class="math notranslate nohighlight">\(\chi^2\)</span>, and CVaR
-neural models, see <a class="reference internal" href="neural_certificates.html"><span class="doc">NN-DRO robustness certificates</span></a>.</p>
+neural models, see <a class="reference internal" href="neural_certificates.html"><span class="doc">Neural DRO robustness certificates</span></a>.</p>
 <section id="chi-2-dro-and-cvar-dro">
-<h2>1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO<a class="headerlink" href="#chi-2-dro-and-cvar-dro" title="Link to this heading">¶</a></h2>
+<h2><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO<a class="headerlink" href="#chi-2-dro-and-cvar-dro" title="Link to this heading">¶</a></h2>
 <p>We follow [1] to implement these two <span class="math notranslate nohighlight">\(f\)</span>-DROs. Our code is largely based on <a class="reference external" href="https://github.com/daniellevy/fast-dro">https://github.com/daniellevy/fast-dro</a>.</p>
 <section id="hyperparameters">
 <h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h3>
@@ -305,12 +305,12 @@ neural models, see <a class="reference internal" href="neural_certificates.html"
 <li><p><code class="docutils literal notranslate"><span class="pre">reg</span></code>: strength of the penalty on adversarial sample weights. Chi-square DRO uses a chi-square divergence penalty, while CVaR-DRO uses a KL-divergence penalty relative to uniform weights.</p></li>
 </ul>
 <p>[1] Large-Scale Methods for Distributionally Robust Optimization. Daniel Levy, Yair Carmon, John Duchi, and Aaron Sidford. NeurIPS 2020.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">Other NN DRO notebook</span></a>
+<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">Other Neural DRO notebook</span></a>
 for companion neural <span class="math notranslate nohighlight">\(f\)</span>-DRO material.</p>
 </section>
 </section>
 <section id="wasserstein-dro">
-<h2>2. Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
+<h2>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> supports two modes: <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> and <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code>.</p>
 <p>In the default <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode, PGD/PGDL2 approximately maximizes each example’s loss within a fixed input-norm ball; training then minimizes the mean loss on the perturbed examples. With exact inner maximization and label-preserving perturbations, this mode has a <span class="math notranslate nohighlight">\(W_\infty\)</span>-style interpretation. Here <span class="math notranslate nohighlight">\(\infty\)</span> is the Wasserstein order; the input norm can be <span class="math notranslate nohighlight">\(\ell_2\)</span> or <span class="math notranslate nohighlight">\(\ell_\infty\)</span>. The <span class="math notranslate nohighlight">\(\ell_2\)</span> PGD attack also accepts two-dimensional tabular inputs.</p>
 <p><strong>Implementation credit:</strong> <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode uses <a class="reference external" href="https://github.com/Harry24k/adversarial-attacks-pytorch">Torchattacks</a> by Hoki Kim to generate adversarial examples (PGD, PGDL2, FGSM, and FFGSM). The attack implementations are provided by that library [2].</p>
@@ -349,12 +349,12 @@ for companion neural <span class="math notranslate nohighlight">\(f\)</span>-DRO
 <p>Tune <code class="docutils literal notranslate"><span class="pre">gamma</span></code> and the ascent step size for the input scale. The inner ascent is approximate, especially for nonconvex neural networks. With unbounded inputs and squared-error regression, too small a <code class="docutils literal notranslate"><span class="pre">gamma</span></code> can make the inner maximum unbounded; set suitable input bounds or increase <code class="docutils literal notranslate"><span class="pre">gamma</span></code>.</p>
 <p>[2] <a class="reference external" href="https://arxiv.org/abs/2010.01950">Torchattacks: A PyTorch Repository for Adversarial Attacks</a>. Hoki Kim. arXiv:2010.01950, 2020.</p>
 <p>[3] Certifying some distributional robustness with principled adversarial training. Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi. ICLR 2018.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">Other NN DRO notebook</span></a>
+<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">Other Neural DRO notebook</span></a>
 for companion neural Wasserstein DRO material.</p>
 </section>
 </section>
 <section id="holistic-robust-dro">
-<h2>3. Holistic Robust DRO<a class="headerlink" href="#holistic-robust-dro" title="Link to this heading">¶</a></h2>
+<h2>Holistic Robust DRO<a class="headerlink" href="#holistic-robust-dro" title="Link to this heading">¶</a></h2>
 <p>We follow [4], and our code is largely based on <a class="reference external" href="https://github.com/RyanLucas3/HR_Neural_Networks">https://github.com/RyanLucas3/HR_Neural_Networks</a>.</p>
 <p><strong>Implementation credit:</strong> <code class="docutils literal notranslate"><span class="pre">HRNNDRO</span></code> uses <a class="reference external" href="https://github.com/Harry24k/adversarial-attacks-pytorch">Torchattacks</a> by Kim [2] for adversarial-example generation.</p>
 <section id="id2">
@@ -365,12 +365,12 @@ for companion neural Wasserstein DRO material.</p>
 <li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: Robustness parameter for the model noise (perturbed ball size), denoted as <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> in the model config.</p></li>
 </ul>
 <p>[4] Certified Robust Neural Networks: Generalization and Corruption Resistance. Amine Bennouna, Ryan Lucas, and Bart Van Parys. ICML 2023.</p>
-<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">Other NN DRO notebook</span></a>
+<p>See the <a class="reference internal" href="../api/notebooks/neural_dro_tutorial.html"><span class="doc">Other Neural DRO notebook</span></a>
 for companion Holistic Robust DRO material.</p>
 </section>
 </section>
 <section id="sinkhorn-dro">
-<h2>4. Sinkhorn DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
+<h2>Sinkhorn DRO<a class="headerlink" href="#sinkhorn-dro" title="Link to this heading">¶</a></h2>
 <p>Sinkhorn DRO uses an entropic-regularized Wasserstein distance and Gaussian input perturbations to construct a smooth robust loss. The implementation supports standard stochastic gradient (SG), multilevel Monte Carlo (MLMC), and randomized truncated MLMC (RTMLMC) optimization [5].</p>
 <section id="id3">
 <h3>Hyperparameters<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
@@ -423,7 +423,7 @@ for companion Holistic Robust DRO material.</p>
 </section>
 </section>
 <section id="group-dro">
-<h2>5. Group DRO<a class="headerlink" href="#group-dro" title="Link to this heading">¶</a></h2>
+<h2>Group DRO<a class="headerlink" href="#group-dro" title="Link to this heading">¶</a></h2>
 <p>Group DRO targets uniform performance across a finite set of observed groups.
 For group-average losses <span class="math notranslate nohighlight">\(L_g(\theta)\)</span>, its objective is</p>
 <div class="math notranslate nohighlight">
@@ -530,25 +530,25 @@ implementation</a>.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">NN-DRO: Model Formulation</a><ul>
-<li><a class="reference internal" href="#chi-2-dro-and-cvar-dro">1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO</a><ul>
+<li><a class="reference internal" href="#">Neural DRO Overview</a><ul>
+<li><a class="reference internal" href="#chi-2-dro-and-cvar-dro"><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO</a><ul>
 <li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#wasserstein-dro">2. Wasserstein DRO</a><ul>
+<li><a class="reference internal" href="#wasserstein-dro">Wasserstein DRO</a><ul>
 <li><a class="reference internal" href="#id1">Hyperparameters</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#holistic-robust-dro">3. Holistic Robust DRO</a><ul>
+<li><a class="reference internal" href="#holistic-robust-dro">Holistic Robust DRO</a><ul>
 <li><a class="reference internal" href="#id2">Hyperparameters</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#sinkhorn-dro">4. Sinkhorn DRO</a><ul>
+<li><a class="reference internal" href="#sinkhorn-dro">Sinkhorn DRO</a><ul>
 <li><a class="reference internal" href="#id3">Hyperparameters</a></li>
 <li><a class="reference internal" href="#hyperparameter-setup">Hyperparameter setup</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#group-dro">5. Group DRO</a><ul>
+<li><a class="reference internal" href="#group-dro">Group DRO</a><ul>
 <li><a class="reference internal" href="#group-feature-and-supported-models">Group feature and supported models</a></li>
 <li><a class="reference internal" href="#id4">Hyperparameters</a></li>
 </ul>
@@ -568,13 +568,13 @@ implementation</a>.</p>
             <div class="left">
                 
                 <a href="linear_mixdro.html">
-                    <span class="icon">&lt;</span><span>Hybrid-distance DRO</span></a>
+                    <span class="icon">&lt;</span><span>Linear Hybrid-Distance DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="neural_certificates.html"><span>NN-DRO: Robustness Certificates</span><span class="icon">&gt;</span></a>
+                    <a href="neural_certificates.html"><span>Neural DRO Robustness Certificates</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wasserstein DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Linear Wasserstein DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_wdro.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="MMD-DRO" href="linear_mmddro.html" />
-    <link rel="prev" title="f-divergence DRO" href="linear_fdro.html" /> 
+    <link rel="next" title="Linear Group DRO" href="linear_groupdro.html" />
+    <link rel="prev" title="Linear f-divergence DRO" href="linear_fdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,21 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -280,10 +281,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="wasserstein-dro">
-<h1>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-wasserstein-dro">
+<h1>Linear Wasserstein DRO<a class="headerlink" href="#linear-wasserstein-dro" title="Link to this heading">¶</a></h1>
 <p>In Wasserstein DRO,
-<span class="math notranslate nohighlight">\(\mathcal{P}(d, \epsilon) = \{Q: W(Q, \hat P)\leq \epsilon\}\)</span>.</p>
+<span class="math notranslate nohighlight">\(\mathcal{P}(d, \epsilon) = \{Q: W(Q, \widehat P)\leq \epsilon\}\)</span>.</p>
 <p>Specifically, Wasserstein distance is defined as follows. For
 <span class="math notranslate nohighlight">\(Z_1 = (X_1, Y_1)\)</span> and <span class="math notranslate nohighlight">\(Z_2 = (X_2, Y_2)\)</span>,</p>
 <div class="math notranslate nohighlight">
@@ -335,7 +336,8 @@ used by <code class="docutils literal notranslate"><span class="pre">lad</span><
 <li><p><span class="math notranslate nohighlight">\(\kappa\)</span>: Robustness parameter for the perturbation of Y.</p></li>
 <li><p><span class="math notranslate nohighlight">\(\epsilon\)</span>: Ambiguity size of Wasserstein ball.</p></li>
 </ul>
-<p>For OLS, Theorem 1 in [1] there provides the corresponding reformulations. We set <span class="math notranslate nohighlight">\(\kappa = \infty\)</span>, i.e., not allow changes in <span class="math notranslate nohighlight">\(Y\)</span>.</p>
+<p>For OLS, Theorem 1 in [1] there provides the corresponding reformulations. We set <span class="math notranslate nohighlight">\(\kappa = \infty\)</span>, i.e., not allow changes in <span class="math notranslate nohighlight">\(Y\)</span>.
+The implementation rejects finite <code class="docutils literal notranslate"><span class="pre">kappa</span></code> for OLS. LAD permits positive finite <code class="docutils literal notranslate"><span class="pre">kappa</span></code> or infinity and rejects zero; binary classification permits zero-cost label flips when <code class="docutils literal notranslate"><span class="pre">kappa=0</span></code>.</p>
 <p>For loss functions in LAD, Logistic, and SVM models, [2] provide to reformulate the problem.</p>
 </section>
 <section id="worst-case-distribution">
@@ -354,7 +356,7 @@ L=\|\Sigma^{-1/2}\theta\|_q.
 <p>The worst-case expected squared loss is</p>
 <div class="math notranslate nohighlight">
 \[
-\sup_{Q:W(Q,\widehat P_n)\leq\epsilon}
+\sup_{Q:W(Q,\widehat P)\leq\epsilon}
 \mathbb E_Q[(\theta^\top X+b-Y)^2]
 =\left(R+\sqrt{\epsilon}\,L\right)^2.
 \]</div>
@@ -493,24 +495,43 @@ slope, as explained in [4]. OLS uses the separate exact construction above.</p>
 </section>
 <section id="robust-satisficing-version">
 <h2>Robust Satisficing Version<a class="headerlink" href="#robust-satisficing-version" title="Link to this heading">¶</a></h2>
-<p>For the Satisficing Wasserstein-DRO model [3], we solve the following constrained optimization problem, where DRO is set as the constraint counterpart:</p>
+<p>For Robust Satisficing Wasserstein-DRO [3], fix an acceptable loss target
+<span class="math notranslate nohighlight">\(\tau\)</span> and minimize the sensitivity coefficient <span class="math notranslate nohighlight">\(\lambda\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\min_{\theta,b,\lambda\geq0}\quad &amp;\lambda\\
+\text{s.t.}\quad
+&amp;\mathbb E_P[\ell_{tr}(\theta,b;(X,Y))]
+\leq\tau+\lambda W(P,\widehat P),\qquad \forall P.
+\end{aligned}
+\end{split}\]</div>
+<p>The optimized <span class="math notranslate nohighlight">\(\lambda\)</span> bounds how quickly loss may increase with distribution
+shift. Smaller sensitivity gives a tighter guarantee for the same loss target.</p>
+<p>For a linear predictor with hinge, logistic, or absolute loss and
+label-preserving norm transport, the formulation reduces to</p>
 <div class="math notranslate nohighlight">
 \[
-\max {\epsilon,\quad \text{s.t.}~E_{(X,Y) \sim P}[\ell_{tr}(\theta;(X, Y))] \leq \tau + \epsilon W(P, \widehat P), \forall P}.
+\min_{\theta,b}\;\|\Sigma^{-1/2}\theta\|_q
+\quad\text{s.t.}\quad
+\mathbb E_{\widehat P}[\ell_{tr}(\theta,b;(X,Y))]\leq\tau,
+\qquad \frac1p+\frac1q=1.
 \]</div>
-<p>For (approximated) regression / classification, we can show the optimization problem above is equivalent to:</p>
-<div class="math notranslate nohighlight">
-\[
-\max \{\|\theta\|_{\Sigma^{-1/2},p},\quad \text{s.t.}~ E_{(X,Y) \sim \widehat P}[\ell_{tr}(\theta;(X, Y))] \leq \tau\}.
-\]</div>
-<section id="id1">
-<h3>Hyperparameter<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
-<p>In the satisfying version,  we do not set <span class="math notranslate nohighlight">\(\epsilon\)</span> as the hyperparameter but as an optimization goal such that to minimize the worst-case performance.</p>
+<p>Here <span class="math notranslate nohighlight">\(q\)</span> is the dual of the feature perturbation norm order <span class="math notranslate nohighlight">\(p\)</span>. The package
+uses the corresponding loss-dependent sensitivity objective; for LAD with
+finite label transport cost <span class="math notranslate nohighlight">\(\kappa\)</span>, this is
+<span class="math notranslate nohighlight">\(\max\{\|\Sigma^{-1/2}\theta\|_q,1/\kappa\}\)</span>.</p>
+<section id="hyperparameters">
+<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">¶</a></h3>
+<p>The loss target is configured through <code class="docutils literal notranslate"><span class="pre">target_ratio</span></code>, rather than a fixed
+ambiguity radius. The sensitivity coefficient <span class="math notranslate nohighlight">\(\lambda\)</span> is optimized.</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\Sigma\)</span>: the feature importance perturbation matrix with the dimension being the (dimX, dimX).</p></li>
-<li><p><span class="math notranslate nohighlight">\(p\)</span>: Norm parameter for controlling the perturbation moment of X.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\kappa\)</span>: Robustness parameter for the perturbation of Y.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\tau\)</span>: <span class="math notranslate nohighlight">\(\tau \geq 1\)</span> is set as the multiplication of the best empirical performance with <span class="math notranslate nohighlight">\(E_{(X, Y)\sim \hat P_n}[\ell(\theta_{ERM};(X, Y))]\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma\)</span>: feature transport cost matrix, configured through <code class="docutils literal notranslate"><span class="pre">cost_matrix</span></code>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span>: feature perturbation norm order, configured through <code class="docutils literal notranslate"><span class="pre">p</span></code>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\kappa\)</span>: label transport cost, configured through <code class="docutils literal notranslate"><span class="pre">kappa</span></code>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau\)</span>: loss target, set to <span class="math notranslate nohighlight">\(\beta\)</span> times the best empirical loss, where
+<span class="math notranslate nohighlight">\(\beta\geq1\)</span> is configured through <code class="docutils literal notranslate"><span class="pre">target_ratio</span></code>. The restriction
+<span class="math notranslate nohighlight">\(\beta\geq1\)</span> applies to the multiplier, not to the loss target <span class="math notranslate nohighlight">\(\tau\)</span>.</p></li>
 </ul>
 <p>For example, fit a linear SVM with an empirical-loss target 25% above the
 best empirical loss. The optimizer then minimizes the fitted sensitivity
@@ -557,7 +578,7 @@ for end-to-end classification, regression, and robust-satisficing examples.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Wasserstein DRO</a><ul>
+<li><a class="reference internal" href="#">Linear Wasserstein DRO</a><ul>
 <li><a class="reference internal" href="#standard-version">Standard Version</a><ul>
 <li><a class="reference internal" href="#hyperparameter">Hyperparameter</a></li>
 <li><a class="reference internal" href="#worst-case-distribution">Worst-case distribution</a><ul>
@@ -568,7 +589,7 @@ for end-to-end classification, regression, and robust-satisficing examples.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#robust-satisficing-version">Robust Satisficing Version</a><ul>
-<li><a class="reference internal" href="#id1">Hyperparameter</a></li>
+<li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#reference">Reference</a></li>
@@ -587,13 +608,13 @@ for end-to-end classification, regression, and robust-satisficing examples.</p>
             <div class="left">
                 
                 <a href="linear_fdro.html">
-                    <span class="icon">&lt;</span><span>f-divergence DRO</span></a>
+                    <span class="icon">&lt;</span><span>Linear f-divergence DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="linear_mmddro.html"><span>MMD-DRO</span><span class="icon">&gt;</span></a>
+                    <a href="linear_groupdro.html"><span>Linear Group DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

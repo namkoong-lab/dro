@@ -253,16 +253,16 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Linear DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chi2dro_linear.html">Chi-square DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cvardro_linear.html">CVaR DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_linear.html">Group DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tvdro.html">TV DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mmddro.html">MMD DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wdro_linear.html">Wasserstein DRO</a></li>
@@ -290,9 +290,29 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.linear_model.mot_dro">
-<span id="mot-dro"></span><h1>MOT DRO<a class="headerlink" href="#module-dro.linear_model.mot_dro" title="Link to this heading">¶</a></h1>
-<dl class="py class">
+  <section id="mot-dro">
+<h1>MOT DRO<a class="headerlink" href="#mot-dro" title="Link to this heading">¶</a></h1>
+<section id="transport-configuration">
+<h2>Transport configuration<a class="headerlink" href="#transport-configuration" title="Link to this heading">¶</a></h2>
+<p>Configure the ambiguity radius, feature norm, and transport exponent with
+<code class="docutils literal notranslate"><span class="pre">model.update({...})</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: non-negative OT ambiguity radius.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: feature perturbation norm order, one of <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, or <code class="docutils literal notranslate"><span class="pre">'inf'</span></code>
+(default: <code class="docutils literal notranslate"><span class="pre">2</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">square</span></code>: transport exponent, either <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code> (default: <code class="docutils literal notranslate"><span class="pre">2</span></code>).</p></li>
+</ul>
+<p>Targets remain fixed, and the feature transport cost is
+<code class="docutils literal notranslate"><span class="pre">||x</span> <span class="pre">-</span> <span class="pre">x_hat||_p</span> <span class="pre">**</span> <span class="pre">square</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">p=2,</span> <span class="pre">square=2</span></code> selects squared
+Euclidean transport; <code class="docutils literal notranslate"><span class="pre">p=2,</span> <span class="pre">square=1</span></code> selects Euclidean transport.
+Unsupported norms or exponents raise <code class="docutils literal notranslate"><span class="pre">MOTDROError</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.mot_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">MOTDRO</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">MOTDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'lad'</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">'p'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'square'</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+</pre></div>
+</div>
+<dl class="py class" id="module-dro.linear_model.mot_dro">
 <dt class="sig sig-object py" id="dro.linear_model.mot_dro.MOTDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.linear_model.mot_dro.</span></span><span class="sig-name descname"><span class="pre">MOTDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLARABEL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.linear_model.mot_dro.MOTDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_linear.html#dro.linear_model.base.BaseLinearDRO" title="dro.linear_model.base.BaseLinearDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLinearDRO</span></code></a></p>
@@ -308,7 +328,25 @@
 <li><p><strong>theta1</strong> (<em>float</em>) – Wasserstein distance scaling factor (<span class="math notranslate nohighlight">\(\theta_1 \geq 0\)</span>)</p></li>
 <li><p><strong>theta2</strong> (<em>float</em>) – KL divergence penalty coefficient (<span class="math notranslate nohighlight">\(\theta_2 \geq 0\)</span>)</p></li>
 <li><p><strong>eps</strong> (<em>float</em>) – Robustness radius for OT ambiguity set (<span class="math notranslate nohighlight">\(\epsilon \geq 0\)</span>)</p></li>
-<li><p><strong>p</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>]</em>) – Norm order for feature perturbation. Valid values: 2 (L2), ‘inf’ (L_inf)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>)</p></li>
+<li><p><strong>model_type</strong> (<em>str</em>)</p></li>
+<li><p><strong>fit_intercept</strong> (<em>bool</em>)</p></li>
+<li><p><strong>solver</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Feature transport keeps targets fixed and uses the cost
+<code class="docutils literal notranslate"><span class="pre">||X_1</span> <span class="pre">-</span> <span class="pre">X_2||_p</span> <span class="pre">**</span> <span class="pre">square</span></code>. The norm order and transport exponent
+are independent parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>]</em>) – Feature perturbation norm order: 1, 2, or ‘inf’. Defaults to 2.</p></li>
+<li><p><strong>square</strong> (<em>int</em>) – Transport exponent: 1 or 2. Defaults to 2.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
@@ -348,13 +386,13 @@ Set False for pre-centered data. Defaults to True.</p></li>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">theta1</span></code>: 1.0 (minimum Wasserstein scaling)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">square</span></code>: 2.0 (quadratic regularization strength)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: 2 (Euclidean feature perturbation norm)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">square</span></code>: 2 (squared feature transport cost)</p></li>
 </ul>
 </div></blockquote>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MOTDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">'svm'</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">theta1</span> <span class="o">=</span> <span class="mf">1.5</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">square</span> <span class="o">=</span> <span class="mf">1.0</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'theta1'</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">'p'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'square'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
 </dd>
@@ -385,7 +423,12 @@ Set False for pre-centered data. Defaults to True.</p></li>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">p</span></code> (float ≥1 or ‘inf’): </dt><dd><p>Perturbation norm order (1 ≤ p ≤ ∞)</p>
+<dt><code class="docutils literal notranslate"><span class="pre">p</span></code> (1, 2, or ‘inf’):</dt><dd><p>Feature perturbation norm order. Defaults to 2.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">square</span></code> (1 or 2):</dt><dd><p>Transport exponent, independent of the norm order. Defaults to 2.</p>
 </dd>
 </dl>
 </li>
@@ -397,7 +440,8 @@ Set False for pre-centered data. Defaults to True.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">theta1</span></code> ≤ 1 or <code class="docutils literal notranslate"><span class="pre">theta2</span></code> ≤ 1</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">theta1</span></code>/<code class="docutils literal notranslate"><span class="pre">theta2</span></code> relationship becomes invalid</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">eps</span></code> &lt; 0 or non-numeric</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">p</span></code> &lt; 1 (when numeric) or not ‘inf’</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">p</span></code> is not 1, 2, or ‘inf’</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">square</span></code> is not 1 or 2</p></li>
 <li><p>If parameter types are incorrect</p></li>
 </ul>
 </p>
@@ -419,6 +463,7 @@ Set False for pre-centered data. Defaults to True.</p></li>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
 <span class="gp">... </span>    <span class="s1">'theta1'</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>       
 <span class="gp">... </span>    <span class="s1">'p'</span><span class="p">:</span> <span class="s1">'inf'</span><span class="p">,</span>          
+<span class="gp">... </span>    <span class="s1">'square'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="s1">'eps'</span><span class="p">:</span> <span class="mf">0.3</span>           
 <span class="gp">... </span><span class="p">})</span>
 </pre></div>
@@ -460,6 +505,7 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
 </dd></dl>
 
 </section>
+</section>
 
 
             <div class="clearer"></div>
@@ -476,9 +522,12 @@ Must satisfy <cite>n_features == self.input_dim</cite>.</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">MOT DRO</a><ul>
+<li><a class="reference internal" href="#transport-configuration">Transport configuration</a><ul>
 <li><a class="reference internal" href="#dro.linear_model.mot_dro.MOTDRO"><code class="docutils literal notranslate"><span class="pre">MOTDRO</span></code></a><ul>
 <li><a class="reference internal" href="#dro.linear_model.mot_dro.MOTDRO.update"><code class="docutils literal notranslate"><span class="pre">MOTDRO.update()</span></code></a></li>
 <li><a class="reference internal" href="#dro.linear_model.mot_dro.MOTDRO.fit"><code class="docutils literal notranslate"><span class="pre">MOTDRO.fit()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

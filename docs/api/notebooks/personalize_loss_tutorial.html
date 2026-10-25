@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>DRO on Personalized Losses &#8212; dro 0.4.2 documentation</title>
+    <title>Personalization &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="API" href="../api.html" />
-    <link rel="prev" title="Bayesian DRO" href="param_dro.html" /> 
+    <link rel="prev" title="Tree DRO" href="tree_dro_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -254,17 +254,18 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Linear Bayesian DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">NN Sinkhorn DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DRO on Personalized Losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and Neural)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Neural Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other Neural DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">Tree DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -279,9 +280,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="DRO-on-Personalized-Losses">
-<h1>DRO on Personalized Losses<a class="headerlink" href="#DRO-on-Personalized-Losses" title="Link to this heading">¶</a></h1>
+  <section id="Personalization">
+<h1>Personalization<a class="headerlink" href="#Personalization" title="Link to this heading">¶</a></h1>
 <p>In this notebook, we personalize the loss as a convex piecewise-affine loss. We use the same loss with exact <span class="math notranslate nohighlight">\(f\)</span>-DRO and Wasserstein DRO models, then carry its asymmetric decision costs into the neural approximation classes.</p>
+<p>The tree-ensemble section illustrates the same 3:1 cost ratio with a cost-sensitive binary cross-entropy loss in XGBoost.</p>
+<p>For post-training worst-case-loss bounds, see the <a class="reference internal" href="../../tutorials/neural_certificates.html"><span class="doc">Neural DRO robustness certificates guide</span></a>.</p>
 <section id="A-general-convex-piecewise-affine-loss">
 <h2>A general convex piecewise-affine loss<a class="headerlink" href="#A-general-convex-piecewise-affine-loss" title="Link to this heading">¶</a></h2>
 <p>Let <span class="math notranslate nohighlight">\(t=\theta^\top x+b\)</span> be the prediction and <span class="math notranslate nohighlight">\(z=t-y\)</span> its residual. We parameterize the loss as</p>
@@ -535,7 +538,10 @@
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">task_type</span><span class="o">=</span><span class="s1">'regression'</span><span class="p">,</span>
     <span class="n">model_type</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span>
-    <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">robust_objective</span><span class="o">=</span><span class="s1">'transport_penalty'</span><span class="p">,</span>
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">adversarial_steps</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">adversarial_step_size</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
     <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
 <span class="p">)</span>
 
@@ -551,7 +557,7 @@
 </pre></div>
 </div>
 </div>
-<p>During training, we call <code class="docutils literal notranslate"><span class="pre">fdro_nn.fit(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">wdro_nn.fit(...)</span></code> normally after binding the hooks. For positive-epsilon Wasserstein regression, we use an adversarial generator compatible with continuous targets; the package’s built-in <code class="docutils literal notranslate"><span class="pre">torchattacks</span></code> path is primarily designed for classification.</p>
+<p>Call <code class="docutils literal notranslate"><span class="pre">fdro_nn.fit(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">wdro_nn.fit(...)</span></code> after binding the hooks. The Wasserstein regression model above uses <code class="docutils literal notranslate"><span class="pre">robust_objective='transport_penalty'</span></code>, so both its inner perturbation search and outer objective use the custom loss with continuous targets. <code class="docutils literal notranslate"><span class="pre">gamma</span></code> penalizes squared feature transport; it is not a norm-ball radius.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
@@ -583,9 +589,10 @@ gradient shape: (3, 1)
 </section>
 <section id="Matching-the-Wasserstein-inner-search-to-a-custom-loss">
 <h3>Matching the Wasserstein inner search to a custom loss<a class="headerlink" href="#Matching-the-Wasserstein-inner-search-to-a-custom-loss" title="Link to this heading">¶</a></h3>
-<p>The preceding <code class="docutils literal notranslate"><span class="pre">wdro_nn._loss</span></code> check evaluates the custom loss without running the attack. With the default <code class="docutils literal notranslate"><span class="pre">robust_objective='norm_ball'</span></code> and positive <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>, Torchattacks generates perturbations using classification cross-entropy; overriding <code class="docutils literal notranslate"><span class="pre">_loss</span></code> changes the outer loss only. For continuous targets, <code class="docutils literal notranslate"><span class="pre">robust_objective='transport_penalty'</span></code> uses <code class="docutils literal notranslate"><span class="pre">_loss</span></code> in both the inner search and outer objective. The example below differentiates that complete objective on a small batch.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<p>The preceding <code class="docutils literal notranslate"><span class="pre">wdro_nn._loss</span></code> check evaluates the custom loss without running the inner search. The model above uses transport-penalty mode. By comparison, with the default <code class="docutils literal notranslate"><span class="pre">robust_objective='norm_ball'</span></code> and positive <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>, Torchattacks generates perturbations using classification cross-entropy; overriding <code class="docutils literal notranslate"><span class="pre">_loss</span></code> changes the outer loss only. For continuous targets, <code class="docutils literal notranslate"><span class="pre">robust_objective='transport_penalty'</span></code> uses <code class="docutils literal notranslate"><span class="pre">_loss</span></code> in both the inner search and outer objective. The example below
+differentiates that complete objective on a small batch.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wdro_transport</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span>
@@ -611,6 +618,14 @@ gradient shape: (3, 1)
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Transport-penalty objective: 3.6209213733673096
+</pre></div></div>
+</div>
 </section>
 </section>
 <section id="Custom-data-loaders,-optimizers,-and-schedulers">
@@ -619,7 +634,7 @@ gradient shape: (3, 1)
 batch.</p>
 <p>The next toy classification data stay in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>, which also meets the input range expected by Torchattacks in the HR-DRO example. The class-1 examples have twice the cost in the personalized <span class="math notranslate nohighlight">\(f\)</span>-DRO loss below.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
@@ -648,9 +663,10 @@ batch.</p>
 </div>
 <section id="Chi-squared-and-CVaR-neural-f-DRO">
 <h3>Chi-squared and CVaR neural <span class="math notranslate nohighlight">\(f\)</span>-DRO<a class="headerlink" href="#Chi-squared-and-CVaR-neural-f-DRO" title="Link to this heading">¶</a></h3>
-<p>Both models use the same per-example cost-sensitive classification loss. Their <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> geometry determines how those losses are aggregated. Each run supplies a replacement network, an SGD optimizer, and a <code class="docutils literal notranslate"><span class="pre">StepLR</span></code> scheduler to the shared fitting loop. The learning-rate value printed at the end confirms that the scheduler was stepped.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<p>Both models use the same per-example cost-sensitive classification loss. Their <code class="docutils literal notranslate"><span class="pre">RobustLoss</span></code> geometry determines how those losses are aggregated. The <code class="docutils literal notranslate"><span class="pre">ResidualClassifier</span></code> below is a user-defined <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>: its skip connection makes it different from the package’s default MLP. Pass an instance to <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> before fitting. Its <code class="docutils literal notranslate"><span class="pre">forward</span></code> method maps each two-feature input to two class logits. Each run also supplies an SGD optimizer and a <code class="docutils literal notranslate"><span class="pre">StepLR</span></code> scheduler to the
+shared fitting loop. The learning-rate value printed at the end confirms that the scheduler was stepped.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CostSensitiveRobustLoss</span><span class="p">(</span><span class="n">RobustLoss</span><span class="p">):</span>
@@ -661,6 +677,17 @@ batch.</p>
         <span class="n">per_sample_ce</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">targets</span><span class="o">.</span><span class="n">float</span><span class="p">())</span> <span class="o">*</span> <span class="n">per_sample_ce</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">ResidualClassifier</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
 <span class="n">f_dro_results</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model_class</span><span class="p">,</span> <span class="n">geometry</span> <span class="ow">in</span> <span class="p">[</span>
     <span class="p">(</span><span class="s1">'chi-squared'</span><span class="p">,</span> <span class="n">Chi2NNDRO</span><span class="p">,</span> <span class="s1">'chi-square'</span><span class="p">),</span>
@@ -668,11 +695,9 @@ batch.</p>
 <span class="p">]:</span>
     <span class="n">neural_model</span> <span class="o">=</span> <span class="n">model_class</span><span class="p">(</span>
         <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span>
-        <span class="n">model_type</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
+        <span class="n">model_type</span><span class="o">=</span><span class="s1">'mlp'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">custom_network</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="p">)</span>
+    <span class="n">custom_network</span> <span class="o">=</span> <span class="n">ResidualClassifier</span><span class="p">()</span>
     <span class="n">neural_model</span><span class="o">.</span><span class="n">update_user_mode</span><span class="p">(</span>
         <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">custom_network</span><span class="p">,</span>
         <span class="n">task_type</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'cpu'</span><span class="p">),</span>
@@ -703,12 +728,24 @@ batch.</p>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;chi-squared&#39;: {&#39;metrics&#39;: {&#39;acc&#39;: 0.5, &#39;f1&#39;: 0.3333333333333333},
+  &#39;final_learning_rate&#39;: 0.03200000000000001},
+ &#39;CVaR&#39;: {&#39;metrics&#39;: {&#39;acc&#39;: 0.5, &#39;f1&#39;: 0.3333333333333333},
+  &#39;final_learning_rate&#39;: 0.03200000000000001}}
+</pre></div></div>
+</div>
 </section>
 <section id="HR-DRO-with-a-replacement-network">
 <h3>HR-DRO with a replacement network<a class="headerlink" href="#HR-DRO-with-a-replacement-network" title="Link to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">HRNNDRO.update_user_mode(...)</span></code> also rebuilds its attack against the replacement network. The optimizer and scheduler are created afterward. HR-DRO still uses its built-in cross-entropy loss here; the cost-sensitive <span class="math notranslate nohighlight">\(f\)</span>-DRO hook above does not alter HR-DRO’s CVXPY weighting or Torchattacks objective. Set <code class="docutils literal notranslate"><span class="pre">train_batch_size</span></code> to the loader batch size to avoid needless CVXPY problem rebuilds. A shorter last batch is handled dynamically.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hr_dro</span> <span class="o">=</span> <span class="n">HRNNDRO</span><span class="p">(</span>
@@ -742,7 +779,93 @@ batch.</p>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+HR-DRO validation: {&#39;acc&#39;: 0.75, &#39;f1&#39;: 0.7333333333333334}
+Final learning rate: 0.0064
+</pre></div></div>
+</div>
 </section>
+</section>
+<section id="Tree-based-ensemble-with-a-personalized-loss">
+<h2>Tree-based ensemble with a personalized loss<a class="headerlink" href="#Tree-based-ensemble-with-a-personalized-loss" title="Link to this heading">¶</a></h2>
+<p>For binary XGBoost KL-DRO, <code class="docutils literal notranslate"><span class="pre">loss(preds,</span> <span class="pre">labels)</span></code> supplies one loss per training example. The wrapper uses those values for DRO sample weights and its reported robust objective. Replacing <code class="docutils literal notranslate"><span class="pre">loss()</span></code> alone does <strong>not</strong> change the ordinary cross-entropy gradients and Hessians used by boosting. To train with a prediction-dependent cost-sensitive loss, we also override <code class="docutils literal notranslate"><span class="pre">_kl_dro_loss()</span></code>.</p>
+<p>Here positive-class log loss costs three times as much as negative-class log loss, matching the 3:1 ratio above. The Hessian uses the same weighted diagonal approximation as the built-in KL-DRO objective. This example covers binary classification; other losses require matching derivatives and a compatible booster objective. The small toy run limits numerical-library threads during fitting and prediction.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">expit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">threadpoolctl</span><span class="w"> </span><span class="kn">import</span> <span class="n">threadpool_limits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_classification</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.tree_model.xgb</span><span class="w"> </span><span class="kn">import</span> <span class="n">KLDRO_XGB</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CostSensitiveKLDRO_XGB</span><span class="p">(</span><span class="n">KLDRO_XGB</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positive_cost</span><span class="p">,</span> <span class="n">negative_cost</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'classification'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positive_cost</span> <span class="o">=</span> <span class="n">positive_cost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">negative_cost</span> <span class="o">=</span> <span class="n">negative_cost</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="n">probabilities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-8</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positive_cost</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">negative_cost</span><span class="p">)</span>
+        <span class="n">log_loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">labels</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">labels</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">probabilities</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">costs</span> <span class="o">*</span> <span class="n">log_loss</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_kl_dro_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_scores</span><span class="p">,</span> <span class="n">dtrain</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">dtrain</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span>
+        <span class="n">probabilities</span> <span class="o">=</span> <span class="n">expit</span><span class="p">(</span><span class="n">raw_scores</span><span class="p">)</span>
+        <span class="n">losses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+        <span class="n">scaled_losses</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">losses</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">scaled_losses</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">scaled_losses</span><span class="p">))</span>
+        <span class="n">weights</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">/</span> <span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positive_cost</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">negative_cost</span><span class="p">)</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">*</span> <span class="n">costs</span> <span class="o">*</span> <span class="p">(</span><span class="n">probabilities</span> <span class="o">-</span> <span class="n">labels</span><span class="p">)</span>
+        <span class="n">hessians</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">*</span> <span class="n">costs</span> <span class="o">*</span> <span class="n">probabilities</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">probabilities</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">hessians</span>
+
+<span class="n">tree_X</span><span class="p">,</span> <span class="n">tree_y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_redundant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">tree_X_train</span><span class="p">,</span> <span class="n">tree_X_test</span><span class="p">,</span> <span class="n">tree_y_train</span><span class="p">,</span> <span class="n">tree_y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">tree_X</span><span class="p">,</span> <span class="n">tree_y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">tree_y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">tree_model</span> <span class="o">=</span> <span class="n">CostSensitiveKLDRO_XGB</span><span class="p">(</span>
+    <span class="n">positive_cost</span><span class="o">=</span><span class="n">UNDERAGE_COST</span><span class="p">,</span> <span class="n">negative_cost</span><span class="o">=</span><span class="n">OVERAGE_COST</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">tree_model</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="s1">'objective'</span><span class="p">:</span> <span class="s1">'binary:logistic'</span><span class="p">,</span> <span class="s1">'max_depth'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">'learning_rate'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s1">'num_boost_round'</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s1">'nthread'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'seed'</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="k">with</span> <span class="n">threadpool_limits</span><span class="p">(</span><span class="n">limits</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">tree_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tree_X_train</span><span class="p">,</span> <span class="n">tree_y_train</span><span class="p">)</span>
+    <span class="n">tree_accuracy</span> <span class="o">=</span> <span class="p">(</span><span class="n">tree_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">tree_X_test</span><span class="p">)</span> <span class="o">==</span> <span class="n">tree_y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Losses at probability 0.5:'</span><span class="p">,</span> <span class="n">tree_model</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+<span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Test accuracy: </span><span class="si">{</span><span class="n">tree_accuracy</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Robust training objective: </span><span class="si">{</span><span class="n">tree_model</span><span class="o">.</span><span class="n">robust_obj</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Losses at probability 0.5: [0.69314718 2.07944154]
+Test accuracy: 0.933
+Robust training objective: 0.445
+</pre></div></div>
+</div>
 </section>
 </section>
 
@@ -760,7 +883,7 @@ batch.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">DRO on Personalized Losses</a><ul>
+<li><a class="reference internal" href="#">Personalization</a><ul>
 <li><a class="reference internal" href="#A-general-convex-piecewise-affine-loss">A general convex piecewise-affine loss</a><ul>
 <li><a class="reference internal" href="#Original-newsvendor-loss">Original newsvendor loss</a></li>
 </ul>
@@ -778,6 +901,7 @@ batch.</p>
 <li><a class="reference internal" href="#HR-DRO-with-a-replacement-network">HR-DRO with a replacement network</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#Tree-based-ensemble-with-a-personalized-loss">Tree-based ensemble with a personalized loss</a></li>
 </ul>
 </li>
 </ul>
@@ -792,8 +916,8 @@ batch.</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="param_dro.html">
-                    <span class="icon">&lt;</span><span>Bayesian DRO</span></a>
+                <a href="tree_dro_tutorial.html">
+                    <span class="icon">&lt;</span><span>Tree DRO</span></a>
                 
             </div>
 

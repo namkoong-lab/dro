@@ -1,4 +1,4 @@
-# NN-DRO: Robustness Certificates
+# Neural DRO Robustness Certificates
 
 Neural DRO training uses approximate optimization, but the fitted network can
 still admit a bound on its worst-case loss. This tutorial explains how to
@@ -13,7 +13,7 @@ In the current neural base class, `robust_obj` is an average of final-epoch
 training-batch objectives [4]. It is not the full-data certificate of the
 final frozen network defined here.
 
-## 1. Certificate Guarantees
+## Certificate Guarantees
 Fix a fitted network $\widehat\theta$ and a reference dataset
 $z_1,\ldots,z_N$, with empirical distribution
 $\widehat P=N^{-1}\sum_i\delta_{z_i}$. Write
@@ -56,7 +56,7 @@ evaluation data, that bound must also account for the selection. A literal
 numerical certificate also requires verified feasibility and conservative
 rounding of computed upper and lower values.
 
-## 2. Wasserstein DRO
+## Wasserstein DRO
 
 ### Formulation
 
@@ -156,7 +156,7 @@ margin. Even when the condition fails, $U_W(\epsilon_0)$ remains a valid
 upper bound. If $c=d^p$, the corresponding ordinary $W_p$ radius is
 $(\epsilon_{\mathrm{cert}}^W)^{1/p}$.
 
-## 3. $\chi^2$-DRO
+## $\chi^2$-DRO
 
 ### Formulation
 
@@ -264,7 +264,7 @@ $\epsilon_0\le\epsilon_{\mathrm{cert}}^{\chi^2}$. A different $\eta$ or
 direct evaluation of $U_{\chi^2}$ at $\epsilon_0$ may give a useful bound
 even when this inverse check fails.
 
-## 4. CVaR-DRO
+## CVaR-DRO
 
 ### Formulation
 
@@ -359,7 +359,7 @@ prespecified target $\alpha_0\ge\alpha$ is covered at this loss level if
 $\alpha_0\ge\alpha_{\mathrm{cert}}$. Direct evaluation of
 $U_{\mathrm{CVaR}}(\alpha_0;\eta)$ remains available in every case.
 
-## 5. Examples
+## Examples
 For each of the Wasserstein, Chi2, and CVaR NN DRO, the interface `certify_radius(...)` is set for the post-training empirical calculation. It returns a dictionary containing `epsilon_cert` (or `alpha_cert` for CVaR), `loss_bound`, `input_upper_bound`, and `gap`.
 It returns `None` when the supplied lower loss cannot be certified at a valid reduced parameter. The inputs must come from the **same frozen model and complete reference dataset**.
 

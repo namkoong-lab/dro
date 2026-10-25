@@ -1,4 +1,4 @@
-Linear DRO Base Class 
+Base Class
 ===========================
 
 .. automodule:: dro.linear_model.base

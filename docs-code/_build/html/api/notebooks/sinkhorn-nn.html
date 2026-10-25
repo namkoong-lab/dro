@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>NN Sinkhorn DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Neural Sinkhorn DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -23,8 +23,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/sinkhorn-nn.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Other NN DRO" href="neural_dro_tutorial.html" />
-    <link rel="prev" title="Group DRO (Linear and NN)" href="groupdro_tutorial.html" /> 
+    <link rel="next" title="Other Neural DRO" href="neural_dro_tutorial.html" />
+    <link rel="prev" title="Group DRO (Linear and Neural)" href="groupdro_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -254,17 +254,18 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Hybrid-distance DRO for Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Linear Bayesian DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">NN Sinkhorn DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">DRO on Personalized Losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and Neural)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Neural Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other Neural DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">Tree DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -279,8 +280,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="NN-Sinkhorn-DRO">
-<h1>NN Sinkhorn DRO<a class="headerlink" href="#NN-Sinkhorn-DRO" title="Link to this heading">¶</a></h1>
+  <section id="Neural-Sinkhorn-DRO">
+<h1>Neural Sinkhorn DRO<a class="headerlink" href="#Neural-Sinkhorn-DRO" title="Link to this heading">¶</a></h1>
 <p>This notebook demonstrates how to use <code class="docutils literal notranslate"><span class="pre">SinkhornNNDRO</span></code> for distributionally robust optimization with neural network models.</p>
 <p>Sinkhorn DRO uses the entropic-regularized Wasserstein distance to define the ambiguity set. The key idea is to add Gaussian perturbations to input features and aggregate per-sample losses via logsumexp, yielding a smooth surrogate of the worst-case expected loss:</p>
 <div class="math notranslate nohighlight">
@@ -692,7 +693,7 @@ True labels:        [0 1 2 3 0 2 0 0 2 3]
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">NN Sinkhorn DRO</a><ul>
+<li><a class="reference internal" href="#">Neural Sinkhorn DRO</a><ul>
 <li><a class="reference internal" href="#Classification-Example">Classification Example</a><ul>
 <li><a class="reference internal" href="#SG-(Stochastic-Gradient)-Optimization">SG (Stochastic Gradient) Optimization</a></li>
 <li><a class="reference internal" href="#MLMC-(Multilevel-Monte-Carlo)-Optimization">MLMC (Multilevel Monte Carlo) Optimization</a></li>
@@ -720,13 +721,13 @@ True labels:        [0 1 2 3 0 2 0 0 2 3]
             <div class="left">
                 
                 <a href="groupdro_tutorial.html">
-                    <span class="icon">&lt;</span><span>Group DRO (Linear and NN)</span></a>
+                    <span class="icon">&lt;</span><span>Group DRO (Linear and Neural)</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="neural_dro_tutorial.html"><span>Other NN DRO</span><span class="icon">&gt;</span></a>
+                    <a href="neural_dro_tutorial.html"><span>Other Neural DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

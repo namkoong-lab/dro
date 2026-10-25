@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Neural DRO Robustness Certificates &#8212; dro 0.4.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <script src="../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/neural_certificates.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tree DRO" href="tree_model.html" />
+    <link rel="prev" title="Neural DRO Overview" href="neural_model.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+        <div id="notification_banner" data-banner-hiding="temporal" v-show="!permanentlyHidden">
+    <p v-if="visible" id="content">A GIFT to the whole DRO community!</p>
+    <a class="close" href="#" @click.prevent="toggleVisible()">[[ visible ? '&#x25B2; HIDE' : '&#x25BC; SHOW BANNER' ]]</a>
+</div>
+
+<script>
+(function() {
+    const topNav = document.querySelector('#top_nav')
+    const notificationContent = document.querySelector('#notification_banner p#content').innerText
+    const localStorageKey = 'readNotification'
+    const bannerHiding = document.querySelector('#notification_banner').dataset['bannerHiding']
+    const cssVariableName = '--navbarHeight'
+    const rootElement = document.documentElement
+
+    /*************************************************************************/
+    // Local storage for remembering if the user has read the notification.
+
+    function checkAlreadyRead() {
+        return localStorage.getItem(localStorageKey) == notificationContent
+    }
+
+    function setRead() {
+        localStorage.setItem(localStorageKey, notificationContent)
+    }
+
+    function clearRead() {
+        localStorage.removeItem(localStorageKey)
+    }
+
+    const alreadyRead = checkAlreadyRead()
+    const permanentlyHidden = alreadyRead && bannerHiding == 'permanent'
+
+    /*************************************************************************/
+    // Updating a CSS variable so other elements adjust to the nav bar height.
+
+    function updateNavbarHeight() {
+        // Only update it if the delta is significant. Otherwise it causes
+        // unnecessary browser repaints.
+        const documentStyles = getComputedStyle(rootElement)
+        // We store the value in REM, so need to convert to pixels
+        const currentValue = parseFloat(
+            documentStyles.getPropertyValue(cssVariableName)
+        ) * parseFloat(documentStyles.fontSize)
+
+        const newValue = topNav.clientHeight
+
+        if (newValue - 5 > currentValue) {
+            console.log(`Updating ${cssVariableName} - overlapping`)
+            rootElement.style.setProperty(
+                cssVariableName, newValue + "px"
+            );
+        } else if (currentValue - newValue >= 30) {
+            console.log(`Updating ${cssVariableName} - gap too large`)
+            rootElement.style.setProperty(
+                cssVariableName, newValue + "px"
+            );
+        }
+    }
+
+    /*************************************************************************/
+    // After loading the page, and resizing the window, recalculate the nav bar
+    // height.
+
+    if (!permanentlyHidden) {
+        // This height is approximately correct when there's a banner, so
+        // shouldn't require any page reflow:
+        rootElement.style.setProperty(
+            '--navbarHeight', "5.5rem"
+        );
+
+        document.addEventListener("DOMContentLoaded", function() {
+            updateNavbarHeight()
+        });
+
+        var interval = undefined
+
+        window.addEventListener('resize', () => {
+            if (interval) {
+                clearTimeout(interval)
+            }
+            interval = setTimeout(() => {
+                console.log("Finished resizing")
+                updateNavbarHeight()
+            }, 100)
+        })
+    }
+
+    /*************************************************************************/
+
+    PetiteVue.createApp({
+        visible: !alreadyRead,
+        permanentlyHidden: permanentlyHidden,
+        bannerHiding: bannerHiding,
+        $delimiters: ['[[', ']]'],
+        toggleVisible() {
+            this.visible = !this.visible
+
+            if (this.visible) {
+                clearRead()
+            } else {
+                setRead()
+            }
+
+            if (!this.visible && bannerHiding == 'permanent') {
+                this.permanentlyHidden = true
+            }
+
+            // Run this after Vue has had time to update the DOM:
+            setTimeout(
+                updateNavbarHeight,
+                0
+            )
+        }
+    }).mount('#notification_banner')
+})()
+</script>
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">dro 0.4.2 documentation</a></h1>
+            <a id="source_link" href="https://github.com/namkoong-lab/dro">
+    
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+            <path fill="white" d="M 244.8,8 C 106.1,8 0,113.3 0,252 c 0,110.9 69.8,205.8 169.5,239.2 12.8,2.3 17.3,-5.6 17.3,-12.1 0,-6.2 -0.3,-40.4 -0.3,-61.4 0,0 -70,15 -84.7,-29.8 0,0 -11.4,-29.1 -27.8,-36.6 0,0 -22.9,-15.7 1.6,-15.4 0,0 24.9,2 38.6,25.8 21.9,38.6 58.6,27.5 72.9,20.9 2.3,-16 8.8,-27.1 16,-33.7 -55.9,-6.2 -112.3,-14.3 -112.3,-110.5 0,-27.5 7.6,-41.3 23.6,-58.9 -2.6,-6.5 -11.1,-33.3 2.6,-67.9 20.9,-6.5 69,27 69,27 20,-5.6 41.5,-8.5 62.8,-8.5 21.3,0 42.8,2.9 62.8,8.5 0,0 48.1,-33.6 69,-27 13.7,34.7 5.2,61.4 2.6,67.9 16,17.7 25.8,31.5 25.8,58.9 0,96.5 -58.9,104.2 -114.8,110.5 9.2,7.9 17,22.9 17,46.4 0,33.7 -0.3,75.4 -0.3,83.6 0,6.5 4.6,14.4 17.3,12.1 C 428.2,457.8 496,362.9 496,252 496,113.3 383.5,8 244.8,8 Z"/>
+        </svg>
+    
+</a>
+        
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section class="tex2jax_ignore mathjax_ignore" id="neural-dro-robustness-certificates">
+<h1>Neural DRO Robustness Certificates<a class="headerlink" href="#neural-dro-robustness-certificates" title="Link to this heading">¶</a></h1>
+<p>Neural DRO training uses approximate optimization, but the fitted network can
+still admit a bound on its worst-case loss. This tutorial explains how to
+construct such a certificate for Wasserstein, <span class="math notranslate nohighlight">\(\chi^2\)</span>, and CVaR ambiguity
+sets, how to account for numerical and mini-batch errors, and when a smaller
+ambiguity set can be certified from a larger-set calculation.</p>
+<p>See the <a class="reference internal" href="neural_model.html"><span class="doc">NN-DRO model guide</span></a> for the model and training interfaces. The
+calculations below describe post-training evaluation; they do not assume that
+a training loss or a solver stopping tolerance is already a certificate.
+In the current neural base class, <code class="docutils literal notranslate"><span class="pre">robust_obj</span></code> is an average of final-epoch
+training-batch objectives [4]. It is not the full-data certificate of the
+final frozen network defined here.</p>
+<section id="certificate-guarantees">
+<h2>Certificate Guarantees<a class="headerlink" href="#certificate-guarantees" title="Link to this heading">¶</a></h2>
+<p>Fix a fitted network <span class="math notranslate nohighlight">\(\widehat\theta\)</span> and a reference dataset
+<span class="math notranslate nohighlight">\(z_1,\ldots,z_N\)</span>, with empirical distribution
+<span class="math notranslate nohighlight">\(\widehat P=N^{-1}\sum_i\delta_{z_i}\)</span>. Write
+<span class="math notranslate nohighlight">\(\ell_{\widehat\theta}(z)=\ell(f_{\widehat\theta}(x),y)\)</span> and
+<span class="math notranslate nohighlight">\(v_i=\ell_{\widehat\theta}(z_i)\)</span>. For an ambiguity set
+<span class="math notranslate nohighlight">\(\mathcal P_\epsilon\)</span> centered at <span class="math notranslate nohighlight">\(\widehat P\)</span>, the quantity to certify is</p>
+<div class="math notranslate nohighlight">
+\[
+R_{\epsilon}
+=\sup_{Q\in\mathcal P_\epsilon}
+\mathbb E_Q[\ell_{\widehat\theta}(Z)].
+\]</div>
+<p><strong>Objective.</strong> A valid upper bound <span class="math notranslate nohighlight">\(U\)</span> establishes <span class="math notranslate nohighlight">\(R_{\epsilon}\le U\)</span>. If <span class="math notranslate nohighlight">\(U\)</span> is below some
+loss threshold, every distribution in the specified ambiguity set satisfies that threshold. A feasible adversarial distribution gives a lower bound <span class="math notranslate nohighlight">\(L\)</span>,
+so <span class="math notranslate nohighlight">\([L,U]\)</span> is an interval for the empirical worst-case loss.</p>
+<p><strong>Radius.</strong> The target radius <span class="math notranslate nohighlight">\(\epsilon_0\)</span> must be specified to state which ambiguity set
+the guarantee covers. One may train or evaluate at a larger radius
+<span class="math notranslate nohighlight">\(\epsilon_1\ge\epsilon_0\)</span>. For nested ambiguity sets, a <strong>verified upper
+bound</strong> <span class="math notranslate nohighlight">\(U(\epsilon_1)\)</span> gives</p>
+<div class="math notranslate nohighlight">
+\[
+R_{\epsilon_0}\le R_{\epsilon_1}\le U(\epsilon_1).
+\]</div>
+<p>CVaR uses the tail fraction <span class="math notranslate nohighlight">\(\alpha\)</span> instead of a radius; a smaller <span class="math notranslate nohighlight">\(\alpha\)</span>
+gives a larger set. An approximate inner adversarial value is generally a
+lower estimate of <span class="math notranslate nohighlight">\(R_{\epsilon_1}\)</span>, so enlarging the training radius alone
+does not provide an upper bound. To use that approximate value itself as a
+certificate at the prespecified <span class="math notranslate nohighlight">\(\epsilon_0\)</span>, the radius margin must cover
+a certified numerical gap. The checks below give this condition for each
+formulation. Otherwise, compute an upper bound directly at <span class="math notranslate nohighlight">\(\epsilon_0\)</span>.</p>
+<p>All bounds below concern the final frozen network and the same reference
+dataset, loss, and admissible support at both parameter settings. They certify
+empirical worst-case loss conditional on that dataset. A population confidence statement
+needs an additional sampling bound; if <span class="math notranslate nohighlight">\(\epsilon_0\)</span> is chosen using the same
+evaluation data, that bound must also account for the selection. A literal
+numerical certificate also requires verified feasibility and conservative
+rounding of computed upper and lower values.</p>
+</section>
+<section id="wasserstein-dro">
+<h2>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h2>
+<section id="formulation">
+<h3>Formulation<a class="headerlink" href="#formulation" title="Link to this heading">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\mathcal T_c(P,Q)\)</span> be the minimum expected transport cost over couplings
+of <span class="math notranslate nohighlight">\(P\)</span> and <span class="math notranslate nohighlight">\(Q\)</span>. Define</p>
+<div class="math notranslate nohighlight">
+\[
+R_\epsilon^W
+=\sup_{Q:\,\mathcal T_c(\widehat P,Q)\le\epsilon}
+\mathbb E_Q[\ell_{\widehat\theta}(Z)].
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\epsilon\)</span> is a transport-cost budget. If <span class="math notranslate nohighlight">\(c(z,z')=d(z,z')^p\)</span>, then
+<span class="math notranslate nohighlight">\(\mathcal T_c=W_p^p\)</span> and the ordinary <span class="math notranslate nohighlight">\(W_p\)</span> radius is
+<span class="math notranslate nohighlight">\(\epsilon^{1/p}\)</span>. For label-preserving shifts, use infinite transport cost when
+labels differ and maximize only over the input coordinates.</p>
+<p>For any transport penalty <span class="math notranslate nohighlight">\(\lambda\ge0\)</span>, weak duality gives [1]</p>
+<div class="math notranslate nohighlight">
+\[
+R_\epsilon^W\le\lambda\epsilon+\frac1N\sum_{i=1}^N\phi_i,
+\qquad
+\phi_i=\sup_z\{\ell_{\widehat\theta}(z)-\lambda c(z,z_i)\}.
+\]</div>
+<p>The supremum must cover the support allowed by the target ambiguity set.
+An attack restricted to a smaller per-example ball does not upper-bound this
+supremum without an additional argument. In particular, a per-example attack
+radius is not interchangeable with a finite-order Wasserstein average budget.
+In <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> [4], the code’s <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode is such a
+per-example attack radius, whereas <span class="math notranslate nohighlight">\(\epsilon\)</span> here is a transport-cost
+budget. In <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode, <code class="docutils literal notranslate"><span class="pre">gamma</span></code> is the coefficient <span class="math notranslate nohighlight">\(\lambda\)</span>
+for squared Euclidean cost. Either attack supplies candidate inputs, but a
+certificate still needs valid global inner error bounds for the specified
+support and cost.</p>
+</section>
+<section id="primal-dual-certificate">
+<h3>Primal-dual certificate<a class="headerlink" href="#primal-dual-certificate" title="Link to this heading">¶</a></h3>
+<p>Suppose <span class="math notranslate nohighlight">\(\lambda&gt;0\)</span>, and an attack returns <span class="math notranslate nohighlight">\(\widetilde z_i\)</span>. Define
+<span class="math notranslate nohighlight">\(g_i(z)=\ell_{\widehat\theta}(z)-\lambda c(z,z_i)\)</span>. Assume a certified bound</p>
+<div class="math notranslate nohighlight">
+\[
+0\le\phi_i-g_i(\widetilde z_i)\le e_i
+\]</div>
+<p>is available. For example, an independently established upper bound
+<span class="math notranslate nohighlight">\(u_i\ge\phi_i\)</span> gives <span class="math notranslate nohighlight">\(e_i=u_i-g_i(\widetilde z_i)\)</span>. Put</p>
+<div class="math notranslate nohighlight">
+\[
+\widehat A=\frac1N\sum_i\ell_{\widehat\theta}(\widetilde z_i),
+\qquad
+\widehat c=\frac1N\sum_i c(\widetilde z_i,z_i),
+\qquad
+\bar e=\frac1N\sum_i e_i.
+\]</div>
+<p>Substitution into weak duality yields the certificate</p>
+<div class="math notranslate nohighlight">
+\[
+{R_\epsilon^W\le U_W(\epsilon)
+:=\widehat A+\lambda(\epsilon-\widehat c)+\bar e.}
+\]</div>
+<p>This derivation requires no global optimality of <span class="math notranslate nohighlight">\(\widehat\theta\)</span> or
+<span class="math notranslate nohighlight">\(\lambda\)</span>. The attack coupling has cost <span class="math notranslate nohighlight">\(\widehat c\)</span>, so
+<span class="math notranslate nohighlight">\(\widehat A\)</span> is also a feasible lower bound at any budget
+<span class="math notranslate nohighlight">\(\epsilon\ge\widehat c\)</span>.
+It need not be a lower bound at a smaller budget.</p>
+</section>
+<section id="radius-certificate">
+<h3>Radius certificate<a class="headerlink" href="#radius-certificate" title="Link to this heading">¶</a></h3>
+<p>Take the user-specified transport-cost budget <span class="math notranslate nohighlight">\(\epsilon\)</span> and suppose the
+attack coupling is feasible at that budget, <span class="math notranslate nohighlight">\(\widehat c\le\epsilon\)</span>. With
+<span class="math notranslate nohighlight">\(\lambda&gt;0\)</span> and certified <span class="math notranslate nohighlight">\(e_i\)</span>, define the verified upper-minus-lower gap</p>
+<div class="math notranslate nohighlight">
+\[
+\delta_W=U_W(\epsilon)-\widehat A
+=\lambda(\epsilon-\widehat c)+\bar e\ge0.
+\]</div>
+<p>The largest budget at which this calculation certifies the <strong>observed
+adversarial loss</strong> <span class="math notranslate nohighlight">\(\widehat A\)</span> as an upper bound is</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon_{\mathrm{cert}}^W
+=\epsilon-\frac{\delta_W}{\lambda}
+=\widehat c-\frac{\bar e}{\lambda}\le\epsilon,\qquad
+R_{\epsilon_{\mathrm{cert}}^W}^W\le\widehat A.
+\]</div>
+<p>Use this formula only if <span class="math notranslate nohighlight">\(\epsilon_{\mathrm{cert}}^W\ge0\)</span>; otherwise it
+does not certify <span class="math notranslate nohighlight">\(\widehat A\)</span> at any nonnegative budget. In particular, a
+prespecified target <span class="math notranslate nohighlight">\(\epsilon_0\le\epsilon\)</span> is covered at this loss level
+exactly when <span class="math notranslate nohighlight">\(\widehat c\ge\epsilon_0+\bar e/\lambda\)</span>. The realized cost
+and error bound, rather than the nominal training radius, determine this
+margin. Even when the condition fails, <span class="math notranslate nohighlight">\(U_W(\epsilon_0)\)</span> remains a valid
+upper bound. If <span class="math notranslate nohighlight">\(c=d^p\)</span>, the corresponding ordinary <span class="math notranslate nohighlight">\(W_p\)</span> radius is
+<span class="math notranslate nohighlight">\((\epsilon_{\mathrm{cert}}^W)^{1/p}\)</span>.</p>
+</section>
+</section>
+<section id="chi-2-dro">
+<h2><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO<a class="headerlink" href="#chi-2-dro" title="Link to this heading">¶</a></h2>
+<section id="id1">
+<h3>Formulation<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>For the neural reweighting convention used in [2], let
+<span class="math notranslate nohighlight">\(u_N=(1/N,\ldots,1/N)\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+D_{\chi^2}(q,u_N)
+=\frac{1}{2N}\sum_i(Nq_i-1)^2
+=\frac N2\sum_iq_i^2-\frac12.
+\]</div>
+<p>The empirical robust loss is</p>
+<div class="math notranslate nohighlight">
+\[
+R_\epsilon^{\chi^2}
+=\max_{q\in\Delta_N:\,D_{\chi^2}(q,u_N)\le\epsilon}
+\sum_iq_iv_i,
+\qquad \epsilon\ge0,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta_N=\{q\ge0:\sum_iq_i=1\}\)</span>. This is a convex optimization
+problem in the weights for any fixed network, including a nonconvex neural
+architecture. If another convention omits the factor <span class="math notranslate nohighlight">\(1/2\)</span> in the divergence,
+rescale its radius before using the formulas below.</p>
+</section>
+<section id="id2">
+<h3>Primal-dual certificate<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>For any scalar <span class="math notranslate nohighlight">\(\eta\)</span>, define</p>
+<div class="math notranslate nohighlight">
+\[
+S_2(\eta)=\sqrt{\frac1N\sum_i(v_i-\eta)_+^2},
+\qquad
+U_{\chi^2}(\epsilon;\eta)=\eta+\sqrt{1+2\epsilon}\,S_2(\eta).
+\]</div>
+<p>Every feasible <span class="math notranslate nohighlight">\(q\)</span> satisfies <span class="math notranslate nohighlight">\(N\sum_iq_i^2\le1+2\epsilon\)</span>. Hence</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_iq_iv_i
+\le\eta+\sum_iq_i(v_i-\eta)_+
+\le\eta+\sqrt{N\sum_iq_i^2}\,S_2(\eta)
+\le U_{\chi^2}(\epsilon;\eta).
+\]</div>
+<p>The middle inequality is Cauchy-Schwarz. A verified feasible candidate
+<span class="math notranslate nohighlight">\(\widetilde q\)</span> therefore gives</p>
+<div class="math notranslate nohighlight">
+\[
+{
+L_{\chi^2}:=\sum_i\widetilde q_iv_i
+\le R_\epsilon^{\chi^2}
+\le U_{\chi^2}(\epsilon;\eta).
+}
+\]</div>
+<p>Optimizing the one-dimensional convex upper bound tightens it, but any
+<span class="math notranslate nohighlight">\(\eta\)</span> already gives a valid upper bound. The difference <span class="math notranslate nohighlight">\(U-L\)</span> measures
+the uncertainty in evaluating this fitted network’s robust loss, not the
+suboptimality of the network weights. A bisection residual is not itself
+this objective gap.</p>
+<p>In the neural implementation [3,4], <code class="docutils literal notranslate"><span class="pre">size</span></code> is <span class="math notranslate nohighlight">\(\epsilon\)</span>, while <code class="docutils literal notranslate"><span class="pre">reg</span></code>
+multiplies a separate <span class="math notranslate nohighlight">\(\chi^2\)</span> penalty on the adversarial weights. If that
+penalty has coefficient <span class="math notranslate nohighlight">\(\tau\ge0\)</span>, a certified upper bound on the
+regularized inner maximum needs a correction of at most <span class="math notranslate nohighlight">\(\tau\epsilon\)</span>
+to upper-bound the unregularized <span class="math notranslate nohighlight">\(R_\epsilon^{\chi^2}\)</span>, because
+<span class="math notranslate nohighlight">\(D_{\chi^2}\le\epsilon\)</span> on the feasible set. Include any numerical error
+in that bound. The displayed <span class="math notranslate nohighlight">\(L_{\chi^2}\)</span> and <span class="math notranslate nohighlight">\(U_{\chi^2}\)</span> instead use
+unregularized losses evaluated on the final network.</p>
+</section>
+<section id="id3">
+<h3>Radius certificate<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<p>At the user-specified radius <span class="math notranslate nohighlight">\(\epsilon\)</span>, take a verified feasible
+<span class="math notranslate nohighlight">\(\widetilde q\)</span>, its <strong>unregularized</strong> loss <span class="math notranslate nohighlight">\(L_{\chi^2}=\widetilde q^\top v\)</span>,
+and any fixed <span class="math notranslate nohighlight">\(\eta\)</span>. Write</p>
+<div class="math notranslate nohighlight">
+\[
+\delta_{\chi^2}=U_{\chi^2}(\epsilon;\eta)-L_{\chi^2}\ge0.
+\]</div>
+<p>When <span class="math notranslate nohighlight">\(S_2(\eta)&gt;0\)</span> and
+<span class="math notranslate nohighlight">\(\delta_{\chi^2}\le S_2(\eta)(\sqrt{1+2\epsilon}-1)\)</span>, the largest radius
+certified by this fixed-<span class="math notranslate nohighlight">\(\eta\)</span> bound at loss level <span class="math notranslate nohighlight">\(L_{\chi^2}\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon_{\mathrm{cert}}^{\chi^2}
+=\frac12\left[
+\left(\sqrt{1+2\epsilon}
+-\frac{\delta_{\chi^2}}{S_2(\eta)}\right)^2-1
+\right]\in[0,\epsilon],\qquad
+R_{\epsilon_{\mathrm{cert}}^{\chi^2}}^{\chi^2}
+\le L_{\chi^2}.
+\]</div>
+<p>Indeed, this choice makes
+<span class="math notranslate nohighlight">\(U_{\chi^2}(\epsilon_{\mathrm{cert}}^{\chi^2};\eta)=L_{\chi^2}\)</span>.
+If the gap exceeds the stated limit, this fixed-<span class="math notranslate nohighlight">\(\eta\)</span> bound cannot certify
+<span class="math notranslate nohighlight">\(L_{\chi^2}\)</span> even at radius zero; do not clip a negative result to zero.
+When <span class="math notranslate nohighlight">\(S_2(\eta)=0\)</span>, the upper bound is the constant <span class="math notranslate nohighlight">\(\eta\)</span>: it certifies
+<span class="math notranslate nohighlight">\(L_{\chi^2}\)</span> through the input radius only if <span class="math notranslate nohighlight">\(L_{\chi^2}=\eta\)</span>.
+When <span class="math notranslate nohighlight">\(\epsilon_{\mathrm{cert}}^{\chi^2}\)</span> exists, a prespecified target
+<span class="math notranslate nohighlight">\(\epsilon_0\le\epsilon\)</span> is covered at this loss level if
+<span class="math notranslate nohighlight">\(\epsilon_0\le\epsilon_{\mathrm{cert}}^{\chi^2}\)</span>. A different <span class="math notranslate nohighlight">\(\eta\)</span> or
+direct evaluation of <span class="math notranslate nohighlight">\(U_{\chi^2}\)</span> at <span class="math notranslate nohighlight">\(\epsilon_0\)</span> may give a useful bound
+even when this inverse check fails.</p>
+</section>
+</section>
+<section id="cvar-dro">
+<h2>CVaR-DRO<a class="headerlink" href="#cvar-dro" title="Link to this heading">¶</a></h2>
+<section id="id4">
+<h3>Formulation<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p>Here <span class="math notranslate nohighlight">\(\alpha\in(0,1]\)</span> is the upper-tail fraction, following the neural
+implementation in [2,3]:</p>
+<div class="math notranslate nohighlight">
+\[
+R_\alpha^{\mathrm{CVaR}}
+=\max_{q\in\Delta_N:\,q_i\le1/(\alpha N)}q^\top v.
+\]</div>
+<p>Smaller <span class="math notranslate nohighlight">\(\alpha\)</span> permits more concentrated weights and increases robustness.
+At <span class="math notranslate nohighlight">\(\alpha=1\)</span> this reduces to the empirical mean. CVaR describes a
+likelihood-ratio ambiguity set, not a metric distance ball. Its parameter
+should not be interpreted as a Wasserstein radius or a <span class="math notranslate nohighlight">\(\chi^2\)</span> radius.</p>
+</section>
+<section id="id5">
+<h3>Primal-dual certificate<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<p>For any <span class="math notranslate nohighlight">\(\eta\)</span>, put</p>
+<div class="math notranslate nohighlight">
+\[
+S_1(\eta)=\frac1N\sum_i(v_i-\eta)_+,
+\qquad
+U_{\mathrm{CVaR}}(\alpha;\eta)=\eta+\frac{S_1(\eta)}{\alpha}.
+\]</div>
+<p>Every feasible <span class="math notranslate nohighlight">\(q\)</span> satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+q^\top v
+\le\eta+\sum_iq_i(v_i-\eta)_+
+\le\eta+\frac1{\alpha N}\sum_i(v_i-\eta)_+.
+\]</div>
+<p>Consequently, a verified feasible <span class="math notranslate nohighlight">\(\widetilde q\)</span> gives</p>
+<div class="math notranslate nohighlight">
+\[
+{
+L_{\mathrm{CVaR}}:=\widetilde q^\top v
+\le R_\alpha^{\mathrm{CVaR}}
+\le U_{\mathrm{CVaR}}(\alpha;\eta).
+}
+\]</div>
+<p>Sorting the losses gives the exact empirical optimum in real arithmetic:
+allocate weight <span class="math notranslate nohighlight">\(1/(\alpha N)\)</span> to the largest losses, with any remaining
+fractional weight on the next loss. This also covers noninteger <span class="math notranslate nohighlight">\(\alpha N\)</span>;
+if <span class="math notranslate nohighlight">\(\alpha N&lt;1\)</span>, the optimum is the largest loss.</p>
+<p>In the neural implementation [3,4], <code class="docutils literal notranslate"><span class="pre">size</span></code> is <span class="math notranslate nohighlight">\(\alpha\)</span>, while <code class="docutils literal notranslate"><span class="pre">reg</span></code>
+multiplies a KL penalty on the adversarial weights. With coefficient
+<span class="math notranslate nohighlight">\(\tau\ge0\)</span>, this penalty is at most <span class="math notranslate nohighlight">\(\tau\log(1/\alpha)\)</span> because
+<span class="math notranslate nohighlight">\(D_{\mathrm{KL}}(q,u_N)=\sum_iq_i\log(Nq_i)\le\log(1/\alpha)\)</span> [2].
+A certified upper bound on the regularized inner maximum needs this
+correction, plus any numerical error, to upper-bound the unregularized
+<span class="math notranslate nohighlight">\(R_\alpha^{\mathrm{CVaR}}\)</span>. The displayed <span class="math notranslate nohighlight">\(L_{\mathrm{CVaR}}\)</span> and
+<span class="math notranslate nohighlight">\(U_{\mathrm{CVaR}}\)</span> instead use unregularized losses.</p>
+</section>
+<section id="id6">
+<h3>Radius certificate<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<p>At the user-specified tail fraction <span class="math notranslate nohighlight">\(\alpha\)</span>, take a verified feasible
+<span class="math notranslate nohighlight">\(\widetilde q\)</span>, its <strong>unregularized</strong> loss
+<span class="math notranslate nohighlight">\(L_{\mathrm{CVaR}}=\widetilde q^\top v\)</span>, and any fixed <span class="math notranslate nohighlight">\(\eta\)</span>. Set</p>
+<div class="math notranslate nohighlight">
+\[
+\delta_{\mathrm{CVaR}}
+=U_{\mathrm{CVaR}}(\alpha;\eta)-L_{\mathrm{CVaR}}\ge0.
+\]</div>
+<p>If <span class="math notranslate nohighlight">\(S_1(\eta)&gt;0\)</span> and
+<span class="math notranslate nohighlight">\(\delta_{\mathrm{CVaR}}\le S_1(\eta)(1/\alpha-1)\)</span>, define</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_{\mathrm{cert}}
+=\left(\frac1\alpha
+-\frac{\delta_{\mathrm{CVaR}}}{S_1(\eta)}\right)^{-1}
+=\frac{S_1(\eta)}{L_{\mathrm{CVaR}}-\eta}
+\in[\alpha,1],\qquad
+R_{\alpha_{\mathrm{cert}}}^{\mathrm{CVaR}}
+\le L_{\mathrm{CVaR}}.
+\]</div>
+<p>A larger <span class="math notranslate nohighlight">\(\alpha_{\mathrm{cert}}\)</span> means a smaller CVaR ambiguity set.
+It is the smallest tail fraction certified by this fixed-<span class="math notranslate nohighlight">\(\eta\)</span> bound at
+the loss level <span class="math notranslate nohighlight">\(L_{\mathrm{CVaR}}\)</span>. This value makes
+<span class="math notranslate nohighlight">\(U_{\mathrm{CVaR}}(\alpha_{\mathrm{cert}};\eta)=L_{\mathrm{CVaR}}\)</span>.
+If the gap exceeds the stated limit, this fixed-<span class="math notranslate nohighlight">\(\eta\)</span> bound cannot
+certify <span class="math notranslate nohighlight">\(L_{\mathrm{CVaR}}\)</span> at any <span class="math notranslate nohighlight">\(\alpha_{\mathrm{cert}}\le1\)</span>.
+When <span class="math notranslate nohighlight">\(S_1(\eta)=0\)</span>, the upper bound is the constant <span class="math notranslate nohighlight">\(\eta\)</span>: it certifies
+<span class="math notranslate nohighlight">\(L_{\mathrm{CVaR}}\)</span> through the input tail fraction only if
+<span class="math notranslate nohighlight">\(L_{\mathrm{CVaR}}=\eta\)</span>. When <span class="math notranslate nohighlight">\(\alpha_{\mathrm{cert}}\)</span> exists, a
+prespecified target <span class="math notranslate nohighlight">\(\alpha_0\ge\alpha\)</span> is covered at this loss level if
+<span class="math notranslate nohighlight">\(\alpha_0\ge\alpha_{\mathrm{cert}}\)</span>. Direct evaluation of
+<span class="math notranslate nohighlight">\(U_{\mathrm{CVaR}}(\alpha_0;\eta)\)</span> remains available in every case.</p>
+</section>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<p>For each of the Wasserstein, Chi2, and CVaR NN DRO, the interface <code class="docutils literal notranslate"><span class="pre">certify_radius(...)</span></code> is set for the post-training empirical calculation. It returns a dictionary containing <code class="docutils literal notranslate"><span class="pre">epsilon_cert</span></code> (or <code class="docutils literal notranslate"><span class="pre">alpha_cert</span></code> for CVaR), <code class="docutils literal notranslate"><span class="pre">loss_bound</span></code>, <code class="docutils literal notranslate"><span class="pre">input_upper_bound</span></code>, and <code class="docutils literal notranslate"><span class="pre">gap</span></code>.
+It returns <code class="docutils literal notranslate"><span class="pre">None</span></code> when the supplied lower loss cannot be certified at a valid reduced parameter. The inputs must come from the <strong>same frozen model and complete reference dataset</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">WNNDRO</span><span class="p">,</span> <span class="n">Chi2NNDRO</span><span class="p">,</span> <span class="n">CVaRNNDRO</span>
+
+<span class="c1"># Analytic Wasserstein example: f(x)=x, y=1, x=0, squared cost,</span>
+<span class="c1"># and penalty lambda=2. The global penalized maximizer is x'=-1.</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">WNNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s2">"regression"</span><span class="p">,</span>
+           <span class="n">model_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span> <span class="n">robust_objective</span><span class="o">=</span><span class="s2">"transport_penalty"</span><span class="p">,</span>
+           <span class="n">gamma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_adv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">]]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">]])</span>
+    <span class="n">adv_losses</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x_adv</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span>
+    <span class="n">costs</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_adv</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">square</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Here g(x')=(x'-1)^2-2(x')^2 has global maximum at x'=-1,</span>
+<span class="c1"># so the verified inner error bound is zero.</span>
+<span class="n">w_cert</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">certify_radius</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">adv_losses</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">certified_inner_errors</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">w_cert</span><span class="p">[</span><span class="s2">"epsilon_cert"</span><span class="p">],</span> <span class="n">w_cert</span><span class="p">[</span><span class="s2">"loss_bound"</span><span class="p">])</span>  <span class="c1"># 1.0, 4.0</span>
+
+<span class="c1"># Illustrative full-data losses and feasible adversarial weights for a</span>
+<span class="c1"># frozen chi-square or CVaR network. Replace these with values from your</span>
+<span class="c1"># final model and complete reference dataset.</span>
+<span class="n">losses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+<span class="n">chi2</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">chi2_cert</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">certify_radius</span><span class="p">(</span><span class="n">losses</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">chi2_cert</span><span class="p">[</span><span class="s2">"epsilon_cert"</span><span class="p">])</span>  <span class="c1"># 0.0625</span>
+
+<span class="n">cvar</span> <span class="o">=</span> <span class="n">CVaRNNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">cvar_cert</span> <span class="o">=</span> <span class="n">cvar</span><span class="o">.</span><span class="n">certify_radius</span><span class="p">(</span><span class="n">losses</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cvar_cert</span><span class="p">[</span><span class="s2">"alpha_cert"</span><span class="p">])</span>  <span class="c1"># 0.666666...</span>
+</pre></div>
+</div>
+<p>For a general <code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> run, a finite number of attack steps does not
+establish <code class="docutils literal notranslate"><span class="pre">certified_inner_errors</span></code>. Supply those bounds only after proving
+them for the chosen network, cost, and support. For <span class="math notranslate nohighlight">\(\chi^2\)</span> and CVaR, we verify the adversarial weights and evaluate unregularized per-example losses on the full reference dataset, even if training used <code class="docutils literal notranslate"><span class="pre">reg</span></code>.</p>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>[1] Aman Sinha, Hongseok Namkoong, Riccardo Volpi, and John Duchi.
+<a class="reference external" href="https://arxiv.org/abs/1710.10571">Certifying Some Distributional Robustness with Principled Adversarial
+Training</a>. ICLR 2018; extended manuscript
+2020. See the Wasserstein dual bound and smooth penalized-adversary analysis.</p></li>
+<li><p>[2] Daniel Levy, Yair Carmon, John C. Duchi, and Aaron Sidford.
+<a class="reference external" href="https://papers.nips.cc/paper/2020/hash/64986d86a17424eeac96b08a6d519059-Abstract.html">Large-Scale Methods for Distributionally Robust
+Optimization</a>.
+NeurIPS 2020. See Proposition 1 for batch bias, Claim 1 for CVaR
+regularization error, and Appendix A for dual representations.</p></li>
+<li><p>[3] Daniel Levy and collaborators.
+<a class="reference external" href="https://github.com/daniellevy/fast-dro/blob/main/robust_losses.py">fast-dro: robust_losses.py</a>.
+Reference implementation of CVaR and <span class="math notranslate nohighlight">\(\chi^2\)</span> robust losses, their
+regularizers, and scalar dual computations.</p></li>
+<li><p>[4] <code class="docutils literal notranslate"><span class="pre">dro</span></code> implementation:
+<a class="reference external" href="https://github.com/namkoong-lab/dro/blob/main/src/dro/neural_model/wdro_nn.py">wdro_nn.py</a>,
+<a class="reference external" href="https://github.com/namkoong-lab/dro/blob/main/src/dro/neural_model/fdro_utils.py">fdro_utils.py</a>,
+and <a class="reference external" href="https://github.com/namkoong-lab/dro/blob/main/src/dro/neural_model/base_nn.py">base_nn.py</a>.
+Parameter conventions refer to the source inspected on October 16, 2026.</p></li>
+</ul>
+<p>The smaller-set formulas above follow directly from the displayed upper
+bounds. They are not theorems attributed verbatim to these references.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Neural DRO Robustness Certificates</a><ul>
+<li><a class="reference internal" href="#certificate-guarantees">Certificate Guarantees</a></li>
+<li><a class="reference internal" href="#wasserstein-dro">Wasserstein DRO</a><ul>
+<li><a class="reference internal" href="#formulation">Formulation</a></li>
+<li><a class="reference internal" href="#primal-dual-certificate">Primal-dual certificate</a></li>
+<li><a class="reference internal" href="#radius-certificate">Radius certificate</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#chi-2-dro"><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO</a><ul>
+<li><a class="reference internal" href="#id1">Formulation</a></li>
+<li><a class="reference internal" href="#id2">Primal-dual certificate</a></li>
+<li><a class="reference internal" href="#id3">Radius certificate</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cvar-dro">CVaR-DRO</a><ul>
+<li><a class="reference internal" href="#id4">Formulation</a></li>
+<li><a class="reference internal" href="#id5">Primal-dual certificate</a></li>
+<li><a class="reference internal" href="#id6">Radius certificate</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="neural_model.html">
+                    <span class="icon">&lt;</span><span>Neural DRO Overview</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="tree_model.html"><span>Tree DRO</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2026, DRO developers.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

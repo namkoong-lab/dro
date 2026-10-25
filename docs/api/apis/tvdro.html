@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="MMD DRO" href="mmddro.html" />
-    <link rel="prev" title="KL-DRO" href="kldro_linear.html" /> 
+    <link rel="prev" title="KL DRO" href="kldro_linear.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,16 +253,16 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Linear DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base_linear.html">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chi2dro_linear.html">Chi-square DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cvardro_linear.html">CVaR DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_linear.html">Group DRO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL-DRO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kldro_linear.html">KL DRO</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">TV DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mmddro.html">MMD DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wdro_linear.html">Wasserstein DRO</a></li>
@@ -300,7 +300,7 @@
 <p>Implements DRO with TV ambiguity set defined as:</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{P} = \{ Q \, | \, \text{TV}(Q, P) \leq \epsilon \}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\text{TV}\)</span> is the total variation distance.</p>
+<p>where <span class="math notranslate nohighlight">\(\text{TV}(Q,P)=\frac12\int|dQ-dP|\)</span>.</p>
 <p>Initialize TV-constrained DRO model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -323,7 +323,7 @@ Disable for pre-centered data. Defaults to True.</p></li>
 <li><p><strong>eps</strong> (<em>float</em>) – <p>TV ambiguity radius. Special cases:</p>
 <ul>
 <li><p>0: Standard empirical risk minimization</p></li>
-<li><p>&gt;0: Controls distributional robustness</p></li>
+<li><p>0 &lt; eps &lt; 1: Controls distributional robustness</p></li>
 </ul>
 </p></li>
 </ul>
@@ -331,7 +331,7 @@ Disable for pre-centered data. Defaults to True.</p></li>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
 <li><p>If input_dim &lt; 1</p></li>
-<li><p>If eps &lt; 0</p></li>
+<li><p>If eps is outside [0, 1)</p></li>
 </ul>
 </p>
 </dd>
@@ -361,7 +361,8 @@ Disable for pre-centered data. Defaults to True.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <p>Dictionary containing configuration updates. Supported keys:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: Robustness parameter controlling the size of the chi-squared ambiguity set (must be ≥ 0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eps</span></code>: Total-variation ambiguity radius, strictly between 0 and 1.
+The constructor defaults to zero radius; <code class="docutils literal notranslate"><span class="pre">update()</span></code> rejects both endpoints.</p></li>
 </ul>
 </p>
 </dd>
@@ -478,7 +479,7 @@ are expected; for classification, ±1 labels.</p></li>
             <div class="left">
                 
                 <a href="kldro_linear.html">
-                    <span class="icon">&lt;</span><span>KL-DRO</span></a>
+                    <span class="icon">&lt;</span><span>KL DRO</span></a>
                 
             </div>
 

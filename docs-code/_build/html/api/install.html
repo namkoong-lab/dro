@@ -20,7 +20,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/install.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Tutorial" href="tutorials.html" />
+    <link rel="next" title="Tutorials" href="tutorials.html" />
     <link rel="prev" title="About" href="about.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -251,8 +251,8 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 
@@ -268,7 +268,7 @@
   <section id="installation-guide">
 <h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading">¶</a></h1>
 <section id="install-dro-package">
-<h2>(1) Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package<a class="headerlink" href="#install-dro-package" title="Link to this heading">¶</a></h2>
+<h2>Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package<a class="headerlink" href="#install-dro-package" title="Link to this heading">¶</a></h2>
 <p>To install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package, you can simply run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dro
 </pre></div>
@@ -276,7 +276,7 @@
 <p>And it will install all required packages.</p>
 </section>
 <section id="solver-selection">
-<h2>(2) Solver selection<a class="headerlink" href="#solver-selection" title="Link to this heading">¶</a></h2>
+<h2>Solver selection<a class="headerlink" href="#solver-selection" title="Link to this heading">¶</a></h2>
 <p>The convex linear DRO models use <code class="docutils literal notranslate"><span class="pre">CLARABEL</span></code> through <code class="docutils literal notranslate"><span class="pre">cvxpy</span></code> by default. No commercial solver license is needed. You can select another installed solver when it supports the model’s formulation, either during initialization or before fitting:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.chi2_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chi2DRO</span>
 
@@ -314,8 +314,8 @@ mv<span class="w"> </span>/path_to_license/mosek.lic<span class="w"> </span>mose
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Installation Guide</a><ul>
-<li><a class="reference internal" href="#install-dro-package">(1) Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package</a></li>
-<li><a class="reference internal" href="#solver-selection">(2) Solver selection</a></li>
+<li><a class="reference internal" href="#install-dro-package">Install <code class="docutils literal notranslate"><span class="pre">dro</span></code> package</a></li>
+<li><a class="reference internal" href="#solver-selection">Solver selection</a></li>
 </ul>
 </li>
 </ul>
@@ -337,7 +337,7 @@ mv<span class="w"> </span>/path_to_license/mosek.lic<span class="w"> </span>mose
 
             <div class="right">
                 
-                    <a href="tutorials.html"><span>Tutorial</span><span class="icon">&gt;</span></a>
+                    <a href="tutorials.html"><span>Tutorials</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

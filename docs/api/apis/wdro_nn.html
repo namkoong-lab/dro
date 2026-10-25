@@ -253,13 +253,13 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../nn_dro.html">Neural Network DRO Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_nn.html">NN DRO Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base_nn.html">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fdro_nn.html">f-Divergence DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_nn.html">Group DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hrdro_nn.html">Holistic Robust DRO</a></li>
@@ -281,9 +281,35 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.neural_model.wdro_nn">
-<span id="wasserstein-dro"></span><h1>Wasserstein DRO<a class="headerlink" href="#module-dro.neural_model.wdro_nn" title="Link to this heading">¶</a></h1>
-<dl class="py class">
+  <section id="wasserstein-dro">
+<h1>Wasserstein DRO<a class="headerlink" href="#wasserstein-dro" title="Link to this heading">¶</a></h1>
+<section id="training-customization">
+<h2>Training customization<a class="headerlink" href="#training-customization" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code> inherits the <a class="reference internal" href="base_nn.html#neural-fit-customization"><span class="std std-ref">neural training controls</span></a>.
+Its <code class="docutils literal notranslate"><span class="pre">fit(...)</span></code> method accepts paired <code class="docutils literal notranslate"><span class="pre">train_loader</span></code> and <code class="docutils literal notranslate"><span class="pre">val_loader</span></code>
+arguments, a PyTorch <code class="docutils literal notranslate"><span class="pre">optimizer</span></code>, and an optional <code class="docutils literal notranslate"><span class="pre">scheduler</span></code> with
+<code class="docutils literal notranslate"><span class="pre">scheduler_step=&quot;epoch&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code>. Install a custom network with
+<code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> before constructing the optimizer; in
+<code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode, this also rebinds the attack to the replacement network.
+These training controls do not change the attack’s loss: a custom <code class="docutils literal notranslate"><span class="pre">_loss</span></code>
+affects the inner search in <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> mode, but only the outer
+objective in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode.
+The <a class="reference internal" href="../notebooks/neural_dro_tutorial.html"><span class="doc">WNNDRO tutorial</span></a> includes a
+“Custom WNNDRO architecture and training controls” example with a
+user-defined PyTorch <code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>, external loaders, an optimizer, and a
+scheduler. The custom module must accept the selected input batches and return
+task-compatible outputs (class logits for this classification example).</p>
+</section>
+<section id="radius-certificate">
+<h2>Radius certificate<a class="headerlink" href="#radius-certificate" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">WNNDRO.certify_radius(transport_budget,</span> <span class="pre">adversarial_losses,</span>
+<span class="pre">transport_costs,</span> <span class="pre">certified_inner_errors,</span> <span class="pre">transport_penalty=None)</span></code> returns
+<code class="docutils literal notranslate"><span class="pre">epsilon_cert</span></code> and its empirical loss bound when the supplied global inner
+error bounds suffice. It returns <code class="docutils literal notranslate"><span class="pre">None</span></code> when no nonnegative budget can be
+certified at that loss level. The constructor’s <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code>
+mode is a per-example attack radius, not <code class="docutils literal notranslate"><span class="pre">transport_budget</span></code>. See the
+<a class="reference internal" href="../../tutorials/neural_certificates.html"><span class="doc">certificate derivation and runnable example</span></a>.</p>
+<dl class="py class" id="module-dro.neural_model.wdro_nn">
 <dt class="sig sig-object py" id="dro.neural_model.wdro_nn.WNNDRO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.wdro_nn.</span></span><span class="sig-name descname"><span class="pre">WNNDRO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mlp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PGD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robust_objective</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'norm_ball'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.wdro_nn.WNNDRO" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="base_nn.html#dro.neural_model.base_nn.BaseNNDRO" title="dro.neural_model.base_nn.BaseNNDRO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNNDRO</span></code></a></p>
@@ -386,8 +412,26 @@ configuration is invalid</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="dro.neural_model.wdro_nn.WNNDRO.certify_radius">
+<span class="sig-name descname"><span class="pre">certify_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transport_budget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_losses</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport_costs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">certified_inner_errors</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.wdro_nn.WNNDRO.certify_radius" title="Link to this definition">¶</a></dt>
+<dd><p>Certify an empirical squared-cost Wasserstein budget.</p>
+<p>Supply per-example losses, squared Euclidean costs, and <strong>proven
+global</strong> inner-maximization error bounds for the same adversarial
+examples, final network, labels, and admissible support. The method
+does not infer error bounds from attack iterations. <code class="docutils literal notranslate"><span class="pre">transport_budget</span></code>
+is distinct from the <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> constructor’s <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">gamma</span></code> in <code class="docutils literal notranslate"><span class="pre">transport_penalty</span></code>
+mode; in <code class="docutils literal notranslate"><span class="pre">norm_ball</span></code> mode it must be supplied explicitly. Returns
+<code class="docutils literal notranslate"><span class="pre">None</span></code> when the achieved loss cannot be certified at a nonnegative
+budget. Otherwise returns <code class="docutils literal notranslate"><span class="pre">epsilon_cert</span></code>, the certified loss bound,
+the upper bound at the input budget, and their gap in a dictionary.
+The result concerns the empirical reference distribution only.</p>
 </dd></dl>
 
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -405,8 +449,13 @@ configuration is invalid</p></li>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Wasserstein DRO</a><ul>
+<li><a class="reference internal" href="#training-customization">Training customization</a></li>
+<li><a class="reference internal" href="#radius-certificate">Radius certificate</a><ul>
 <li><a class="reference internal" href="#dro.neural_model.wdro_nn.WNNDRO"><code class="docutils literal notranslate"><span class="pre">WNNDRO</span></code></a><ul>
 <li><a class="reference internal" href="#dro.neural_model.wdro_nn.WNNDRO.update_user_mode"><code class="docutils literal notranslate"><span class="pre">WNNDRO.update_user_mode()</span></code></a></li>
+<li><a class="reference internal" href="#dro.neural_model.wdro_nn.WNNDRO.certify_radius"><code class="docutils literal notranslate"><span class="pre">WNNDRO.certify_radius()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

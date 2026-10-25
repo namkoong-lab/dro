@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>MMD-DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Linear MMD-DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_mmddro.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Bayesian (Parametric) DRO" href="linear_pdro.html" />
-    <link rel="prev" title="Wasserstein DRO" href="linear_wdro.html" /> 
+    <link rel="next" title="Linear Bayesian DRO" href="linear_pdro.html" />
+    <link rel="prev" title="Linear Group DRO" href="linear_groupdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,22 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Hybrid-distance DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO: Model Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">NN-DRO: Robustness Certificates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -281,8 +281,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="mmd-dro">
-<h1>MMD-DRO<a class="headerlink" href="#mmd-dro" title="Link to this heading">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-mmd-dro">
+<h1>Linear MMD-DRO<a class="headerlink" href="#linear-mmd-dro" title="Link to this heading">¶</a></h1>
 <p>In MMD-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{P}(d, \eta) = \{Q: d(Q, \widehat P)\leq \eta\}\)</span>.
 Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> is the kernel distance <span class="math notranslate nohighlight">\(\|\mu_P - \mu_Q\|_{\mathcal H}\)</span>, which is defined as:</p>
 <div class="math notranslate nohighlight">
@@ -361,7 +361,7 @@ an end-to-end MMD-DRO example and ambiguity-set kernel selection guidance.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">MMD-DRO</a><ul>
+<li><a class="reference internal" href="#">Linear MMD-DRO</a><ul>
 <li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
 <li><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
@@ -378,14 +378,14 @@ an end-to-end MMD-DRO example and ambiguity-set kernel selection guidance.</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="linear_wdro.html">
-                    <span class="icon">&lt;</span><span>Wasserstein DRO</span></a>
+                <a href="linear_groupdro.html">
+                    <span class="icon">&lt;</span><span>Linear Group DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="linear_pdro.html"><span>Bayesian (Parametric) DRO</span><span class="icon">&gt;</span></a>
+                    <a href="linear_pdro.html"><span>Linear Bayesian DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

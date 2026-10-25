@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tree-based DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Tree DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -22,7 +22,9 @@
     <script src="../../_static/js/petite-vue.js"></script>
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/tree_dro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Personalization" href="personalize_loss_tutorial.html" />
+    <link rel="prev" title="Other Neural DRO" href="neural_dro_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -249,11 +251,23 @@
 
     
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper"><ul>
+        <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and Neural)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Neural Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other Neural DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalization</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
 </ul>
 
@@ -266,10 +280,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="Tree-based-DRO">
-<h1>Tree-based DRO<a class="headerlink" href="#Tree-based-DRO" title="Link to this heading">¶</a></h1>
-<p>This tutorial fits distributionally robust tree ensembles with XGBoost and LightGBM. The examples use the same binary classification data and booster settings so that the KL-DRO and CVaR-DRO setup is easy to compare.</p>
-<p>Each example follows the same sequence: choose a DRO class and its robustness parameter, provide the tree-booster configuration with <code class="docutils literal notranslate"><span class="pre">update</span></code>, call <code class="docutils literal notranslate"><span class="pre">fit</span></code>, and then inspect both predictive accuracy and the fitted robust objective.</p>
+  <section id="Tree-DRO">
+<h1>Tree DRO<a class="headerlink" href="#Tree-DRO" title="Link to this heading">¶</a></h1>
+<p>This notebook fits distributionally robust tree ensembles with XGBoost and LightGBM. The examples use the same binary classification data and booster settings so that the KL-DRO and CVaR-DRO setup is easy to compare.</p>
+<p>See the <a class="reference internal" href="../../tutorials/tree_model.html"><span class="doc">tree-model tutorial</span></a> for the objective formulations, booster configuration, and interpretation of the fitted robust objective.</p>
 <section id="Setup">
 <h2>Setup<a class="headerlink" href="#Setup" title="Link to this heading">¶</a></h2>
 <p>Import the two robust objectives for each supported boosting backend.</p>
@@ -307,22 +321,6 @@
 </div>
 </div>
 </section>
-<section id="Objective-and-booster-configuration">
-<h2>Objective and booster configuration<a class="headerlink" href="#Objective-and-booster-configuration" title="Link to this heading">¶</a></h2>
-<p>There are two separate parts of the model setup:</p>
-<ol class="arabic">
-<li><p><strong>Robust objective:</strong> the class selects KL-DRO or CVaR-DRO, while <code class="docutils literal notranslate"><span class="pre">eps</span></code> controls that objective. For fitted sample losses <span class="math notranslate nohighlight">\(\ell_1, \ldots, \ell_n\)</span>, the reported KL objective is</p>
-<div class="math notranslate nohighlight">
-\[\frac{1}{\varepsilon} \log\left(\frac{1}{n}\sum_{i=1}^n \exp(\varepsilon \ell_i)\right),\]</div>
-<p>and the reported CVaR objective is</p>
-<div class="math notranslate nohighlight">
-\[t + \frac{1}{1-\varepsilon}\frac{1}{n}\sum_{i=1}^n(\ell_i-t)_+,\]</div>
-<p>where <span class="math notranslate nohighlight">\(t\)</span> is the empirical <code class="docutils literal notranslate"><span class="pre">eps</span></code> quantile of the fitted losses.</p>
-</li>
-<li><p><strong>Booster configuration:</strong> the dictionary passed to <code class="docutils literal notranslate"><span class="pre">update</span></code> controls tree construction. Here, <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> limits tree depth, <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> scales each boosting step, and the required <code class="docutils literal notranslate"><span class="pre">num_boost_round</span></code> sets the number of boosting iterations. The DRO wrapper supplies the custom training objective during <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
-</ol>
-<p>Before fitting, <code class="docutils literal notranslate"><span class="pre">model.robust_obj</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>. After fitting, it contains the robust empirical objective evaluated on the training data. It is a training diagnostic rather than a test-set metric; compare it only when the data, loss, and DRO formulation are held fixed.</p>
-</section>
 <section id="XGBoost">
 <h2>XGBoost<a class="headerlink" href="#XGBoost" title="Link to this heading">¶</a></h2>
 <section id="KL-DRO">
@@ -352,7 +350,7 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Test accuracy: 0.945
+Test accuracy: 0.950
 Robust training objective: 0.130190
 </pre></div></div>
 </div>
@@ -384,7 +382,7 @@ Robust training objective: 0.130190
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Test accuracy: 0.930
+Test accuracy: 0.945
 Robust training objective: 0.137117
 </pre></div></div>
 </div>
@@ -419,7 +417,7 @@ Robust training objective: 0.137117
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Test accuracy: 0.930
+Test accuracy: 0.940
 Robust training objective: 0.139228
 </pre></div></div>
 </div>
@@ -451,7 +449,7 @@ Robust training objective: 0.139228
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Test accuracy: 0.910
+Test accuracy: 0.925
 Robust training objective: 0.157335
 </pre></div></div>
 </div>
@@ -473,10 +471,9 @@ Robust training objective: 0.157335
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Tree-based DRO</a><ul>
+<li><a class="reference internal" href="#">Tree DRO</a><ul>
 <li><a class="reference internal" href="#Setup">Setup</a></li>
 <li><a class="reference internal" href="#Dataset">Dataset</a></li>
-<li><a class="reference internal" href="#Objective-and-booster-configuration">Objective and booster configuration</a></li>
 <li><a class="reference internal" href="#XGBoost">XGBoost</a><ul>
 <li><a class="reference internal" href="#KL-DRO">KL-DRO</a></li>
 <li><a class="reference internal" href="#CVaR-DRO">CVaR-DRO</a></li>
@@ -501,9 +498,14 @@ Robust training objective: 0.157335
         <div class="button_nav">
             <div class="left">
                 
+                <a href="neural_dro_tutorial.html">
+                    <span class="icon">&lt;</span><span>Other Neural DRO</span></a>
+                
             </div>
 
             <div class="right">
+                
+                    <a href="personalize_loss_tutorial.html"><span>Personalization</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

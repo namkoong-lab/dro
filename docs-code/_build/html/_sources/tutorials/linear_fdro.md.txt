@@ -1,4 +1,4 @@
-# f-divergence DRO
+# Linear f-divergence DRO
 
 We describe the $f$-divergence DRO here.
 

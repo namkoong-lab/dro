@@ -23,8 +23,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/WassersteinDRO_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Linear DRO with Hybrid Distances" href="mixed_dro_tutorial.html" />
-    <link rel="prev" title="Linear f-Divergence DRO" href="f_dro_tutorial.html" /> 
+    <link rel="next" title="Linear Hybrid-Distance DRO" href="mixed_dro_tutorial.html" />
+    <link rel="prev" title="Linear f-divergence DRO" href="f_dro_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -254,17 +254,18 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-divergence DRO</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Linear Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Linear Bayesian DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and NN)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">NN Sinkhorn DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">DRO on Personalized Losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupdro_tutorial.html">Group DRO (Linear and Neural)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Neural Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other Neural DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">Tree DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -281,6 +282,7 @@
             
   <section id="Linear-Wasserstein-DRO">
 <h1>Linear Wasserstein DRO<a class="headerlink" href="#Linear-Wasserstein-DRO" title="Link to this heading">¶</a></h1>
+<p>This notebook demonstrates Wasserstein DRO for linear classification and regression using transport-based ambiguity sets. The examples show how to fit models, adjust the robustness radius and transport cost, and visualize worst-case distributions. It also introduces robust satisficing and illustrates the effect of the feature norm and the cost of changing labels or responses.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
@@ -527,13 +529,13 @@ array([ 0.97511973, -0.67716171, -0.01224677, -0.89725437,  0.07580456])
             <div class="left">
                 
                 <a href="f_dro_tutorial.html">
-                    <span class="icon">&lt;</span><span>Linear f-Divergence DRO</span></a>
+                    <span class="icon">&lt;</span><span>Linear f-divergence DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="mixed_dro_tutorial.html"><span>Linear DRO with Hybrid Distances</span><span class="icon">&gt;</span></a>
+                    <a href="mixed_dro_tutorial.html"><span>Linear Hybrid-Distance DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

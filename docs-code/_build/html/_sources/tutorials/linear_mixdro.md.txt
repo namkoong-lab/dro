@@ -1,5 +1,5 @@
-# Hybrid-distance DRO
-This guide covers Hybrid-distance DRO formulations: Sinkhorn-DRO, Holistic Robust DRO, MOT-DRO, and outlier-robust Wasserstein DRO. They combine transport-based distances with entropy, divergence, moment, or contamination constraints. Let $\widehat P$ denote the empirical training distribution.
+# Linear Hybrid-Distance DRO
+This guide covers hybrid-distance DRO formulations: Sinkhorn-DRO, Holistic Robust DRO, MOT-DRO, and outlier-robust Wasserstein DRO. They combine transport-based distances with entropy, divergence, moment, or contamination constraints. Let $\widehat P$ denote the empirical training distribution.
 
 
 ## Sinkhorn-DRO
@@ -81,7 +81,7 @@ where $p$ is the $p$-Wasserstein distance and $\eta \in [0, 0.5)$ denotes the co
 
 We only consider SVM (for classification) and LAD (for regression) based on the convex reformulation of Theorem 2 in [4]. Note that the model also requires the input of $\sigma$, which we take $\sigma = \sqrt{d_x}$ as default.
 
-See the {doc}`Hybrid-distance DRO notebook <../api/notebooks/mixed_dro_tutorial>`
+See the {doc}`Linear Hybrid-Distance DRO notebook <../api/notebooks/mixed_dro_tutorial>`
 for end-to-end Sinkhorn, MOT, OR-WDRO, and Holistic DRO examples.
 
 ## Reference

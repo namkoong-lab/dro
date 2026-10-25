@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>NN DRO Base Class &#8212; dro 0.4.2 documentation</title>
+    <title>Base Class &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -253,13 +253,13 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_api.html">Data Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../linear_dro.html">Linear DRO Methods</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../nn_dro.html">Neural Network DRO Methods</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">NN DRO Base Class</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fdro_nn.html">f-Divergence DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="groupdro_nn.html">Group DRO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hrdro_nn.html">Holistic Robust DRO</a></li>
@@ -281,9 +281,46 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-dro.neural_model.base_nn">
-<span id="nn-dro-base-class"></span><h1>NN DRO Base Class<a class="headerlink" href="#module-dro.neural_model.base_nn" title="Link to this heading">¶</a></h1>
-<dl class="py class">
+  <section id="base-class">
+<h1>Base Class<a class="headerlink" href="#base-class" title="Link to this heading">¶</a></h1>
+<section id="training-controls">
+<span id="neural-fit-customization"></span><h2>Training controls<a class="headerlink" href="#training-controls" title="Link to this heading">¶</a></h2>
+<p>Neural DRO models using <code class="docutils literal notranslate"><span class="pre">BaseNNDRO.fit</span></code> accept either arrays through
+<code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y,</span> <span class="pre">...)</span></code> or a caller-provided pair of <code class="docutils literal notranslate"><span class="pre">train_loader</span></code> and
+<code class="docutils literal notranslate"><span class="pre">val_loader</span></code>. Each loader must yield <code class="docutils literal notranslate"><span class="pre">(inputs,</span> <span class="pre">labels)</span></code> tensor batches.
+Do not pass <code class="docutils literal notranslate"><span class="pre">X</span></code> or <code class="docutils literal notranslate"><span class="pre">y</span></code> with external loaders. The array path keeps the
+internal training/validation split and Adam optimizer.</p>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> to use a different PyTorch optimizer. Build it from the
+current <code class="docutils literal notranslate"><span class="pre">model.model.parameters()</span></code> after any <code class="docutils literal notranslate"><span class="pre">update_user_mode(...)</span></code> call.
+A <code class="docutils literal notranslate"><span class="pre">scheduler</span></code> requires that explicit optimizer. Set <code class="docutils literal notranslate"><span class="pre">scheduler_step</span></code> to
+<code class="docutils literal notranslate"><span class="pre">&quot;epoch&quot;</span></code> (the default) or <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code>. <code class="docutils literal notranslate"><span class="pre">ReduceLROnPlateau</span></code> supports only
+epoch stepping and receives the mean training loss for that epoch.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dro.neural_model.fdro_nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chi2NNDRO</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">20</span><span class="p">],</span> <span class="n">y</span><span class="p">[:</span><span class="mi">20</span><span class="p">]),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">20</span><span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="mi">20</span><span class="p">:]),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Chi2NNDRO</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">train_loader</span><span class="o">=</span><span class="n">train_loader</span><span class="p">,</span>
+    <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+    <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span>
+    <span class="n">scheduler_step</span><span class="o">=</span><span class="s2">"epoch"</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="../../tutorials/personal_loss.html"><span class="doc">personalization tutorial</span></a> for
+custom networks, losses, and examples for the individual DRO methods.</p>
+<dl class="py class" id="module-dro.neural_model.base_nn">
 <dt class="sig sig-object py" id="dro.neural_model.base_nn.Linear">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dro.neural_model.base_nn.</span></span><span class="sig-name descname"><span class="pre">Linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dro.neural_model.base_nn.Linear" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
@@ -653,6 +690,7 @@ for regression.</p>
 </dd></dl>
 
 </section>
+</section>
 
 
             <div class="clearer"></div>
@@ -668,7 +706,8 @@ for regression.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">NN DRO Base Class</a><ul>
+<li><a class="reference internal" href="#">Base Class</a><ul>
+<li><a class="reference internal" href="#training-controls">Training controls</a><ul>
 <li><a class="reference internal" href="#dro.neural_model.base_nn.Linear"><code class="docutils literal notranslate"><span class="pre">Linear</span></code></a><ul>
 <li><a class="reference internal" href="#dro.neural_model.base_nn.Linear.forward"><code class="docutils literal notranslate"><span class="pre">Linear.forward()</span></code></a></li>
 </ul>
@@ -684,6 +723,8 @@ for regression.</p>
 <li><a class="reference internal" href="#dro.neural_model.base_nn.BaseNNDRO.score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.score()</span></code></a></li>
 <li><a class="reference internal" href="#dro.neural_model.base_nn.BaseNNDRO.acc"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.acc()</span></code></a></li>
 <li><a class="reference internal" href="#dro.neural_model.base_nn.BaseNNDRO.f1score"><code class="docutils literal notranslate"><span class="pre">BaseNNDRO.f1score()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

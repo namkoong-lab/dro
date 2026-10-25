@@ -1,4 +1,4 @@
-# Formulation
+# Overview
 
 Given the empirical distribution $\widehat P$ from the training data $\{(x_i, y_i)\}_{i \in [N]}$, we consider the following (distance-based) distributionally robust optimization formulations under the machine learning context. In general, DRO optimizes over the worst-case loss and satisfies the following structure:
 
@@ -115,7 +115,7 @@ The kernel interface follows scikit-learn:
 The neural module implements $\chi^2$-DRO, CVaR-DRO, Wasserstein DRO through adversarial training, and Holistic Robust DRO. Supported architectures are linear models, vanilla MLP, AlexNet, and ResNet18. Users can also supply their own architecture through `BaseNNDRO.update_user_mode(...)`.
 
 See the {doc}`neural-model guide <neural_model>` for training interfaces and the
-{doc}`NN-DRO robustness certificates guide <neural_certificates>` for
+{doc}`Neural DRO robustness certificates guide <neural_certificates>` for
 post-training bounds on the worst-case loss of a fitted network.
 
 ### Tree-based Ensemble Models (Approximate Fitting)

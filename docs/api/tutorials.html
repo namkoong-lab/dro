@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial &#8212; dro 0.4.2 documentation</title>
+    <title>Tutorials &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,7 +22,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/tutorials.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Formulation" href="../tutorials/index.html" />
+    <link rel="next" title="Overview" href="../tutorials/index.html" />
     <link rel="prev" title="Installation Guide" href="install.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -253,21 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mmddro.html">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mmddro.html">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 
@@ -280,12 +281,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading">¶</a></h1>
+  <section id="tutorials">
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Overall Pipeline</span></p>
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Formulation</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#data-module">Data Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#synthetic-data-generation">Synthetic Data Generation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#model-module">Model Module</a></li>
@@ -295,50 +296,49 @@
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Linear DRO</span></p>
+<p class="caption" role="heading"><span class="caption-text">Linear Models</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear.html">Linear Models</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear.html">Linear DRO Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html#f-divergence-dro"><span class="math notranslate nohighlight">\(f\)</span>-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html#wasserstein-dro">Wasserstein DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html#group-dro">Group DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html#mmd-dro">MMD-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html#bayesian-parametric-dro">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html#mixed-distance-dro">Mixed-distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear.html#hybrid-distance-dro">Hybrid-distance DRO</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_groupdro.html">Group DRO for Linear Models</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_fdro.html">Linear f-divergence DRO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#standard-generalized">Standard (Generalized)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#partial-dro">Partial DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#reference">Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_wdro.html">Linear Wasserstein DRO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#standard-version">Standard Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#robust-satisficing-version">Robust Satisficing Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#reference">Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_groupdro.html">Linear Group DRO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html#formulation">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html#defining-groups">Defining groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html#supported-losses">Supported losses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html#hyperparameters">Hyperparameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html#fitting-and-diagnostics">Fitting and diagnostics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html#practical-guidance">Practical guidance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_groupdro.html#reference">Reference</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_fdro.html">f-divergence DRO</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#standard-generalized">Standard (Generalized)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#partial-dro">Partial DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_fdro.html#reference">Reference</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_wdro.html">Wasserstein DRO</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#standard-version">Standard Version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#robust-satisficing-version">Robust Satisficing Version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_wdro.html#reference">Reference</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_mmddro.html">MMD-DRO</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_mmddro.html">Linear MMD-DRO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mmddro.html#hyperparameters">Hyperparameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mmddro.html#reference">Reference</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_pdro.html">Bayesian (Parametric) DRO</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_pdro.html">Linear Bayesian DRO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_pdro.html#hyperparameters">Hyperparameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_pdro.html#reference">Reference</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_mixdro.html">DRO with a mixture of distance metrics</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/linear_mixdro.html">Linear Hybrid-Distance DRO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html#sinkhorn-dro">Sinkhorn-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html#holistic-dro">Holistic-DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/linear_mixdro.html#mot-dro">MOT-DRO</a></li>
@@ -349,24 +349,33 @@
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">NN DRO</span></p>
+<p class="caption" role="heading"><span class="caption-text">Neural Models</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/neural_model.html">NN-DRO</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#chi-2-dro-and-cvar-dro">1. <span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#wasserstein-dro">2. Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#holistic-robust-dro">3. Holistic Robust DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#sinkhorn-dro">4. Sinkhorn DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#group-dro">5. Group DRO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/neural_model.html">Neural DRO Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#chi-2-dro-and-cvar-dro"><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO and CVaR-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#wasserstein-dro">Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#holistic-robust-dro">Holistic Robust DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#sinkhorn-dro">Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_model.html#group-dro">Group DRO</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/neural_certificates.html">Neural DRO Robustness Certificates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_certificates.html#certificate-guarantees">Certificate Guarantees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_certificates.html#wasserstein-dro">Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_certificates.html#chi-2-dro"><span class="math notranslate nohighlight">\(\chi^2\)</span>-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_certificates.html#cvar-dro">CVaR-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_certificates.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/neural_certificates.html#reference">Reference</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Tree DRO</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tree Models</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/tree_model.html">Tree-DRO</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tree_model.html">Tree DRO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/tree_model.html#formulation">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/tree_model.html#hyperparameters">Hyperparameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/tree_model.html#objective-and-booster-configuration">Objective and booster configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/tree_model.html#fitting-and-diagnostics">Fitting and diagnostics</a></li>
 </ul>
 </li>
@@ -376,9 +385,9 @@
 <p class="caption" role="heading"><span class="caption-text">Personalization</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/personal_loss.html">Personalization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/personal_loss.html#linear-convex-dro-methods">1. Linear (Convex) DRO Methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/personal_loss.html#nn-based-dro-methods">2. NN-Based DRO Methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/personal_loss.html#tree-based-dro-methods">3. Tree-Based DRO Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/personal_loss.html#linear-convex-dro-methods">Linear (Convex) DRO Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/personal_loss.html#nn-based-dro-methods">NN-Based DRO Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/personal_loss.html#tree-based-dro-methods">Tree-Based DRO Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -405,7 +414,7 @@
 
             <div class="right">
                 
-                    <a href="../tutorials/index.html"><span>Formulation</span><span class="icon">&gt;</span></a>
+                    <a href="../tutorials/index.html"><span>Overview</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

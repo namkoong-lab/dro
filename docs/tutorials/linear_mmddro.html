@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>MMD-DRO &#8212; dro 0.4.2 documentation</title>
+    <title>Linear MMD-DRO &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/tutorials/linear_mmddro.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Bayesian (Parametric) DRO" href="linear_pdro.html" />
-    <link rel="prev" title="Wasserstein DRO" href="linear_wdro.html" /> 
+    <link rel="next" title="Linear Bayesian DRO" href="linear_pdro.html" />
+    <link rel="prev" title="Linear Group DRO" href="linear_groupdro.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -253,21 +253,22 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/install.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorial</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html">Formulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Group DRO for Linear Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">f-divergence DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Wasserstein DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">MMD-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Bayesian (Parametric) DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">DRO with a mixture of distance metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_model.html">NN-DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree-DRO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api/tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_fdro.html">Linear f-divergence DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_wdro.html">Linear Wasserstein DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_groupdro.html">Linear Group DRO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear MMD-DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_pdro.html">Linear Bayesian DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_mixdro.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_model.html">Neural DRO Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_certificates.html">Neural DRO Robustness Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_model.html">Tree DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="personal_loss.html">Personalization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/example.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -280,9 +281,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="mmd-dro">
-<h1>MMD-DRO<a class="headerlink" href="#mmd-dro" title="Link to this heading">¶</a></h1>
-<p>In MMD-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{P}(d, \eta) = \{Q: d(Q, \hat P)\leq \eta\}\)</span>.
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-mmd-dro">
+<h1>Linear MMD-DRO<a class="headerlink" href="#linear-mmd-dro" title="Link to this heading">¶</a></h1>
+<p>In MMD-DRO [1], <span class="math notranslate nohighlight">\(\mathcal{P}(d, \eta) = \{Q: d(Q, \widehat P)\leq \eta\}\)</span>.
 Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> is the kernel distance <span class="math notranslate nohighlight">\(\|\mu_P - \mu_Q\|_{\mathcal H}\)</span>, which is defined as:</p>
 <div class="math notranslate nohighlight">
 \[\|\mu_P - \mu_Q\|_{\mathcal H}^2 = \mathbb E_{x, x' \sim P}[k(x, x')] + \mathbb E_{y, y' \sim Q}[k(y, y')] - 2\mathbb{E}_{x \sim P, y \sim Q}[k(x, y)], \]</div>
@@ -309,9 +310,10 @@ Here, <span class="math notranslate nohighlight">\(d(P, Q)\)</span> is the kerne
 </ul>
 <p>Besides, MMD-DRO requires constructing ambiguity sets supported on some <span class="math notranslate nohighlight">\(\{(\tilde X_j, \tilde Y_j)\}_{j \in [M]}\subseteq \mathcal{X} \times \mathcal{Y}\)</span>, where setting <span class="math notranslate nohighlight">\((\tilde X_j, \tilde Y_j) = (X_j, Y_j)\)</span> for <span class="math notranslate nohighlight">\(j \in [n]\)</span> and creates new data which leads to additional input parameters:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sampling_method</span></code>, chosen from <code class="docutils literal notranslate"><span class="pre">bound</span></code> or <code class="docutils literal notranslate"><span class="pre">hull</span></code>. When <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">bound</span></code>, we set each new <span class="math notranslate nohighlight">\((\tilde X, \tilde Y)\)</span> uniformly sampled from <span class="math notranslate nohighlight">\([-1, 1]^{d + 1}\)</span>; when <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">hull</span></code>, each regression coordinate is sampled within its observed range, while classification labels are sampled from <span class="math notranslate nohighlight">\(\{-1,+1\}\)</span>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sampling_method</span></code>, chosen from <code class="docutils literal notranslate"><span class="pre">bound</span></code> or <code class="docutils literal notranslate"><span class="pre">hull</span></code>. When <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">bound</span></code>, we set each new <span class="math notranslate nohighlight">\((\tilde X, \tilde Y)\)</span> uniformly sampled from <span class="math notranslate nohighlight">\([-1, 1]^{d + 1}\)</span>. When <code class="docutils literal notranslate"><span class="pre">sampling_method</span> <span class="pre">==</span> <span class="pre">hull</span></code>, regression feature coordinates are sampled uniformly from the pooled interval <span class="math notranslate nohighlight">\([\min_{i,r} X_{ir},\max_{i,r} X_{ir}]\)</span>, and targets from <span class="math notranslate nohighlight">\([\min_i Y_i,\max_i Y_i]\)</span>. For classification, feature coordinates are sampled uniformly from <span class="math notranslate nohighlight">\([-1,1]\)</span> and labels from <span class="math notranslate nohighlight">\(\{-1,+1\}\)</span>. These regions are the same in the accelerated and unaccelerated paths; <code class="docutils literal notranslate"><span class="pre">hull</span></code> is a box-sampling option, not sampling from the empirical convex hull.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">n_certify_ratio</span></code>, the additional number of samples created, i.e., the size <span class="math notranslate nohighlight">\(\frac{M - n}{n}\)</span>.</p></li>
 </ul>
+<p>The unaccelerated regularizer is <span class="math notranslate nohighlight">\(\eta\sqrt{a^\top K a}\)</span>, the RKHS norm of the auxiliary function. With a Nyström feature matrix <span class="math notranslate nohighlight">\(\Phi\)</span>, accelerated fitting uses <span class="math notranslate nohighlight">\(\eta\|\beta\|_2\)</span> by default (<code class="docutils literal notranslate"><span class="pre">accelerated_regularizer=&quot;feature_coefficients&quot;</span></code>), corresponding to the RKHS norm for the approximate kernel <span class="math notranslate nohighlight">\(K\approx\Phi\Phi^\top\)</span>. The legacy option <code class="docutils literal notranslate"><span class="pre">accelerated_regularizer=&quot;support_values&quot;</span></code> instead uses <span class="math notranslate nohighlight">\(\eta\|\Phi\beta\|_2\)</span>. The regularizer applies to the auxiliary function bounding the loss, rather than the predictor coefficients.</p>
 <p>For example, the default RBF kernel needs no explicit kernel settings:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dro.linear_model.mmd_dro</span><span class="w"> </span><span class="kn">import</span> <span class="n">MMD_DRO</span>
 
@@ -359,7 +361,7 @@ an end-to-end MMD-DRO example and ambiguity-set kernel selection guidance.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">MMD-DRO</a><ul>
+<li><a class="reference internal" href="#">Linear MMD-DRO</a><ul>
 <li><a class="reference internal" href="#hyperparameters">Hyperparameters</a></li>
 <li><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
@@ -376,14 +378,14 @@ an end-to-end MMD-DRO example and ambiguity-set kernel selection guidance.</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="linear_wdro.html">
-                    <span class="icon">&lt;</span><span>Wasserstein DRO</span></a>
+                <a href="linear_groupdro.html">
+                    <span class="icon">&lt;</span><span>Linear Group DRO</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="linear_pdro.html"><span>Bayesian (Parametric) DRO</span><span class="icon">&gt;</span></a>
+                    <a href="linear_pdro.html"><span>Linear Bayesian DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

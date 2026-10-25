@@ -4,10 +4,13 @@
 [![codecov](https://codecov.io/github/namkoong-lab/dro/graph/badge.svg?token=QFYLOVYZXF)](https://codecov.io/github/namkoong-lab/dro)
 
 # `dro`: A Python Package for Distributionally Robust Optimization in Machine Learning
-> Jiashuo Liu<sup>†</sup>, Tianyu Wang<sup>†</sup>, Henry Lam, Hongseok Namkoong, Jose Blanchet  
-> <sub>† equal contributions (α-β order)</sub>
+>Tianyu Wang<sup>†</sup>, Jiashuo Liu<sup>†</sup>, Henry Lam, Hongseok Namkoong, Jose Blanchet  
+> <sub>† equal contributions (reverse α-β order)</sub>
 
-<p align="center"><img src='./logo-new.png' width='500px'/></p>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/namkoong-lab/dro/main/logo-new.png"
+       alt="DRO logo" width="500"/>
+</p>
 
 `dro` is a python package that implements typical DRO methods on linear loss (SVM, logistic regression, and linear regression) for supervised learning tasks. It is built based on the convex optimization solver `cvxpy`. The `dro` package supports different kinds of distance metrics $d(\cdot,\cdot)$ as well as different kinds of base models (e.g., linear regression, logistic regression, SVM, neural networks...). Furthermore, it integrates different synthetic data generating mechanisms from recent research papers. 
 
@@ -18,9 +21,9 @@ where $U$ is the so-called ambiguity set and typically of the form $U = \\{P: d(
 
 Please refer to our <a href="https://arxiv.org/pdf/2505.23565">paper</a> for more details. 
 ```bibtex
-@misc{liu2025dropythonlibrary,
+@misc{wang2025dropythonlibrary,
       title={DRO: A Python Library for Distributionally Robust Optimization in Machine Learning}, 
-      author={Jiashuo Liu and Tianyu Wang and Henry Lam and Hongseok Namkoong and Jose Blanchet},
+      author={Tianyu Wang and Jiashuo Liu and Henry Lam and Hongseok Namkoong and Jose Blanchet},
       year={2025},
       eprint={2505.23565},
       archivePrefix={arXiv},
@@ -149,52 +152,52 @@ The models listed below are solved by exact solvers from ``cvxpy``.
   </tr></thead>
 <tbody>
   <tr>
-    <td class="tg-0lax">dro.linear_dro.base</td>
+    <td class="tg-0lax">dro.linear_model.base</td>
     <td class="tg-0lax">BaseLinearDRO</td>
     <td class="tg-0lax">Base class for linear DRO methods</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.chi2_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_model.chi2_dro</span></td>
     <td class="tg-0lax">Chi2DRO</td>
     <td class="tg-0lax">Linear chi-square divergence-based DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.kl_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_model.kl_dro</span></td>
     <td class="tg-0lax">KLDRO</td>
     <td class="tg-0lax">Kullback-Leibler divergence-based DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.linear_dro.cvar_dro</td>
+    <td class="tg-0lax">dro.linear_model.cvar_dro</td>
     <td class="tg-0lax">CVaRDRO</td>
     <td class="tg-0lax">CVaR DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.linear_dro.tv_dro</td>
+    <td class="tg-0lax">dro.linear_model.tv_dro</td>
     <td class="tg-0lax">TVDRO</td>
     <td class="tg-0lax">Total Variation DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.linear_dro.marginal_dro</td>
+    <td class="tg-0lax">dro.linear_model.marginal_dro</td>
     <td class="tg-0lax">MarginalCVaRDRO</td>
     <td class="tg-0lax">Marginal-X CVaR DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.mmd_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_model.mmd_dro</span></td>
     <td class="tg-0lax">MMD_DRO</td>
     <td class="tg-0lax">Maximum Mean Discrepancy DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.conditional_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_model.conditional_dro</span></td>
     <td class="tg-0lax">ConditionalCVaRDRO</td>
     <td class="tg-0lax">Y|X (ConditionalShiftBased) CVaR DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.hr_dro</span></td>
+    <td class="tg-0lax"><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_model.hr_dro</span></td>
     <td class="tg-0lax">HR_DRO_LR</td>
     <td class="tg-0lax">Holistic Robust DRO on linear models</td>
   </tr>
   <tr>
-    <td class="tg-0lax" rowspan="2"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_dro.wasserstein_dro</span></td>
+    <td class="tg-0lax" rowspan="2"><br><br><span style="font-weight:400;font-style:normal;text-decoration:none">dro.linear_model.wasserstein_dro</span></td>
     <td class="tg-0lax">WassersteinDRO</td>
     <td class="tg-0lax">Wasserstein DRO</td>
   </tr>
@@ -203,17 +206,17 @@ The models listed below are solved by exact solvers from ``cvxpy``.
     <td class="tg-0lax">Robust satisficing version of Wasserstein DRO</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.linear_dro.sinkhorn_dro</td>
+    <td class="tg-0lax">dro.linear_model.sinkhorn_dro</td>
     <td class="tg-0lax">SinkhornLinearDRO</td>
     <td class="tg-0lax">Sinkhorn DRO on linear models</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.linear_dro.mot_dro</td>
+    <td class="tg-0lax">dro.linear_model.mot_dro</td>
     <td class="tg-0lax">MOTDRO</td>
     <td class="tg-0lax">Optimal Transport DRO with Conditional Moment Constraints</td>
   </tr>
   <tr>
-    <td class="tg-0lax">dro.linear_dro.or_wasserstein_dro</td>
+    <td class="tg-0lax">dro.linear_model.or_wasserstein_dro</td>
     <td class="tg-0lax">ORWDRO</td>
     <td class="tg-0lax">Outlier-Robust Wasserstein DRO</td>
   </tr>

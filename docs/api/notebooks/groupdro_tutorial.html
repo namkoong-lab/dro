@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Group DRO (Linear and NN) &#8212; dro 0.4.2 documentation</title>
+    <title>Group DRO (Linear and Neural) &#8212; dro 0.4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic_mod.css?v=9b2032db" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -23,7 +23,7 @@
     <link rel="canonical" href="https://namkoong-lab.github.io/dro/api/notebooks/groupdro_tutorial.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="NN Sinkhorn DRO" href="sinkhorn-nn.html" />
+    <link rel="next" title="Neural Sinkhorn DRO" href="sinkhorn-nn.html" />
     <link rel="prev" title="Kernel DRO" href="kernel_dro_tutorial.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -254,17 +254,18 @@
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Example</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-Divergence DRO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../example.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="f_dro_tutorial.html">Linear f-divergence DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="WassersteinDRO_tutorial.html">Linear Wasserstein DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear DRO with Hybrid Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_dro_tutorial.html">Linear Hybrid-Distance DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Linear Bayesian DRO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel_dro_tutorial.html">Kernel DRO</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Group DRO (Linear and NN)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">NN Sinkhorn DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other NN DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="param_dro.html">Bayesian DRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">DRO on Personalized Losses</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Group DRO (Linear and Neural)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinkhorn-nn.html">Neural Sinkhorn DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_dro_tutorial.html">Other Neural DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_dro_tutorial.html">Tree DRO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="personalize_loss_tutorial.html">Personalization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
@@ -279,8 +280,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="Group-DRO-(Linear-and-NN)">
-<h1>Group DRO (Linear and NN)<a class="headerlink" href="#Group-DRO-(Linear-and-NN)" title="Link to this heading">¶</a></h1>
+  <section id="Group-DRO-(Linear-and-Neural)">
+<h1>Group DRO (Linear and Neural)<a class="headerlink" href="#Group-DRO-(Linear-and-Neural)" title="Link to this heading">¶</a></h1>
 <p>Group DRO minimizes the largest expected loss over a finite set of known groups. This notebook uses a synthetic binary-classification problem to demonstrate the package’s two implementations:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">GroupDRO</span></code> formulates the convex linear minimax problem in CVXPY and solves it numerically.</p></li>
@@ -477,7 +478,7 @@ accuracy by group: {0: 0.875, 1: 0.85}
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Group DRO (Linear and NN)</a><ul>
+<li><a class="reference internal" href="#">Group DRO (Linear and Neural)</a><ul>
 <li><a class="reference internal" href="#Create-grouped-synthetic-data">Create grouped synthetic data</a></li>
 <li><a class="reference internal" href="#Exact-linear-Group-DRO">Exact linear Group DRO</a></li>
 <li><a class="reference internal" href="#Neural-Group-DRO">Neural Group DRO</a></li>
@@ -504,7 +505,7 @@ accuracy by group: {0: 0.875, 1: 0.85}
 
             <div class="right">
                 
-                    <a href="sinkhorn-nn.html"><span>NN Sinkhorn DRO</span><span class="icon">&gt;</span></a>
+                    <a href="sinkhorn-nn.html"><span>Neural Sinkhorn DRO</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

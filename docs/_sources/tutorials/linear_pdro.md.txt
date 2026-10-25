@@ -1,4 +1,4 @@
-# Bayesian (Parametric) DRO
+# Linear Bayesian DRO
 In the context of general stochastic optimization $\ell(\theta;\xi)$ (where $\xi = (x, y)$ in the supervised learning setup), Bayesian DRO [1] is formulated as the following nested structure:
 
 $$\min_{\theta \in \Theta}\mathbb{E}_{\zeta \sim \zeta_N}[\sup_{Q \in \mathcal{Q}_{\zeta}(d, \epsilon)} \mathbb{E}_{\xi \sim Q}[\ell(\theta;\xi)]],$$

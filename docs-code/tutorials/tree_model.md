@@ -1,4 +1,4 @@
-# Tree-DRO
+# Tree DRO
 
 The `dro` package provides KL-DRO, $\chi^2$-DRO, and CVaR-DRO wrappers for
 XGBoost and LightGBM. These methods fit tree ensembles with custom boosting
@@ -65,7 +65,16 @@ gradients and Hessians multiplied by $1/(1-\varepsilon)$; examples at or below
 it retain their ordinary gradients. This is a heuristic training rule, so the
 boosting updates are not exact derivatives of the displayed CVaR objective.
 
-## Hyperparameters
+## Objective and booster configuration
+
+Configure the robust objective through the model class and `eps`, and pass
+tree-construction settings to `update()`. The DRO wrapper supplies the custom
+training objective during `fit()`.
+
+### Robust objective
+
+The model class selects KL-DRO, $\chi^2$-DRO, or CVaR-DRO and the XGBoost or
+LightGBM backend. The formulations above define the corresponding objectives.
 
 - `eps` controls the selected DRO formulation. The default is `0.1` for KL
   and $\chi^2$, and `0.2` for CVaR. KL and $\chi^2$ constructors require
@@ -78,10 +87,17 @@ boosting updates are not exact derivatives of the displayed CVaR objective.
   `"classification"` with labels in $\{0,1\}$ for the objectives described
   above. Although `"regression"` is accepted, its training updates do not
   implement the squared-loss DRO objective reported after fitting.
-- `num_boost_round` is a required key in the dictionary passed to `update()`.
-  It sets the number of boosting iterations. Standard XGBoost or LightGBM
-  options such as `learning_rate` and `max_depth` go in the same dictionary;
-  they control the tree booster, not the ambiguity set.
+
+### Booster configuration
+
+Pass a dictionary of XGBoost or LightGBM settings to `update()` before fitting:
+
+- `max_depth` limits tree depth.
+- `learning_rate` scales each boosting step.
+- `num_boost_round` sets the number of boosting iterations and is required.
+
+These settings control tree construction. The class and `eps` determine the
+robust objective used to train the ensemble.
 
 Choose `eps` using held-out data and the performance measure relevant to the
 deployment setting. Tree depth, learning rate, and boosting rounds should be
@@ -112,10 +128,11 @@ print(model.robust_obj)
 The corresponding class names are `Chi2DRO_XGB`, `CVaRDRO_XGB`,
 `KLDRO_LGBM`, `Chi2DRO_LGBM`, and `CVaRDRO_LGBM`. `robust_obj` is `None`
 before fitting and is the selected robust objective evaluated on the training
-losses afterward. It is a training diagnostic, not a held-out performance
-estimate. `score()` returns accuracy and macro F1 for classification. Classification
-uses raw booster margins with a threshold of zero, equivalent to a sigmoid
-probability threshold of 0.5.
+losses afterward. It is a training diagnostic; compare it only when the data,
+loss, and DRO formulation are held fixed. Use held-out data to estimate
+predictive performance. `score()` returns accuracy and macro F1 for
+classification. Classification uses raw booster margins with a threshold of
+zero, equivalent to a sigmoid probability threshold of 0.5.
 
 See the {doc}`tree DRO notebook <../api/notebooks/tree_dro_tutorial>` for
 end-to-end XGBoost and LightGBM examples.
